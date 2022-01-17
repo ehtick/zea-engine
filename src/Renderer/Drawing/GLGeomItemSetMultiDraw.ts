@@ -111,11 +111,12 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     glGeomItem.on('visibilityChanged', eventHandlers.visibilityChanged)
 
     eventHandlers.cullStateChanged = (event: VisibilityChangedEvent) => {
+      const drawIndex = this.drawOrderIndices.indexOf(index)
       if (event.visible) {
         const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
-        this.drawElementCounts[index] = offsetAndCount[1]
+        this.drawElementCounts[drawIndex] = offsetAndCount[1]
       } else {
-        this.drawElementCounts[index] = 0
+        this.drawElementCounts[drawIndex] = 0
       }
       this.emit('updated')
     }
