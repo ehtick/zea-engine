@@ -394,7 +394,7 @@ class GLBoundingBoxPass extends GLPass {
 
       {
         // The instance transform ids are bound as an instanced attribute.
-        const location = renderstate.attrs.instanceIds.location
+        const location = renderstate.attrs.instancedIds.location
         gl.enableVertexAttribArray(location)
         gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer!)
         gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0)

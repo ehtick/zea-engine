@@ -854,7 +854,7 @@ class GLGeomItemLibrary extends EventEmitter {
     material.off('transparencyChanged', handlers.geomItemChanged)
 
     geomItem.off('visibilityChanged', handlers.workerItemDataChanged)
-    geomItem.geomMatParam.on('valueChanged', handlers.workerItemDataChanged)
+    geomItem.geomMatParam.off('valueChanged', handlers.workerItemDataChanged)
     geomParam.off('boundingBoxChanged', handlers.workerItemDataChanged)
 
     this.glGeomItems[index] = null
