@@ -9,11 +9,11 @@ describe('occlusion-culling-tiny-objects', () => {
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
     cy.get('canvas').percySnapshot('occlusion-culling-tiny-objects')
 
-    cy.window().then((win) => {
+    {
       const variant = 'variant-01'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
+      cy.get('#variant-01').click()
+      cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`occlusion-culling-tiny-objects - ${variant}`)
-    })
+    }
   })
 })

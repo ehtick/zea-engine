@@ -9,18 +9,10 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
 
     <script src="../dist/index.umd.js"></script>
     <style>
-      .hud {
-        color: #333333;
-        font-size: 16px;
-      }
-      #fps-display {
-        position: fixed;
-        bottom: 10px;
-        right: 10px;
-      }
       #cull-stats {
         color: rgb(0, 0, 0);
         position: fixed;
@@ -96,41 +88,43 @@
         }
       })
 
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'variant-01') {
-          // Rotate the camera away from the objects. Rotate back, and check that everything is still visible
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 10), new Vec3(10, 0, 0))
-          renderer.once('CullingUpdated', () => {
-            renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 10), new Vec3(0, 0, 0))
-            renderer.once('CullingUpdated', () => {
-              postMessage(`done-${data}`)
-            })
-          })
-        } else if (data === 'variant-02') {
-          // Rotate the camera away from the objects. Rotate back, and check that everything is still visible
-          geomItemOuter.visibleParam.value = false
-          renderer.once('CullingUpdated', () => {
-            postMessage(`done-${data}`)
-          })
-        } else if (data === 'variant-03') {
-          // Rotate the camera away from the objects. Rotate back, and check that everything is still visible
-          geomItemOuter.visibleParam.value = true
-          renderer.once('CullingUpdated', () => {
-            postMessage(`done-${data}`)
-          })
-        } else if (data === 'variant-04') {
-          // Rotate the camera away from the objects. Rotate back, and check that everything is still visible
-          geomItemOuter.globalXfoParam.value = new Xfo(new Vec3(3, 0, 1))
-          renderer.once('CullingUpdated', () => {
-            postMessage(`done-${data}`)
-          })
-        }
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
       }
 
-      window.addEventListener('message', handleMessage, false)
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        // Rotate the camera away from the objects. Rotate back, and check that everything is still visible
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 10), new Vec3(10, 0, 0))
+        renderer.once('CullingUpdated', () => {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 10), new Vec3(0, 0, 0))
+          renderer.once('CullingUpdated', () => {
+            setStatusText(`done-variant-01`)
+          })
+        })
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        // Rotate the camera away from the objects. Rotate back, and check that everything is still visible
+        geomItemOuter.visibleParam.value = false
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-02`)
+        })
+      })
+      document.getElementById('variant-03').addEventListener('click', function (event) {
+        // Make the outer torus visible again.
+        geomItemOuter.visibleParam.value = true
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-03`)
+        })
+      })
+      document.getElementById('variant-04').addEventListener('click', function (event) {
+        // Rotate the camera away from the objects. Rotate back, and check that everything is still visible
+        geomItemOuter.globalXfoParam.value = new Xfo(new Vec3(3, 0, 1))
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-04`)
+        })
+      })
+
       // }}}
     </script>
   </head>
@@ -138,6 +132,13 @@
     <div class="h-screen">
       <canvas class="absolute" id="renderer"></canvas>
       <div id="cull-stats" class="hud"></div>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+        <button class="variant-button" id="variant-03">variant-03</button>
+        <button class="variant-button" id="variant-04">variant-04</button>
+      </div>
     </div>
   </body>
 </html>

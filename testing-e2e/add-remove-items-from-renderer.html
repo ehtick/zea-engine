@@ -9,6 +9,7 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
 
     <script src="../dist/index.umd.js"></script>
 
@@ -72,66 +73,79 @@
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
 
-        if (data === 'variant-01') {
-          scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem0))
-          scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem1))
-          // Modify the item that is not being removed.
-          // Note: this used to cause a crash because indices were confused in the multi-draw class.
-          sphere1.loopsParam.value = 100
-          window.postMessage(`done-${data}`)
-        } else if (data === 'variant-02') {
-          // Now look away, so that the scene gets frustum culled.
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(20, 20, 0.4))
-          window.postMessage(`done-${data}`)
-        } else if (data === 'variant-03') {
-          // Now look back, so that the scene gets frustum un-culled.
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(0, 0, 0.4))
-          window.postMessage(`done-${data}`)
-        } else if (data === 'variant-04') {
-          scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem2))
-          // Modify the class again, after it has been removed from the renderer.
-          // Note: Our GLGeomLibrary still updates the buffers. It doesn't know that
-          // no GeomItems track this geom. We need to add ref counting...
-          sphere1.loopsParam.value = 12
-          window.postMessage(`done-${data}`)
-        } else if (data === 'variant-05') {
-          scene.getRoot().addChild(geomItem0)
-          scene.getRoot().addChild(geomItem1)
-          scene.getRoot().addChild(geomItem2)
-          window.postMessage(`done-${data}`)
-        } else if (data === 'variant-06') {
-          // Now we remove and add items from the renderer by re-attaching them to a different
-          // part of the tree. Maybe in the future, this can be be made so that the item stays in
-          // the renderer if a simple re-attach. Not sure how that would happen.
-          const treeItem = new TreeItem('TreeItem')
-          scene.getRoot().addChild(treeItem)
-          treeItem.addChild(geomItem0)
-          treeItem.addChild(geomItem1)
-          treeItem.addChild(geomItem2)
-          treeItem.addChild(geomItem3)
-
-          const material = new SimpleSurfaceMaterial('surfaces')
-          material.baseColorParam.value = new Color(1, 1, 0, 0.2)
-          geomItem2.materialParam.value = material
-
-          const material2 = new SimpleSurfaceMaterial('surfaces')
-          material2.baseColorParam.value = new Color(1, 1, 0, 1)
-          geomItem3.materialParam.value = material2
-
-          window.postMessage(`done-${data}`)
-        }
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
       }
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem0))
+        scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem1))
+        // Modify the item that is not being removed.
+        // Note: this used to cause a crash because indices were confused in the multi-draw class.
+        sphere1.loopsParam.value = 100
+        setStatusText(`done-variant-01`)
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        // Now look away, so that the scene gets frustum culled.
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(20, 20, 0.4))
+        setStatusText(`done-variant-02`)
+      })
+      document.getElementById('variant-03').addEventListener('click', function (event) {
+        // Now look back, so that the scene gets frustum un-culled.
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(0, 0, 0.4))
+        setStatusText(`done-variant-03`)
+      })
+      document.getElementById('variant-04').addEventListener('click', function (event) {
+        scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem2))
+        // Modify the class again, after it has been removed from the renderer.
+        // Note: Our GLGeomLibrary still updates the buffers. It doesn't know that
+        // no GeomItems track this geom. We need to add ref counting...
+        sphere1.loopsParam.value = 12
+        setStatusText(`done-variant-04`)
+      })
+      document.getElementById('variant-05').addEventListener('click', function (event) {
+        scene.getRoot().addChild(geomItem0)
+        scene.getRoot().addChild(geomItem1)
+        scene.getRoot().addChild(geomItem2)
+        setStatusText(`done-variant-05`)
+      })
+      document.getElementById('variant-06').addEventListener('click', function (event) {
+        // Now we remove and add items from the renderer by re-attaching them to a different
+        // part of the tree. Maybe in the future, this can be be made so that the item stays in
+        // the renderer if a simple re-attach. Not sure how that would happen.
+        const treeItem = new TreeItem('TreeItem')
+        scene.getRoot().addChild(treeItem)
+        treeItem.addChild(geomItem0)
+        treeItem.addChild(geomItem1)
+        treeItem.addChild(geomItem2)
+        treeItem.addChild(geomItem3)
 
-      window.addEventListener('message', handleMessage, false)
+        const material = new SimpleSurfaceMaterial('surfaces')
+        material.baseColorParam.value = new Color(1, 1, 0, 0.2)
+        geomItem2.materialParam.value = material
+
+        const material2 = new SimpleSurfaceMaterial('surfaces')
+        material2.baseColorParam.value = new Color(1, 1, 0, 1)
+        geomItem3.materialParam.value = material2
+
+        setStatusText(`done-variant-06`)
+      })
       // }}}
     </script>
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
       <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+        <button class="variant-button" id="variant-03">variant-03</button>
+        <button class="variant-button" id="variant-04">variant-04</button>
+        <button class="variant-button" id="variant-05">variant-05</button>
+        <button class="variant-button" id="variant-06">variant-06</button>
+      </div>
     </div>
   </body>
 </html>
