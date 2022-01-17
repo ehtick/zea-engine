@@ -11,42 +11,42 @@ describe('add-remove-items-from-renderer', () => {
 
     {
       const variant = 'variant-01'
-      cy.get('#variant-01').click()
+      cy.get(`#${variant}`).click()
       cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`occlusion-culling-tiny-objects - ${variant}`)
     }
 
     {
       const variant = 'variant-02'
-      cy.get('#variant-01').click()
+      cy.get(`#${variant}`).click()
       cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`occlusion-culling-tiny-objects - ${variant}`)
     }
 
     {
       const variant = 'variant-03'
-      cy.get('#variant-01').click()
+      cy.get(`#${variant}`).click()
       cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`occlusion-culling-tiny-objects - ${variant}`)
     }
 
     {
       const variant = 'variant-04'
-      cy.get('#variant-01').click()
+      cy.get(`#${variant}`).click()
       cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`occlusion-culling-tiny-objects - ${variant}`)
     }
 
     {
       const variant = 'variant-05'
-      cy.get('#variant-01').click()
+      cy.get(`#${variant}`).click()
       cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`occlusion-culling-tiny-objects - ${variant}`)
     }
 
     {
       const variant = 'variant-06'
-      cy.get('#variant-01').click()
+      cy.get(`#${variant}`).click()
       cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`occlusion-culling-tiny-objects - ${variant}`)
     }

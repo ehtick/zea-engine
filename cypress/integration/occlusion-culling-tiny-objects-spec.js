@@ -11,7 +11,7 @@ describe('occlusion-culling-tiny-objects', () => {
 
     {
       const variant = 'variant-01'
-      cy.get('#variant-01').click()
+      cy.get(`#${variant}`).click()
       cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`occlusion-culling-tiny-objects - ${variant}`)
     }

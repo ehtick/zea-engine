@@ -11,25 +11,25 @@ describe('occlusion-culling-occluded-by-hidden-bbox', () => {
 
     {
       const variant = 'variant-01'
-      cy.get('#variant-01').click()
+      cy.get(`#${variant}`).click()
       cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`occlusion-culling-occluded-by-hidden-bbox - ${variant}`)
     }
     {
       const variant = 'variant-02'
-      cy.get('#variant-01').click()
+      cy.get(`#${variant}`).click()
       cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`occlusion-culling-occluded-by-hidden-bbox - ${variant}`)
     }
     {
       const variant = 'variant-03'
-      cy.get('#variant-01').click()
+      cy.get(`#${variant}`).click()
       cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`occlusion-culling-occluded-by-hidden-bbox - ${variant}`)
     }
     {
       const variant = 'variant-04'
-      cy.get('#variant-01').click()
+      cy.get(`#${variant}`).click()
       cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`occlusion-culling-occluded-by-hidden-bbox - ${variant}`)
     }
