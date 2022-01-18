@@ -59,6 +59,7 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
   getValue(): Box3 {
     if (this.dirty) {
       this.__value = this.treeItem._cleanBoundingBox(this.__value)
+      this.dirty = false
     }
     return this.__value
   }
