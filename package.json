@@ -81,7 +81,7 @@
     "@zeainc/zea-ux": "^3.2.0",
     "babel-jest": "^27.0.5",
     "copyfiles": "latest",
-    "cypress": "^5.1.0",
+    "cypress": "9.2.1",
     "es-dev-server": "^2.1.0",
     "http-server": "^13.0.1",
     "husky": "^7.0.4",
