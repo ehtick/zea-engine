@@ -33,6 +33,8 @@
     return fragColor;
   }
 
+  // Note: the older code imported drawItemId.glsl and newer code is importing geomItemId.glsl
+  // This code keeps compatibility with the older shaders.
   vec4 setFragColor_geomData(vec3 v_viewPos, int floatGeomBuffer, int passId, float v_geomItemId, int isOrthographic){
     return setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_geomItemId, -1.0, isOrthographic);
   }
