@@ -95,6 +95,9 @@
 
       document.getElementById('variant-01').addEventListener('click', function (event) {
         // Rotate the camera away from the objects. Rotate back, and check that everything is still visible
+        // Note: this variant is disabled in the spec as it as failing constantly.
+        // This variant doesn't ever seem to complete in Cypress. Something gets stuck in the web worker.
+        // which never emits the correct event to say culling completed.
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 10), new Vec3(10, 0, 0))
         renderer.once('CullingUpdated', () => {
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 10), new Vec3(0, 0, 0))
