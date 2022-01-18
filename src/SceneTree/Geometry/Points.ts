@@ -44,7 +44,7 @@ class Points extends BaseGeom {
    * @param context - The context value.
    */
   readBinary(reader: BinReader, context: AssetLoadContext): void {
-    super.loadBaseGeomBinary(reader)
+    super.loadBaseGeomBinary(reader, context)
 
     // this.computeVertexNormals();
     this.emit('geomDataChanged')

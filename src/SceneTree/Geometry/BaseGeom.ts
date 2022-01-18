@@ -10,14 +10,32 @@ const parse8BitPositionsArray = (
   range: Array<number>,
   offset: Vec3,
   sclVec: Vec3,
-  positions_8bit: Uint8Array,
+  positions_quantized: Uint8Array,
   positionsAttr: Vec3Attribute
 ) => {
   for (let i = range[0]; i < range[1]; i++) {
     const pos = new Vec3(
-      positions_8bit[i * 3 + 0] / 255.0,
-      positions_8bit[i * 3 + 1] / 255.0,
-      positions_8bit[i * 3 + 2] / 255.0
+      positions_quantized[i * 3 + 0] / 255.0,
+      positions_quantized[i * 3 + 1] / 255.0,
+      positions_quantized[i * 3 + 2] / 255.0
+    )
+    pos.multiplyInPlace(sclVec)
+    pos.addInPlace(offset)
+    positionsAttr.setValue(i, pos)
+  }
+}
+const parse16BitPositionsArray = (
+  range: Array<number>,
+  offset: Vec3,
+  sclVec: Vec3,
+  positions_quantized: Uint16Array,
+  positionsAttr: Vec3Attribute
+) => {
+  for (let i = range[0]; i < range[1]; i++) {
+    const pos = new Vec3(
+      positions_quantized[i * 3 + 0] / 65535.0,
+      positions_quantized[i * 3 + 1] / 65535.0,
+      positions_quantized[i * 3 + 2] / 65535.0
     )
     pos.multiplyInPlace(sclVec)
     pos.addInPlace(offset)
@@ -28,15 +46,15 @@ const parse8BitNormalsArray = (
   range: Array<number>,
   offset: Vec3,
   sclVec: Vec3,
-  normals_8bit: Uint8Array,
+  normals_quantized: Uint8Array,
   normalsAttr: Vec3Attribute
 ) => {
   if (sclVec.isNull()) sclVec.set(1, 1, 1)
   for (let i = range[0]; i < range[1]; i++) {
     const normal = new Vec3(
-      normals_8bit[i * 3 + 0] / 255.0,
-      normals_8bit[i * 3 + 1] / 255.0,
-      normals_8bit[i * 3 + 2] / 255.0
+      normals_quantized[i * 3 + 0] / 255.0,
+      normals_quantized[i * 3 + 1] / 255.0,
+      normals_quantized[i * 3 + 2] / 255.0
     )
     normal.multiplyInPlace(sclVec)
     normal.addInPlace(offset)
@@ -48,13 +66,29 @@ const parse8BitTextureCoordsArray = (
   range: Array<number>,
   offset: Vec2,
   sclVec: Vec2,
-  texCoords_8bit: Uint8Array,
+  texCoords_quantized: Uint8Array,
   texCoordsAttr: Vec2Attribute
 ) => {
   // if (sclVec.isNull())
   //     sclVec.set(1, 1, 1);
   for (let i = range[0]; i < range[1]; i++) {
-    const textureCoord = new Vec2(texCoords_8bit[i * 2 + 0] / 255.0, texCoords_8bit[i * 2 + 1] / 255.0)
+    const textureCoord = new Vec2(texCoords_quantized[i * 2 + 0] / 255.0, texCoords_quantized[i * 2 + 1] / 255.0)
+    textureCoord.multiplyInPlace(sclVec)
+    textureCoord.addInPlace(offset)
+    texCoordsAttr.setValue(i, textureCoord)
+  }
+}
+const parse16BitTextureCoordsArray = (
+  range: Array<number>,
+  offset: Vec2,
+  sclVec: Vec2,
+  texCoords_quantized: Uint16Array,
+  texCoordsAttr: Vec2Attribute
+) => {
+  // if (sclVec.isNull())
+  //     sclVec.set(1, 1, 1);
+  for (let i = range[0]; i < range[1]; i++) {
+    const textureCoord = new Vec2(texCoords_quantized[i * 2 + 0] / 65535.0, texCoords_quantized[i * 2 + 1] / 65535.0)
     textureCoord.multiplyInPlace(sclVec)
     textureCoord.addInPlace(offset)
     texCoordsAttr.setValue(i, textureCoord)
@@ -289,7 +323,7 @@ class BaseGeom extends ParameterOwner {
    *
    * @param reader - The reader value.
    */
-  loadBaseGeomBinary(reader: BinReader): void {
+  loadBaseGeomBinary(reader: BinReader, context?: Record<string, any>): void {
     this.name = reader.loadStr()
     const flags = reader.loadUInt8()
     this.debugColor = reader.loadRGBFloat32Color()
@@ -318,20 +352,32 @@ class BaseGeom extends ParameterOwner {
     if (numClusters == 1) {
       {
         const box3 = this.__boundingBox
-        const positions_8bit = reader.loadUInt8Array(numVerts * 3)
-        parse8BitPositionsArray([0, numVerts], box3.p0, box3.diagonal(), positions_8bit, positionsAttr)
+        // From 3.9.1, vertex data is a mix of 16bit and 8 bit quanitization
+        if (context.versions['zea-engine'].compare([3, 9, 1]) >= 0) {
+          const positions_quantized = reader.loadUInt16Array(numVerts * 3)
+          parse16BitPositionsArray([0, numVerts], box3.p0, box3.diagonal(), positions_quantized, positionsAttr)
+        } else {
+          const positions_quantized = reader.loadUInt8Array(numVerts * 3)
+          parse8BitPositionsArray([0, numVerts], box3.p0, box3.diagonal(), positions_quantized, positionsAttr)
+        }
       }
 
       if (normalsAttr) {
         const box3 = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
-        const normals_8bit = reader.loadUInt8Array(numVerts * 3)
-        parse8BitNormalsArray([0, numVerts], box3.p0, box3.diagonal(), normals_8bit, normalsAttr)
+        const normals_quantized = reader.loadUInt8Array(numVerts * 3)
+        parse8BitNormalsArray([0, numVerts], box3.p0, box3.diagonal(), normals_quantized, normalsAttr)
         normalsAttr.loadSplitValues(reader)
       }
       if (texCoordsAttr) {
         const box2 = new Box2(reader.loadFloat32Vec2(), reader.loadFloat32Vec2())
-        const texCoords_8bit = reader.loadUInt8Array(numVerts * 2)
-        parse8BitTextureCoordsArray([0, numVerts], box2.p0, box2.diagonal(), texCoords_8bit, texCoordsAttr)
+        // From 3.9.1, vertex data is a mix of 16bit and 8 bit quanitization
+        if (context.versions['zea-engine'].compare([3, 9, 1]) >= 0) {
+          const texCoords_quantized = reader.loadUInt16Array(numVerts * 2)
+          parse16BitTextureCoordsArray([0, numVerts], box2.p0, box2.diagonal(), texCoords_quantized, texCoordsAttr)
+        } else {
+          const texCoords_quantized = reader.loadUInt8Array(numVerts * 2)
+          parse8BitTextureCoordsArray([0, numVerts], box2.p0, box2.diagonal(), texCoords_quantized, texCoordsAttr)
+        }
         texCoordsAttr.loadSplitValues(reader)
       }
     } else {
@@ -355,29 +401,68 @@ class BaseGeom extends ParameterOwner {
         clusters.push(clusterData)
         offset += count
       }
-      const positions_8bit = reader.loadUInt8Array(numVerts * 3)
-      let normals_8bit: Uint8Array | null = null
-      let texCoords_8bit: Uint8Array | null = null
+      // From 3.9.1, vertex data is a mix of 16bit and 8 bit quanitization
+      let positions_quantized: Uint8Array | Uint16Array
+      if (context.versions['zea-engine'].compare([3, 9, 1]) >= 0) {
+        positions_quantized = reader.loadUInt16Array(numVerts * 3)
+      } else {
+        positions_quantized = reader.loadUInt8Array(numVerts * 3)
+      }
+      let normals_quantized: Uint8Array | null = null
+      let texCoords_quantized: Uint8Array | Uint16Array | null = null
       if (normalsAttr) {
-        normals_8bit = reader.loadUInt8Array(numVerts * 3)
+        normals_quantized = reader.loadUInt8Array(numVerts * 3)
       }
       if (texCoordsAttr) {
-        texCoords_8bit = reader.loadUInt8Array(numVerts * 2)
+        texCoords_quantized = reader.loadUInt8Array(numVerts * 2)
       }
 
       for (let i = 0; i < numClusters; i++) {
         {
           const box3 = clusters[i].bbox
-          parse8BitPositionsArray(clusters[i].range, box3.p0, box3.diagonal(), positions_8bit, positionsAttr)
+          // From 3.9.1, vertex data is a mix of 16bit and 8 bit quanitization
+          if (context.versions['zea-engine'].compare([3, 9, 1]) >= 0) {
+            parse16BitPositionsArray(
+              clusters[i].range,
+              box3.p0,
+              box3.diagonal(),
+              <Uint16Array>positions_quantized,
+              positionsAttr
+            )
+          } else {
+            parse8BitPositionsArray(
+              clusters[i].range,
+              box3.p0,
+              box3.diagonal(),
+              <Uint8Array>positions_quantized,
+              positionsAttr
+            )
+          }
         }
 
-        if (normalsAttr) {
+        if (normals_quantized) {
           const box3 = clusters[i].normalsRange
-          parse8BitNormalsArray(clusters[i].range, box3.p0, box3.diagonal(), normals_8bit!, normalsAttr)
+          parse8BitNormalsArray(clusters[i].range, box3.p0, box3.diagonal(), normals_quantized, normalsAttr)
         }
-        if (texCoordsAttr) {
+        if (texCoords_quantized) {
           const box2 = clusters[i].texCoordsRange
-          parse8BitTextureCoordsArray(clusters[i].range, box2.p0, box2.diagonal(), texCoords_8bit!, texCoordsAttr)
+          if (context.versions['zea-engine'].compare([3, 9, 1]) >= 0) {
+            parse16BitTextureCoordsArray(
+              [0, numVerts],
+              box2.p0,
+              box2.diagonal(),
+              <Uint16Array>texCoords_quantized,
+              texCoordsAttr
+            )
+          } else {
+            parse8BitTextureCoordsArray(
+              clusters[i].range,
+              box2.p0,
+              box2.diagonal(),
+              <Uint8Array>texCoords_quantized,
+              texCoordsAttr
+            )
+          }
         }
       }
       if (normalsAttr) {

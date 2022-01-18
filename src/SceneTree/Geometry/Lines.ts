@@ -136,7 +136,7 @@ class Lines extends BaseGeom {
    * @param context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, any>): void {
-    super.loadBaseGeomBinary(reader)
+    super.loadBaseGeomBinary(reader, context)
 
     this.setNumSegments(reader.loadUInt32())
 

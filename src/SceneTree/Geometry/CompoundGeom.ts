@@ -152,7 +152,7 @@ class CompoundGeom extends BaseGeom {
    * @param {Record<string, unknown>} context - The context value.
    */
   readBinary(reader: BinReader, context: AssetLoadContext) {
-    super.loadBaseGeomBinary(reader)
+    super.loadBaseGeomBinary(reader, context)
 
     const geomCountsByType = reader.loadUInt32Array(3)
     this.offsets['TRIANGLES'] = 0

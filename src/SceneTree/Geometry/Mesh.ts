@@ -69,7 +69,7 @@ class Mesh extends BaseGeom {
    * The init method.
    * @private
    */
-  init():void {}
+  init(): void {}
 
   /**
    * The clear method.
@@ -884,7 +884,7 @@ class Mesh extends BaseGeom {
    * @param context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, any>): void {
-    super.loadBaseGeomBinary(reader)
+    super.loadBaseGeomBinary(reader, context)
     this.setFaceCounts(Array.from(reader.loadUInt32Array()))
     const numFaces = this.getNumFaces()
 

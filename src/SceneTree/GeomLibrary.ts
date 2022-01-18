@@ -13,7 +13,7 @@ import { parseGeomsBinary } from './Geometry/parseGeomsBinary'
 
 // @ts-ignore
 import GeomParserWorker from 'web-worker:./Geometry/GeomParser-worker.js'
-const workerParsing = false
+const workerParsing = true
 
 import { StreamFileParsedEvent } from '../Utilities/Events/StreamFileParsedEvent'
 import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'
@@ -217,8 +217,7 @@ class GeomLibrary extends EventEmitter {
    * @param index - The index value.
    * @return - The stored geometry
    */
-  getGeom(index: number): BaseProxy | BaseGeom
-  {
+  getGeom(index: number): BaseProxy | BaseGeom {
     if (index >= this.geoms.length) {
       // console.warn("Geom index invalid:" + index);
       return null
