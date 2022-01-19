@@ -1,8 +1,8 @@
-import { Registry } from "../../Registry"
-import { AssetLoadContext } from "../AssetLoadContext"
-import { BinReader } from "../BinReader"
-import { CloneContext } from "../CloneContext"
-import { TreeItem } from "../TreeItem"
+import { Registry } from '../../Registry'
+import { AssetLoadContext } from '../AssetLoadContext'
+import { BinReader } from '../BinReader'
+import { CloneContext } from '../CloneContext'
+import { TreeItem } from '../TreeItem'
 
 /**
  * Represents a Part within a CAD assembly.
