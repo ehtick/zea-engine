@@ -12,6 +12,14 @@
 
     <script src="../dist/index.umd.js"></script>
 
+    <style>
+      #cull-stats {
+        color: rgb(0, 0, 0);
+        position: fixed;
+        bottom: 10px;
+        left: 10px;
+      }
+    </style>
     <script type="module">
       /*
         Reference Stats:
@@ -40,7 +48,11 @@
         window.zeaEngine
 
       const canvas = document.getElementById('viewport')
-      const renderer = new GLRenderer(canvas, { antialias: false })
+      const renderer = new GLRenderer(canvas, {
+        antialias: false,
+        enableOcclusionCulling: true,
+        debugOcclusionBuffer: false,
+      })
       renderer.solidAngleLimit = 0.0
 
       const scene = new Scene()
@@ -208,6 +220,17 @@
         frameCounter++
       })
 
+      renderer.on('occlusionCullingProfilingData', (event) => {
+        const { queryReduceSceneGeoms, queryReduceBBoxes } = event
+        console.log(`occlusionCulling Reduction: ${queryReduceSceneGeoms}, ${queryReduceBBoxes}`)
+      })
+      const cullElement = document.getElementById('cull-stats')
+      renderer.on('CullingUpdated', (event) => {
+        if (event.visible != undefined && event.total != undefined) {
+          cullElement.textContent = `visible: ${event.visible} / total: ${event.total}. culled: ${event.culled}. unCulled: ${event.unCulled}`
+        }
+      })
+
       const fpsElement = document.getElementById('fps')
       setInterval(() => {
         if (fps != frameCounter * 2) {
@@ -266,6 +289,7 @@
 
         <div class="flex-1">
           <canvas id="viewport"></canvas>
+          <div id="cull-stats" class="hud"></div>
         </div>
       </div>
     </div>
