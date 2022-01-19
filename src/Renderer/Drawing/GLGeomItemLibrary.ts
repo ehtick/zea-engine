@@ -56,8 +56,11 @@ class GLGeomItemLibrary extends EventEmitter {
   protected glGeomItemsMap: Record<number, number> = {}
   protected glGeomItemsIndexFreeList: number[] = []
   protected dirtyItemIndices: number[] = []
+
+  // Items that have transform or bounding box changes and need to be updated in the worker.
   protected dirtyWorkerItemIndices: Set<number> = new Set()
-  protected removedItemIndices: number[]
+  protected removedItemIndices: number[] = []
+
   protected glGeomItemsTexture: GLTexture2D | null = null
   protected enableFrustumCulling: boolean
 
@@ -95,9 +98,6 @@ class GLGeomItemLibrary extends EventEmitter {
 
     this.renderer = renderer
 
-    // Items that have transform or bounding box changes and need to be updated in the worker.
-    this.dirtyWorkerItemIndices = new Set()
-    this.removedItemIndices = []
     this.enableFrustumCulling = options.enableFrustumCulling || options.enableOcclusionCulling
 
     // Note: while it would be possible to get Occlusion Culling working in WebGL1,
@@ -109,9 +109,6 @@ class GLGeomItemLibrary extends EventEmitter {
     const gl = this.renderer.gl
     this.enableOcclusionCulling = options.enableOcclusionCulling && gl.name == 'webgl2'
     this.debugOcclusionBuffer = options.debugOcclusionBuffer ?? false
-
-    // https://www.khronos.org/registry/webgl/extensions/EXT_disjoint_timer_query_webgl2/
-    this.timer_query_ext = gl.getExtension('EXT_disjoint_timer_query_webgl2')
 
     if (this.enableFrustumCulling) {
       this.setupCullingWorker(renderer)
@@ -304,6 +301,10 @@ class GLGeomItemLibrary extends EventEmitter {
       // Occlusion Culling
       if (this.enableOcclusionCulling) {
         const gl = this.renderer.gl
+
+        // https://www.khronos.org/registry/webgl/extensions/EXT_disjoint_timer_query_webgl2/
+        this.timer_query_ext = gl.getExtension('EXT_disjoint_timer_query_webgl2')
+
         let occlusionDataBufferSizeFactor = 1
         const occlusionDataBufferWidth = Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor)
         const occlusionDataBufferHeight = Math.ceil(this.renderer.getHeight() * occlusionDataBufferSizeFactor)
