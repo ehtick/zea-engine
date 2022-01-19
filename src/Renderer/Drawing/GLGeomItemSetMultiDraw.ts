@@ -1,4 +1,4 @@
-import { VisibilityChangedEvent } from '../..'
+import { VisibilityChangedEvent, IndexEvent } from '../../Utilities/Events'
 import { Vec3 } from '../../Math/Vec3'
 import '../../SceneTree/GeomItem'
 
@@ -16,9 +16,9 @@ import { GLGeomItem } from './GLGeomItem'
 abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   protected renderer: GLBaseRenderer
   protected gl: WebGL12RenderingContext
-  protected glGeomItems: Array<GLGeomItem | null>
-  protected glGeomIdsMapping: Record<string, any>
-  protected glgeomItemEventHandlers: any[]
+  protected glGeomItems: Array<GLGeomItem | null> = []
+  protected glGeomIdsMapping: Record<string, number[]> = {}
+  protected glgeomItemEventHandlers: any[] = []
   protected freeIndices: number[] = []
 
   // Mapping from the array of glGeomItems, to the actual rendering
@@ -31,11 +31,14 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   protected drawIdsArray: Float32Array = new Float32Array(0)
   protected drawIdsBufferDirty: boolean = true
   protected drawIdsTexture: GLTexture2D | null = null
-  protected highlightedItems: GLGeomItem[]
-  protected highlightedIdsArray: any
-  protected highlightedIdsTexture: GLTexture2D | null = null
-  protected highlightedIdsBufferDirty: boolean
 
+  protected highlightedItems: GLGeomItem[] = []
+  protected highlightedIdsArray: Float32Array | null = null
+  protected highlightedIdsTexture: GLTexture2D | null = null
+  protected highlightedIdsBufferDirty: boolean = false
+
+  // When a geometry changes, we update offset and count the values.
+  private dirtyGeomIndices: Set<number> = new Set()
   private timeAddingItems: number = 0
 
   /**
@@ -46,34 +49,9 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     super()
     this.renderer = renderer
     this.gl = <WebGL12RenderingContext>renderer.gl
-    this.glGeomItems = []
-    this.glGeomIdsMapping = {}
-    this.glgeomItemEventHandlers = []
 
-    this.highlightedItems = []
-    this.highlightedIdsArray = null
-    this.highlightedIdsTexture = null
-    this.highlightedIdsBufferDirty = true
-
-    this.renderer.glGeomLibrary.on('geomDataChanged', (event: any) => {
-      const geomItemIndices = this.glGeomIdsMapping[event.index]
-      if (geomItemIndices != undefined) {
-        geomItemIndices.forEach((index: number) => {
-          const glGeomItem = this.glGeomItems[index]!
-          if (glGeomItem.isVisible()) {
-            const drawIndex = this.drawOrderIndices.indexOf(index)
-            const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
-
-            this.drawElementOffsets[drawIndex] = offsetAndCount[0]
-            this.drawElementCounts[drawIndex] = offsetAndCount[1]
-            const highlightIndex = this.highlightedItems.indexOf(glGeomItem)
-            if (highlightIndex != -1) {
-              this.highlightElementOffsets[highlightIndex] = offsetAndCount[0]
-              this.highlightElementCounts[highlightIndex] = offsetAndCount[1]
-            }
-          }
-        })
-      }
+    this.renderer.glGeomLibrary.on('geomDataChanged', (event: IndexEvent) => {
+      this.dirtyGeomIndices.add(event.index)
     })
   }
 
@@ -167,6 +145,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     geomItemIndices.splice(geomItemIndices.indexOf(index), 1)
     if (geomItemIndices.length == 0) {
       delete this.glGeomIdsMapping[glGeomItem.geomId]
+      if (this.dirtyGeomIndices.has(glGeomItem.geomId)) this.dirtyGeomIndices.delete(glGeomItem.geomId)
     }
 
     const eventHandlers = this.glgeomItemEventHandlers[index]
@@ -197,6 +176,39 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   // ////////////////////////////////////
   // Draw Ids
 
+  cleanGeomIds() {
+    // When a geometry changes, we update offset and count the values.
+    // Note: this method is quite expensive.
+    // (taking up 80% of the time to load the GPU in the Memory test before it was refactored)
+    // The cost is probably in the "drawOrderIndices.indexOf(index)" call below.
+    // Most of the time, we are adding/removing GeomItems. The geoms rarely change
+    // independently.
+    // We run this method in the rare occurrence that a geom changes, and not its GeomItem.
+    this.dirtyGeomIndices.forEach((geomId) => {
+      const geomItemIndices = this.glGeomIdsMapping[geomId]
+      if (geomItemIndices != undefined) {
+        const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(geomId)
+        geomItemIndices.forEach((index: number) => {
+          const glGeomItem = this.glGeomItems[index]!
+          if (glGeomItem.isVisible()) {
+            const drawIndex = this.drawOrderIndices.indexOf(index)
+
+            this.drawElementOffsets[drawIndex] = offsetAndCount[0]
+            this.drawElementCounts[drawIndex] = offsetAndCount[1]
+            this.drawIdsArray[drawIndex] = glGeomItem.drawItemId
+
+            const highlightIndex = this.highlightedItems.indexOf(glGeomItem)
+            if (highlightIndex != -1) {
+              this.highlightElementOffsets[highlightIndex] = offsetAndCount[0]
+              this.highlightElementCounts[highlightIndex] = offsetAndCount[1]
+            }
+          }
+        })
+      }
+    })
+    this.dirtyGeomIndices = new Set()
+  }
+
   /**
    * The updateDrawIDsBuffer method.
    * @param renderstate - The object used to track state changes during rendering.
@@ -216,6 +228,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
         this.drawElementCounts[drawIndex] = offsetAndCount[1]
         this.drawIdsArray[drawIndex] = glGeomItem.drawItemId
       })
+      this.dirtyGeomIndices = new Set()
     }
 
     const gl = this.renderer.gl
@@ -383,6 +396,8 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     if (this.drawIdsBufferDirty) {
       console.time('GLGeomItemSetMultiDraw.updateDrawIDsBuffer')
       this.updateDrawIDsBuffer(renderstate)
+    } else if (this.dirtyGeomIndices.size > 0) {
+      this.cleanGeomIds()
       console.timeEnd('GLGeomItemSetMultiDraw.updateDrawIDsBuffer')
     }
     // Note: updateDrawIDsBuffer first, as this avoids a case where the buffers stay dirty
