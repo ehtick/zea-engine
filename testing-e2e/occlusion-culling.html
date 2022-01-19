@@ -181,6 +181,10 @@
 
       if (urlParams.has('profile')) renderer.startContinuousDrawing()
 
+      renderer.on('occlusionCullingProfilingData', (event) => {
+        const { queryReduceSceneGeoms, queryReduceBBoxes } = event
+        console.log(`occlusionCulling Reduction: ${queryReduceSceneGeoms}, ${queryReduceBBoxes}`)
+      })
       const cullElement = document.getElementById('cull-stats')
       renderer.on('CullingUpdated', (event) => {
         cullElement.textContent = `visible: ${event.visible} / total: ${event.total} triangles: ${
