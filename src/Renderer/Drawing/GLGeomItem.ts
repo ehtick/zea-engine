@@ -40,7 +40,7 @@ class GLGeomItem extends EventEmitter {
   protected supportInstancing: boolean
   protected geomVisible: boolean
   visible: boolean
-  protected culled: boolean
+  culled: boolean
   protected cutDataChanged: boolean = false
   protected cutData: number[] = []
   protected geomData: any
@@ -154,7 +154,7 @@ class GLGeomItem extends EventEmitter {
   setCulled(culled: boolean): void {
     this.culled = culled
     if (this.visible) {
-      this.emit('cullStateChanged', new VisibilityChangedEvent(!culled))
+      this.emit('cullStateChanged')
     }
   }
 

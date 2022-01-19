@@ -414,17 +414,6 @@ class GLGeomItemLibrary extends EventEmitter {
     // return
     if (data.newlyCulled) {
       data.newlyCulled.forEach((index: number) => {
-        // console.log('newlyCulled:', this.glGeomItems[index].geomItem.getName())
-        if (!this.glGeomItems[index]) {
-          if (this.removedItemIndices.indexOf(index) == -1) {
-            console.warn('Culling worker has items that are deleted.')
-          }
-          // oddly, the culling worker generates indices that are out of range
-          // on the first cull and after that behaves itself.
-          // until I can figure out why, just ignoring this issue.
-          console.warn(`Culling index our of range: ${index}`)
-          return
-        }
         this.glGeomItems[index].setCulled(true)
       })
     }
@@ -440,6 +429,8 @@ class GLGeomItemLibrary extends EventEmitter {
     // TODO: Bundle render stats.
     // console.log(`visible: ${data.visible} / total: ${data.total}`)
     this.renderer.emit('CullingUpdated', {
+      culled: data.newlyCulled?.length,
+      unCulled: data.newlyUnCulled?.length,
       visible: data.visible,
       total: data.total,
     })
@@ -598,7 +589,6 @@ class GLGeomItemLibrary extends EventEmitter {
 
       this.boundingBoxShader.bind(renderstate, 'GLGeomItemLibrary')
       this.bbox.bind(renderstate)
-      gl.disable(gl.CULL_FACE)
 
       // Read each Matrix and Bbox settings from the Texture.
       const { instancesTexture, instancesTextureSize, instancedDraw, reductionDataTexture, occlusionCulling } =
