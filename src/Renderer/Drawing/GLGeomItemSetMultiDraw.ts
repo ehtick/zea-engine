@@ -36,6 +36,8 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   protected highlightedIdsTexture: GLTexture2D | null = null
   protected highlightedIdsBufferDirty: boolean
 
+  private timeAddingItems: number = 0
+
   /**
    * Create a GL geom item set.
    * @param renderer - The renderer object.
@@ -80,6 +82,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param glGeomItem - The glGeomItem value.
    */
   addGLGeomItem(glGeomItem: GLGeomItem): void {
+    const start = performance.now()
     const index: number = this.freeIndices.length > 0 ? this.freeIndices.pop()! : this.glGeomItems.length
 
     // Keep track of which geomitems use which geoms, so we can update the offset and count array if they change.
@@ -150,6 +153,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
 
     this.drawIdsBufferDirty = true
 
+    this.timeAddingItems += performance.now() - start
     this.emit('updated')
   }
 
@@ -373,8 +377,13 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState): void {
+    if (this.timeAddingItems > 0) {
+      console.log('GLGeomItemSetMultiDraw.timeAddingItems:', this.timeAddingItems)
+    }
     if (this.drawIdsBufferDirty) {
+      console.time('GLGeomItemSetMultiDraw.updateDrawIDsBuffer')
       this.updateDrawIDsBuffer(renderstate)
+      console.timeEnd('GLGeomItemSetMultiDraw.updateDrawIDsBuffer')
     }
     // Note: updateDrawIDsBuffer first, as this avoids a case where the buffers stay dirty
     // because the last item was removed.

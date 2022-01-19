@@ -890,10 +890,13 @@ class GLViewport extends GLBaseViewport {
    * The draw method.
    */
   draw(): void {
+    console.time('GLViewport.draw')
     const renderstate: ColorRenderState = <ColorRenderState>{}
     this.initRenderState(renderstate)
 
     super.draw(renderstate)
+
+    console.timeEnd('GLViewport.draw')
 
     // Turn this on to debug the geom data buffer.
     if (this.debugGeomDataBuffer) {

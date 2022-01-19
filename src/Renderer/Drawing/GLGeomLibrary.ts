@@ -105,7 +105,7 @@ class GLGeomLibrary extends EventEmitter {
    * @param geom - The geom value.
    * @return - The return value.
    */
-  constructGLGeom(geom: BaseGeom):GLGeom {
+  constructGLGeom(geom: BaseGeom): GLGeom {
     let glgeom = this.glGeomsDict[geom.getId()]
     if (glgeom != undefined) {
       // Increment the ref count for the GLGeom
@@ -440,6 +440,7 @@ class GLGeomLibrary extends EventEmitter {
    * Cleans the state of this GeomSet during rendering.
    */
   cleanGeomBuffers(): void {
+    console.time('GLGeomLibrary.cleanGeomBuffers')
     // First we alocate all memory needed to clean the GeomSet,
     // and then we start uploading all the data.
     // Note: during allocation, some buffers that were not dirty may
@@ -474,6 +475,7 @@ class GLGeomLibrary extends EventEmitter {
 
     this.dirtyGeomIndices = new Set()
     this.geomBuffersTmp = []
+    console.timeEnd('GLGeomLibrary.cleanGeomBuffers')
   }
 
   // /////////////////////////////////////
