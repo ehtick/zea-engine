@@ -39,7 +39,6 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
 
   // When a geometry changes, we update offset and count the values.
   private dirtyGeomIndices: Set<number> = new Set()
-  private timeAddingItems: number = 0
 
   /**
    * Create a GL geom item set.
@@ -131,7 +130,6 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
 
     this.drawIdsBufferDirty = true
 
-    this.timeAddingItems += performance.now() - start
     this.emit('updated')
   }
 
@@ -390,15 +388,10 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState): void {
-    if (this.timeAddingItems > 0) {
-      console.log('GLGeomItemSetMultiDraw.timeAddingItems:', this.timeAddingItems)
-    }
     if (this.drawIdsBufferDirty) {
-      console.time('GLGeomItemSetMultiDraw.updateDrawIDsBuffer')
       this.updateDrawIDsBuffer(renderstate)
     } else if (this.dirtyGeomIndices.size > 0) {
       this.cleanGeomIds()
-      console.timeEnd('GLGeomItemSetMultiDraw.updateDrawIDsBuffer')
     }
     // Note: updateDrawIDsBuffer first, as this avoids a case where the buffers stay dirty
     // because the last item was removed.

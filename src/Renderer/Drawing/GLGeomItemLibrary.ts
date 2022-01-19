@@ -85,8 +85,6 @@ class GLGeomItemLibrary extends EventEmitter {
   protected reductionDataArray: Uint8Array
 
   private timer_query_ext: any = null
-  private timeAddingItems = 0
-
   private worker: GLGeomItemLibraryCullingWorker
 
   /**
@@ -816,7 +814,6 @@ class GLGeomItemLibrary extends EventEmitter {
     }
     this.glGeomItemsMap[geomItem.getId()] = index
 
-    this.timeAddingItems += performance.now() - start
     // Note: before the renderer is disabled, this is a  no-op.
     this.renderer.requestRedraw()
 
@@ -1144,16 +1141,11 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param renderstate - The object tracking the current state of the renderer
    */
   bind(renderstate: RenderState): void {
-    if (this.timeAddingItems > 0) console.log('this.timeAddingItems:', this.timeAddingItems)
     if (this.dirtyWorkerItemIndices.size > 0 || this.removedItemIndices.length > 0) {
-      console.time('GLGeomItemLibrary.uploadGeomItemsToWorker')
       this.uploadGeomItemsToWorker()
-      console.timeEnd('GLGeomItemLibrary.uploadGeomItemsToWorker')
     }
     if (this.dirtyItemIndices.length > 0) {
-      console.time('GLGeomItemLibrary.uploadGeomItems')
       this.uploadGeomItems(renderstate)
-      console.timeEnd('GLGeomItemLibrary.uploadGeomItems')
     }
 
     const gl = this.renderer.gl
