@@ -12,6 +12,7 @@ import { ZeaPointerEvent } from '../Utilities/Events/ZeaPointerEvent'
 import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
 import { ColorRenderState, RenderState } from './types/renderer'
 import { WebGL12RenderingContext } from './types/webgl'
+import { GLBaseRenderer } from './GLBaseRenderer'
 
 const FRAMEBUFFER = {
   MSAA_RENDERBUFFER: 0,
@@ -137,6 +138,13 @@ class GLBaseViewport extends ParameterOwner {
     }
     processBGValue()
     this.backgroundColorParam!.on('valueChanged', processBGValue)
+  }
+
+  /**
+   * Returns the renderer this viewport is bound to.
+   */
+  getRenderer(): GLBaseRenderer {
+    return this.renderer
   }
 
   /**
