@@ -23,7 +23,7 @@ describe('multi_draw', () => {
 })
 describe('multi_draw-webgl1', () => {
   it('Captures snapshots of variants', () => {
-    cy.visit(`testing-e2e/multi-draw.html?webgl=webgl.`)
+    cy.visit(`testing-e2e/multi-draw.html?webgl=webgl`)
 
     cy.get('#status').should('have.text', `done-loading`)
     cy.get('canvas').percySnapshot('multi_draw')
@@ -47,7 +47,7 @@ describe('multi_draw-webgl1', () => {
 
 describe('multi_draw-disable-multidraw', () => {
   it('Captures snapshots of variants', () => {
-    cy.visit(`testing-e2e/multi-draw.html?disableMultiDraw.`)
+    cy.visit(`testing-e2e/multi-draw.html?disableMultiDraw`)
 
     cy.get('#status').should('have.text', `done-loading`)
     cy.get('canvas').percySnapshot('multi_draw')

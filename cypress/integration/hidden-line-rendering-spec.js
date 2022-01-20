@@ -51,7 +51,7 @@ describe('hidden-line-rendering-webgl1', () => {
 
 describe('hidden-line-rendering-debugGeomShader', () => {
   it('Capture snapshots', () => {
-    cy.visit(`testing-e2e/hidden-line-rendering.html?debugGeomShader.`)
+    cy.visit(`testing-e2e/hidden-line-rendering.html?debugGeomShader`)
 
     cy.get('#status').should('have.text', `done-loading`)
     const test = 'hidden-line-rendering-debugGeomShader'
