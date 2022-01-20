@@ -19,6 +19,11 @@ import './commands'
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
+// Integrating Percy with Cypress.
+// See:
+// https://docs.percy.io/docs/cypress
+import '@percy/cypress'
+
 // This addresses a bug in Cypress.
 // See:
 // https://stackoverflow.com/a/63519375/320791

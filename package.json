@@ -40,8 +40,8 @@
     "test:coverage": "jest --coverage",
     "test:debug": "node --inspect ./node_modules/jest/bin/jest.js --runInBand --watch",
     "test:watch": "jest --watch",
-    "test:e2e": "percy exec cypress run --browser chrome --headless",
-    "test:e2e:watch": "percy exec cypress open",
+    "test:e2e": "percy exec -- cypress run --browser chrome --headless",
+    "test:e2e:watch": "percy exec -- cypress open",
     "lint": "tsdx lint",
     "size": "size-limit",
     "analyze": "size-limit --why"
@@ -65,7 +65,8 @@
     }
   ],
   "devDependencies": {
-    "@percy/cypress": "^2.3.1",
+    "@percy/cli": "^1.0.0-beta.73",
+    "@percy/cypress": "^3.1.1",
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.6",
