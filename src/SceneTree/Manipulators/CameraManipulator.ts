@@ -933,6 +933,13 @@ class CameraManipulator extends BaseTool {
         camera.emit('movementFinished')
       }
     }
+    const applyDolly = () => {
+      const dollyDist = 50.0 * this.mouseWheelMovementDist
+      const delta = new Xfo()
+      delta.tr.set(0, 0, dollyDist)
+      xfo.tr.addInPlace(dir.scale(dollyDist))
+      camera.globalXfoParam.value = xfo
+    }
     const applyViewScale = () => {
       const frustumHeight = camera.getFrustumHeight()
       const zoomDist = frustumHeight * this.mouseWheelMovementDist
@@ -968,7 +975,8 @@ class CameraManipulator extends BaseTool {
       if (camera.isOrthographic()) {
         applyViewScale()
       } else {
-        applyMovement()
+        if (event.ctrlKey) applyDolly()
+        else applyMovement()
       }
     }
 
