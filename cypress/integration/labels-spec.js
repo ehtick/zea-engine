@@ -1,12 +1,8 @@
 describe('Labels and Billboards', () => {
   it('Renders labels', () => {
-    cy.visit('testing-e2e/labels.html', {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit('testing-e2e/labels.html')
 
-    cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-Loading')
+    cy.get('#status').should('have.text', `done-loading`)
 
     // This should work, but it always fails. The screenshot taken does not contain the highlight.
     // I have no idea how to fix it.
@@ -16,13 +12,13 @@ describe('Labels and Billboards', () => {
     // cy.get('canvas').percySnapshot(`MouseOverLabel`)
 
     {
-      const variant = 'front'
+      const variant = 'variant-01'
       cy.get(`#${variant}`).click()
       cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`Labels ${variant}`)
     }
     {
-      const variant = 'back'
+      const variant = 'variant-02'
       cy.get(`#${variant}`).click()
       cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`Labels ${variant}`)
@@ -30,21 +26,17 @@ describe('Labels and Billboards', () => {
   })
 
   it('Renders labels - Fixedsize', () => {
-    cy.visit('testing-e2e/labels-fixedsize.html', {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit('testing-e2e/labels-fixedsize.html')
 
-    cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-Loading')
+    cy.get('#status').should('have.text', `done-loading`)
     {
-      const variant = 'front'
+      const variant = 'variant-01'
       cy.get(`#${variant}`).click()
       cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`Labels - Fixedsize ${variant}`)
     }
     {
-      const variant = 'back'
+      const variant = 'variant-02'
       cy.get(`#${variant}`).click()
       cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`Labels - Fixedsize ${variant}`)

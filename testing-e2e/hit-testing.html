@@ -82,7 +82,7 @@
           // This allows the subsequent pointe events to 'see' through the point we are
           // dragging, and so we can slide the point over the surface of the cow.
           this.point.setSelectable(false)
-          event.setCapture(this, event.intersectionData)
+          event.setCapture(this)
         }
         onPointerMove(event) {
           // Now: when a
@@ -110,7 +110,7 @@
           this.stroke = new TreeItem('stroke')
           scene.getRoot().addChild(this.stroke)
           this.addPoint(event, event.intersectionData)
-          event.setCapture(this, event.intersectionData)
+          event.setCapture(this)
         }
         addPoint(event, intersectionData) {
           const pos = event.pointerRay.start.add(event.pointerRay.dir.scale(intersectionData.dist))
@@ -138,8 +138,10 @@
         if (event.intersectionData) {
           if (event.intersectionData.geomItem.geomParam.getValue() == sphere) {
             movePointTool.startMove(event)
+            event.stopPropagation()
           } else {
             makeStrokeTool.startStroke(event)
+            event.stopPropagation()
           }
         }
       })

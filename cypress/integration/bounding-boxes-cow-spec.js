@@ -1,15 +1,11 @@
 const test = 'bounding-boxes-cow'
 describe(test, () => {
   it('Captures snapshots of variants', () => {
-    cy.visit(`testing-e2e/${test}.html`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/${test}.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
     cy.get('canvas').percySnapshot(test)
-    
+
     /* Eliminating redundant tests while our limit is 5k images per month
     {
       const variant = 'variant-01'
@@ -25,4 +21,5 @@ describe(test, () => {
       cy.get('canvas').percySnapshot(`${test} - ${variant}`)
     }
     */
+  })
 })

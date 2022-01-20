@@ -1,10 +1,6 @@
 describe('shader-facenormals', () => {
   it('Captures snapshots of variants', () => {
-    cy.visit(`testing-e2e/shader-facenormals.html`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/shader-facenormals.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
     const test = 'shader-facenormals'

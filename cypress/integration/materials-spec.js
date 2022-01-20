@@ -1,10 +1,6 @@
 describe('materials', () => {
   it('Captures snapshots of variants', () => {
-    cy.visit(`testing-e2e/materials.html`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/materials.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
     cy.get('canvas').percySnapshot('materials')

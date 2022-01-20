@@ -1,10 +1,6 @@
 describe('frustum-culling-long-geoms', () => {
   it('Capture snapshots', () => {
-    cy.visit(`testing-e2e/frustum-culling-long-geoms.html`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/frustum-culling-long-geoms.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
     const test = 'frustum-culling-long-geoms'

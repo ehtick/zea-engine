@@ -1,10 +1,6 @@
 describe('vr-oculus-heaset-loading-test', () => {
   it('Captures snapshots of variants', () => {
-    cy.visit(`testing-e2e/vr-oculus-heaset-loading-test.html`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/vr-oculus-heaset-loading-test.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
     const test = 'vr-oculus-heaset-loading-test'

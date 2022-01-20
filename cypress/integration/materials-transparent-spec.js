@@ -1,10 +1,6 @@
 describe('materials-transparent', () => {
   it('Captures snapshots of variants', () => {
-    cy.visit(`testing-e2e/materials-transparent.html`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/materials-transparent.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
 

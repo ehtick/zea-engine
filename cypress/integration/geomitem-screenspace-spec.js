@@ -1,10 +1,6 @@
 describe('geomitem-screenspace', () => {
   it('Capture snapshots', () => {
-    cy.visit(`testing-e2e/geomitem-screenspace.html`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/geomitem-screenspace.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
     const test = 'geomitem-screenspace'

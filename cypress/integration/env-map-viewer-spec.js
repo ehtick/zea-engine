@@ -1,10 +1,6 @@
 describe('env-map-viewer', () => {
   it('Captures snapshots of variants', () => {
-    cy.visit(`testing-e2e/env-map-viewer.html`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/env-map-viewer.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
     const test = 'env-map-viewer'

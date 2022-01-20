@@ -1,10 +1,6 @@
 describe('geomitem-geometry-changes', () => {
   it('Capture snapshots', () => {
-    cy.visit(`testing-e2e/geomitem-geometry-changes.html`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/geomitem-geometry-changes.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
     const test = 'geomitem-geometry-changes'

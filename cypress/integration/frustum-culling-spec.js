@@ -1,10 +1,6 @@
 describe('frustum-culling', () => {
   it('Capture snapshots', () => {
-    cy.visit(`testing-e2e/frustum-culling.html`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/frustum-culling.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
     const test = 'frustum-culling'

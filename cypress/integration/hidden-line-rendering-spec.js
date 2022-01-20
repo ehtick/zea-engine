@@ -1,10 +1,6 @@
 describe('hidden-line-rendering', () => {
   it('Capture snapshots', () => {
-    cy.visit(`testing-e2e/hidden-line-rendering.html`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/hidden-line-rendering.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
     cy.get('canvas').percySnapshot('hidden-line-rendering')
@@ -26,13 +22,10 @@ describe('hidden-line-rendering', () => {
     */
   })
 })
+
 describe('hidden-line-rendering-webgl1', () => {
   it('Capture snapshots', () => {
-    cy.visit(`testing-e2e/hidden-line-rendering.html?webgl=webgl.`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/hidden-line-rendering.html?webgl=webgl`)
 
     cy.get('#status').should('have.text', `done-loading`)
     const test = 'hidden-line-rendering'
@@ -55,13 +48,10 @@ describe('hidden-line-rendering-webgl1', () => {
     */
   })
 })
+
 describe('hidden-line-rendering-debugGeomShader', () => {
   it('Capture snapshots', () => {
-    cy.visit(`testing-e2e/hidden-line-rendering.html?debugGeomShader.`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/hidden-line-rendering.html?debugGeomShader.`)
 
     cy.get('#status').should('have.text', `done-loading`)
     const test = 'hidden-line-rendering-debugGeomShader'

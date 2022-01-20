@@ -1,10 +1,6 @@
 describe('vr-vive-heaset-loading-test', () => {
   it('Captures snapshots of variants', () => {
-    cy.visit(`testing-e2e/vr-vive-heaset-loading-test.html`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/vr-vive-heaset-loading-test.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
 

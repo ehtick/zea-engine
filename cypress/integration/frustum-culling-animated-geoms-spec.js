@@ -1,11 +1,7 @@
 const test = 'frustum-culling-animated-geoms'
 describe(test, () => {
   it('Capture snapshots', () => {
-    cy.visit(`testing-e2e/${test}.html`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/${test}.html`)
     cy.get('#status').should('have.text', `done-loading`)
     cy.get('canvas').percySnapshot(test)
     {

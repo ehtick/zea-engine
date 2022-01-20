@@ -1,10 +1,6 @@
 describe('material-group', () => {
   it('Captures snapshots of variants', () => {
-    cy.visit(`testing-e2e/material-group.html`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/material-group.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
     const test = 'material-group'

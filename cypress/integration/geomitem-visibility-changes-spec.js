@@ -1,10 +1,6 @@
 describe('geomitem-visibility-changes', () => {
   it('Captures snapshots of variants', () => {
-    cy.visit(`testing-e2e/geomitem-visibility-changes.html`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/geomitem-visibility-changes.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
 

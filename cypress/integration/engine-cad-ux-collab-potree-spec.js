@@ -4,11 +4,7 @@ Not sure why. Maybe the assets aren't loading on the server. They always
 run fine locally.
 describe('engine-cad-ux-collab-potree-Dead_eye_bearing', () => {
   it('Capture snapshots', () => {
-    cy.visit(`testing-e2e/engine-cad-ux-collab-potree.html`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/engine-cad-ux-collab-potree.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
     cy.get('canvas').percySnapshot('engine-cad-ux-collab-potree')
@@ -30,11 +26,7 @@ describe('engine-cad-ux-collab-potree-Dead_eye_bearing', () => {
 })
 describe('engine-cad-ux-collab-potree-gear_box_final_asm', () => {
   it('Capture snapshots', () => {
-    cy.visit(`testing-e2e/engine-cad-ux-collab-potree.html?zcad=data/gear_box_final_asm.zcad.`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/engine-cad-ux-collab-potree.html?zcad=data/gear_box_final_asm.zcad.`)
 
     cy.get('#status').should('have.text', `done-loading`)
     cy.get('canvas').percySnapshot('engine-cad-ux-collab-potree-gear_box_final_asm')
@@ -57,11 +49,7 @@ describe('engine-cad-ux-collab-potree-gear_box_final_asm', () => {
 
 describe('engine-cad-ux-collab-potree-HC_SRO4', () => {
   it('Capture snapshots', () => {
-    cy.visit(`testing-e2e/engine-cad-ux-collab-potree.html?zcad=data/HC_SRO4.zcad.`, {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit(`testing-e2e/engine-cad-ux-collab-potree.html?zcad=data/HC_SRO4.zcad.`)
 
     cy.get('#status').should('have.text', `done-loading`)
     cy.get('canvas').percySnapshot('engine-cad-ux-collab-potree-HC_SRO4')
