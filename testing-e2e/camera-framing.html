@@ -9,6 +9,7 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
 
     <script src="../dist/index.umd.js"></script>
 
@@ -53,46 +54,47 @@
       renderer.addPass(boundingBoxPass)
       boundingBoxPass.addTreeItem(geomItem, true)
 
-      const postMessage = (msg) => {
-        console.log(msg)
-        window.postMessage(msg)
-      }
-      postMessage('done-loading')
-
       const camera = renderer.getViewport().getCamera()
 
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'variant-01') {
-          camera.setPositionAndTarget(new Vec3(2, 2, 0), new Vec3(0, 0, 0))
-          renderer.frameAll()
-          postMessage(`done-${data}`)
-        } else if (data === 'variant-02') {
-          camera.setPositionAndTarget(new Vec3(-6, 6, 3), new Vec3(0, 0, 0))
-          renderer.frameAll()
-          postMessage(`done-${data}`)
-        } else if (data === 'variant-03') {
-          camera.setIsOrthographic(1, 0)
-          camera.setPositionAndTarget(new Vec3(2, 2, 2), new Vec3(0, 0, 0))
-          renderer.frameAll()
-          postMessage(`done-${data}`)
-        } else if (data === 'variant-04') {
-          camera.setIsOrthographic(1, 0)
-          camera.setPositionAndTarget(new Vec3(-6, 6, 5), new Vec3(0, 0, 0))
-          renderer.frameAll()
-          postMessage(`done-${data}`)
-        }
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
       }
-
-      window.addEventListener('message', handleMessage, false)
+      setStatusText('done-loading')
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        camera.setPositionAndTarget(new Vec3(2, 2, 0), new Vec3(0, 0, 0))
+        renderer.frameAll()
+        setStatusText(`done-variant-01`)
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        camera.setPositionAndTarget(new Vec3(-6, 6, 3), new Vec3(0, 0, 0))
+        renderer.frameAll()
+        setStatusText(`done-variant-02`)
+      })
+      document.getElementById('variant-03').addEventListener('click', function (event) {
+        camera.setIsOrthographic(1, 0)
+        camera.setPositionAndTarget(new Vec3(2, 2, 2), new Vec3(0, 0, 0))
+        renderer.frameAll()
+        setStatusText(`done-variant-03`)
+      })
+      document.getElementById('variant-04').addEventListener('click', function (event) {
+        camera.setIsOrthographic(1, 0)
+        camera.setPositionAndTarget(new Vec3(-6, 6, 5), new Vec3(0, 0, 0))
+        renderer.frameAll()
+        setStatusText(`done-variant-04`)
+      })
       // }}}
     </script>
   </head>
   <body class="bg-blue-100">
     <div class="h-screen">
       <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+      </div>
     </div>
   </body>
 </html>

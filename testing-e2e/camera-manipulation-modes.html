@@ -9,6 +9,7 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
 
     <script src="../dist/index.umd.js"></script>
 
@@ -83,44 +84,41 @@
       addShape('cone2', cone, new Vec3(4, 1, 0), material2)
 
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
-      const postMessage = (msg) => {
-        console.log(msg)
-        window.postMessage(msg)
-      }
-      postMessage('done-loading')
-
       renderer.getViewport().getManipulator().setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.tumbler)
 
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'variant-01') {
-          renderer.getViewport().getManipulator().orbitAroundCursorParam.value = false
-          postMessage(`done-${data}`)
-        }
-        if (data === 'variant-02') {
-          renderer
-            .getViewport()
-            .getManipulator()
-            .setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.tumbler)
-          postMessage(`done-${data}`)
-        } else if (data === 'variant-03') {
-          renderer
-            .getViewport()
-            .getManipulator()
-            .setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.turntable)
-          postMessage(`done-${data}`)
-        }
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
       }
-
-      window.addEventListener('message', handleMessage, false)
+      setStatusText('done-loading')
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        renderer.getViewport().getManipulator().orbitAroundCursor.value = true
+        setStatusText(`done-variant-01`)
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        renderer.getViewport().getManipulator().setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.tumbler)
+        setStatusText(`done-variant-02`)
+      })
+      document.getElementById('variant-03').addEventListener('click', function (event) {
+        renderer
+          .getViewport()
+          .getManipulator()
+          .setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.turntable)
+        setStatusText(`done-variant-03`)
+      })
       // }}}
     </script>
   </head>
   <body class="bg-blue-100 h-full">
-    <div class="h-full">
+    <div class="h-screen">
       <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+        <button class="variant-button" id="variant-03">variant-03</button>
+      </div>
     </div>
   </body>
 </html>

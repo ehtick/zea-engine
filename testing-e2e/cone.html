@@ -2,14 +2,10 @@
 <html class="h-full">
   <head>
     <title>cone - Zea Engine</title>
+    <meta charset="UTF-8" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
-    <meta charset="UTF-8" />
-  </head>
-  <body class="bg-blue-100 h-full">
-    <div class="h-full">
-      <canvas id="viewport"></canvas>
-    </div>
+    <link rel="stylesheet" href="styles/test.css" />
 
     <script src="../dist/index.umd.js"></script>
 
@@ -31,30 +27,38 @@
       const geomItem = new GeomItem('Cone', cone, standardMaterial)
       scene.getRoot().addChild(geomItem)
 
-      window.postMessage('done-loading')
-
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'variant-01') {
-          cone.radiusParam.value = 2.5
-          cone.heightParam.value = 5.5
-
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          window.postMessage(`done-${data}`)
-        } else if (data === 'variant-02') {
-          cone.detailParam.value = 25
-          cone.heightParam.value = 2.5
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          window.postMessage(`done-${data}`)
-        }
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
       }
+      setStatusText('done-loading')
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        cone.radiusParam.value = 2.5
+        cone.heightParam.value = 5.5
 
-      window.addEventListener('message', handleMessage, false)
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+        renderer.frameAll()
+        setStatusText(`done-variant-01`)
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        cone.detailParam.value = 25
+        cone.heightParam.value = 2.5
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+        renderer.frameAll()
+        setStatusText(`done-variant-02`)
+      })
       // }}}
     </script>
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="h-full">
+      <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+      </div>
+    </div>
   </body>
 </html>

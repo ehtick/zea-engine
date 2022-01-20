@@ -6,6 +6,7 @@
 
     <title>grid - Zea Engine</title>
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
     <style>
       .fps-display {
         position: fixed;
@@ -15,12 +16,6 @@
         font-size: 45px;
       }
     </style>
-  </head>
-  <body class="bg-blue-100 h-full">
-    <div class="h-full">
-      <canvas id="viewport"></canvas>
-    </div>
-    <div class="fps-display" id="fps"></div>
 
     <script src="../dist/index.umd.js"></script>
 
@@ -36,7 +31,11 @@
 
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 1.7), new Vec3(0, 0, 0.4))
 
-      window.postMessage('done-loading')
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
+      }
+      setStatusText('done-loading')
 
       // //////////////////////////////////////
       // Setup FPS Counter
@@ -56,5 +55,12 @@
       }, 500)
       renderer.startContinuousDrawing()
     </script>
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="h-screen">
+      <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+    </div>
+    <div class="fps-display" id="fps"></div>
   </body>
 </html>

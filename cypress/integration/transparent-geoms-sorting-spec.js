@@ -9,7 +9,7 @@ describe('transparent-geoms-sorting', () => {
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
     cy.get('canvas').percySnapshot('transparent-geoms-sorting')
 
-    cy.get('#variant-01').click()
+    cy.get(`#${variant}`).click()
     cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-variant-01`)
     cy.get('canvas').percySnapshot(`transparent-geoms-sorting - variant-01`)
 

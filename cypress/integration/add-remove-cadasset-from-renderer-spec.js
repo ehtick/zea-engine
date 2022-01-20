@@ -1,26 +1,27 @@
-describe('add-remove-cadasset-from-renderer', () => {
+const test = 'add-remove-cadasset-from-renderer'
+describe(test, () => {
   it('Captures snapshots of variants', () => {
-    cy.visit('testing-e2e/add-remove-cadasset-from-renderer.html', {
+    cy.visit(`testing-e2e/${test}.html`, {
       onBeforeLoad(win) {
         cy.spy(win, 'postMessage').as('postMessage')
       },
     })
 
-    cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
-    cy.get('canvas').percySnapshot(`add-remove-cadasset-from-renderer`)
+    cy.get('#status').should('have.text', `done-loading`)
+    cy.get('canvas').percySnapshot(test)
 
-    cy.window().then((win) => {
+    {
       const variant = 'variant-01'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
-      cy.get('canvas').percySnapshot(`add-remove-cadasset-from-renderer - ${variant}`)
-    })
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
+    }
 
-    cy.window().then((win) => {
+    {
       const variant = 'variant-02'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
-      cy.get('canvas').percySnapshot(`add-remove-cadasset-from-renderer - ${variant}`)
-    })
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
+    }
   })
 })

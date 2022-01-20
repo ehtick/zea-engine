@@ -1,40 +1,38 @@
-describe('camera-framing', () => {
-  it('Capture snapshots', () => {
-    cy.visit('testing-e2e/camera-framing.html', {
+const test = 'camera-framing'
+describe(test, () => {
+  it('Captures snapshots of variants', () => {
+    cy.visit(`testing-e2e/${test}.html`, {
       onBeforeLoad(win) {
         cy.spy(win, 'postMessage').as('postMessage')
       },
     })
 
-    cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
-    cy.get('canvas').percySnapshot('camera-framing')
+    cy.get('#status').should('have.text', `done-loading`)
+    cy.get('canvas').percySnapshot(test)
 
-    cy.window().then((win) => {
+    {
       const variant = 'variant-01'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
-      cy.get('canvas').percySnapshot(`camera-framing - ${variant}`)
-    })
-
-    cy.window().then((win) => {
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
+    }
+    {
       const variant = 'variant-02'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
-      cy.get('canvas').percySnapshot(`camera-framing - ${variant}`)
-    })
-
-    cy.window().then((win) => {
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
+    }
+    {
       const variant = 'variant-03'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
-      cy.get('canvas').percySnapshot(`camera-framing - ${variant}`)
-    })
-
-    cy.window().then((win) => {
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
+    }
+    {
       const variant = 'variant-04'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
-      cy.get('canvas').percySnapshot(`camera-framing - ${variant}`)
-    })
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
+    }
   })
 })

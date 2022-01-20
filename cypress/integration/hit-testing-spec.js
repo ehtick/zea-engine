@@ -1,4 +1,6 @@
-describe('hit-testing', () => {
+const test = 'hit-testing'
+
+describe(test, () => {
   it('Capture snapshots', () => {
     cy.visit('testing-e2e/hit-testing.html', {
       onBeforeLoad(win) {
@@ -7,7 +9,7 @@ describe('hit-testing', () => {
     })
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
-    cy.get('canvas').percySnapshot('hit-testing')
+    cy.get('canvas').percySnapshot(test)
 
     cy.window().then((win) => {
       cy.get('canvas')

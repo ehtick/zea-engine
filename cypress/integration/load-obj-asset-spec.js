@@ -1,12 +1,12 @@
 describe.skip('Zea Engine', () => {
   it('Loads an OBJ asset', () => {
-    cy.visit('testing-e2e/load-obj-asset.html', {
+    cy.visit(`testing-e2e/load-obj-asset.html`, {
       onBeforeLoad(win) {
         cy.spy(win, 'postMessage').as('postMessage')
       },
     })
 
-    cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
+    cy.get('#status').should('have.text', `done-loading`)
 
     /* Eliminating redundant tests while our limit is 5k images per month
     cy.window().then((win) => {

@@ -1,40 +1,41 @@
 describe('geomitem-material-changes', () => {
   it('Capture snapshots', () => {
-    cy.visit('testing-e2e/geomitem-material-changes.html', {
+    cy.visit(`testing-e2e/geomitem-material-changes.html`, {
       onBeforeLoad(win) {
         cy.spy(win, 'postMessage').as('postMessage')
       },
     })
 
-    cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
-    cy.get('canvas').percySnapshot('geomitem-material-changes')
+    cy.get('#status').should('have.text', `done-loading`)
+    const test = 'geomitem-material-changes'
+    cy.get('canvas').percySnapshot(test)
 
-    cy.window().then((win) => {
+    {
       const variant = 'variant-01'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
-      cy.get('canvas').percySnapshot(`geomitem-material-changes - ${variant}`)
-    })
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
+    }
 
-    cy.window().then((win) => {
+    {
       const variant = 'variant-02'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
-      cy.get('canvas').percySnapshot(`geomitem-material-changes - ${variant}`)
-    })
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
+    }
 
-    cy.window().then((win) => {
+    {
       const variant = 'variant-03'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
-      cy.get('canvas').percySnapshot(`geomitem-material-changes - ${variant}`)
-    })
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
+    }
 
-    cy.window().then((win) => {
+    {
       const variant = 'variant-04'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
-      cy.get('canvas').percySnapshot(`geomitem-material-changes - ${variant}`)
-    })
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
+    }
   })
 })

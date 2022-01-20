@@ -15,19 +15,18 @@ describe('Labels and Billboards', () => {
     // cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-MouseOverLabel`)
     // cy.get('canvas').percySnapshot(`MouseOverLabel`)
 
-    cy.window().then((win) => {
+    {
       const variant = 'front'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`Labels ${variant}`)
-    })
-
-    cy.window().then((win) => {
+    }
+    {
       const variant = 'back'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`Labels ${variant}`)
-    })
+    }
   })
 
   it('Renders labels - Fixedsize', () => {
@@ -38,19 +37,17 @@ describe('Labels and Billboards', () => {
     })
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-Loading')
-
-    cy.window().then((win) => {
+    {
       const variant = 'front'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`Labels - Fixedsize ${variant}`)
-    })
-
-    cy.window().then((win) => {
+    }
+    {
       const variant = 'back'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`Labels - Fixedsize ${variant}`)
-    })
+    }
   })
 })

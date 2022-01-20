@@ -9,6 +9,7 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
 
     <script src="../dist/index.umd.js"></script>
 
@@ -77,16 +78,17 @@
         highlightedItem = null
       })
 
-      const postMessage = (msg) => {
-        console.log(msg)
-        window.postMessage(msg)
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
       }
-      postMessage('done-loading')
+      setStatusText('done-loading')
     </script>
   </head>
   <body class="bg-blue-100">
     <div class="h-screen">
       <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
     </div>
   </body>
 </html>

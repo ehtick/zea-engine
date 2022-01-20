@@ -1,39 +1,41 @@
-describe('cutaways', () => {
+let test = 'cutaways'
+describe(test, () => {
   it('Captures snapshots of variants', () => {
-    cy.visit('testing-e2e/cutaways.html', {
+    cy.visit(`testing-e2e/cutaways.html`, {
       onBeforeLoad(win) {
         cy.spy(win, 'postMessage').as('postMessage')
       },
     })
 
-    cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
-    cy.get('canvas').percySnapshot('cutaways')
+    cy.get('#status').should('have.text', `done-loading`)
+    const test = 'cutaways'
+    cy.get('canvas').percySnapshot(test)
 
-    cy.window().then((win) => {
+    {
       const variant = 'variant-01'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
-      cy.get('canvas').percySnapshot(`cutaways - ${variant}`)
-    })
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
+    }
 
-    cy.window().then((win) => {
+    {
       const variant = 'variant-02'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
-      cy.get('canvas').percySnapshot(`cutaways - ${variant}`)
-    })
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
+    }
   })
 })
 
 describe('cutaways-debugGeomShader', () => {
   it('Capture snapshots', () => {
-    cy.visit('testing-e2e/cutaways.html?debugGeomShader', {
+    cy.visit(`testing-e2e/cutaways.html?debugGeomShader`, {
       onBeforeLoad(win) {
         cy.spy(win, 'postMessage').as('postMessage')
       },
     })
 
-    cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
-    cy.get('canvas').percySnapshot('cutaways')
+    cy.get('#status').should('have.text', `done-loading`)
+    cy.get('canvas').percySnapshot('cutaways-debugGeomShader')
   })
 })
