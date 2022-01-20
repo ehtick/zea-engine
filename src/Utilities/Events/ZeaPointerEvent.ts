@@ -1,5 +1,5 @@
 import { BaseItem, BaseTool, GLBaseViewport, GLViewport, Ray, TreeItem, Vec2, Vec3 } from '../..'
-import { BaseEvent } from '../BaseEvent'
+import { ZeaUIEvent } from './ZeaUIEvent'
 import { IntersectionData } from '../IntersectionData'
 
 const POINTER_TYPES = {
@@ -13,11 +13,11 @@ let capturedItem: TreeItem | BaseTool = null
 /**
  * ZeaPointerEvent are emitted from mouse or touch interactions or from WebXR controllers.
  */
-class ZeaPointerEvent extends BaseEvent {
+class ZeaPointerEvent extends ZeaUIEvent {
   pointerType: string
   pointerRay: Ray
-  viewport: GLBaseViewport
-  propagating = true
+  pointerPos: Vec2
+  detail: number
 
   intersectionData?: IntersectionData
   leftGeometry: BaseItem

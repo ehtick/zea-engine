@@ -1,6 +1,5 @@
 import { Ray, Vec2 } from '../../Math'
-import { POINTER_TYPES } from './ZeaPointerEvent'
-import { ZeaUIEvent } from './ZeaUIEvent'
+import { ZeaPointerEvent, POINTER_TYPES } from './ZeaPointerEvent'
 
 class Touch {
   identifier: number
@@ -55,7 +54,7 @@ class Touch {
   }
 }
 
-class ZeaTouchEvent extends ZeaUIEvent {
+class ZeaTouchEvent extends ZeaPointerEvent {
   touches: Touch[] = []
   changedTouches: Touch[] = []
   targetTouches: Touch[] = []
