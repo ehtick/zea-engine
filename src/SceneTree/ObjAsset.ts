@@ -112,8 +112,6 @@ class ObjAsset extends AssetItem {
           const key = elements.shift()
           const value = elements.join(' ')
 
-          if (material == undefined) throw Error('no material defined.')
-
           switch (key) {
             case 'newmtl':
               material = new Material(value)
