@@ -2,6 +2,58 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.1.0](https://github.com/ZeaInc/zea-engine/compare/v4.0.1...v4.1.0) (2022-01-21)
+
+
+### Features
+
+* Added CameraManipulator.zoomTowardGeomUnderCursor. This option enables zooming towards the point under the mouse. By default now, the current framing is maintained during zoom. ([df887b4](https://github.com/ZeaInc/zea-engine/commit/df887b48b96499b3c9aafc7971c94bd32a62bcc7))
+* Cuboid can be generated without normals and texture coordinates. Used in the new occlusion culling feature. ([312e3fe](https://github.com/ZeaInc/zea-engine/commit/312e3fec8f5717608f016ea76c8d103d792cd36c))
+* DataImage can now be loaded with a WebGLTexture object and used in the scene. Very helpful for debugging rendering textures. ([fa6e3b3](https://github.com/ZeaInc/zea-engine/commit/fa6e3b3bbbe9d0ea076c522d221ad8e9a1d8461d))
+* GLRenderer now assumes material color values are in linear space as the color values in ZCAD files are always linear. A new option was added to the renderer to force gamma space color values to be used. ([84a802b](https://github.com/ZeaInc/zea-engine/commit/84a802b29bfe6a7bc877c2eceea93fcb27041f16))
+* GLRenderer now support GPU based occlusion culling that improves performance by reducing the number of drawn geometries. ([c9762d2](https://github.com/ZeaInc/zea-engine/commit/c9762d2ff52937ab3ebee25d4189142f27f3b799))
+* GLScreenQuad now supports binding without providing a texture. ([852e631](https://github.com/ZeaInc/zea-engine/commit/852e6319d8fea72fcd265262ed805c92d9c51254))
+* GLViewport helper method that calculates a 2d position from a 3d world coordinate. ([#614](https://github.com/ZeaInc/zea-engine/issues/614)) ([215929a](https://github.com/ZeaInc/zea-engine/commit/215929acc8db804f84bdebead7ca238c85bfe573))
+* Holding ctrl while using the mouse wheel now moves the user forward. ([82a1105](https://github.com/ZeaInc/zea-engine/commit/82a110595594767d35124a68068b44852c2f197f))
+* Implemented `getNumTriangles` on Mesh, which calculates the number of triangles based on the face counts. ([4d74050](https://github.com/ZeaInc/zea-engine/commit/4d740508f26755343ed6743bcefd82bb14ba682d))
+* Material Color parameters now have a `colorSpace` value which determines if the value is in linear of gamma space. By default color values are in Gamma space, but values loaded from files are assumed to be in Linear space. ([83a52eb](https://github.com/ZeaInc/zea-engine/commit/83a52ebcbe94807420748792544b798fd7b49fcb))
+* Move `pointerRay` value up one level in the class hierarchy so all pointer events, even those emitted by XR controllers now provide a `pointerRay` that is used in hit testing. ([b0250dd](https://github.com/ZeaInc/zea-engine/commit/b0250ddd6b495b6e99af80662b9c31a62cdb0e82))
+* VRController now provides a `raycastDist` property that controls the distance of the ray used to detect geometries. ([2b43375](https://github.com/ZeaInc/zea-engine/commit/2b4337540a2361e84adc93b9f6b06c93a4b9c301))
+* XRController now emits 'buttonPressed' and 'buttonReleased' events when users press buttons aside from the main trigger button. ([b452a08](https://github.com/ZeaInc/zea-engine/commit/b452a08dbb9c62501820f700500af803838fd996))
+
+
+### Bug Fixes
+
+* [#581](https://github.com/ZeaInc/zea-engine/issues/581) - When an InstanceItem clones, it must also cone the reference item when it asynchronously clones. ([59e8a0b](https://github.com/ZeaInc/zea-engine/commit/59e8a0b24ebc428f8ec23613434377e1e9892721))
+* [#595](https://github.com/ZeaInc/zea-engine/issues/595) ensure the XRControllerEvent has a reference to the VRViewport. ([c964784](https://github.com/ZeaInc/zea-engine/commit/c964784c5569c709bd5e966a81696974c2299dfe))
+* A warning was generated when replacing an image on a MaterialColorParam due to trying to remove a listener that was never added. ([9b265fc](https://github.com/ZeaInc/zea-engine/commit/9b265fc1fa417f4e3aa120c0fe2c353876cc1266))
+* Addressed double-initialization issue causing exception in the WebXR emulator. ([fe8f8c1](https://github.com/ZeaInc/zea-engine/commit/fe8f8c19e88bd3e669c1e04bda2102f791f68a48))
+* All XR classes are now exported to make their types available. ([#660](https://github.com/ZeaInc/zea-engine/issues/660)) ([4e9c852](https://github.com/ZeaInc/zea-engine/commit/4e9c852fd59589c9fd0bf768d82a9b258829ad84))
+* At the end of an XR Session, the frustum is re-culled using the regular camera. ([3be9fb4](https://github.com/ZeaInc/zea-engine/commit/3be9fb48e7268d97a52c07608863409ffe11b035))
+* Captured events no longer propagate to other items. ([2046984](https://github.com/ZeaInc/zea-engine/commit/2046984475bd81b98ffac4c15d5e842370edc06a))
+* Cleaned up exception thrown when loading an obj asset referencing materials. ([080a985](https://github.com/ZeaInc/zea-engine/commit/080a985e80972c71ed554bd7ffa0fecd429ceb33))
+* Cleaned up huge performance issue loading large assemblies. Listening to changes the GLGeomItemLibrary caused a massive problem. ([69ba155](https://github.com/ZeaInc/zea-engine/commit/69ba155746a2b41ed7113a032153d460a177b990))
+* Cloning custom material types, like FlatSurfaceMaterial now results in a new FlatSurfaceMaterial instead of a generic Material class. ([7a9f5c2](https://github.com/ZeaInc/zea-engine/commit/7a9f5c2ff2f35bd1d03078311c4457fe9cc6a85e))
+* Cloning items in the tree now correctly clones the 'isSelectable' property. ([11f467e](https://github.com/ZeaInc/zea-engine/commit/11f467ea386b6d1294836b01d8a931c8ea6e8bdc))
+* Cutting Plane values on the BaseGeomItem are now initialized to reasonable values. ([c983f19](https://github.com/ZeaInc/zea-engine/commit/c983f19de3a3020d7f23ae435c178b55b7dcf432))
+* Debugging GeomData buffer is now possible when silhouettes are being displayed. ([8cc3439](https://github.com/ZeaInc/zea-engine/commit/8cc3439c10a1f0a26c4db37b3239352ff4466f5c))
+* Double taps were being generated on non-iOS devices due to mouse events being emulated after real touch events were generated. This is now fixed. ([4836a48](https://github.com/ZeaInc/zea-engine/commit/4836a48b4b292eac647e5d19b86c56b4455710ba))
+* Each XRController now has a separate 'capture' item for UI interactions. ([2381c36](https://github.com/ZeaInc/zea-engine/commit/2381c36458d086ba12bc6907cf111a1df4e043e1))
+* Exceptions where thrown when a scene consisted of many different textured items and one was highlighted dynamically. ([cbd1c2c](https://github.com/ZeaInc/zea-engine/commit/cbd1c2ccff31a5c3b9ad8739bd0b211a13d09d79))
+* Fixed WebGL error caused by a GLRenderTarget.unbindForWriting trying to re-bind a previous fbo it should have been null ([2b2597b](https://github.com/ZeaInc/zea-engine/commit/2b2597b21ea2b28241610e88fa03f5b3860d8710))
+* GLRenderTarget now correctly binds the TEXTURE_MIN_FILTER and TEXTURE_MAG_FILTER to its generated textures. ([8eb7a90](https://github.com/ZeaInc/zea-engine/commit/8eb7a905b3f2edb3a6ae335d3b536c6b40a148e3))
+* GLTexture2D now correctly infers the internalFormat for RGB format textures. ([5679167](https://github.com/ZeaInc/zea-engine/commit/5679167397e30cdd104c1d8d20a567293ef46951))
+* Labels with the fixed size on screen value set to 'true' now rendered correctly in VR. ([4e18cad](https://github.com/ZeaInc/zea-engine/commit/4e18cad1e101c30e7cb980ac51b0b14089adfa46))
+* Pointer click distance is now correct in orthographic cameras.(This was a regression in 4.0.0) ([1fcfd56](https://github.com/ZeaInc/zea-engine/commit/1fcfd56da5c106eccb95e0736978df7c4ade9310))
+* ProcessTextureParams now checks for wrapS and wrapT in the parsers provided by the image. ([4af31da](https://github.com/ZeaInc/zea-engine/commit/4af31da2dff769dd9d49b8f9787bb6840dc2c8c9))
+* RaycastWithProjection and raycastCluster now are correctly depth tested. ([87a945f](https://github.com/ZeaInc/zea-engine/commit/87a945f3e3fa0f454c8439fcdfac13e3f80bd864))
+* Textured materials are now correctly unbound addressing a WebGL error: WebGL: INVALID_ENUM: activeTexture: texture unit out of range ([da78764](https://github.com/ZeaInc/zea-engine/commit/da78764ecb6933c4b4ae7039206edf9a7ea3b557))
+* The camera now orbits around the clicked position, even when clicking in empty space. ([52b1826](https://github.com/ZeaInc/zea-engine/commit/52b18262a29e9e9933fcbeea82d30e7c853fea9d))
+* The WalkMode on the CameraManipulator is working again. ([085a3b0](https://github.com/ZeaInc/zea-engine/commit/085a3b0cdbac6b1b53d2091f6ad654f3810156ff))
+* Window zoom changes now cause the canvas to be resized. ([fa13044](https://github.com/ZeaInc/zea-engine/commit/fa1304401d1ad088d2a6d7631d7e192cf7c0bea6))
+* Xfo.multiply generated incorrect results if the LHS Xfo had non-uniform scale. ([22cb841](https://github.com/ZeaInc/zea-engine/commit/22cb841fb998450919273ddf3b6d057e0848981e))
+* XR Controller ray casting distance and 'dist' value in the intersectionData are now corrected for stage scale. ([9a9d0f3](https://github.com/ZeaInc/zea-engine/commit/9a9d0f318492e7d53b7cbe345a15b381461ea9ff))
+
 ### [4.0.1](https://github.com/ZeaInc/zea-engine/compare/v0.0.4...v4.0.1) (2021-11-25)
 
 
@@ -27,7 +79,7 @@ We highly recommend you install the engine and its libraries as dependencies usi
 ### Old code
 Previously, our engine did not support module bundlers for a few technical reasons that have now been addressed. Instead, we recommended users load our engine using script tags, and then access the classes using a global variable. This approach had a few concerns and limitations. 
 
-* The engine code was not installed in a clients application, creating a dependency on servers such as jsdeliver.
+* The engine code was not installed in a clients application, creating a dependency on servers such as jsDelivr.
 * using incomplete version numbers, like the one shown below, caused automatic and silent updates to the engine on already deployed applications. These updates sometimes had unintended negative consequences.
 * Any other resources in the module bundle were not available, such as TypeScript definitions.
 
@@ -342,7 +394,7 @@ New code
 ### Features
 
 * Added support for parsing 'Property_SInt32', 'Property_UInt32', 'Property_Float32', values from zcad files. ([88b751e](https://github.com/ZeaInc/zea-engine/commit/88b751e435088ae32af24c2050d1d1487b957015))
-* zcad files can now contain String Lists, used to store PMI Linked Entitiy paths. ([39f43c6](https://github.com/ZeaInc/zea-engine/commit/39f43c64a7414e034eb3d2710411923d91833064))
+* zcad files can now contain String Lists, used to store PMI Linked Entity paths. ([39f43c6](https://github.com/ZeaInc/zea-engine/commit/39f43c64a7414e034eb3d2710411923d91833064))
 * zcad files can now contain BooleanParameters ([f4f0761](https://github.com/ZeaInc/zea-engine/commit/f4f0761795b6cfca446106331c0c031259c9a05d))
 
 
