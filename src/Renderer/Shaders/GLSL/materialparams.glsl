@@ -21,11 +21,7 @@ vec4 getMaterialValue(vec2 materialCoords, int valueIndex) {
 
 vec4 getColorParamValue(vec4 value, sampler2D tex, int texType, vec2 texCoord) {
   if (texType == 0) {
-#ifdef GAMMA_SPACE_COLORS
-    return toLinear(value);
-#else
     return value;
-#endif // GAMMA_SPACE_COLORS
   }
   else if (texType == 1 || texType == 2) {
     // Note: we assume textures are always in gamma space, and must be converted
@@ -34,7 +30,7 @@ vec4 getColorParamValue(vec4 value, sampler2D tex, int texType, vec2 texCoord) {
     return toLinear(texture2D(tex, texCoord));
   }
   else if (texType == 3) {
-    // Float HDR Texture
+    // Float HDR Texture. We assume these textures are in linear space.
     return texture2D(tex, texCoord);
   }
   else
