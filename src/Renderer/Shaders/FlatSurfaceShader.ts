@@ -2,8 +2,7 @@
 import { Color } from '../../Math/Color'
 import { Registry } from '../../Registry'
 import { GLShader } from '../GLShader'
-import { FlatSurfaceMaterial, Material, MaterialColorParam } from '../../SceneTree'
-import { shaderLibrary } from '../ShaderLibrary'
+import { ColorSpace, FlatSurfaceMaterial, Material, MaterialColorParam } from '../../SceneTree'
 
 import './GLSL/index'
 // @ts-ignore
@@ -62,7 +61,13 @@ class FlatSurfaceShader extends GLShader {
    */
   static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(4)
-    const baseColor = material.getParameter('BaseColor')!.value
+    const baseColorParam = material.getParameter('BaseColor')
+    let baseColor
+    if (baseColorParam instanceof MaterialColorParam && baseColorParam.colorSpace == ColorSpace.Gamma) {
+      baseColor = baseColorParam.value.toLinear()
+    } else {
+      baseColor = baseColorParam.value
+    }
     matData[0] = baseColor.r
     matData[1] = baseColor.g
     matData[2] = baseColor.b

@@ -11,6 +11,7 @@ import {
   ColorParameter,
   NumberParameter,
   BooleanParameter,
+  ColorSpace,
 } from '../../SceneTree'
 import { GLMaterial } from '.'
 import { BaseClass } from '../../Utilities/BaseClass'
@@ -429,7 +430,11 @@ class ColorUniformBinding extends ParamUniformBinding {
         // Sometimes the value of a color param is an image.
         if (boundImage) {
         } else if (this.unif) {
-          this.values = param.value.asArray()
+          if (param instanceof MaterialColorParam && param.colorSpace == ColorSpace.Gamma) {
+            this.values = param.value.toLinear().asArray()
+          } else {
+            this.values = param.value.asArray()
+          }
         }
       } catch (e) {}
       glMaterial.emit('updated')

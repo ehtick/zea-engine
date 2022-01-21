@@ -1,7 +1,6 @@
 /* eslint-disable require-jsdoc */
 import { Registry } from '../../Registry'
 import { GLShader } from '../GLShader'
-import { shaderLibrary } from '../ShaderLibrary'
 import { Material } from '../../SceneTree/Material'
 
 import './GLSL/index'
@@ -11,6 +10,7 @@ import frag from './SimpleSurface.frag'
 import vert from './SimpleSurface.vert'
 import { SimpleSurfaceMaterial } from '../../SceneTree/Materials/SimpleSurfaceMaterial'
 import { WebGL12RenderingContext } from '../types/webgl'
+import { ColorSpace, MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
 
 /** A simple shader with no support for PBR or textures
  * @ignore
@@ -33,7 +33,13 @@ class SimpleSurfaceShader extends GLShader {
    */
   static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(8)
-    const baseColor = material.getParameter('BaseColor')!.value
+    const baseColorParam = material.getParameter('BaseColor')
+    let baseColor
+    if (baseColorParam instanceof MaterialColorParam && baseColorParam.colorSpace == ColorSpace.Gamma) {
+      baseColor = baseColorParam.value.toLinear()
+    } else {
+      baseColor = baseColorParam.value
+    }
     matData[0] = baseColor.r
     matData[1] = baseColor.g
     matData[2] = baseColor.b
