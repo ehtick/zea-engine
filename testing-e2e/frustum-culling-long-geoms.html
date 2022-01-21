@@ -9,6 +9,7 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
 
     <script src="../dist/index.umd.js"></script>
 
@@ -53,30 +54,28 @@
       //   console.log(camera.globalXfoParam.getValue().toString(), camera.getTargetPosition().toString())
       // })
 
-      const postMessage = (msg) => {
-        console.log(msg)
-        window.postMessage(msg)
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
       }
-      postMessage('done-loading')
-
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-        if (data === 'variant-01') {
-          camera.setPositionAndTarget(new Vec3(14.15735, 14.55242, -0.38921), new Vec3(3.49633, -2.18602, -1.41332))
-          renderer.once('CullingUpdated', () => {
-            postMessage(`done-${data}`)
-          })
-        }
-      }
-
-      window.addEventListener('message', handleMessage, false)
+      setStatusText('done-loading')
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        camera.setPositionAndTarget(new Vec3(14.15735, 14.55242, -0.38921), new Vec3(3.49633, -2.18602, -1.41332))
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-01`)
+        })
+      })
       // }}}
     </script>
   </head>
   <body class="bg-blue-100">
     <div class="h-screen">
       <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+      </div>
     </div>
   </body>
 </html>

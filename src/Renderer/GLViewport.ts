@@ -8,7 +8,7 @@ import { CameraManipulator } from '../SceneTree/index'
 import { GLRenderer } from './GLRenderer'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { ViewChangedEvent } from '../Utilities/Events/ViewChangedEvent'
-import { POINTER_TYPES } from '../Utilities/Events/ZeaPointerEvent'
+import { POINTER_TYPES, ZeaPointerEvent } from '../Utilities/Events/ZeaPointerEvent'
 import { IntersectionData } from '../Utilities/IntersectionData'
 import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
 import { ZeaWheelEvent } from '../Utilities/Events/ZeaWheelEvent'
@@ -574,7 +574,7 @@ class GLViewport extends GLBaseViewport {
    *
    * @param event - The DOM event produced by a pointer
    */
-  onPointerDown(event: ZeaUIEvent): void {
+  onPointerDown(event: ZeaPointerEvent): void {
     this.prepareUIEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
@@ -639,7 +639,7 @@ class GLViewport extends GLBaseViewport {
    *
    * @param event - The event that occurs.
    */
-  onPointerUp(event: ZeaUIEvent): void {
+  onPointerUp(event: ZeaPointerEvent): void {
     this.prepareUIEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
@@ -685,7 +685,7 @@ class GLViewport extends GLBaseViewport {
    *
    * @param event - The event that occurs.
    */
-  onPointerMove(event: ZeaUIEvent): void {
+  onPointerMove(event: ZeaPointerEvent): void {
     this.prepareUIEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
@@ -760,7 +760,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse pointer is moved into this viewport
    * @param event - The event that occurs.
    */
-  onPointerEnter(event: ZeaUIEvent): void {
+  onPointerEnter(event: ZeaPointerEvent): void {
     this.prepareUIEvent(event)
     this.emit('pointerEnter', event)
     if (!event.propagating) return
@@ -775,7 +775,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse pointer is moved out of this viewport
    * @param event - The event that occurs.
    */
-  onPointerLeave(event: ZeaUIEvent): void {
+  onPointerLeave(event: ZeaPointerEvent): void {
     this.prepareUIEvent(event)
     this.emit('pointerLeave', event)
     if (!event.propagating) return
@@ -791,7 +791,7 @@ class GLViewport extends GLBaseViewport {
    * @param event - The event that occurs.
    */
   onKeyDown(event: KeyboardEvent): void {
-    // this.prepareUIEvent(event)
+    this.prepareUIEvent(event)
     if (this.manipulator) {
       this.manipulator.onKeyDown(event)
       if (!event.propagating) return
@@ -804,7 +804,7 @@ class GLViewport extends GLBaseViewport {
    * @param event - The event that occurs.
    */
   onKeyUp(event: KeyboardEvent): void {
-    // this.prepareUIEvent(event)
+    this.prepareUIEvent(event)
     if (this.manipulator) {
       this.manipulator.onKeyUp(event)
       if (!event.propagating) return

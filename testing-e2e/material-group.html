@@ -4,12 +4,8 @@
     <title>material-group - Zea Engine</title>
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
     <meta charset="UTF-8" />
-  </head>
-  <body class="bg-blue-100 h-full">
-    <div class="h-full">
-      <canvas id="viewport"></canvas>
-    </div>
 
     <script src="../dist/index.umd.js"></script>
 
@@ -89,29 +85,37 @@
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
       renderer.frameAll()
 
-      window.postMessage('done-loading')
-
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        // Note: changing materials on items is currently broken.
-        // Once fixed, we should modify this test to show material changes.
-        if (data === 'variant-01') {
-          materialGroup1.materialParam.value = null
-          window.postMessage(`done-${data}`)
-        } else if (data === 'variant-02') {
-          materialGroup2.materialParam.value = null
-          window.postMessage(`done-${data}`)
-        } else if (data === 'variant-03') {
-          materialGroup1.materialParam.value = material1
-          materialGroup2.materialParam.value = material2
-          window.postMessage(`done-${data}`)
-        }
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
       }
-
-      window.addEventListener('message', handleMessage, false)
+      setStatusText('done-loading')
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        materialGroup1.materialParam.value = null
+        setStatusText(`done-variant-01`)
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        materialGroup2.materialParam.value = null
+        setStatusText(`done-variant-02`)
+      })
+      document.getElementById('variant-03').addEventListener('click', function (event) {
+        materialGroup1.materialParam.value = material1
+        materialGroup2.materialParam.value = material2
+        setStatusText(`done-variant-03`)
+      })
       // }}}
     </script>
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="h-screen">
+      <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+        <button class="variant-button" id="variant-03">variant-03</button>
+      </div>
+    </div>
   </body>
 </html>

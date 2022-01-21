@@ -49,10 +49,10 @@ const registeredPasses: Record<string, any> = {}
  *  - "low-power": Prioritizes power saving over rendering performance.
  * premultipliedAlpha: Boolean that indicates that the page compositor will assume the drawing buffer contains colors with pre-multiplied alpha.
  * preserveDrawingBuffer: If the value is true the buffers will not be cleared and will preserve their values until cleared or overwritten by the author.
- * xrCompatible: Boolean that hints to the user agent to use a compatible graphics adapter for an immersive XR device. 
- * Setting this synchronous flag at context creation is discouraged; rather call the asynchronous WebGLRenderingContext.makeXRCompatible() 
-*    method the moment you intend to start an XR session.
-*/
+ * xrCompatible: Boolean that hints to the user agent to use a compatible graphics adapter for an immersive XR device.
+ * Setting this synchronous flag at context creation is discouraged; rather call the asynchronous WebGLRenderingContext.makeXRCompatible()
+ *    method the moment you intend to start an XR session.
+ */
 export interface RendererOptions {
   // GLBaseRenderer
   supportXR?: boolean
@@ -705,8 +705,7 @@ class GLBaseRenderer extends ParameterOwner {
     if (SystemDesc.browserName == 'Safari' && gl.name == 'webgl') {
       this.floatGeomBuffer = false
     } else {
-      this.floatGeomBuffer =
-        webglOptions.floatGeomBuffer ?? gl.floatTexturesSupported
+      this.floatGeomBuffer = webglOptions.floatGeomBuffer ?? gl.floatTexturesSupported
     }
     gl.floatGeomBuffer = this.floatGeomBuffer
     return gl

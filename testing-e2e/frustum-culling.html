@@ -9,6 +9,7 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
 
     <script src="../dist/index.umd.js"></script>
 
@@ -22,8 +23,6 @@
       const renderer = new GLRenderer(canvas, { enableFrustumCulling: true, antialias: false })
       renderer.setScene(scene)
       renderer.solidAngleLimit = 0.001
-      renderer.outlineThickness = 1.5
-      renderer.outlineSensitivity = 0.02
 
       scene.setupGrid(10.0, 10)
 
@@ -67,40 +66,38 @@
         })
       })
       // renderer.frameAll()
-
-      const postMessage = (msg) => {
-        console.log(msg)
-        window.postMessage(msg)
+      const camera = renderer.getViewport().getCamera()
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
       }
-      postMessage('done-loading')
-
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        const camera = renderer.getViewport().getCamera()
-        if (data === 'variant-01') {
-          camera.setPositionAndTarget(new Vec3(-200, -20, 10), new Vec3(0, 0, 0))
-          renderer.once('CullingUpdated', () => {
-            postMessage(`done-${data}`)
-          })
-          camera.emit('movementFinished')
-        } else if (data === 'variant-02') {
-          camera.setPositionAndTarget(new Vec3(20, 20, 10), new Vec3(0, 0, 0))
-          renderer.once('CullingUpdated', () => {
-            postMessage(`done-${data}`)
-          })
-          camera.emit('movementFinished')
-        }
-      }
-
-      window.addEventListener('message', handleMessage, false)
+      setStatusText('done-loading')
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        camera.setPositionAndTarget(new Vec3(-200, -20, 10), new Vec3(0, 0, 0))
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-01`)
+        })
+        camera.emit('movementFinished')
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        camera.setPositionAndTarget(new Vec3(20, 20, 10), new Vec3(0, 0, 0))
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-02`)
+        })
+        camera.emit('movementFinished')
+      })
       // }}}
     </script>
   </head>
   <body class="bg-blue-100 h-full">
-    <div class="h-full">
+    <div class="h-screen">
       <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+      </div>
     </div>
   </body>
 </html>

@@ -4,12 +4,8 @@
     <title>kinematic-group - Zea Engine</title>
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
     <meta charset="UTF-8" />
-  </head>
-  <body class="bg-blue-100 h-full">
-    <div class="h-full">
-      <canvas id="viewport"></canvas>
-    </div>
 
     <script src="../dist/index.umd.js"></script>
 
@@ -69,31 +65,39 @@
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
       renderer.frameAll()
 
-      window.postMessage('done-loading')
-
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'variant-01') {
-          const angle = 2
-          const xfo = new Xfo()
-          xfo.tr.set(6, Math.cos(angle) * 2, 0)
-          xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), angle)
-          kinematicGroup.localXfoParam.value = xfo
-          window.postMessage(`done-${data}`)
-        } else if (data === 'variant-02') {
-          const angle = 3
-          const xfo = new Xfo()
-          xfo.tr.set(-6, Math.cos(angle) * 2, 0)
-          xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), angle)
-          kinematicGroup.localXfoParam.value = xfo
-          window.postMessage(`done-${data}`)
-        }
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
       }
-
-      window.addEventListener('message', handleMessage, false)
+      setStatusText('done-loading')
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        const angle = 2
+        const xfo = new Xfo()
+        xfo.tr.set(6, Math.cos(angle) * 2, 0)
+        xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), angle)
+        kinematicGroup.localXfoParam.value = xfo
+        setStatusText(`done-variant-01`)
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        const angle = 3
+        const xfo = new Xfo()
+        xfo.tr.set(-6, Math.cos(angle) * 2, 0)
+        xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), angle)
+        kinematicGroup.localXfoParam.value = xfo
+        setStatusText(`done-variant-02`)
+      })
       // }}}
     </script>
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="h-screen">
+      <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+      </div>
+    </div>
   </body>
 </html>

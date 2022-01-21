@@ -3,6 +3,7 @@
   <head>
     <title>Zea Engine</title>
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
   </head>
   <style>
     .main-wrapper {
@@ -11,7 +12,7 @@
         'nav main right'
         'footer footer footer';
       grid-template-columns: 20% 1fr 20%;
-      grid-template-rows: 50px 1fr 50px;
+      grid-template-rows: 60px 1fr 50px;
     }
 
     header {
@@ -21,30 +22,65 @@
     footer {
       grid-area: footer;
     }
+
+    #status {
+      color: rgb(0, 0, 0);
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+    }
+
+    .variant-buttons {
+      left: 10px;
+      top: 10px;
+      display: block;
+      position: fixed;
+    }
+
+    .variant-button {
+      top: 10px;
+      font-family: 'arial';
+      background-color: #f9ce03; /* Green */
+      border: none;
+      color: black;
+      padding: 10px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      user-select: none;
+    }
   </style>
   <body class="bg-blue-100 h-full">
     <div class="main-wrapper grid h-screen">
-      <header class="border border-blue-400 flex justify-center items-center">header</header>
+      <header class="border border-blue-400 flex justify-center items-center">
+        <div class="variant-buttons">
+          <button class="variant-button" id="variant-01">variant-01</button>
+          <button class="variant-button" id="variant-02">variant-02</button>
+        </div>
+      </header>
       <nav class="border border-blue-400 flex justify-center items-center">nav</nav>
-      <main>  
+      <main>
         <div style="position: relative">
-        <svg id="svg_canvas" style="position: absolute; left: 0px; top: 0px; z-index: 2; pointer-events: none">
-          <circle
-            id="svg_circle"
-            cx="500"
-            cy="700"
-            r="40"
-            stroke="green"
-            stroke-width="4"
-            fill="yellow"
-            fill-opacity="0.5"
-          />
-        </svg>
-      </div>
+          <svg id="svg_canvas" style="position: absolute; left: 0px; top: 0px; z-index: 2; pointer-events: none">
+            <circle
+              id="svg_circle"
+              cx="500"
+              cy="700"
+              r="40"
+              stroke="green"
+              stroke-width="4"
+              fill="yellow"
+              fill-opacity="0.5"
+            />
+          </svg>
+        </div>
         <canvas id="viewport"></canvas>
       </main>
       <aside class="border border-blue-400 flex justify-center items-center">aside</aside>
-      <footer class="border border-blue-400 flex justify-center items-center">footer</footer>
+      <footer class="border border-blue-400 flex justify-center items-center">
+        <div id="status"></div>
+      </footer>
     </div>
   </body>
 
@@ -107,23 +143,22 @@
       svg_canvas.setAttribute('width', width)
       svg_canvas.setAttribute('height', height)
     })
-    window.postMessage('done-loading')
 
     // {{{ Messages handler.
-    const handleMessage = (event) => {
-      const { data } = event
-
-      if (data === 'variant-01') {
-        sphere.radiusParam.value = 2.5
-        window.postMessage(`done-${data}`)
-      } else if (data === 'variant-02') {
-        sphere.loopsParam.value = 25
-        sphere.sidesParam.value = 15
-        window.postMessage(`done-${data}`)
-      }
+    // {{{ Variants
+    const statusElement = document.getElementById('status')
+    const setStatusText = (text) => {
+      statusElement.textContent = text
     }
-
-    window.addEventListener('message', handleMessage, false)
+    setStatusText('done-loading')
+    document.getElementById('variant-01').addEventListener('click', function (event) {
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, 5, 2.7), new Vec3(2.5, 0, 0.4))
+      setStatusText(`done-variant-01`)
+    })
+    document.getElementById('variant-02').addEventListener('click', function (event) {
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(3, 3, 2.7), new Vec3(0.5, 0, 0.4))
+      setStatusText(`done-variant-02`)
+    })
     // }}}
   </script>
 </html>

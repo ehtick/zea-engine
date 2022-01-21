@@ -9,6 +9,7 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
 
     <script src="../dist/index.umd.js"></script>
     <style>
@@ -83,11 +84,7 @@
       const renderer = new GLRenderer(canvas, {
         enableFrustumCulling: true,
         debugOcclusionBuffer: false,
-        outlineThickness: 0,
-        outlineSensitivity: 0.5,
       })
-      renderer.outlineThickness = 1.5
-      renderer.outlineSensitivity = 0.5
       // renderer.getViewport().debugGeomShader = true
 
       renderer.setScene(scene)
@@ -185,7 +182,7 @@
         xfo.sc.set(0.3048, 0.3048, 0.3048)
         objAsset.globalXfoParam.value = xfo
         objAsset.on('loaded', () => {
-          window.postMessage(`done-Loading`)
+          setStatusText('done-loading')
         })
 
         addLabel(new Vec3(1, 0, 0), new Vec3(1, 1, 1), new Color(0, 1, 0), 'Front', 300, false)
@@ -354,6 +351,11 @@
         }
         frameCounter = 0
       }, 500)
+
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
+      }
     </script>
   </head>
   <body class="bg-blue-100 h-full">
@@ -362,6 +364,7 @@
       <div class="label" id="buttonHolder"></div>
       <div class="button" id="button">XR Device Not Detected</div>
       <div class="fps-display" id="fps"></div>
+      <div id="status" class="hud"></div>
     </div>
   </body>
 </html>

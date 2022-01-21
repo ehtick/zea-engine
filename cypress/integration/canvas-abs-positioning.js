@@ -1,13 +1,7 @@
-describe('Zea Engine', () => {
-  it('Can use a `canvas` as root element', () => {
-    cy.visit('testing-e2e/canvas-abs-positioning.html', {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+describe('canvas-abs-positioning', () => {
+  it('Can use a `canvas` with absolute positioning', () => {
+    cy.visit('testing-e2e/canvas-abs-positioning.html')
 
-    cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
-
-    cy.get('canvas').percySnapshot('Canvas as root')
+    cy.get('canvas').percySnapshot('canvas-abs-positioning')
   })
 })

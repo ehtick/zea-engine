@@ -1,17 +1,19 @@
 describe('transparent-geoms-sorting-tinyscene', () => {
   it('Renders as expected', () => {
-    cy.visit('testing-e2e/transparent-geoms-sorting-tinyscene.html', {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit('testing-e2e/transparent-geoms-sorting-tinyscene.html')
+    const test = 'transparent-geoms-sorting-tinyscene'
 
-    cy.get('#front').click()
-    cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-front`)
-    cy.get('canvas').percySnapshot(`transparent-geoms-sorting-tinyscene - front`)
-
-    cy.get('#back').click()
-    cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-back`)
-    cy.get('canvas').percySnapshot(`transparent-geoms-sorting-tinyscene - back`)
+    {
+      const variant = 'front'
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
+    }
+    {
+      const variant = 'back'
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
+    }
   })
 })

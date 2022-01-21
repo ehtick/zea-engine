@@ -2,11 +2,7 @@ import { createTouchEvents, cyFocusCanvas } from './utils'
 
 describe('pointer-events', () => {
   beforeEach(() => {
-    cy.visit('testing-e2e/pointer-events.html', {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit('testing-e2e/pointer-events.html')
   })
 
   it('Mouse Move - Camera Manipulator', () => {
@@ -114,11 +110,7 @@ describe('pointer-events', () => {
 
 describe('pointer-events-debugGeomShader', () => {
   it('Capture snapshots', () => {
-    cy.visit('testing-e2e/pointer-events.html?debugGeomShader', {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit('testing-e2e/pointer-events.html?debugGeomShader')
     cy.get('canvas').percySnapshot('pointer-events')
   })
 })
