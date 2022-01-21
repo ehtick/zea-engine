@@ -1,6 +1,6 @@
-import { BaseEvent } from '../BaseEvent'
+import { ZeaUIEvent } from './ZeaUIEvent'
 
-class KeyboardEvent extends BaseEvent {
+class KeyboardEvent extends ZeaUIEvent {
   private sourceEvent: globalThis.KeyboardEvent
   propagating = true
 

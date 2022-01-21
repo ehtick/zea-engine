@@ -1,9 +1,9 @@
-describe('shader-facenormals', () => {
+const test = 'billboards'
+describe(test, () => {
   it('Captures snapshots of variants', () => {
-    cy.visit(`testing-e2e/shader-facenormals.html`)
+    cy.visit(`testing-e2e/${test}.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
-    const test = 'shader-facenormals'
     cy.get('canvas').percySnapshot(test)
 
     {

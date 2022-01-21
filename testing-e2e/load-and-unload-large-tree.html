@@ -9,6 +9,7 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
 
     <style>
       body {
@@ -57,7 +58,9 @@
         CameraManipulator,
         GLBoundingBoxPass,
         GeomLibrary,
-        resourceLoader, CADAsset, CADBody
+        resourceLoader,
+        CADAsset,
+        CADBody,
       } = zeaEngine
 
       const canvas = document.getElementById('viewport')
@@ -65,15 +68,11 @@
       const scene = new Scene()
       const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false })
       renderer.setScene(scene)
-      renderer.outlineThickness = 0.5
-      renderer.outlineColor = new Color(0.2, 0.2, 0.2, 1)
       renderer.getViewport().backgroundColorParam.value = new Color(0.85, 0.85, 0.85, 1)
 
       renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
 
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(40, 90, 3))
-
-   
 
       const loadZCADAsset = (url, filename) => {
         const asset = new CADAsset()
@@ -81,7 +80,7 @@
           renderer.frameAll()
         })
         asset.getGeometryLibrary().on('loaded', () => {
-          postMessage('done-loading')
+          setStatusText('done-loading')
         })
         scene.getRoot().addChild(asset)
         return asset
@@ -114,39 +113,40 @@
       }
       createAndDestroyCadAsset(1)
 
-      const postMessage = (msg) => {
-        console.log(msg)
-        window.postMessage(msg)
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
       }
-
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'variant-01') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          postMessage(`done-${data}`)
-        } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          postMessage(`done-${data}`)
-        }
-      }
-
-      window.addEventListener('message', handleMessage, false)
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+        renderer.frameAll()
+        setStatusText(`done-variant-01`)
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+        renderer.frameAll()
+        setStatusText(`done-variant-02`)
+      })
       // }}}
     </script>
   </head>
   <body class="bg-blue-100 h-full">
     <div class="main-wrapper grid h-screen">
-      <header class="border border-blue-400 flex justify-center items-center"></header>
+      <header class="border border-blue-400 flex justify-center items-center">
+        <div class="variant-buttons">
+          <button class="variant-button" id="variant-01">variant-01</button>
+          <button class="variant-button" id="variant-02">variant-02</button>
+        </div>
+      </header>
       <nav class="border border-blue-400 flex justify-center items-center">nav</nav>
       <main>
         <canvas id="viewport"></canvas>
       </main>
       <aside class="border border-blue-400 flex justify-center items-center"></aside>
-      <footer class="border border-blue-400 flex justify-center items-center"></footer>
+      <footer class="border border-blue-400 flex justify-center items-center">
+        <div id="status" class="hud"></div>
+      </footer>
     </div>
   </body>
 </html>

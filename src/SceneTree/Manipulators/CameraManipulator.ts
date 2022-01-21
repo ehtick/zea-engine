@@ -409,7 +409,7 @@ class CameraManipulator extends BaseTool {
    * @private
    * @param event - The event value.
    */
-  initDrag(event: ZeaUIEvent): void {
+  initDrag(event: ZeaPointerEvent): void {
     const { pointerPos } = event
     event.setCapture(this)
 
@@ -643,7 +643,7 @@ class CameraManipulator extends BaseTool {
         this.endDrag(event)
       }
 
-      this.initDrag(<ZeaUIEvent>event)
+      this.initDrag(event)
 
       const mouseEvent = <ZeaMouseEvent>event
       if (mouseEvent.button == 2) {
@@ -668,7 +668,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param event - The mouse event that occurs.
    */
-  onPointerMove(event: ZeaPointerEvent): void  {
+  onPointerMove(event: ZeaPointerEvent): void {
     if (this.__dragging != 0) {
       if (event.pointerType === POINTER_TYPES.mouse) this._onMouseMove(<ZeaMouseEvent>event)
       if (event.pointerType === POINTER_TYPES.touch) this._onTouchMove(<ZeaTouchEvent>event)
@@ -683,7 +683,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param event -The event value
    */
-  _onMouseMove(event: ZeaMouseEvent): void  {
+  _onMouseMove(event: ZeaMouseEvent): void {
     if (!this.__pointerDown) return
 
     const pointerPos = event.pointerPos
@@ -721,7 +721,7 @@ class CameraManipulator extends BaseTool {
    * @param event - The touch event that occurs.
    * @private
    */
-  _onTouchMove(event: ZeaTouchEvent): void  {
+  _onTouchMove(event: ZeaTouchEvent): void {
     // this.__calculatingDragAction = true
 
     const touches = event.touches
@@ -822,7 +822,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param event - The mouse event that occurs.
    */
-  onPointerUp(event: ZeaPointerEvent): void  {
+  onPointerUp(event: ZeaPointerEvent): void {
     if (this.__dragging == 1) {
       // No dragging ocurred. Release the capture and let the event propagate like normal.
       this.endDrag(event)
@@ -887,7 +887,7 @@ class CameraManipulator extends BaseTool {
    * Causes an event to occur when the mouse pointer is moved out of this viewport
    * @param event - The event that occurs.
    */
-  onPointerLeave(event: ZeaPointerEvent): void  {
+  onPointerLeave(event: ZeaPointerEvent): void {
     // If the pointer leaves the viewport, then we will no longer receive key up events,
     // so we must immediately disable movement here.
     if (this.__keysPressed.length > 0) {
@@ -902,7 +902,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param event - The wheel event that occurs.
    */
-  onWheel(event: ZeaWheelEvent): void  {
+  onWheel(event: ZeaWheelEvent): void {
     const viewport = <GLViewport>event.viewport
     const camera = viewport.getCamera()
     const mouseWheelDollySpeed = this.mouseWheelDollySpeedParam.value
@@ -992,7 +992,7 @@ class CameraManipulator extends BaseTool {
    * @param event - The event value.
    * @private
    */
-  integrateVelocityChange(event: Record<string, any>): void  {
+  integrateVelocityChange(event: Record<string, any>): void {
     const { viewport } = event
     const camera = viewport.getCamera()
 
@@ -1048,7 +1048,7 @@ class CameraManipulator extends BaseTool {
    * @param event - The keyboard event that occurs.
    * @private
    */
-  onKeyDown(event: KeyboardEvent): void  {
+  onKeyDown(event: KeyboardEvent): void {
     if (!this.enabledWASDWalkMode) return
     const key = event.key.toLowerCase()
     // Note: onKeyPressed is called initially only once, and then we
@@ -1090,7 +1090,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param event - The event that occurs.
    */
-  onKeyUp(event: KeyboardEvent): void  {
+  onKeyUp(event: KeyboardEvent): void {
     const key = event.key.toLowerCase()
     if (!this.__keysPressed.includes(key)) return
     switch (key) {
@@ -1123,7 +1123,7 @@ class CameraManipulator extends BaseTool {
    * @param touch - The touch value.
    * @private
    */
-  __startTouch(touch: Touch): void  {
+  __startTouch(touch: Touch): void {
     this.__ongoingTouches[touch.identifier] = {
       identifier: touch.identifier,
       pos: new Vec2(touch.clientX, touch.clientY),
@@ -1148,7 +1148,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param event - The touch event that occurs.
    */
-  _onTouchStart(event: ZeaTouchEvent): void  {
+  _onTouchStart(event: ZeaTouchEvent): void {
     const touches = event.changedTouches
     for (let i = 0; i < touches.length; i++) {
       this.__startTouch(touches[i])
@@ -1162,7 +1162,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param event - The touch event that occurs.
    */
-  onTouchEnd(event: ZeaTouchEvent): void  {
+  onTouchEnd(event: ZeaTouchEvent): void {
     event.preventDefault()
     event.stopPropagation()
     const touches = event.changedTouches
@@ -1178,7 +1178,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param event - The touch event that occurs.
    */
-  onTouchCancel(event: ZeaTouchEvent): void  {
+  onTouchCancel(event: ZeaTouchEvent): void {
     event.preventDefault()
     const touches = event.touches
     for (let i = 0; i < touches.length; i++) {

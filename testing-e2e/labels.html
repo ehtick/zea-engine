@@ -3,11 +3,7 @@
   <head>
     <title>Zea Engine</title>
     <link rel="stylesheet" href="styles/tailwind.min.css" />
-  </head>
-  <body class="bg-blue-100 h-full">
-    <div class="h-full">
-      <canvas class="h-full w-full" id="viewport"></canvas>
-    </div>
+    <link rel="stylesheet" href="styles/test.css" />
 
     <script src="../dist/index.umd.js"></script>
 
@@ -83,27 +79,36 @@
       promises.push(addLabel(new Vec3(0, 0, 0), new Vec3(0, 0.05, 0.08), new Color(1, 1, 0), 'MyCustomLabel'))
 
       Promise.all(promises).then(() => {
-        window.postMessage(`done-Loading`)
+        setStatusText('done-loading')
         loaded = true
       })
 
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'front') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          window.postMessage(`done-${data}`)
-        } else if (data === 'back') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          window.postMessage(`done-${data}`)
-        }
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
       }
-
-      window.addEventListener('message', handleMessage, false)
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+        renderer.frameAll()
+        setStatusText(`done-variant-01`)
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+        renderer.frameAll()
+        setStatusText(`done-variant-02`)
+      })
       // }}}
     </script>
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="h-full">
+      <canvas class="h-full w-full" id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+      </div>
+    </div>
   </body>
 </html>

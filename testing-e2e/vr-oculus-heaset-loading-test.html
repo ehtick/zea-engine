@@ -9,6 +9,7 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
@@ -36,7 +37,7 @@
         const RightController = asset.getChildByName('RightController')
         RightController.localXfoParam.value = new Xfo(new Vec3(200, 0, 0))
 
-        window.postMessage('done-loading')
+        setStatusText('done-loading')
       })
       scene.getRoot().addChild(asset)
 
@@ -44,28 +45,31 @@
         console.log(event.intersectionData.geomItem.getName())
       })
 
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'variant-01') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0.5, 0.5, -0.5), new Vec3(0, 0, 0))
-          renderer.frameAll()
-          window.postMessage(`done-${data}`)
-        } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-0.5, -0.5, 0.5), new Vec3(0, 0, 0))
-          renderer.frameAll()
-          window.postMessage(`done-${data}`)
-        }
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
       }
-
-      window.addEventListener('message', handleMessage, false)
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0.5, 0.5, -0.5), new Vec3(0, 0, 0))
+        setStatusText(`done-variant-01`)
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-0.5, -0.5, 0.5), new Vec3(0, 0, 0))
+        renderer.frameAll()
+        setStatusText(`done-variant-02`)
+      })
       // }}}
     </script>
   </head>
   <body class="bg-blue-100 h-full">
-    <div class="h-full">
+    <div class="h-screen">
       <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+      </div>
     </div>
   </body>
 </html>

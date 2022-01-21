@@ -9,6 +9,7 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
 
     <script src="../dist/index.umd.js"></script>
 
@@ -42,20 +43,6 @@
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
 
-      window.postMessage('done-loading')
-
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'variant-01') {
-          circle.sidesParam.value = 32
-          window.postMessage(`done-${data}`)
-        } else if (data === 'variant-02') {
-          circle.sidesParam.value = 6
-          window.postMessage(`done-${data}`)
-        }
-      }
       const urlParams = new URLSearchParams(window.location.search)
       renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
 
@@ -79,8 +66,6 @@
         }
       })
       /** HIGHLIGHT END */
-      window.addEventListener('message', handleMessage, false)
-      // }}}
 
       renderer.getXRViewport().then((xrvp) => {
         console.log('XR Device Detected')
@@ -90,11 +75,32 @@
           }
         })
       })
+
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
+      }
+      setStatusText('done-loading')
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        circle.sidesParam.value = 32
+        setStatusText(`done-variant-01`)
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        circle.sidesParam.value = 6
+        setStatusText(`done-variant-02`)
+      })
+      // }}}
     </script>
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
       <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+      </div>
     </div>
   </body>
 </html>

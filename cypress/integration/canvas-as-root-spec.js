@@ -6,8 +6,6 @@ describe('Zea Engine', () => {
       },
     })
 
-    cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
-
     cy.get('canvas').percySnapshot('Canvas as root')
   })
 })

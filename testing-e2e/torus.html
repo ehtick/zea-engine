@@ -3,12 +3,7 @@
   <head>
     <title>Zea Engine</title>
     <link rel="stylesheet" href="styles/tailwind.min.css" />
-  </head>
-  <body class="bg-blue-100 h-full">
-    <div class="h-full">
-      <canvas id="viewport"></canvas>
-    </div>
-
+    <link rel="stylesheet" href="styles/test.css" />
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
@@ -29,26 +24,31 @@
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
 
-      window.postMessage('done-loading')
-
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'variant-01') {
-          torus.arcAngleParam.value = Math.PI * 1.5
-          window.postMessage(`done-${data}`)
-        } else if (data === 'variant-02') {
-          torus.detailParam.value = 25
-          window.postMessage(`done-${data}`)
-        } else if (data === 'variant-03') {
-          torus.innerRadiusParam.value = 0.5
-          window.postMessage(`done-${data}`)
-        }
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
       }
-
-      window.addEventListener('message', handleMessage, false)
+      setStatusText('done-loading')
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        torus.arcAngleParam.value = Math.PI * 1.5
+        setStatusText(`done-variant-01`)
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        torus.detailParam.value = 25
+        setStatusText(`done-variant-02`)
+      })
       // }}}
     </script>
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="h-screen">
+      <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+      </div>
+    </div>
   </body>
 </html>

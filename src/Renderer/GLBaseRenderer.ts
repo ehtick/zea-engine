@@ -35,7 +35,23 @@ let pointerLeft = false
 const registeredPasses: Record<string, any> = {}
 
 /*
- * GLRenderer options
+ * WebGL context attributes:
+ *
+ * alpha: Boolean that indicates if the canvas contains an alpha buffer.
+ * depth: Boolean that indicates that the drawing buffer is requested to have a depth buffer of at least 16 bits.
+ * stencil: Boolean that indicates that the drawing buffer is requested to have a stencil buffer of at least 8 bits.
+ * desynchronized: Boolean that hints the user agent to reduce the latency by desynchronizing the canvas paint cycle from the event loop
+ * antialias: Boolean that indicates whether or not to perform anti-aliasing if possible.
+ * failIfMajorPerformanceCaveat: Boolean that indicates if a context will be created if the system performance is low or if no hardware GPU is available.
+ * powerPreference: A hint to the user agent indicating what configuration of GPU is suitable for the WebGL context. Possible values are:
+ *  - "default": Let the user agent decide which GPU configuration is most suitable. This is the default value.
+ *  - "high-performance": Prioritizes rendering performance over power consumption.
+ *  - "low-power": Prioritizes power saving over rendering performance.
+ * premultipliedAlpha: Boolean that indicates that the page compositor will assume the drawing buffer contains colors with pre-multiplied alpha.
+ * preserveDrawingBuffer: If the value is true the buffers will not be cleared and will preserve their values until cleared or overwritten by the author.
+ * xrCompatible: Boolean that hints to the user agent to use a compatible graphics adapter for an immersive XR device.
+ * Setting this synchronous flag at context creation is discouraged; rather call the asynchronous WebGLRenderingContext.makeXRCompatible()
+ *    method the moment you intend to start an XR session.
  */
 export interface RendererOptions {
   // Enable WebXR Rendering.
@@ -705,7 +721,7 @@ class GLBaseRenderer extends ParameterOwner {
     if (SystemDesc.browserName == 'Safari' && gl.name == 'webgl') {
       this.floatGeomBuffer = false
     } else {
-      this.floatGeomBuffer = options.floatGeomBuffer ?? gl.floatTexturesSupported
+      this.floatGeomBuffer = options.floatGeomBuffer != undefined ? options.floatGeomBuffer : gl.floatTexturesSupported
     }
     gl.floatGeomBuffer = this.floatGeomBuffer
     return gl

@@ -1,18 +1,17 @@
-import { GLViewport } from '../../Renderer'
-import { Ray, Vec2 } from '../../Math'
+import { GLBaseViewport } from '../../Renderer'
 
-import { ZeaPointerEvent } from './ZeaPointerEvent'
+import { BaseEvent } from '../BaseEvent'
 
 /**
  * ZeaUIEvent are emitted from a 2D UI, such as from a HTMLCanvas element generated from
- * a mouse or touch interaction.
+ * a mouse or touch interaction, or key presses
  */
-class ZeaUIEvent extends ZeaPointerEvent {
-  detail: number
-  pointerPos: Vec2
+class ZeaUIEvent extends BaseEvent {
+  viewport: GLBaseViewport
+  propagating = true
 
-  constructor(pointerType: string) {
-    super(pointerType)
+  constructor() {
+    super()
   }
 }
 export { ZeaUIEvent }

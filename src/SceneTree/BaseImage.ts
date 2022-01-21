@@ -12,10 +12,18 @@ interface ImageParams {
   magFilter?: string
   mipMapped?: boolean
 
-  data?: HTMLImageElement | HTMLVideoElement | Uint8Array | Float32Array | HTMLCanvasElement | ImageData | Record<string, any>
+  data?:
+    | HTMLImageElement
+    | HTMLVideoElement
+    | Uint8Array
+    | Float32Array
+    | HTMLCanvasElement
+    | ImageData
+    | Record<string, any>
   exposure?: number
 
   flipY?: boolean
+  alphaFromLuminance?: boolean
 }
 /**
  * Represents a 2D image item, containing width and height.
@@ -36,6 +44,7 @@ class BaseImage extends BaseItem {
   wrapT: string = 'REPEAT'
   minFilter: string = 'LINEAR'
   magFilter: string = 'LINEAR'
+  alphaFromLuminance: boolean = false
 
   /**
    * Creates an instance of BaseImage.
@@ -73,6 +82,7 @@ class BaseImage extends BaseItem {
       minFilter: this.minFilter,
       magFilter: this.magFilter,
       mipMapped: this.mipMapped,
+      alphaFromLuminance: this.alphaFromLuminance,
     }
   }
 }

@@ -9,6 +9,7 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
 
     <script src="../dist/index.umd.js"></script>
     <style>
@@ -84,18 +85,22 @@
 
       const INDICATORS_DEFAULT_TEXT = '(None)'
 
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
+      }
       // Register pointer event handlers directly to the geometry.
       selfEventItem.on('pointerEnter', (event) => {
         selfEventsIndicator.textContent = 'pointerEnter'
         clearTimeout(goToDefaultTextTimeout)
-        window.postMessage('done-enter-geometry')
+        setStatusText('done-enter-geometry')
       })
 
       selfEventItem.on('pointerLeave', (event) => {
         selfEventsIndicator.textContent = 'pointerLeave'
         startBackToDefaultTextTimeout()
 
-        window.postMessage('done-leave-geometry')
+        setStatusText('done-leave-geometry')
       })
 
       selfEventItem.on('pointerDown', (event) => {
@@ -262,7 +267,7 @@
           console.log('movementFinished')
 
           // renderer.once('redrawOccurred', () => {
-          window.postMessage('done-moving-camera')
+          setStatusText('done-moving-camera')
           // })
         })
     </script>
@@ -288,6 +293,7 @@
 
       <div class="flex-1">
         <canvas id="viewport"></canvas>
+        <div id="status" class="hud"></div>
       </div>
     </div>
   </body>

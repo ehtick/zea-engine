@@ -1,8 +1,7 @@
 import { Ray, Vec2 } from '../../Math'
-import { POINTER_TYPES } from './ZeaPointerEvent'
-import { ZeaUIEvent } from './ZeaUIEvent'
+import { ZeaPointerEvent, POINTER_TYPES } from './ZeaPointerEvent'
 
-class ZeaMouseEvent extends ZeaUIEvent {
+class ZeaMouseEvent extends ZeaPointerEvent {
   button: number
   clientX: number
   clientY: number
@@ -42,7 +41,7 @@ class ZeaMouseEvent extends ZeaUIEvent {
     super.stopPropagation()
     if (this.sourceEvent) this.sourceEvent.stopPropagation()
   }
-  preventDefault(): void{
+  preventDefault(): void {
     if (this.sourceEvent) this.sourceEvent.preventDefault()
   }
 }
