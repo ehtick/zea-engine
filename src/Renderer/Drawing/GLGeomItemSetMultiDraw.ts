@@ -162,7 +162,8 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     this.freeIndices.push(index)
 
     if (glGeomItem.isVisible()) {
-      const drawIndex = this.indexToDrawIndex[index]
+      // Note: as items are removed, the indexToDrawIndex values get broken and must be updated.
+      const drawIndex = this.drawOrderToIndex.indexOf(index)
       this.drawOrderToIndex.splice(drawIndex, 1)
       this.indexToDrawIndex[index] = -1
       this.drawIdsBufferDirty = true
@@ -229,6 +230,9 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
         this.drawElementOffsets[drawIndex] = offsetAndCount[0]
         this.drawElementCounts[drawIndex] = glGeomItem.culled ? 0 : offsetAndCount[1]
         this.drawIdsArray[drawIndex] = glGeomItem.drawItemId
+
+        // Note: as items are removed, these indices must be updated.
+        this.indexToDrawIndex[itemIndex] = drawIndex
       })
       this.dirtyGeomIndices = new Set()
     }
