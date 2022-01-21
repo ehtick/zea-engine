@@ -29,7 +29,6 @@
       const domElement = document.getElementById('viewport')
       const renderer = new GLRenderer(domElement, { antialias: false })
       renderer.setScene(scene)
-      renderer.getViewport().outlineThickness = 1.5
 
       scene.setupGrid(60.0, 6)
       const tree1 = new TreeItem('tree1')

@@ -84,11 +84,7 @@
       const renderer = new GLRenderer(canvas, {
         enableFrustumCulling: true,
         debugOcclusionBuffer: false,
-        outlineThickness: 0,
-        outlineSensitivity: 0.5,
       })
-      renderer.outlineThickness = 1.5
-      renderer.outlineSensitivity = 0.5
       // renderer.getViewport().debugGeomShader = true
 
       renderer.setScene(scene)

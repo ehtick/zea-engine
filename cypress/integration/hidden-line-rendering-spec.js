@@ -4,22 +4,6 @@ describe('hidden-line-rendering', () => {
 
     cy.get('#status').should('have.text', `done-loading`)
     cy.get('canvas').percySnapshot('hidden-line-rendering')
-
-    /* Eliminating redundant tests while our limit is 5k images per month
-    {
-      const variant = 'variant-01'
-      cy.get(`#${variant}`).click()
-      cy.get('#status').should('have.text', `done-${variant}`)
-      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
-    }
-
-    {
-      const variant = 'variant-02'
-      cy.get(`#${variant}`).click()
-      cy.get('#status').should('have.text', `done-${variant}`)
-      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
-    }
-    */
   })
 })
 
@@ -30,22 +14,6 @@ describe('hidden-line-rendering-webgl1', () => {
     cy.get('#status').should('have.text', `done-loading`)
     const test = 'hidden-line-rendering'
     cy.get('canvas').percySnapshot(test)
-
-    /* Eliminating redundant tests while our limit is 5k images per month
-    {
-      const variant = 'variant-01'
-      cy.get(`#${variant}`).click()
-      cy.get('#status').should('have.text', `done-${variant}`)
-      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
-    }
-
-    {
-      const variant = 'variant-02'
-      cy.get(`#${variant}`).click()
-      cy.get('#status').should('have.text', `done-${variant}`)
-      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
-    }
-    */
   })
 })
 

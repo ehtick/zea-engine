@@ -38,9 +38,6 @@
       renderer.setScene(scene)
       renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
 
-      renderer.outlineThickness = 0
-      renderer.outlineSensitivity = 0.5
-
       scene.setupGrid(10.0, 10)
 
       renderer.getViewport().backgroundColorParam.value = new Color(0.85, 0.85, 0.85, 1)
@@ -124,16 +121,6 @@
         statusElement.textContent = text
       }
       setStatusText('done-loading')
-      document.getElementById('variant-01').addEventListener('click', function (event) {
-        renderer.outlineThickness = 1.5
-        renderer.requestRedraw()
-        setStatusText(`done-variant-01`)
-      })
-      document.getElementById('variant-02').addEventListener('click', function (event) {
-        renderer.outlineThickness = 0
-        renderer.requestRedraw()
-        setStatusText(`done-variant-02`)
-      })
       // }}}
 
       renderer.getXRViewport().then((xrvp) => {
@@ -150,10 +137,6 @@
     <div class="h-screen">
       <canvas id="viewport"></canvas>
       <div id="status" class="hud"></div>
-      <div class="variant-buttons">
-        <button class="variant-button" id="variant-01">variant-01</button>
-        <button class="variant-button" id="variant-02">variant-02</button>
-      </div>
     </div>
   </body>
 </html>
