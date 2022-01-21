@@ -26,7 +26,7 @@ describe('multi_draw-webgl1', () => {
     cy.visit(`testing-e2e/multi-draw.html?webgl=webgl`)
 
     cy.get('#status').should('have.text', `done-loading`)
-    cy.get('canvas').percySnapshot('multi_draw')
+    cy.get('canvas').percySnapshot('multi_draw-webgl')
 
     /* Eliminating redundant tests while our limit is 5k images per month
     {
@@ -50,7 +50,7 @@ describe('multi_draw-disable-multidraw', () => {
     cy.visit(`testing-e2e/multi-draw.html?disableMultiDraw`)
 
     cy.get('#status').should('have.text', `done-loading`)
-    cy.get('canvas').percySnapshot('multi_draw')
+    cy.get('canvas').percySnapshot('multi_draw-disableMultiDraw')
 
     /* Eliminating redundant tests while our limit is 5k images per month
     {
