@@ -40,6 +40,12 @@
         padding: 0.5em;
         gap: 1em;
       }
+      #cull-stats {
+        color: rgb(0, 0, 0);
+        position: fixed;
+        bottom: 40px;
+        left: 10px;
+      }
     </style>
     <!-- <script src="https://websocket-staging.zea.live/socket.io/socket.io.js"></script>
     <script src="https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js"></script> -->
@@ -301,6 +307,12 @@
       }
       /** COLLAB END */
 
+      const cullElement = document.getElementById('cull-stats')
+      renderer.on('CullingUpdated', (event) => {
+        if (event.visible && event.total) {
+          cullElement.textContent = `visible: ${event.visible} / total: ${event.total}`
+        }
+      })
       // {{{ Variants
       const statusElement = document.getElementById('status')
       const setStatusText = (text) => {
@@ -317,6 +329,7 @@
       <nav class="border border-blue-400 flex justify-center items-center">nav</nav>
       <main>
         <canvas id="viewport"></canvas>
+        <div id="cull-stats" class="hud"></div>
       </main>
       <aside class="border border-blue-400 flex justify-center items-center"></aside>
       <footer class="border border-blue-400 flex justify-center items-center">
