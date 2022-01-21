@@ -41,13 +41,15 @@
       const texturedMaterial0 = new FlatSurfaceMaterial('Material')
       texturedMaterial0.baseColorParam.value = new Color(0.6, 0, 1)
       const image0 = new FileImage('logo')
-      promises.push(image0.load('data/zea-logo.png', 'RGBA'))
+      image0.load('data/zea-logo.png', 'RGBA')
+      promises.push(new Promise((resolve) => image0.on('loaded', resolve)))
       texturedMaterial0.baseColorParam.setImage(image0)
 
       const texturedMaterial1 = new FlatSurfaceMaterial('Material')
       texturedMaterial1.baseColorParam.value = new Color(0.6, 0, 1)
       const image1 = new FileImage('avatar1')
-      promises.push(image1.load('data/avatar1.jpg'))
+      image1.load('data/avatar1.jpg')
+      promises.push(new Promise((resolve) => image1.on('loaded', resolve)))
       texturedMaterial1.baseColorParam.setImage(image1)
 
       const material = new SimpleSurfaceMaterial('surfaces')
