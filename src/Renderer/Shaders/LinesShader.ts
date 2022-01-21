@@ -3,7 +3,6 @@ import { Registry } from '../../Registry'
 import { GLShader } from '../GLShader'
 import { Material } from '../../SceneTree/Material'
 import { LinesMaterial } from '../../SceneTree/Materials/LinesMaterial'
-import { shaderLibrary } from '../ShaderLibrary'
 
 import './GLSL/index'
 // @ts-ignore
@@ -11,6 +10,7 @@ import vert from './Lines.vert'
 // @ts-ignore
 import frag from './Lines.frag'
 import { WebGL12RenderingContext } from '../types/webgl'
+import { ColorSpace, MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
 
 class LinesShader extends GLShader {
   /**
@@ -30,7 +30,13 @@ class LinesShader extends GLShader {
    */
   static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(12)
-    const baseColor = material.getParameter('BaseColor')!.value
+    const baseColorParam = material.getParameter('BaseColor')
+    let baseColor
+    if (baseColorParam instanceof MaterialColorParam && baseColorParam.colorSpace == ColorSpace.Gamma) {
+      baseColor = baseColorParam.value.toLinear()
+    } else {
+      baseColor = baseColorParam.value
+    }
     matData[0] = baseColor.r
     matData[1] = baseColor.g
     matData[2] = baseColor.b

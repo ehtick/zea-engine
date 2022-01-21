@@ -3,7 +3,6 @@ import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
 import { Material, NumberParameter, MaterialColorParam, FatPointsMaterial } from '../../SceneTree'
 import { GLShader } from '../GLShader'
-import { shaderLibrary } from '../ShaderLibrary'
 
 import './GLSL/index'
 // @ts-ignore
