@@ -16,7 +16,7 @@
       #cull-stats {
         color: rgb(0, 0, 0);
         position: fixed;
-        bottom: 10px;
+        bottom: 40px;
         left: 10px;
       }
     </style>
@@ -66,9 +66,9 @@
       // renderer.on('CullingUpdated', (event) => {
       //   console.log(`visible: ${event.visible} / total: ${event.total}`)
       // })
-      // renderer.on('occlusionCullingProfilingData', (event) => {
-      //   console.log(`occlusionCulling: ${JSON.stringify(event)}`)
-      // })
+      renderer.on('occlusionCullingProfilingData', (event) => {
+        console.log(`occlusionCulling: ${JSON.stringify(event)}`)
+      })
 
       const postMessage = (msg) => {
         console.log(msg)
@@ -79,7 +79,7 @@
       })
       renderer.on('occlusionCullingProfilingData', (event) => {
         const { queryReduceSceneGeoms, queryReduceBBoxes } = event
-        console.log(`occlusionCulling Reduction: ${queryReduceSceneGeoms}, ${queryReduceBBoxes}`)
+        cullElement.textContent = `occlusionCulling Reduction: ${queryReduceSceneGeoms}, ${queryReduceBBoxes}`
       })
       const cullElement = document.getElementById('cull-stats')
       renderer.on('CullingUpdated', (event) => {
@@ -99,33 +99,35 @@
         // This variant doesn't ever seem to complete in Cypress. Something gets stuck in the web worker.
         // which never emits the correct event to say culling completed.
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 10), new Vec3(10, 0, 0))
-        renderer.once('CullingUpdated', () => {
+        setTimeout(() => {
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 10), new Vec3(0, 0, 0))
-          renderer.once('CullingUpdated', () => {
+          setTimeout(() => {
             setStatusText(`done-variant-01`)
-          })
-        })
+          }, 500)
+        }, 500)
       })
       document.getElementById('variant-02').addEventListener('click', function (event) {
         // Rotate the camera away from the objects. Rotate back, and check that everything is still visible
-        geomItemOuter.visibleParam.value = false
+        // console.log('Press button')
         renderer.once('CullingUpdated', () => {
           setStatusText(`done-variant-02`)
         })
+        geomItemOuter.visibleParam.value = false
       })
       document.getElementById('variant-03').addEventListener('click', function (event) {
         // Make the outer torus visible again.
-        geomItemOuter.visibleParam.value = true
+        // console.log('Press button')
         renderer.once('CullingUpdated', () => {
           setStatusText(`done-variant-03`)
         })
+        geomItemOuter.visibleParam.value = true
       })
       document.getElementById('variant-04').addEventListener('click', function (event) {
         // Rotate the camera away from the objects. Rotate back, and check that everything is still visible
-        geomItemOuter.globalXfoParam.value = new Xfo(new Vec3(3, 0, 1))
         renderer.once('CullingUpdated', () => {
           setStatusText(`done-variant-04`)
         })
+        geomItemOuter.globalXfoParam.value = new Xfo(new Vec3(3, 0, 1))
       })
 
       // }}}

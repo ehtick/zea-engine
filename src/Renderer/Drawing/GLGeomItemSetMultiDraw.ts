@@ -83,8 +83,8 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
         this.indexToDrawIndex[index] = this.drawOrderToIndex.length
         this.drawOrderToIndex.push(index)
       } else {
-        this.indexToDrawIndex[index] = -1
         this.drawOrderToIndex.splice(this.indexToDrawIndex[index], 1)
+        this.indexToDrawIndex[index] = -1
       }
       // console.log(this.constructor.name, ' drawOrderToIndex', this.drawOrderToIndex.length)
       if (!this.drawIdsBufferDirty) {
