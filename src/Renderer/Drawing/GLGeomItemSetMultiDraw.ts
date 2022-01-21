@@ -494,15 +494,13 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param viewPos - The position of the camera that we are sorting relative to.
    */
   sortItems(viewPos: Vec3): void {
-    const distances: number[] = []
-    this.drawOrderToIndex.forEach((itemIndex, drawIndex) => {
+    const distances: Float32Array = new Float32Array(this.drawOrderToIndex.length)
+    this.drawOrderToIndex.forEach((itemIndex) => {
       const glGeomItem = this.glGeomItems[itemIndex]
       if (glGeomItem) {
         const mat4 = glGeomItem.geomItem.geomMatParam.value
         const dist = mat4.translation.distanceTo(viewPos)
-        // distances.push(dist)
-        distances[drawIndex] = dist
-        // this.drawOrderToIndex[index] = index
+        distances[itemIndex] = dist
       }
     })
     this.drawOrderToIndex.sort((a, b) => distances[b] - distances[a])

@@ -8,7 +8,7 @@ describe('transparent-geoms-sorting', () => {
     cy.get('canvas').percySnapshot('transparent-geoms-sorting')
 
     {
-      const variant = 'variant-02'
+      const variant = 'variant-01'
       cy.get(`#${variant}`).click()
       cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`${test} - ${variant}`)
