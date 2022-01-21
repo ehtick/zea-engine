@@ -112,22 +112,35 @@
         renderer.once('CullingUpdated', () => {
           setStatusText(`done-variant-02`)
         })
+        // renderer.on('onmessage', (event) => {
+        //   setStatusText(`onmessage` + event.data.type + JSON.stringify(event.data))
+        // })
         geomItemOuter.visibleParam.value = false
+        // renderer.getViewport().getCamera().emit('movementFinished')
       })
       document.getElementById('variant-03').addEventListener('click', function (event) {
         // Make the outer torus visible again.
         // console.log('Press button')
         renderer.once('CullingUpdated', () => {
           setStatusText(`done-variant-03`)
+
+          // Note: this forces the culling to be run again.
+          // it updates the state in the worker, so that variant-04 succeeds.
+          // The internal state of the worker is still no up to date, meaning
+          // when we move the torus in variant4, the little sphere is still considered
+          // not occluded, so no occlusion update occurs.
+          renderer.getViewport().getCamera().emit('movementFinished')
         })
         geomItemOuter.visibleParam.value = true
+        renderer.getViewport().getCamera().emit('movementFinished')
       })
       document.getElementById('variant-04').addEventListener('click', function (event) {
-        // Rotate the camera away from the objects. Rotate back, and check that everything is still visible
+        // Move the big torus aside so we can see all 4 geometries.
+        geomItemOuter.globalXfoParam.value = new Xfo(new Vec3(3, 0, 1))
+        renderer.getViewport().getCamera().emit('movementFinished')
         renderer.once('CullingUpdated', () => {
           setStatusText(`done-variant-04`)
         })
-        geomItemOuter.globalXfoParam.value = new Xfo(new Vec3(3, 0, 1))
       })
 
       // }}}
