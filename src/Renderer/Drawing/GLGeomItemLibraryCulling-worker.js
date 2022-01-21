@@ -329,9 +329,12 @@ const handleMessage = (data, postMessage) => {
       geomItemsData[id] = null
     })
     data.geomItems.forEach((geomItem) => {
-      // New geoms default to being un-culled
+      const isNew = geomItemsData[geomItem.id] == undefined
       geomItemsData[geomItem.id] = geomItem
-      outOfFrustum[geomItem.id] = false
+      // New geoms default to being un-culled
+      // Existing geoms that may be changing state, like changing
+      // visibility or transformations should simply update.
+      if (isNew) outOfFrustum[geomItem.id] = false
       checkGeomItem(geomItemsData[geomItem.id])
     })
     inFrustumDrawIdsBufferPopulated = false
