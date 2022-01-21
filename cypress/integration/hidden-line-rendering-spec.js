@@ -3,7 +3,8 @@ describe('hidden-line-rendering', () => {
     cy.visit(`testing-e2e/hidden-line-rendering.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
-    cy.get('canvas').percySnapshot('hidden-line-rendering')
+    const test = 'hidden-line-rendering'
+    cy.get('canvas').percySnapshot(test)
   })
 })
 
@@ -12,7 +13,7 @@ describe('hidden-line-rendering-webgl1', () => {
     cy.visit(`testing-e2e/hidden-line-rendering.html?webgl=webgl`)
 
     cy.get('#status').should('have.text', `done-loading`)
-    const test = 'hidden-line-rendering'
+    const test = 'hidden-line-rendering-webgl1'
     cy.get('canvas').percySnapshot(test)
   })
 })
