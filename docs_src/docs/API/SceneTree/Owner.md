@@ -28,13 +28,13 @@ Returns the current path of the item in the tree as an array of names.
 
 #### Defined in
 
-[src/SceneTree/Owner.ts:10](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/SceneTree/Owner.ts#L10)
+[src/SceneTree/Owner.ts:10](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/SceneTree/Owner.ts#L10)
 
 ___
 
 ### resolvePath
 
-▸ **resolvePath**(`path`, `index?`): [`BaseItem`](SceneTree_BaseItem.BaseItem) \| [`Parameter`](Parameters/SceneTree_Parameters_Parameter.Parameter)<`any`\>
+▸ **resolvePath**(`path`, `index?`): [`Parameter`](Parameters/SceneTree_Parameters_Parameter.Parameter)<`any`\> \| [`BaseItem`](SceneTree_BaseItem.BaseItem)
 
 #### Parameters
 
@@ -45,9 +45,9 @@ ___
 
 #### Returns
 
-[`BaseItem`](SceneTree_BaseItem.BaseItem) \| [`Parameter`](Parameters/SceneTree_Parameters_Parameter.Parameter)<`any`\>
+[`Parameter`](Parameters/SceneTree_Parameters_Parameter.Parameter)<`any`\> \| [`BaseItem`](SceneTree_BaseItem.BaseItem)
 
 #### Defined in
 
-[src/SceneTree/Owner.ts:12](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/SceneTree/Owner.ts#L12)
+[src/SceneTree/Owner.ts:12](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/SceneTree/Owner.ts#L12)
 

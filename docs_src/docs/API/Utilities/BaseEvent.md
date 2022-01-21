@@ -25,8 +25,6 @@ Class representing a BaseEvent.
 
   ↳ [`IndexEvent`](Events/Utilities_Events_IndexEvent.IndexEvent)
 
-  ↳ [`KeyboardEvent`](Events/Utilities_Events_KeyboardEvent.KeyboardEvent)
-
   ↳ [`ParameterAddedEvent`](Events/Utilities_Events_ParameterAddedEvent.ParameterAddedEvent)
 
   ↳ [`ParameterRemovedEvent`](Events/Utilities_Events_ParameterRemovedEvent.ParameterRemovedEvent)
@@ -57,7 +55,7 @@ Class representing a BaseEvent.
 
   ↳ [`XrViewportEvent`](Events/Utilities_Events_XrViewportEvent.XrViewportEvent)
 
-  ↳ [`ZeaPointerEvent`](Events/Utilities_Events_ZeaPointerEvent.ZeaPointerEvent)
+  ↳ [`ZeaUIEvent`](Events/Utilities_Events_ZeaUIEvent.ZeaUIEvent)
 
 ## Constructors
 
@@ -69,5 +67,5 @@ Create an BaseEvent.
 
 #### Defined in
 
-[src/Utilities/BaseEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/716e8606e/src/Utilities/BaseEvent.ts#L6)
+[src/Utilities/BaseEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/BaseEvent.ts#L6)
 
