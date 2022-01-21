@@ -108,6 +108,20 @@ class Mesh extends BaseGeom {
   }
 
   /**
+   * The getNumTriangles method.
+   * @return {number} - The return value.
+   */
+  getNumTriangles(): number {
+    let numTriangles = 0
+    let numTrisPerFace = 1
+    for (const fc of this.faceCounts) {
+      numTriangles += fc * numTrisPerFace
+      numTrisPerFace++
+    }
+    return numTriangles
+  }
+
+  /**
    * Sets the number of faces on the mesh using an array specifying the counts per polygon size.
    * The first item in the array specifies the number of triangles, the second, the number of quads, the 3rd, the number of 5 sided polygons etc..
    * e.g. to specify 2 triangles, and 7 quads, we would pass [2, 7]

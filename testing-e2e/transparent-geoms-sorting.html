@@ -4,6 +4,14 @@
     <title>Zea Engine - transparent-geoms-sorting</title>
     <link rel="stylesheet" href="styles/tailwind.min.css" />
     <link rel="stylesheet" href="styles/test.css" />
+    <style>
+      #cull-stats {
+        color: rgb(0, 0, 0);
+        position: fixed;
+        bottom: 40px;
+        left: 10px;
+      }
+    </style>
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
@@ -28,7 +36,11 @@
 
       const scene = new Scene()
       const domElement = document.getElementById('viewport')
-      const renderer = new GLRenderer(domElement, { antialias: false })
+      const renderer = new GLRenderer(domElement, {
+        antialias: false,
+        enableOcclusionCulling: false,
+        debugOcclusionBuffer: false,
+      })
       renderer.setScene(scene)
 
       const envMap = new EnvMap()
@@ -118,12 +130,18 @@
         renderer.frameAll()
         setStatusText(`done-variant-04`)
       })
+
+      const cullElement = document.getElementById('cull-stats')
+      renderer.on('CullingUpdated', (event) => {
+        cullElement.textContent = `visible: ${event.visible} / total: ${event.total}`
+      })
     </script>
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-screen">
       <canvas id="viewport"></canvas>
       <div id="status" class="hud"></div>
+      <div id="cull-stats" class="hud"></div>
     </div>
     <div class="fixed flex justify-center p-1 w-full top-0">
       <button

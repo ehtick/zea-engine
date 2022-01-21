@@ -4,23 +4,41 @@ import { processTextureParams } from './processTextureParams'
 import { RenderState, Uniform } from './types/renderer'
 import { WebGL12RenderingContext } from './types/webgl'
 
-/** Class representing a GL render target. */
+/** The GLRenderTarget is used to generate a WebGL Framebuffer and its associated textures.
+ * It can be used to create a FrameBuffer, several color textures and an optional depth texture, all bound to the Framebuffer.
+ *
+ *
+ * ```javascript
+ *  const renderTarget = new GLRenderTarget(gl, {
+ *    type: gl.FLOAT,
+ *    format: gl.RGBA,
+ *    minFilter: gl.NEAREST,
+ *    magFilter: gl.NEAREST,
+ *    width: 128,
+ *    height: 64,
+ *    depthType: gl.FLOAT,
+ *    depthFormat: gl.DEPTH_COMPONENT,
+ *    depthInternalFormat: gl.DEPTH_COMPONENT32F,
+ *  })
+ * ```
+ */
 class GLRenderTarget extends EventEmitter {
   protected __gl: WebGL12RenderingContext
-  protected textureTargets: any[]
-  protected depthTexture: any
+  protected textureTargets: WebGLTexture[]
+  protected depthTexture: WebGLTexture
   protected textureDesc: number[]
-  protected frameBuffer: any
+  protected frameBuffer: WebGLFramebuffer
 
   protected params: Record<string, any> = {}
-  protected type: any
-  protected format: any
-  protected internalFormat: any
-  protected filter: any
+  protected type: number
+  protected format: number
+  protected internalFormat: number
+  protected minFilter: number
+  protected maxFilter: number
   protected wrap: any
-  protected flipY: any
-  protected width: number = 0
-  protected height: number = 0
+  protected flipY: boolean = false
+  width: number = 0
+  height: number = 0
   clearColor: Color
   protected colorMask: Array<boolean>
   protected textureType: any
@@ -70,7 +88,8 @@ class GLRenderTarget extends EventEmitter {
     this.type = p.type
     this.format = p.format
     this.internalFormat = p.internalFormat
-    this.filter = p.filter
+    this.minFilter = p.minFilter ? p.minFilter : p.filter
+    this.minFilter = p.magFilter ? p.magFilter : p.filter
     this.wrap = p.wrap
     this.flipY = p.flipY
     this.width = p.width
@@ -185,7 +204,7 @@ class GLRenderTarget extends EventEmitter {
    * @param renderstate - The object tracking the current state of the renderer
    * @param clear - The clear value.
    */
-  bindForWriting(renderstate?: RenderState, clear = false): void{
+  bindForWriting(renderstate?: RenderState, clear = false): void {
     if (renderstate) {
       this.__prevBoundFbo = renderstate.boundRendertarget
       renderstate.boundRendertarget = this.frameBuffer
@@ -204,8 +223,8 @@ class GLRenderTarget extends EventEmitter {
   unbindForWriting(renderstate?: RenderState): void {
     if (renderstate) renderstate.boundRendertarget = this.__prevBoundFbo
     const gl = this.__gl
-    if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__prevBoundFbo)
-    else gl.bindFramebuffer(gl.FRAMEBUFFER, this.__prevBoundFbo)
+    gl.bindFramebuffer(gl.name == 'webgl2' ? gl.DRAW_FRAMEBUFFER : gl.FRAMEBUFFER, this.__prevBoundFbo)
+    this.__prevBoundFbo = null
   }
 
   /**

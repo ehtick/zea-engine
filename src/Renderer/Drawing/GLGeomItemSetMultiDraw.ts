@@ -1,3 +1,4 @@
+import { VisibilityChangedEvent, IndexEvent } from '../../Utilities/Events'
 import { Vec3 } from '../../Math/Vec3'
 import '../../SceneTree/GeomItem'
 
@@ -15,23 +16,30 @@ import { GLGeomItem } from './GLGeomItem'
 abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   protected renderer: GLBaseRenderer
   protected gl: WebGL12RenderingContext
-  protected glGeomItems: Array<GLGeomItem | null>
-  protected glGeomIdsMapping: Record<string, any>
-  protected glgeomItemEventHandlers: any[]
-  protected freeIndices: number[]
-  protected drawElementCounts: Int32Array
-  protected drawElementOffsets: Int32Array
-  protected highlightElementCounts: Int32Array
-  protected highlightElementOffsets: Int32Array
-  protected reserved: number
-  protected visibleItems: GLGeomItem[]
-  protected drawIdsArray: Float32Array
-  protected drawIdsBufferDirty: boolean
+  protected glGeomItems: Array<GLGeomItem | null> = []
+  protected glGeomIdsMapping: Record<string, number[]> = {}
+  protected glgeomItemEventHandlers: any[] = []
+  protected freeIndices: number[] = []
+
+  // Mapping from the array of glGeomItems, to the actual rendering
+  // order. When rendering transparent geoms, we sort this array.
+  protected drawElementCounts: Int32Array = new Int32Array(0)
+  protected drawElementOffsets: Int32Array = new Int32Array(0)
+  protected highlightElementCounts: Int32Array = new Int32Array(0)
+  protected highlightElementOffsets: Int32Array = new Int32Array(0)
+  protected drawOrderToIndex: number[] = []
+  protected indexToDrawIndex: number[] = []
+  protected drawIdsArray: Float32Array = new Float32Array(0)
+  protected drawIdsBufferDirty: boolean = true
   protected drawIdsTexture: GLTexture2D | null = null
-  protected highlightedItems: GLGeomItem[]
-  protected highlightedIdsArray: any
+
+  protected highlightedItems: GLGeomItem[] = []
+  protected highlightedIdsArray: Float32Array | null = null
   protected highlightedIdsTexture: GLTexture2D | null = null
-  protected highlightedIdsBufferDirty: boolean
+  protected highlightedIdsBufferDirty: boolean = false
+
+  // When a geometry changes, we update offset and count the values.
+  private dirtyGeomIndices: Set<number> = new Set()
 
   /**
    * Create a GL geom item set.
@@ -41,46 +49,9 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     super()
     this.renderer = renderer
     this.gl = <WebGL12RenderingContext>renderer.gl
-    this.glGeomItems = []
-    this.glGeomIdsMapping = {}
-    this.glgeomItemEventHandlers = []
-    this.freeIndices = []
 
-    this.drawElementCounts = new Int32Array(0)
-    this.drawElementOffsets = new Int32Array(0)
-    this.highlightElementCounts = new Int32Array(0)
-    this.highlightElementOffsets = new Int32Array(0)
-
-    this.reserved = 0
-    this.visibleItems = []
-    this.drawIdsArray = new Float32Array(0)
-    this.drawIdsBufferDirty = true
-    this.drawIdsTexture = null
-
-    this.highlightedItems = []
-    this.highlightedIdsArray = null
-    this.highlightedIdsTexture = null
-    this.highlightedIdsBufferDirty = true
-
-    this.renderer.glGeomLibrary.on('geomDataChanged', (event: any) => {
-      const geomItemIndices = this.glGeomIdsMapping[event.index]
-      if (geomItemIndices != undefined) {
-        geomItemIndices.forEach((index: number) => {
-          const glGeomItem = this.glGeomItems[index]!
-          if (glGeomItem.isVisible()) {
-            const index = this.visibleItems.indexOf(glGeomItem)
-            const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
-
-            this.drawElementOffsets[index] = offsetAndCount[0]
-            this.drawElementCounts[index] = offsetAndCount[1]
-            const highlightIndex = this.highlightedItems.indexOf(glGeomItem)
-            if (highlightIndex != -1) {
-              this.highlightElementOffsets[highlightIndex] = offsetAndCount[0]
-              this.highlightElementCounts[highlightIndex] = offsetAndCount[1]
-            }
-          }
-        })
-      }
+    this.renderer.glGeomLibrary.on('geomDataChanged', (event: IndexEvent) => {
+      this.dirtyGeomIndices.add(event.index)
     })
   }
 
@@ -89,6 +60,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param glGeomItem - The glGeomItem value.
    */
   addGLGeomItem(glGeomItem: GLGeomItem): void {
+    const start = performance.now()
     const index: number = this.freeIndices.length > 0 ? this.freeIndices.pop()! : this.glGeomItems.length
 
     // Keep track of which geomitems use which geoms, so we can update the offset and count array if they change.
@@ -103,21 +75,35 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     // //////////////////////////////
     // Visibility
     if (glGeomItem.visible) {
-      this.visibleItems.push(glGeomItem)
+      this.indexToDrawIndex[index] = this.drawOrderToIndex.length
+      this.drawOrderToIndex.push(index)
     }
     eventHandlers.visibilityChanged = (event: Record<string, any>) => {
       if (event.visible) {
-        this.visibleItems.push(glGeomItem)
+        this.indexToDrawIndex[index] = this.drawOrderToIndex.length
+        this.drawOrderToIndex.push(index)
       } else {
-        this.visibleItems.splice(this.visibleItems.indexOf(glGeomItem), 1)
+        this.drawOrderToIndex.splice(this.indexToDrawIndex[index], 1)
+        this.indexToDrawIndex[index] = -1
       }
-      // console.log(this.constructor.name, ' visibleItems', this.visibleItems.length)
+      // console.log(this.constructor.name, ' drawOrderToIndex', this.drawOrderToIndex.length)
       if (!this.drawIdsBufferDirty) {
         this.drawIdsBufferDirty = true
         this.emit('updated')
       }
     }
     glGeomItem.on('visibilityChanged', eventHandlers.visibilityChanged)
+
+    eventHandlers.cullStateChanged = () => {
+      const drawIndex = this.indexToDrawIndex[index]
+      if (!glGeomItem.culled) {
+        const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
+        this.drawElementCounts[drawIndex] = offsetAndCount[1]
+      } else {
+        this.drawElementCounts[drawIndex] = 0
+      }
+    }
+    glGeomItem.on('cullStateChanged', eventHandlers.cullStateChanged)
 
     // //////////////////////////////
     // Highlighted
@@ -160,11 +146,13 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     geomItemIndices.splice(geomItemIndices.indexOf(index), 1)
     if (geomItemIndices.length == 0) {
       delete this.glGeomIdsMapping[glGeomItem.geomId]
+      if (this.dirtyGeomIndices.has(glGeomItem.geomId)) this.dirtyGeomIndices.delete(glGeomItem.geomId)
     }
 
     const eventHandlers = this.glgeomItemEventHandlers[index]
     glGeomItem.geomItem.off('highlightChanged', eventHandlers.highlightChanged)
     glGeomItem.off('visibilityChanged', eventHandlers.visibilityChanged)
+    glGeomItem.off('cullStateChanged', eventHandlers.cullStateChanged)
 
     this.glGeomItems[index] = null
     this.glgeomItemEventHandlers[index] = null
@@ -174,8 +162,10 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     this.freeIndices.push(index)
 
     if (glGeomItem.isVisible()) {
-      const visibleItemIndex = this.visibleItems.indexOf(glGeomItem)
-      this.visibleItems.splice(visibleItemIndex, 1)
+      // Note: as items are removed, the indexToDrawIndex values get broken and must be updated.
+      const drawIndex = this.drawOrderToIndex.indexOf(index)
+      this.drawOrderToIndex.splice(drawIndex, 1)
+      this.indexToDrawIndex[index] = -1
       this.drawIdsBufferDirty = true
     }
     if (glGeomItem.geomItem.isHighlighted()) {
@@ -189,8 +179,38 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   // ////////////////////////////////////
   // Draw Ids
 
-  // ////////////////////////////////////
-  // Instance Ids
+  cleanGeomIds() {
+    // When a geometry changes, we update offset and count the values.
+    // Note: this method is quite expensive.
+    // (taking up 80% of the time to load the GPU in the Memory test before it was refactored)
+    // The cost is probably in the "drawOrderToIndex.indexOf(index)" call below.
+    // Most of the time, we are adding/removing GeomItems. The geoms rarely change
+    // independently.
+    // We run this method in the rare occurrence that a geom changes, and not its GeomItem.
+    this.dirtyGeomIndices.forEach((geomId) => {
+      const geomItemIndices = this.glGeomIdsMapping[geomId]
+      if (geomItemIndices != undefined) {
+        const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(geomId)
+        geomItemIndices.forEach((index: number) => {
+          const glGeomItem = this.glGeomItems[index]!
+          if (glGeomItem.isVisible()) {
+            const drawIndex = this.indexToDrawIndex[index]
+
+            this.drawElementOffsets[drawIndex] = offsetAndCount[0]
+            this.drawElementCounts[drawIndex] = offsetAndCount[1]
+            this.drawIdsArray[drawIndex] = glGeomItem.drawItemId
+
+            const highlightIndex = this.highlightedItems.indexOf(glGeomItem)
+            if (highlightIndex != -1) {
+              this.highlightElementOffsets[highlightIndex] = offsetAndCount[0]
+              this.highlightElementCounts[highlightIndex] = offsetAndCount[1]
+            }
+          }
+        })
+      }
+    })
+    this.dirtyGeomIndices = new Set()
+  }
 
   /**
    * The updateDrawIDsBuffer method.
@@ -198,18 +218,23 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    */
   updateDrawIDsBuffer(renderstate: RenderState): void {
     {
-      if (!this.drawIdsArray || this.visibleItems.length > this.drawIdsArray.length) {
-        this.drawIdsArray = new Float32Array(this.visibleItems.length)
-        this.drawElementOffsets = new Int32Array(this.visibleItems.length)
-        this.drawElementCounts = new Int32Array(this.visibleItems.length)
+      if (!this.drawIdsArray || this.drawOrderToIndex.length > this.drawIdsArray.length) {
+        this.drawIdsArray = new Float32Array(this.drawOrderToIndex.length)
+        this.drawElementOffsets = new Int32Array(this.drawOrderToIndex.length)
+        this.drawElementCounts = new Int32Array(this.drawOrderToIndex.length)
       }
 
-      this.visibleItems.forEach((glGeomItem, index) => {
+      this.drawOrderToIndex.forEach((itemIndex, drawIndex) => {
+        const glGeomItem = this.glGeomItems[itemIndex]!
         const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
-        this.drawElementOffsets[index] = offsetAndCount[0]
-        this.drawElementCounts[index] = offsetAndCount[1]
-        this.drawIdsArray[index] = glGeomItem.drawItemId
+        this.drawElementOffsets[drawIndex] = offsetAndCount[0]
+        this.drawElementCounts[drawIndex] = glGeomItem.culled ? 0 : offsetAndCount[1]
+        this.drawIdsArray[drawIndex] = glGeomItem.drawItemId
+
+        // Note: as items are removed, these indices must be updated.
+        this.indexToDrawIndex[itemIndex] = drawIndex
       })
+      this.dirtyGeomIndices = new Set()
     }
 
     const gl = this.renderer.gl
@@ -220,7 +245,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     const unit = renderstate.boundTextures++
     gl.activeTexture(gl.TEXTURE0 + unit)
 
-    const drawIdsTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.visibleItems.length))) * 2
+    const drawIdsTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.drawOrderToIndex.length))) * 2
     if (!this.drawIdsTexture) {
       this.drawIdsTexture = new GLTexture2D(this.gl, {
         format: gl.name == 'webgl2' ? 'RED' : 'ALPHA',
@@ -243,10 +268,10 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       const height = 1
       const format = tex.getFormat()
       const type = tex.getType()
-      const rows = Math.ceil((xoffset + this.visibleItems.length) / texWidth)
+      const rows = Math.ceil((xoffset + this.drawOrderToIndex.length) / texWidth)
 
       let consumed = 0
-      let remaining = this.visibleItems.length
+      let remaining = this.drawOrderToIndex.length
       let rowStart = xoffset
       for (let i = 0; i < rows; i++) {
         let width
@@ -373,10 +398,12 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   draw(renderstate: RenderState): void {
     if (this.drawIdsBufferDirty) {
       this.updateDrawIDsBuffer(renderstate)
+    } else if (this.dirtyGeomIndices.size > 0) {
+      this.cleanGeomIds()
     }
     // Note: updateDrawIDsBuffer first, as this avoids a case where the buffers stay dirty
     // because the last item was removed.
-    if (this.visibleItems.length == 0) {
+    if (this.drawOrderToIndex.length == 0) {
       return
     }
     if (this.drawIdsTexture) {
@@ -389,7 +416,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       this.drawIdsArray,
       this.drawElementCounts,
       this.drawElementOffsets,
-      this.visibleItems.length
+      this.drawOrderToIndex.length
     )
   }
 
@@ -467,28 +494,30 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param viewPos - The position of the camera that we are sorting relative to.
    */
   sortItems(viewPos: Vec3): void {
-    const distances: any[] = []
-    const indices: any[] = []
-    this.visibleItems.forEach((glGeomItem, index) => {
+    const distances: number[] = []
+    this.drawOrderToIndex.forEach((itemIndex, drawIndex) => {
+      const glGeomItem = this.glGeomItems[itemIndex]
       if (glGeomItem) {
         const mat4 = glGeomItem.geomItem.geomMatParam.value
         const dist = mat4.translation.distanceTo(viewPos)
-        distances.push(dist)
-        indices.push(index)
+        // distances.push(dist)
+        distances[drawIndex] = dist
+        // this.drawOrderToIndex[index] = index
       }
     })
-    indices.sort((a, b) => distances[b] - distances[a])
+    this.drawOrderToIndex.sort((a, b) => distances[b] - distances[a])
 
-    const visibleItems: any[] = []
     const drawElementCounts = new Int32Array(this.drawElementCounts.length)
     const drawElementOffsets = new Int32Array(this.drawElementOffsets.length)
-    indices.forEach((tgtIndex, srcIndex) => {
-      visibleItems[srcIndex] = this.visibleItems[tgtIndex]
-      drawElementCounts[srcIndex] = this.drawElementCounts[tgtIndex]
-      drawElementOffsets[srcIndex] = this.drawElementOffsets[tgtIndex]
-      this.drawIdsArray[srcIndex] = this.visibleItems[tgtIndex].drawItemId
+    this.drawOrderToIndex.forEach((itemIndex, drawIndex) => {
+      const glGeomItem = this.glGeomItems[itemIndex]
+      if (glGeomItem) {
+        drawElementCounts[drawIndex] = this.drawElementCounts[itemIndex]
+        drawElementOffsets[drawIndex] = this.drawElementOffsets[itemIndex]
+        this.drawIdsArray[drawIndex] = glGeomItem.drawItemId
+        this.indexToDrawIndex[itemIndex] = drawIndex
+      }
     })
-    this.visibleItems = visibleItems
     this.drawElementCounts = drawElementCounts
     this.drawElementOffsets = drawElementOffsets
     this.drawIdsBufferDirty = true

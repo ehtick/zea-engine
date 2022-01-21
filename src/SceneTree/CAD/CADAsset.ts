@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
-import { Registry } from "../../Registry"
-import { SystemDesc } from "../../SystemDesc"
-import { AssetItem } from "../AssetItem"
-import { AssetLoadContext } from "../AssetLoadContext"
-import { BinReader } from "../BinReader"
-import { CloneContext } from "../CloneContext"
-import { resourceLoader } from "../resourceLoader"
-import { Version } from "../Version"
+import { Registry } from '../../Registry'
+import { SystemDesc } from '../../SystemDesc'
+import { AssetItem } from '../AssetItem'
+import { AssetLoadContext } from '../AssetLoadContext'
+import { BinReader } from '../BinReader'
+import { CloneContext } from '../CloneContext'
+import { resourceLoader } from '../resourceLoader'
+import { Version } from '../Version'
 
 /**
  * Class representing a CAD asset.
@@ -52,7 +52,7 @@ class CADAsset extends AssetItem {
    *
    * @return {string} - The return value.
    */
-  getVersion(): Version{
+  getVersion(): Version {
     return this.cadfileVersion
   }
 
@@ -80,7 +80,7 @@ class CADAsset extends AssetItem {
    * @param {AssetLoadContext} context - The load context object that provides additional data such as paths to external references.
    * @return {Promise} - Returns a promise that resolves once the load of the tree is complete. Geometries, textures and other resources might still be loading.
    */
-  load(url: string, context = new AssetLoadContext()): any{
+  load(url: string, context = new AssetLoadContext()): any {
     if (this.__loadPromise) return this.__loadPromise
     this.__loadPromise = new Promise((resolve, reject) => {
       const folder = url.lastIndexOf('/') > -1 ? url.substring(0, url.lastIndexOf('/')) + '/' : ''
@@ -163,7 +163,7 @@ class CADAsset extends AssetItem {
 
   // ////////////////////////////////////////
   // Persistence
-  
+
   /**
    * The fromJSON method decodes a json object for this type.
    *
@@ -172,7 +172,8 @@ class CADAsset extends AssetItem {
    * @param {callback} onDone - The onDone param.
    */
   // TODO: can't pass in onDone
-  fromJSON(j: Record<string, any>, context: Record<string, any>): void { //, onDone
+  fromJSON(j: Record<string, any>, context: Record<string, any>): void {
+    //, onDone
     const loadAssetJSON = () => {
       //const flags = TreeItem.LoadFlags.LOAD_FLAG_LOADING_BIN_TREE_VALUES
       super.fromJSON(j, context) //, flags, onDone

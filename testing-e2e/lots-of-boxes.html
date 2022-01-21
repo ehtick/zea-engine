@@ -86,6 +86,7 @@
 
       const renderer = new GLRenderer(domElement, {
         enableFrustumCulling: true,
+        enableOcclusionCulling: true,
       })
       renderer.setScene(scene)
       renderer.solidAngleLimit = 0.0
@@ -218,6 +219,10 @@
         }
         frameCounter = 0
       }, 500)
+
+      renderer.on('CullingUpdated', (event) => {
+        console.log(`visible: ${event.visible} / total: ${event.total}`)
+      })
 
       // renderer.startContinuousDrawing()
     </script>

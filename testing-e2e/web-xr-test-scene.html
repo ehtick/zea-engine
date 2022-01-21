@@ -83,6 +83,7 @@
       const scene = new Scene()
       const renderer = new GLRenderer(canvas, {
         enableFrustumCulling: true,
+        enableOcclusionCulling: true,
         debugOcclusionBuffer: false,
       })
       // renderer.getViewport().debugGeomShader = true
@@ -333,6 +334,11 @@
         })
       })
 
+      renderer.on('occlusionCullingProfilingData', (event) => {
+        console.log(
+          `occlusionCulling DrawScene: ${event.queryDrawScene} DrawBBoxes: ${event.queryDrawCulledBBoxes} ReduceSceneGeoms: ${event.queryReduceSceneGeoms} ReduceBBoxes:${event.queryReduceBBoxes}`
+        )
+      })
       // //////////////////////////////////////
       // Setup FPS Counter
 

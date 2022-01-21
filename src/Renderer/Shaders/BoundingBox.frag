@@ -12,6 +12,7 @@ void main(void) {
   vec4 fragColor;
 #endif
 
+  int drawItemId = int(v_color.g);
   fragColor = v_color;
 
 #ifndef ENABLE_ES3

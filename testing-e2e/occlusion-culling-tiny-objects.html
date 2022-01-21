@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>occlusion-culling-tiny-objects - Zea Engine</title>
+
+    <link href="data/zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
+
+    <script src="../dist/index.umd.js"></script>
+
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Xfo, Color, Cylinder, SimpleSurfaceMaterial, GeomItem } = zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, {
+        enableFrustumCulling: true,
+        enableOcclusionCulling: true,
+        debugOcclusionBuffer: false,
+      })
+      renderer.setScene(scene)
+
+      scene.setupGrid(10.0, 10)
+
+      const standardMaterial = new SimpleSurfaceMaterial('main')
+      standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+
+      // const mainCylinder = new Cylinder(1, 8, 40)
+      // const geomItemSphere = new GeomItem('Sphere', mainCylinder, standardMaterial)
+      // scene.getRoot().addChild(geomItemSphere)
+
+      const tinyCylinder = new Cylinder(0.1, 8, 12)
+      const material2 = new SimpleSurfaceMaterial('main')
+      material2.getParameter('BaseColor').setValue(new Color(1, 0, 0))
+
+      for (let i = 0; i <= 6; i++) {
+        const geomItemSphere = new GeomItem('TinyCylinder' + i, tinyCylinder, material2)
+        const xfo = geomItemSphere.globalXfoParam.value
+        // xfo.tr.set(Math.sin((i / 6) * Math.PI * 2.0), Math.cos((i / 6) * Math.PI * 2.0), 0)
+        xfo.tr.set(i, 0, 0)
+        if (i == 0) xfo.sc.set(3, 3, 1)
+        geomItemSphere.globalXfoParam.value = xfo
+        scene.getRoot().addChild(geomItemSphere)
+      }
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-20, 0, 2.7), new Vec3(0, 0, 0.4))
+      // renderer.frameAll()
+
+      renderer.on('CullingUpdated', (event) => {
+        console.log(`visible: ${event.visible} / total: ${event.total}`)
+      })
+
+      const postMessage = (msg) => {
+        console.log(msg)
+        window.postMessage(msg)
+      }
+      renderer.once('CullingUpdated', () => {
+        postMessage('done-loading')
+      })
+
+      // {{{ Messages handler.
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
+      }
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-10, 10, 2.7), new Vec3(0, 0, 0.4))
+        setStatusText(`done-variant-01`)
+      })
+      // }}}
+    </script>
+  </head>
+  <body class="bg-blue-100">
+    <div class="h-screen">
+      <canvas class="absolute" id="renderer"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+      </div>
+    </div>
+  </body>
+</html>

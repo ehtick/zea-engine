@@ -51,9 +51,8 @@ class GLMaterial extends EventEmitter {
    * The bind method.
    * @param renderstate - The object tracking the current state of the renderer
    * @param warnMissingUnifs - The renderstate value.
-   * @return - The return value.
    */
-  bind(renderstate: RenderState, warnMissingUnifs: any): boolean { // TODO: fix type on __shaderBindings
+  bind(renderstate: RenderState, warnMissingUnifs: any): void {
     this.__boundTexturesBeforeMaterial = renderstate.boundTextures
 
     let shaderBinding = this.__shaderBindings[renderstate.shaderkey!]
@@ -62,7 +61,7 @@ class GLMaterial extends EventEmitter {
       shaderBinding = new MaterialShaderBinding(gl, this, renderstate.unifs, warnMissingUnifs)
       this.__shaderBindings[renderstate.shaderkey!] = shaderBinding
     }
-    return shaderBinding.bind(renderstate)
+    shaderBinding.bind(renderstate)
   }
 
   /**
@@ -72,6 +71,8 @@ class GLMaterial extends EventEmitter {
   unbind(renderstate: RenderState): void {
     // Enable texture units to be re-used by resetting the count back
     // to what it was.
+    // Note: we don't need to unbind each texture, as re-binding a new material
+    // will overwrite the bindings made by this material.
     renderstate.boundTextures = this.__boundTexturesBeforeMaterial
   }
 }

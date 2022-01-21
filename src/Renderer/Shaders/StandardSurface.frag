@@ -38,14 +38,6 @@ varying vec3 v_worldPos;
 
 #if defined(DRAW_COLOR)
 
-#ifdef ENABLE_MULTI_DRAW
-// #define DEBUG_GEOM_ID
-#endif
-#ifdef DEBUG_GEOM_ID
-import 'debugColors.glsl'
-#endif
-
-
 uniform color cutColor;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
@@ -121,8 +113,18 @@ import 'computeViewNormal.glsl'
 
 
 #elif defined(DRAW_GEOMDATA)
+
+#ifdef ENABLE_MULTI_DRAW
+// #define DEBUG_GEOM_ID
+#endif
+#ifdef DEBUG_GEOM_ID
+import 'debugColors.glsl'
+#endif
+
 uniform int isOrthographic;
 import 'surfaceGeomData.glsl'
+
+
 #elif defined(DRAW_HIGHLIGHT)
 import 'surfaceHighlight.glsl'
 #endif // DRAW_HIGHLIGHT
@@ -277,9 +279,16 @@ void main(void) {
     discard;
     return;
   }
+  if (occlusionCulling != 0) {
+    // Transparent geoms do not render to the occlusion buffer
+    if (testFlag(flags, GEOMITEM_TRANSPARENT)) {
+      discard;
+      return;
+    }
+  }
   
-  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId,v_drawItemId, isOrthographic);
-   
+  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_drawItemId, isOrthographic);
+
 #elif defined(DRAW_HIGHLIGHT)
   fragColor = getHighlightColor(drawItemId);
 #endif // DRAW_HIGHLIGHT

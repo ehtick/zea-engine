@@ -50,6 +50,7 @@ export type Shaderopts = Record<string, string[]>
 export interface GeomDataRenderState extends BaseRenderState {
   geomDataFbo?: GLFbo // only used in geomdata buffer rendering
   floatGeomBuffer: boolean
+  occlusionCulling: number
 }
 
 // only used in color rendering
@@ -102,20 +103,6 @@ export interface LayoutItem {
 
 export interface Bindings {
   textureTypeUnif: WebGLUniformLocation
-}
-
-export interface Options {
-  antialias: boolean
-  depth: boolean
-  stencil: boolean
-  alpha: boolean
-  disableMultiDraw: boolean
-  webglContextType: string
-  powerPreference: string
-  preserveDrawingBuffer: boolean
-  xrCompatible: boolean
-  supportXR: boolean
-  debugGeomIds: boolean
 }
 
 export type JSON = Record<string, any>

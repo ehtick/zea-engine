@@ -76,14 +76,14 @@
       }
       setStatusText('done-loading')
       document.getElementById('variant-01').addEventListener('click', function (event) {
-        updateTreePositions(2)
+        updateTreePositions(1)
         renderer.once('CullingUpdated', () => {
           setStatusText(`done-variant-01`)
         })
       })
 
       document.getElementById('variant-02').addEventListener('click', function (event) {
-        updateTreePositions(0)
+        updateTreePositions(0.2)
         renderer.once('CullingUpdated', () => {
           setStatusText(`done-variant-02`)
         })
