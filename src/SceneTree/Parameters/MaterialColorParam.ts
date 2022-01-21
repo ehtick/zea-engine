@@ -59,6 +59,9 @@ enum ColorSpace {
 class MaterialColorParam extends ColorParameter {
   protected listenerIDs: Record<string, number> = {}
   protected image?: BaseImage
+
+  // Color values default to gamma space, but when loaded
+  // from a file such as zcad or GLTF, we set this value to ColorSpace.Linear
   colorSpace?: ColorSpace = ColorSpace.Gamma
   /**
    * Create a material color parameter.
