@@ -23,7 +23,7 @@
           'nav main right'
           'footer footer footer';
         grid-template-columns: 5px 1fr 5px;
-        grid-template-rows: 50px 1fr 40px;
+        grid-template-rows: 50px 1fr 5px;
       }
 
       header {
@@ -46,19 +46,17 @@
         bottom: 40px;
         left: 10px;
       }
+      .fps-display {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        color: #333333;
+        font-size: 45px;
+      }
     </style>
-    <!-- <script src="https://websocket-staging.zea.live/socket.io/socket.io.js"></script>
-    <script src="https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js"></script> -->
     <script type="module">
       import '../dist/index.umd.js'
-      // import '../node_modules/@zeainc/zea-ux/dist/index.umd.js'
-      // import '../node_modules/@zeainc/zea-potree/dist/index.umd.js'
-
-      // // import 'https://websocket-staging.zea.live/socket.io/socket.io.js'
-      // import '../node_modules/@zeainc/zea-collab/dist/index.umd.js'
-
-      // // import 'https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js'
-      // import '../node_modules/@zeainc/gltf-loader/dist/index.umd.js'
+      import '../node_modules/@zeainc/zea-ux/dist/index.umd.js'
 
       const urlParams = new URLSearchParams(window.location.search)
 
@@ -81,7 +79,12 @@
       const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false, enableOcclusionCulling: true })
+      const renderer = new GLRenderer(canvas, {
+        debugGeomIds: false,
+        antialias: false,
+        enableOcclusionCulling: true,
+        debugOcclusionBuffer: false,
+      })
       renderer.setScene(scene)
       renderer.getViewport().backgroundColorParam.value = new Color(0.85, 0.85, 0.85, 1)
       renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
@@ -140,7 +143,7 @@
       })
       /** HIGHLIGHT START */
 
-      /** UX START * /
+      /** UX START */
       const { SelectionManager, UndoRedoManager, ToolManager, SelectionTool, CreateFreehandLineTool } = window.zeaUx
 
       const appData = { scene, renderer }
@@ -149,16 +152,15 @@
       cameraManipulator.setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.tumbler)
       appData.cameraManipulator = cameraManipulator
 
-
       /** UNDO START * /
       const undoRedoManager = UndoRedoManager.getInstance()
       appData.undoRedoManager = undoRedoManager
       /** UNDO END */
 
-      /** SELECTION START * /
+      /** SELECTION START */
 
       const selectionManager = new SelectionManager(appData, {
-        enableXfoHandles: true
+        enableXfoHandles: true,
       })
       appData.selectionManager = selectionManager
 
@@ -166,7 +168,7 @@
       selectionManager.showHandles(false)
 
       const selectionTool = new SelectionTool(appData)
-      const filterItemSelection = item => {
+      const filterItemSelection = (item) => {
         return item
       }
       selectionTool.setSelectionFilter(filterItemSelection)
@@ -176,64 +178,13 @@
       selectionColor.a = 0.1
       const subtreeColor = selectionColor //.lerp(new Color(1, 1, 1, 0), 0.5)
       selectionManager.selectionGroup.highlightColorParam.value = selectionColor
-      selectionManager.selectionGroup.subtreeHighlightColorParam.value = subtreeColor
+      // selectionManager.selectionGroup.subtreeHighlightColorParam.value = subtreeColor
 
       // Color the selection rect.
       const selectionRectColor = new Color(0, 0, 0, 1)
-      selectionTool.rectItem
-        .materialParam
-        .getValue()
-        .baseColorParam
-        .value = selectionRectColor
+      selectionTool.rectItem.materialParam.getValue().getParameter('BaseColor').value = selectionRectColor
 
-      /** SELECTION END * /
-
-      /** FREEHAND LINES TOOL START * /
-      const freeHandLineTool = new CreateFreehandLineTool(appData)
-      freeHandLineTool.lineThicknessParam.value = 0.01
-
-      /** FREEHAND LINES TOOL END * /
-
-      /** TOOL MANAGER START * /
-
-      /** TOOL MANAGER START * /
-      const toolManager = new ToolManager()
-      toolManager.registerTool('CameraManipulator', cameraManipulator)
-      toolManager.registerTool('SelectionTool', selectionTool)
-
-      renderer.getViewport().setManipulator(toolManager)
-      toolManager.pushTool('CameraManipulator')
-      appData.toolManager = toolManager
-
-      const toolStack = ['CameraManipulator']
-      const tools = document.querySelectorAll('.tool')
-
-      const disableSelectedTools = () => {
-        tools.forEach(toolCbx => (toolCbx.disabled = false))
-        for (let i = 0; i < toolStack.length; i++) {
-          const chkBox = document.querySelector(`input[type='checkbox'][value='${toolStack[i]}']`)
-          if (i === 0 || i < toolStack.length - 1) chkBox.disabled = true
-          chkBox.checked = true
-        }
-      }
-
-      tools.forEach(tool => {
-        tool.addEventListener('change', e => {
-          if (e.target.checked) {
-            const value = e.target.value
-            toolStack.push(value)
-            toolManager.pushTool(e.target.value)
-          } else {
-            toolStack.pop()
-            toolManager.popTool()
-          }
-
-          disableSelectedTools()
-        })
-      })
-
-      disableSelectedTools()
-      /** TOOL MANAGER END */
+      /** SELECTION END */
 
       /** LOAD ASSETS START */
 
@@ -248,29 +199,13 @@
         asset.getGeometryLibrary().on('loaded', () => {
           setStatusText('done-loading')
         })
-        scene.getRoot().addChild(asset)
-        return asset
-      }
-      const loadGLTFAsset = (url, filename) => {
-        const { GLTFAsset } = gltfLoader
-        const asset = new GLTFAsset()
-        asset.load(url, filename).then(() => {
-          renderer.frameAll()
-          setStatusText('done-loading')
-        })
-        scene.getRoot().addChild(asset)
-        return asset
-      }
-
-      const loadAsset = (url, filename) => {
-        let res
-        if (filename.endsWith('zcad')) {
-          res = loadZCADAsset(url, filename)
-        } else if (filename.endsWith('gltf') || filename.endsWith('glb')) {
-          res = loadGLTFAsset(url, filename)
+        if (urlParams.has('yToZUp')) {
+          const xfo = new Xfo()
+          xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5)
+          asset.localXfoParam.value = xfo
         }
-        // boundingBoxPass.addTreeItem(res, true)
-        return res
+        scene.getRoot().addChild(asset)
+        return asset
       }
       let assetUrl = 'data/Dead_eye_bearing.zcad'
       if (urlParams.has('zcad')) {
@@ -278,34 +213,25 @@
       } else if (urlParams.has('gltf')) {
         assetUrl = urlParams.get('gltf')
       }
-      loadAsset(assetUrl, assetUrl)
+      loadZCADAsset(assetUrl, assetUrl)
       /** LOAD ASSETS END */
 
-      /** COLLAB START* /
+      // //////////////////////////////////////
+      // Setup FPS Counter
+      let frameCounter = 0
+      let fps = 0
+      renderer.on('redrawOccurred', () => {
+        frameCounter++
+      })
 
-      if (urlParams.has('collab')) {
-        const { Session, SessionSync } = window.zeaCollab
-        const userData = {
-          id: Math.random()
+      const fpsElement = document.getElementById('fps')
+      setInterval(() => {
+        if (fps != frameCounter * 2) {
+          fps = frameCounter * 2
+          fpsElement.textContent = `FPS: ${fps}`
         }
-        appData.userData = userData
-
-        const SOCKET_URL = 'https://websocket-staging.zea.live'
-        const roomId = window.location.href
-        const session = new Session(userData, SOCKET_URL)
-        if (roomId) session.joinRoom(roomId)
-
-        const sessionSync = new SessionSync(session, appData, userData, {
-          /* Avatars scale based on the distance to the target * /
-          scaleAvatarWithFocalDistance: true,
-          /* The overal size multiplier of the avatar. * /
-          avatarScale: 2.0
-        })
-
-        appData.session = session
-        appData.sessionSync = sessionSync
-      }
-      /** COLLAB END */
+        frameCounter = 0
+      }, 500)
 
       const cullElement = document.getElementById('cull-stats')
       renderer.on('CullingUpdated', (event) => {
@@ -330,6 +256,7 @@
       <main>
         <canvas id="viewport"></canvas>
         <div id="cull-stats" class="hud"></div>
+        <div class="fps-display" id="fps"></div>
       </main>
       <aside class="border border-blue-400 flex justify-center items-center"></aside>
       <footer class="border border-blue-400 flex justify-center items-center">
