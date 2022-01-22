@@ -66,12 +66,12 @@ void main(void) {
   if (v_drawItemIds.z > 0.5) {
     materialCoords.x = v_drawItemIds.z;
   }
-  vec4 baseColor = toLinear(getMaterialValue(materialCoords, 0));
+  vec4 baseColor = getMaterialValue(materialCoords, 0);
 
 #else // ENABLE_MULTI_DRAW
 
 #ifndef ENABLE_TEXTURES
-  vec4 baseColor = toLinear(BaseColor);
+  vec4 baseColor = BaseColor;
 #else
   vec4 baseColor = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
 #endif // ENABLE_TEXTURES
@@ -106,7 +106,13 @@ void main(void) {
     discard;
     return;
   }
-
+  if (occlusionCulling != 0) {
+    // Transparent geoms do not render to the occlusion buffer
+    if (testFlag(flags, GEOMITEM_TRANSPARENT)) {
+      discard;
+      return;
+    }
+  }
   fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_drawItemIds.x, v_drawItemIds.y, isOrthographic);
 #elif defined(DRAW_HIGHLIGHT)
   fragColor = setFragColor_highlight(v_drawItemIds.x);

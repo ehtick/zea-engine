@@ -3,8 +3,8 @@ import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
 import { Material } from '../../SceneTree/Material'
 import { PointsMaterial } from '../../SceneTree/Materials/PointsMaterial'
+import { ColorSpace, MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
 import { GLShader } from '../GLShader'
-import { shaderLibrary } from '../ShaderLibrary'
 import { WebGL12RenderingContext } from '../types/webgl'
 
 import './GLSL/index'
@@ -30,7 +30,13 @@ class PointsShader extends GLShader {
    */
   static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(12)
-    const baseColor = material.getParameter('BaseColor')!.value
+    const baseColorParam = material.getParameter('BaseColor')
+    let baseColor
+    if (baseColorParam instanceof MaterialColorParam && baseColorParam.colorSpace == ColorSpace.Gamma) {
+      baseColor = baseColorParam.value.toLinear()
+    } else {
+      baseColor = baseColorParam.value
+    }
     matData[0] = baseColor.r
     matData[1] = baseColor.g
     matData[2] = baseColor.b

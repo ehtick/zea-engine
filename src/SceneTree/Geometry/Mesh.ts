@@ -66,12 +66,6 @@ class Mesh extends BaseGeom {
   }
 
   /**
-   * The init method.
-   * @private
-   */
-  init(): void {}
-
-  /**
    * The clear method.
    */
   clear(): void {
@@ -111,6 +105,20 @@ class Mesh extends BaseGeom {
    */
   getNumFaces(): number {
     return this.faceCounts.length == 0 ? 0 : this.faceCounts.reduce((numFaces: number, fc: number) => (numFaces += fc))
+  }
+
+  /**
+   * The getNumTriangles method.
+   * @return {number} - The return value.
+   */
+  getNumTriangles(): number {
+    let numTriangles = 0
+    let numTrisPerFace = 1
+    for (const fc of this.faceCounts) {
+      numTriangles += fc * numTrisPerFace
+      numTrisPerFace++
+    }
+    return numTriangles
   }
 
   /**

@@ -15,8 +15,6 @@ Class representing a BaseEvent.
 
   ↳ [`ItemEvent`](../SceneTree/Parameters/SceneTree_Parameters_ItemSetParameter.ItemEvent)
 
-  ↳ [`AudioSourceCreatedEvent`](Events/Utilities_Events_AudioSourceCreatedEvent.AudioSourceCreatedEvent)
-
   ↳ [`ChildAddedEvent`](Events/Utilities_Events_ChildAddedEvent.ChildAddedEvent)
 
   ↳ [`ControllerAddedEvent`](Events/Utilities_Events_ControllerAddedEvent.ControllerAddedEvent)
@@ -26,8 +24,6 @@ Class representing a BaseEvent.
   ↳ [`EnvMapAssignedEvent`](Events/Utilities_Events_EnvMapAssignedEvent.EnvMapAssignedEvent)
 
   ↳ [`IndexEvent`](Events/Utilities_Events_IndexEvent.IndexEvent)
-
-  ↳ [`KeyboardEvent`](Events/Utilities_Events_KeyboardEvent.KeyboardEvent)
 
   ↳ [`ParameterAddedEvent`](Events/Utilities_Events_ParameterAddedEvent.ParameterAddedEvent)
 
@@ -59,7 +55,7 @@ Class representing a BaseEvent.
 
   ↳ [`XrViewportEvent`](Events/Utilities_Events_XrViewportEvent.XrViewportEvent)
 
-  ↳ [`ZeaPointerEvent`](Events/Utilities_Events_ZeaPointerEvent.ZeaPointerEvent)
+  ↳ [`ZeaUIEvent`](Events/Utilities_Events_ZeaUIEvent.ZeaUIEvent)
 
 ## Constructors
 
@@ -71,5 +67,5 @@ Create an BaseEvent.
 
 #### Defined in
 
-[src/Utilities/BaseEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/BaseEvent.ts#L6)
+[src/Utilities/BaseEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/BaseEvent.ts#L6)
 

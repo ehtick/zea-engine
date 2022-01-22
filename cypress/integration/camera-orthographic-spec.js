@@ -1,6 +1,7 @@
-describe('camera-orthographic', () => {
+const demo = 'camera-orthographic'
+describe(demo, () => {
   it('Capture snapshots', () => {
-    cy.visit('testing-e2e/camera-orthographic.html')
+    cy.visit(`testing-e2e/camera-orthographic.html`)
     cy.get('#camera-button-top').click()
     cy.get('canvas').percySnapshot('camera-button-top')
     cy.get('#camera-button-left').click()

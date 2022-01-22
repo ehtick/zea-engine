@@ -105,7 +105,7 @@ class GLGeomLibrary extends EventEmitter {
    * @param geom - The geom value.
    * @return - The return value.
    */
-  constructGLGeom(geom: BaseGeom):GLGeom {
+  constructGLGeom(geom: BaseGeom): GLGeom {
     let glgeom = this.glGeomsDict[geom.getId()]
     if (glgeom != undefined) {
       // Increment the ref count for the GLGeom

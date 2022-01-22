@@ -1,10 +1,7 @@
-import { Color } from "../../Math/Color"
-import { Registry } from "../../Registry"
-import { CloneContext } from "../CloneContext"
-import { Vec3Parameter } from "../Parameters/Vec3Parameter"
-import { TreeItem } from "../TreeItem"
-
-Registry.register('Property_Vec3_32f', Vec3Parameter)
+import { Color } from '../../Math/Color'
+import { Registry } from '../../Registry'
+import { CloneContext } from '../CloneContext'
+import { TreeItem } from '../TreeItem'
 
 /**
  * Represents a view of PMI data. within a CAD assembly.
@@ -50,12 +47,12 @@ class PMIItem extends TreeItem {
   /**
    * Activates the PMIView, adjusting visibility of the PMI items and the camera Xfo
    */
-  activate():void {}
+  activate(): void {}
 
   /**
    * Deactivates the PMIItem
    */
-  deactivate():void {}
+  deactivate(): void {}
 
   /**
    * Adds a highlight to the tree item.
@@ -64,7 +61,7 @@ class PMIItem extends TreeItem {
    * @param {Color} color - The color of the highlight.
    * @param {boolean} propagateToChildren - A boolean indicating whether to propagate to children.
    */
-  addHighlight(name?: string, color?: Color, propagateToChildren = false):void {
+  addHighlight(name?: string, color?: Color, propagateToChildren = false): void {
     super.addHighlight(name, color, propagateToChildren)
 
     const pmiContainer = (this.getOwner() as TreeItem).getOwner() // TODO: check
@@ -96,7 +93,7 @@ class PMIItem extends TreeItem {
    * @param {string} name - The name of the tree item.
    * @param {boolean} propagateToChildren - A boolean indicating whether to propagate to children.
    */
-  removeHighlight(name: string, propagateToChildren = false):void {
+  removeHighlight(name: string, propagateToChildren = false): void {
     super.removeHighlight(name, propagateToChildren)
     const pmiContainer = (this.getOwner() as TreeItem).getOwner()
     const pmiOwner = (pmiContainer as TreeItem).getOwner()

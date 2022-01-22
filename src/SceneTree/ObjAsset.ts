@@ -12,6 +12,8 @@ import { resourceLoader } from './resourceLoader'
 import { BooleanParameter, NumberParameter, StringParameter } from './Parameters/index'
 import { Vec3Attribute } from './Geometry/Vec3Attribute'
 import { Vec2Attribute } from './Geometry/Vec2Attribute'
+import { ColorSpace, MaterialColorParam } from './Parameters/MaterialColorParam'
+import { MaterialFloatParam } from './Parameters/MaterialFloatParam'
 
 // AssetItem.registerDataLoader('.obj', ObjDataLoader);
 
@@ -112,27 +114,37 @@ class ObjAsset extends AssetItem {
           const key = elements.shift()
           const value = elements.join(' ')
 
-          if (material == undefined) throw Error('no material defined.')
-
           switch (key) {
             case 'newmtl':
               material = new Material(value)
               material.setShaderName('StandardSurfaceShader')
               this.materialLibrary.addMaterial(material)
               break
-            case 'Kd':
-              material.getParameter('BaseColor')!.value = parseColor(elements)
+            case 'Kd': {
+              const baseColorParam = material.getParameter('BaseColor')!
+              baseColorParam.value = parseColor(elements)
+              if (baseColorParam instanceof MaterialColorParam) {
+                baseColorParam.colorSpace == ColorSpace.Linear
+              }
               break
-            case 'map_Kd':
-              material.getParameter('BaseColor')!.value = parseMap('map_Kd', elements[0])
+            }
+            case 'map_Kd': {
+              const baseColorParam = material.getParameter('BaseColor')!
+              if (baseColorParam instanceof MaterialColorParam) {
+                baseColorParam.setImage(parseMap('map_Kd', elements[0]))
+              }
               break
+            }
             case 'Ks':
               const specular = (parseFloat(elements[0]) + parseFloat(elements[1]) + parseFloat(elements[2])) / 3.0
               material.getParameter('Roughness')!.value = 1.0 - specular
               material.getParameter('Reflectance')!.value = specular
               break
             case 'map_Ks':
-              material.getParameter('Roughness')!.value = parseMap('map_Ks', elements[0] /* flags=TEXTURE_INVERT */)
+              const roughnessParam = material.getParameter('Roughness')!
+              if (roughnessParam instanceof MaterialFloatParam) {
+                roughnessParam.setImage(parseMap('map_Ks', elements[0])) /* flags=TEXTURE_INVERT */
+              }
               material.getParameter('Reflectance')!.value = 0.2
               break
             case 'd':
@@ -146,7 +158,10 @@ class ObjAsset extends AssetItem {
               material.getParameter('alpha')!.value = parseFloat(elements[0])
               break
             case 'map_bump':
-              material.getParameter('normal')!.value = parseMap('map_Ks', elements[0] /* flags=BUMP_TO_NORMAL */)
+              const normalParam = material.getParameter('Normal')!
+              if (normalParam instanceof MaterialColorParam) {
+                normalParam.setImage(parseMap('normal', elements[0])) /* flags=BUMP_TO_NORMAL */
+              }
               break
             default:
             // console.warn("Unhandled material parameter: '" + key +"' in:" + filePath);

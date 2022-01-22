@@ -9,6 +9,7 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
 
     <script src="../dist/index.umd.js"></script>
 
@@ -68,32 +69,36 @@
       scene.getRoot().addChild(tree2)
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(4, 4, 2.7), new Vec3(0, 0, 1))
 
-      const postMessage = (msg) => {
-        console.log(msg)
-        window.postMessage(msg)
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
       }
-      postMessage('done-loading')
+      setStatusText('done-loading')
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        updateTreePositions(1)
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-01`)
+        })
+      })
 
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'variant-01') {
-          updateTreePositions(2)
-          postMessage(`done-${data}`)
-        } else if (data === 'variant-02') {
-          updateTreePositions(0)
-          postMessage(`done-${data}`)
-        }
-      }
-
-      window.addEventListener('message', handleMessage, false)
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        updateTreePositions(0.2)
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-02`)
+        })
+      })
       // }}}
     </script>
   </head>
   <body class="bg-blue-100">
     <div class="h-screen">
       <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+      </div>
     </div>
   </body>
 </html>

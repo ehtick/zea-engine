@@ -84,7 +84,7 @@ class GLGeom extends RefCounted {
    * @param renderstate - The object tracking the current state of the renderer
    * @return - returns false if the binding failed.
    */
-  bind(renderstate: RenderState): boolean {
+  bind(renderstate: RenderState): void {
     if (this.__destroyed) throw new Error('Error binding a destroyed geom')
 
     if (this.buffersDirty) this.updateBuffers()
@@ -96,7 +96,6 @@ class GLGeom extends RefCounted {
       this.__shaderBindings[renderstate.shaderkey!] = shaderBinding
     }
     shaderBinding.bind(renderstate)
-    return true
   }
 
   /**

@@ -54,27 +54,40 @@ const registeredPasses: Record<string, any> = {}
  *    method the moment you intend to start an XR session.
  */
 export interface RendererOptions {
-  // GLBaseRenderer
+  // Enable WebXR Rendering.
   supportXR?: boolean
+  // alpha: Boolean that indicates if the canvas contains an alpha buffer.
+  alpha?: boolean
+
+  // antialias: Boolean that indicates whether or not to perform anti-aliasing if possible.
+  antialias?: boolean
+
+  // powerPreference: A hint to the user agent indicating what configuration of GPU is suitable for the WebGL context. Possible values are:
+  // - "default": Let the user agent decide which GPU configuration is most suitable. This is the default value.
+  // - "high-performance": Prioritizes rendering performance over power consumption.
+  // - "low-power": Prioritizes power saving over rendering performance.
+  powerPreference?: string
 
   // GLRenderer
   disableTextures?: boolean
+  // This debugging option modifies the color of each geometry to display its id as a pseudo-random color.
+  // This option is useful to see visually each geometry in the scene.
   debugGeomIds?: boolean
 
-  // GLGeomItemLibrary. Set this to true to cull objects not within view of the camera.
+  // Enabled frustum culling which is a performance optimization that speeds up rendering in heavy scenes.
   enableFrustumCulling?: boolean
+  // Enabled Occlusion culling which is a performance optimization that speeds up rendering in heavy scenes.
+  enableOcclusionCulling?: boolean
 
-  // webgl context attributes
-  alpha?: boolean
-  depth?: boolean
-  stencil?: boolean
-  antialias?: boolean
-  powerPreference?: string
-  preserveDrawingBuffer?: boolean
-  xrCompatible?: boolean
-
+  // This debugging option disabled use of the multi-draw extension.
   disableMultiDraw?: boolean
+  // This debugging option is used to disable the use of floating point geom data buffers.
+  // Mainly for testing compatibility with older browsers.
   floatGeomBuffer?: boolean
+  // This debugging option is used to display the GeomData picking buffer on screen.
+  debugGeomDataBuffer?: boolean
+  // This debugging option is used to display the occlusion buffer generated during occlusion culling.
+  debugOcclusionBuffer?: boolean
 }
 
 /**
@@ -84,7 +97,7 @@ export interface RendererOptions {
  */
 class GLBaseRenderer extends ParameterOwner {
   protected listenerIDs: Record<number, Record<string, number>> = {}
-  protected directives: string[] = []
+  directives: string[] = []
   solidAngleLimit: number = 0.004
 
   __gl: WebGL12RenderingContext
@@ -141,7 +154,9 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.screenQuad = new GLScreenQuad(this.__gl, { directives: this.directives })
     this.bindEventHandlers()
-    this.addViewport('main')
+    const mainViewport = this.addViewport('main')
+    mainViewport.debugGeomDataBuffer = options.debugGeomDataBuffer
+    mainViewport.debugOcclusionBuffer = options.debugOcclusionBuffer
 
     this.glMaterialLibrary = new GLMaterialLibrary(this)
     this.glMaterialLibrary.on('updated', () => {
@@ -587,7 +602,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param $canvas - The $canvas element.
    * @param webglOptions - The webglOptions value.
    */
-  private setupWebGL($canvas: HTMLCanvasElement, webglOptions: RendererOptions = {}): WebGL12RenderingContext {
+  private setupWebGL($canvas: HTMLCanvasElement, options: RendererOptions = {}): WebGL12RenderingContext {
     const { tagName } = $canvas
 
     if (!['DIV', 'CANVAS'].includes(tagName)) {
@@ -663,18 +678,19 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.handleResize(this.__glcanvas.parentElement.clientWidth, this.__glcanvas.parentElement.clientHeight)
 
+    const webglOptions: Record<string, any> = {}
     webglOptions.preserveDrawingBuffer = true
-    webglOptions.antialias = webglOptions.antialias ?? true
+    webglOptions.antialias = options.antialias ?? true
     webglOptions.depth = true
     webglOptions.stencil = false
-    webglOptions.alpha = webglOptions.alpha ?? false
+    webglOptions.alpha = options.alpha ?? false
     // Note: Due to a change in Chrome (version 88-89), providing true here caused a pause when creating
     // an WebGL context, if the XR device was unplugged. We also call 'makeXRCompatible' when setting
     // up the XRViewport, so we to get an XR Compatible context anyway.
     webglOptions.xrCompatible = false
 
     // Most applications of our engine will prefer the high-performance context by default.
-    webglOptions.powerPreference = webglOptions.powerPreference || 'high-performance'
+    webglOptions.powerPreference = options.powerPreference || 'high-performance'
     const gl = create3DContext(this.__glcanvas, webglOptions)
     if (!gl) alert('Unable to create WebGL context. WebGL not supported.')
 
@@ -687,7 +703,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     {
       const ext = gl.name == 'webgl2' ? gl.getExtension('WEBGL_multi_draw') : null
-      if (ext && !webglOptions.disableMultiDraw) {
+      if (ext && !options.disableMultiDraw) {
         gl.multiDrawArrays = ext.multiDrawArraysWEBGL.bind(ext)
         gl.multiDrawElements = ext.multiDrawElementsWEBGL.bind(ext)
         gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
@@ -705,7 +721,7 @@ class GLBaseRenderer extends ParameterOwner {
     if (SystemDesc.browserName == 'Safari' && gl.name == 'webgl') {
       this.floatGeomBuffer = false
     } else {
-      this.floatGeomBuffer = webglOptions.floatGeomBuffer ?? gl.floatTexturesSupported
+      this.floatGeomBuffer = options.floatGeomBuffer != undefined ? options.floatGeomBuffer : gl.floatTexturesSupported
     }
     gl.floatGeomBuffer = this.floatGeomBuffer
     return gl
@@ -1215,7 +1231,7 @@ class GLBaseRenderer extends ParameterOwner {
           gl.uniform1i(eye.location, 0)
         }
         if (isOrthographic) {
-          // Left or right eye, when rendering sterio VR.
+          // Left or right eye, when rendering stereo VR.
           gl.uniform1i(isOrthographic.location, vp.isOrthographic)
         }
       }
@@ -1246,11 +1262,11 @@ class GLBaseRenderer extends ParameterOwner {
           }
 
           if (eye) {
-            // Left or right eye, when rendering sterio VR.
+            // Left or right eye, when rendering stereo VR.
             gl.uniform1i(eye.location, index)
           }
           if (isOrthographic) {
-            // Left or right eye, when rendering sterio VR.
+            // Left or right eye, when rendering stereo VR.
             gl.uniform1i(isOrthographic.location, vp.isOrthographic)
           }
           cb()

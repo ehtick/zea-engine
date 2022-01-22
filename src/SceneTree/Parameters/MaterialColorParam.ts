@@ -5,6 +5,11 @@ import { Color } from '../../Math/Color'
 import { BinReader } from '../../SceneTree/BinReader'
 import { AssetLoadContext } from '../AssetLoadContext'
 
+enum ColorSpace {
+  Gamma = 'Gamma',
+  Linear = 'Linear',
+}
+
 /**
  * Represents a specific type of parameter, that stores `Color` and `BaseImage` texture values.
  *
@@ -54,6 +59,10 @@ import { AssetLoadContext } from '../AssetLoadContext'
 class MaterialColorParam extends ColorParameter {
   protected listenerIDs: Record<string, number> = {}
   protected image?: BaseImage
+
+  // Color values default to gamma space, but when loaded
+  // from a file such as zcad or GLTF, we set this value to ColorSpace.Linear
+  colorSpace?: ColorSpace = ColorSpace.Gamma
   /**
    * Create a material color parameter.
    * @param name - The name of the material color parameter.
@@ -88,7 +97,6 @@ class MaterialColorParam extends ColorParameter {
   setImage(value: BaseImage | null): void {
     const disconnectImage = () => {
       if (this.image) {
-        this.image.removeListenerById('loaded', this.listenerIDs['loaded'])
         this.image.removeListenerById('updated', this.listenerIDs['updated'])
         this.image = undefined
       }
@@ -140,6 +148,8 @@ class MaterialColorParam extends ColorParameter {
     if (textureName != '') {
       this.setImage(context.assetItem.materialLibrary.getImage(textureName))
     }
+
+    this.colorSpace = ColorSpace.Linear
   }
 
   /**
@@ -156,4 +166,4 @@ class MaterialColorParam extends ColorParameter {
 
 Registry.register('MaterialColorParam', MaterialColorParam)
 
-export { MaterialColorParam }
+export { MaterialColorParam, ColorSpace }

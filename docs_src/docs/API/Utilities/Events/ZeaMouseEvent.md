@@ -9,7 +9,7 @@ custom_edit_url: null
 
 ## Hierarchy
 
-- [`ZeaUIEvent`](Utilities_Events_ZeaUIEvent.ZeaUIEvent)
+- [`ZeaPointerEvent`](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent)
 
   ↳ **`ZeaMouseEvent`**
 
@@ -32,11 +32,11 @@ Create an BaseEvent.
 
 #### Overrides
 
-[ZeaUIEvent](Utilities_Events_ZeaUIEvent.ZeaUIEvent).[constructor](Utilities_Events_ZeaUIEvent.ZeaUIEvent#constructor)
+[ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[constructor](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#constructor)
 
 #### Defined in
 
-[src/Utilities/Events/ZeaMouseEvent.ts:16](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaMouseEvent.ts#L16)
+[src/Utilities/Events/ZeaMouseEvent.ts:15](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaMouseEvent.ts#L15)
 
 ## Properties
 
@@ -46,7 +46,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[src/Utilities/Events/ZeaMouseEvent.ts:11](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaMouseEvent.ts#L11)
+[src/Utilities/Events/ZeaMouseEvent.ts:10](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaMouseEvent.ts#L10)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaMouseEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaMouseEvent.ts#L6)
+[src/Utilities/Events/ZeaMouseEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaMouseEvent.ts#L5)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaMouseEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaMouseEvent.ts#L7)
+[src/Utilities/Events/ZeaMouseEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaMouseEvent.ts#L6)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaMouseEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaMouseEvent.ts#L8)
+[src/Utilities/Events/ZeaMouseEvent.ts:7](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaMouseEvent.ts#L7)
 
 ___
 
@@ -86,7 +86,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaMouseEvent.ts:13](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaMouseEvent.ts#L13)
+[src/Utilities/Events/ZeaMouseEvent.ts:12](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaMouseEvent.ts#L12)
 
 ___
 
@@ -96,11 +96,11 @@ ___
 
 #### Inherited from
 
-[ZeaUIEvent](Utilities_Events_ZeaUIEvent.ZeaUIEvent).[detail](Utilities_Events_ZeaUIEvent.ZeaUIEvent#detail)
+[ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[detail](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#detail)
 
 #### Defined in
 
-[src/Utilities/Events/ZeaUIEvent.ts:11](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaUIEvent.ts#L11)
+[src/Utilities/Events/ZeaPointerEvent.ts:20](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaPointerEvent.ts#L20)
 
 ___
 
@@ -110,11 +110,11 @@ ___
 
 #### Inherited from
 
-[ZeaUIEvent](Utilities_Events_ZeaUIEvent.ZeaUIEvent).[intersectionData](Utilities_Events_ZeaUIEvent.ZeaUIEvent#intersectiondata)
+[ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[intersectionData](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#intersectiondata)
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:22](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L22)
+[src/Utilities/Events/ZeaPointerEvent.ts:22](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaPointerEvent.ts#L22)
 
 ___
 
@@ -124,11 +124,11 @@ ___
 
 #### Inherited from
 
-[ZeaUIEvent](Utilities_Events_ZeaUIEvent.ZeaUIEvent).[leftGeometry](Utilities_Events_ZeaUIEvent.ZeaUIEvent#leftgeometry)
+[ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[leftGeometry](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#leftgeometry)
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:23](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L23)
+[src/Utilities/Events/ZeaPointerEvent.ts:23](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaPointerEvent.ts#L23)
 
 ___
 
@@ -138,7 +138,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaMouseEvent.ts:12](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaMouseEvent.ts#L12)
+[src/Utilities/Events/ZeaMouseEvent.ts:11](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaMouseEvent.ts#L11)
 
 ___
 
@@ -148,11 +148,11 @@ ___
 
 #### Inherited from
 
-[ZeaUIEvent](Utilities_Events_ZeaUIEvent.ZeaUIEvent).[pointerPos](Utilities_Events_ZeaUIEvent.ZeaUIEvent#pointerpos)
+[ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[pointerPos](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#pointerpos)
 
 #### Defined in
 
-[src/Utilities/Events/ZeaUIEvent.ts:12](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaUIEvent.ts#L12)
+[src/Utilities/Events/ZeaPointerEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaPointerEvent.ts#L19)
 
 ___
 
@@ -162,11 +162,11 @@ ___
 
 #### Inherited from
 
-[ZeaUIEvent](Utilities_Events_ZeaUIEvent.ZeaUIEvent).[pointerRay](Utilities_Events_ZeaUIEvent.ZeaUIEvent#pointerray)
+[ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[pointerRay](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#pointerray)
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L18)
+[src/Utilities/Events/ZeaPointerEvent.ts:18](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaPointerEvent.ts#L18)
 
 ___
 
@@ -176,11 +176,11 @@ ___
 
 #### Inherited from
 
-[ZeaUIEvent](Utilities_Events_ZeaUIEvent.ZeaUIEvent).[pointerType](Utilities_Events_ZeaUIEvent.ZeaUIEvent#pointertype)
+[ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[pointerType](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#pointertype)
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:17](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L17)
+[src/Utilities/Events/ZeaPointerEvent.ts:17](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaPointerEvent.ts#L17)
 
 ___
 
@@ -190,11 +190,11 @@ ___
 
 #### Inherited from
 
-[ZeaUIEvent](Utilities_Events_ZeaUIEvent.ZeaUIEvent).[propagating](Utilities_Events_ZeaUIEvent.ZeaUIEvent#propagating)
+[ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[propagating](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#propagating)
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:20](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L20)
+[src/Utilities/Events/ZeaUIEvent.ts:11](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaUIEvent.ts#L11)
 
 ___
 
@@ -204,7 +204,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaMouseEvent.ts:9](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaMouseEvent.ts#L9)
+[src/Utilities/Events/ZeaMouseEvent.ts:8](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaMouseEvent.ts#L8)
 
 ___
 
@@ -214,7 +214,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaMouseEvent.ts:10](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaMouseEvent.ts#L10)
+[src/Utilities/Events/ZeaMouseEvent.ts:9](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaMouseEvent.ts#L9)
 
 ___
 
@@ -224,7 +224,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaMouseEvent.ts:14](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaMouseEvent.ts#L14)
+[src/Utilities/Events/ZeaMouseEvent.ts:13](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaMouseEvent.ts#L13)
 
 ___
 
@@ -234,7 +234,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaMouseEvent.ts:15](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaMouseEvent.ts#L15)
+[src/Utilities/Events/ZeaMouseEvent.ts:14](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaMouseEvent.ts#L14)
 
 ___
 
@@ -244,11 +244,11 @@ ___
 
 #### Inherited from
 
-[ZeaUIEvent](Utilities_Events_ZeaUIEvent.ZeaUIEvent).[viewport](Utilities_Events_ZeaUIEvent.ZeaUIEvent#viewport)
+[ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[viewport](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#viewport)
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:19](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L19)
+[src/Utilities/Events/ZeaUIEvent.ts:10](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaUIEvent.ts#L10)
 
 ## Methods
 
@@ -262,11 +262,11 @@ ___
 
 #### Inherited from
 
-[ZeaUIEvent](Utilities_Events_ZeaUIEvent.ZeaUIEvent).[getCapture](Utilities_Events_ZeaUIEvent.ZeaUIEvent#getcapture)
+[ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[getCapture](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#getcapture)
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:38](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L38)
+[src/Utilities/Events/ZeaPointerEvent.ts:38](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaPointerEvent.ts#L38)
 
 ___
 
@@ -280,7 +280,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/ZeaMouseEvent.ts:45](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaMouseEvent.ts#L45)
+[src/Utilities/Events/ZeaMouseEvent.ts:44](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaMouseEvent.ts#L44)
 
 ___
 
@@ -294,11 +294,11 @@ ___
 
 #### Inherited from
 
-[ZeaUIEvent](Utilities_Events_ZeaUIEvent.ZeaUIEvent).[releaseCapture](Utilities_Events_ZeaUIEvent.ZeaUIEvent#releasecapture)
+[ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[releaseCapture](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#releasecapture)
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:42](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L42)
+[src/Utilities/Events/ZeaPointerEvent.ts:42](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaPointerEvent.ts#L42)
 
 ___
 
@@ -318,11 +318,11 @@ ___
 
 #### Inherited from
 
-[ZeaUIEvent](Utilities_Events_ZeaUIEvent.ZeaUIEvent).[setCapture](Utilities_Events_ZeaUIEvent.ZeaUIEvent#setcapture)
+[ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[setCapture](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#setcapture)
 
 #### Defined in
 
-[src/Utilities/Events/ZeaPointerEvent.ts:34](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaPointerEvent.ts#L34)
+[src/Utilities/Events/ZeaPointerEvent.ts:34](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaPointerEvent.ts#L34)
 
 ___
 
@@ -336,9 +336,9 @@ ___
 
 #### Overrides
 
-[ZeaUIEvent](Utilities_Events_ZeaUIEvent.ZeaUIEvent).[stopPropagation](Utilities_Events_ZeaUIEvent.ZeaUIEvent#stoppropagation)
+[ZeaPointerEvent](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent).[stopPropagation](Utilities_Events_ZeaPointerEvent.ZeaPointerEvent#stoppropagation)
 
 #### Defined in
 
-[src/Utilities/Events/ZeaMouseEvent.ts:41](https://github.com/ZeaInc/zea-engine/blob/0a2901eeb/src/Utilities/Events/ZeaMouseEvent.ts#L41)
+[src/Utilities/Events/ZeaMouseEvent.ts:40](https://github.com/ZeaInc/zea-engine/blob/d12d3e016/src/Utilities/Events/ZeaMouseEvent.ts#L40)
 

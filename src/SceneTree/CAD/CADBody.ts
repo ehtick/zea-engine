@@ -92,16 +92,16 @@ class CADBody extends GeomItem {
         }
         this.materialParam.setValue(material)
       }
-
-      if (context.versions['zea-cad'].compare([0, 0, 2]) >= 0 && context.versions['zea-cad'].compare([0, 0, 4]) < 0) {
-        this.__layers = reader.loadStrArray()
-        // console.log("Layers:", this.__layers)
-        // Note: addGeomToLayer should take a 'GeomItem'
-        // @ts-ignore
-        for (const layer of this.__layers) context.addGeomToLayer(this, layer)
-      }
     } else {
       super.readBinary(reader, context)
+    }
+
+    if (context.versions['zea-cad'].compare([0, 0, 2]) >= 0 && context.versions['zea-cad'].compare([0, 0, 4]) < 0) {
+      this.__layers = reader.loadStrArray()
+      // console.log("Layers:", this.__layers)
+      // Note: addGeomToLayer should take a 'BaseGeomItem'
+      // @ts-ignore
+      for (const layer of this.__layers) context.addGeomToLayer(this, layer)
     }
   }
 }

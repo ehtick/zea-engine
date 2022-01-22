@@ -3,12 +3,8 @@
   <head>
     <title>Load OBJ Asset</title>
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
     <meta charset="UTF-8" />
-  </head>
-  <body class="bg-blue-100 h-full">
-    <div class="h-full">
-      <canvas id="viewport"></canvas>
-    </div>
 
     <script src="../dist/index.umd.js"></script>
 
@@ -20,7 +16,11 @@
       const scene = new Scene()
       scene.setupGrid(10.0, 10)
 
-      const renderer = new GLRenderer(domElement, { antialias: false })
+      const renderer = new GLRenderer(domElement, {
+        antialias: false,
+        debugGeomIds: false,
+        debugOcclusionBuffer: false,
+      })
       renderer.setScene(scene)
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 10), new Vec3(0, 0, 1.5))
 
@@ -30,9 +30,8 @@
       scene.displayEnvMapParam.value = true
 
       const objAsset = new ObjAsset('cow')
-      objAsset.load('data/rifle/rifle.obj').then(() => {
-        renderer.frameAll()
-      })
+      objAsset.getParameter('splitGroupsIntoObjects').setValue(true)
+      objAsset.load('data/cow.obj')
       scene.getRoot().addChild(objAsset)
 
       const xfo = new Xfo()
@@ -44,26 +43,35 @@
       promises.push(new Promise((resolve) => envMap.once('loaded', resolve)))
       promises.push(new Promise((resolve) => objAsset.once('loaded', resolve)))
       Promise.all(promises).then(() => {
-        window.postMessage('done-loading')
+        setStatusText('done-loading')
       })
 
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'front') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(1, 1, 0.1), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          window.postMessage(`done-${data}`)
-        } else if (data === 'back') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          window.postMessage(`done-${data}`)
-        }
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
       }
-
-      window.addEventListener('message', handleMessage, false)
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(1, 1, 0.1), new Vec3(0, 0, 0.4))
+        renderer.frameAll()
+        setStatusText(`done-variant-01`)
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+        renderer.frameAll()
+        setStatusText(`done-variant-02`)
+      })
       // }}}
     </script>
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="h-screen">
+      <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+      </div>
+    </div>
   </body>
 </html>

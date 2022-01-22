@@ -25,13 +25,7 @@ varying vec3 v_worldPos;
 
 #if defined(DRAW_COLOR)
 
-#ifdef ENABLE_MULTI_DRAW
-// #define DEBUG_GEOM_ID
-#endif
-#ifdef DEBUG_GEOM_ID
-import 'debugColors.glsl'
-#endif
-
+uniform color cutColor;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
@@ -114,8 +108,18 @@ import 'computeViewNormal.glsl'
 
 
 #elif defined(DRAW_GEOMDATA)
+
+#ifdef ENABLE_MULTI_DRAW
+// #define DEBUG_GEOM_ID
+#endif
+#ifdef DEBUG_GEOM_ID
+import 'debugColors.glsl'
+#endif
+
 uniform int isOrthographic;
 import 'surfaceGeomData.glsl'
+
+
 #elif defined(DRAW_HIGHLIGHT)
 import 'surfaceHighlight.glsl'
 #endif // DRAW_HIGHLIGHT
@@ -198,7 +202,7 @@ void main(void) {
   vec4 matValue1      = getMaterialValue(materialCoords, 1);
   vec4 matValue2      = getMaterialValue(materialCoords, 2);
 
-  material.baseColor     = toLinear(matValue0.rgb);
+  material.baseColor     = matValue0.rgb;
   material.ambientOcclusion      = matValue1.r;
   material.metallic      = matValue1.g;
   material.roughness     = matValue1.b;
@@ -210,7 +214,7 @@ void main(void) {
 #else // ENABLE_MULTI_DRAW
 
 #ifndef ENABLE_TEXTURES
-  material.baseColor     = toLinear(BaseColor.rgb);
+  material.baseColor     = BaseColor.rgb;
   material.emission      = EmissiveStrength;
 
 #ifdef ENABLE_PBR
@@ -219,15 +223,17 @@ void main(void) {
   material.reflectance   = Reflectance;
 #endif
 
-#else
+#else // ENABLE_TEXTURES
   // Planar YZ projection for texturing, repeating every meter.
   // vec2 texCoord       = v_worldPos.xz * 0.2;
   vec2 texCoord          = v_textureCoord;
 
   vec4 baseColor         = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, texCoord);
+
   material.ambientOcclusion = getLuminanceParamValue(AmbientOcclusion, AmbientOcclusionTex, AmbientOcclusionTexType, texCoord);
   material.baseColor     = baseColor.rgb;
   
+
 #ifdef ENABLE_PBR
 
   material.metallic      = getLuminanceParamValue(Metallic, MetallicTex, MetallicTexType, texCoord);
@@ -256,7 +262,6 @@ void main(void) {
 #endif // ENABLE_PBR
 #endif // ENABLE_TEXTURES
 #endif // ENABLE_MULTI_DRAW
-
 
   fragColor = pbrSurfaceRadiance(material, normal, viewVector);
   // fragColor = vec4(texture2D(NormalTex, texCoord).rgb, 1.0);
@@ -301,6 +306,13 @@ void main(void) {
   if (testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {
     discard;
     return;
+  }
+  if (occlusionCulling != 0) {
+    // Transparent geoms do not render to the occlusion buffer
+    if (testFlag(flags, GEOMITEM_TRANSPARENT)) {
+      discard;
+      return;
+    }
   }
   
   fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_drawItemIds.x, v_drawItemIds.y, isOrthographic);

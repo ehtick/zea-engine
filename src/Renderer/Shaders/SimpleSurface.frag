@@ -120,15 +120,15 @@ void main(void) {
   if (v_drawItemIds.z > 0.5) {
     materialCoords.x = v_drawItemIds.z;
   }
-  vec4 baseColor = toLinear(getMaterialValue(materialCoords, 0));
-  vec4 matValue1 = getMaterialValue(materialCoords, 1);
+  vec4 baseColor      = getMaterialValue(materialCoords, 0);
+  vec4 matValue1      = getMaterialValue(materialCoords, 1);
   float opacity       = baseColor.a * matValue1.r;
   float emission      = matValue1.g;
 
 #else // ENABLE_MULTI_DRAW
 
 #ifndef ENABLE_TEXTURES
-  vec4 baseColor      = toLinear(BaseColor);
+  vec4 baseColor      = BaseColor;
   float emission      = EmissiveStrength;
   float opacity       = baseColor.a * Opacity;
 #else
@@ -174,6 +174,13 @@ void main(void) {
   if (testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {
     discard;
     return;
+  }
+  if (occlusionCulling != 0) {
+    // Transparent geoms do not render to the occlusion buffer
+    if (testFlag(flags, GEOMITEM_TRANSPARENT)) {
+      discard;
+      return;
+    }
   }
   fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_drawItemIds.x, v_drawItemIds.y, isOrthographic);
 #elif defined(DRAW_HIGHLIGHT)

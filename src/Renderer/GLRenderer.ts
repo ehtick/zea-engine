@@ -17,8 +17,6 @@ import { IntersectionData } from '../Utilities/IntersectionData'
 import { GeomDataRenderState, ColorRenderState } from './types/renderer'
 import { WebGL12RenderingContext } from './types/webgl'
 
-
-
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
 // TODO: move this fn somewhere
 
@@ -459,12 +457,14 @@ class GLRenderer extends GLBaseRenderer {
     const region = [0, 0, 3, 3]
 
     const renderstate = <GeomDataRenderState>{}
-    renderstate.viewports.push({
-      region,
-      viewMatrix: xfo.inverse().toMat4(),
-      projectionMatrix: this.__rayCastRenderTargetProjMatrix,
-      isOrthographic: true,
-    })
+    renderstate.viewports = [
+      {
+        region,
+        viewMatrix: xfo.inverse().toMat4(),
+        projectionMatrix: this.__rayCastRenderTargetProjMatrix,
+        isOrthographic: true,
+      },
+    ]
     renderstate.cameraMatrix = xfo.toMat4()
 
     this.__rayCastRenderTarget.bindForWriting(renderstate, true)

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>occlusion-culling-occluded-by-hidden-bbox - Zea Engine</title>
+
+    <link href="data/zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
+
+    <script src="../dist/index.umd.js"></script>
+    <style>
+      #cull-stats {
+        color: rgb(0, 0, 0);
+        position: fixed;
+        bottom: 40px;
+        left: 10px;
+      }
+    </style>
+
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Xfo, Color, Torus, Sphere, Material, GeomItem } = zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, {
+        enableOcclusionCulling: true,
+        debugOcclusionBuffer: false,
+      })
+      renderer.setScene(scene)
+
+      // scene.setupGrid(10.0, 10)
+
+      const redMaterial = new Material('surfaces', 'SimpleSurfaceShader')
+      redMaterial.getParameter('BaseColor').setValue(new Color(1, 0, 0))
+      const yellowMaterial = new Material('surfaces', 'SimpleSurfaceShader')
+      yellowMaterial.getParameter('BaseColor').setValue(new Color(1, 1, 0))
+      const sphereMaterial = new Material('surfaces', 'SimpleSurfaceShader')
+      sphereMaterial.getParameter('BaseColor').setValue(new Color(0, 1, 1))
+
+      const sphere = new Sphere(0.5, 8, 5)
+      const geomItemSphere = new GeomItem('Sphere', sphere, sphereMaterial)
+      scene.getRoot().addChild(geomItemSphere)
+
+      // The inner torus is occluded by the outer torus, and the inner torus bbox should then
+      // occlude the bbox of the sphere. This caused the sphere to be considered occluded.
+      // The fix is a stochastic transparency in the bbox rendering allowing the sphere or its bbox
+      // to be seen through the bbox of the occluded inner torus.
+      const torusInner = new Torus(1, 5.0, 16)
+      const geomItemInner = new GeomItem('SkinnyTorus', torusInner, redMaterial)
+      scene.getRoot().addChild(geomItemInner)
+
+      const torusOuter = new Torus(1.5, 5.0, 16)
+      const geomItemOuter = new GeomItem('FatTorus', torusOuter, yellowMaterial)
+      scene.getRoot().addChild(geomItemOuter)
+
+      const geomItemSphere2 = new GeomItem('Sphere', new Sphere(0.1, 8, 5), sphereMaterial, new Xfo(new Vec3(5, 0, 1)))
+      scene.getRoot().addChild(geomItemSphere2)
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 10), new Vec3(0, 0, 0))
+
+      // renderer.on('CullingUpdated', (event) => {
+      //   console.log(`visible: ${event.visible} / total: ${event.total}`)
+      // })
+      renderer.on('occlusionCullingProfilingData', (event) => {
+        console.log(`occlusionCulling: ${JSON.stringify(event)}`)
+      })
+
+      const postMessage = (msg) => {
+        console.log(msg)
+        window.postMessage(msg)
+      }
+      renderer.once('CullingUpdated', () => {
+        postMessage('done-loading')
+      })
+      renderer.on('occlusionCullingProfilingData', (event) => {
+        const { queryReduceSceneGeoms, queryReduceBBoxes } = event
+        cullElement.textContent = `occlusionCulling Reduction: ${queryReduceSceneGeoms}, ${queryReduceBBoxes}`
+      })
+      const cullElement = document.getElementById('cull-stats')
+      renderer.on('CullingUpdated', (event) => {
+        if (event.visible != undefined && event.total != undefined) {
+          cullElement.textContent = `visible: ${event.visible} / total: ${event.total}`
+        }
+      })
+
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
+      }
+
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        // Rotate the camera away from the objects. Rotate back, and check that everything is still visible
+        // Note: this variant is disabled in the spec as it as failing constantly.
+        // This variant doesn't ever seem to complete in Cypress. Something gets stuck in the web worker.
+        // which never emits the correct event to say culling completed.
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 10), new Vec3(10, 0, 0))
+        setTimeout(() => {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 10), new Vec3(0, 0, 0))
+          setTimeout(() => {
+            setStatusText(`done-variant-01`)
+          }, 500)
+        }, 500)
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        // Rotate the camera away from the objects. Rotate back, and check that everything is still visible
+        // console.log('Press button')
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-02`)
+        })
+        // renderer.on('onmessage', (event) => {
+        //   setStatusText(`onmessage` + event.data.type + JSON.stringify(event.data))
+        // })
+        geomItemOuter.visibleParam.value = false
+        // renderer.getViewport().getCamera().emit('movementFinished')
+      })
+      document.getElementById('variant-03').addEventListener('click', function (event) {
+        // Make the outer torus visible again.
+        // console.log('Press button')
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-03`)
+
+          // Note: this forces the culling to be run again.
+          // it updates the state in the worker, so that variant-04 succeeds.
+          // The internal state of the worker is still no up to date, meaning
+          // when we move the torus in variant4, the little sphere is still considered
+          // not occluded, so no occlusion update occurs.
+          renderer.getViewport().getCamera().emit('movementFinished')
+        })
+        geomItemOuter.visibleParam.value = true
+        renderer.getViewport().getCamera().emit('movementFinished')
+      })
+      document.getElementById('variant-04').addEventListener('click', function (event) {
+        // Move the big torus aside so we can see all 4 geometries.
+        geomItemOuter.globalXfoParam.value = new Xfo(new Vec3(3, 0, 1))
+        renderer.getViewport().getCamera().emit('movementFinished')
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-04`)
+        })
+      })
+
+      // }}}
+    </script>
+  </head>
+  <body class="bg-blue-100">
+    <div class="h-screen">
+      <canvas class="absolute" id="renderer"></canvas>
+      <div id="cull-stats" class="hud"></div>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+        <button class="variant-button" id="variant-03">variant-03</button>
+        <button class="variant-button" id="variant-04">variant-04</button>
+      </div>
+    </div>
+  </body>
+</html>

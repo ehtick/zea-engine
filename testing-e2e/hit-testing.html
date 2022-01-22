@@ -9,6 +9,7 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
 
     <script src="../dist/index.umd.js"></script>
 
@@ -56,7 +57,7 @@
       const objAsset = new ObjAsset('cow')
       objAsset.splitGroupsIntoObjectsParam.value = true
       objAsset.load('data/cow.obj').then(() => {
-        postMessage('done-loading')
+        setStatusText('done-loading')
       })
       scene.getRoot().addChild(objAsset)
 
@@ -65,11 +66,6 @@
       xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5)
       objAsset.globalXfoParam.value = xfo
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(8, 8, 6), new Vec3(2, 0, 3))
-
-      const postMessage = (msg) => {
-        console.log(msg)
-        window.postMessage(msg)
-      }
 
       const sphere = new Sphere(0.1)
       const material = new SimpleSurfaceMaterial('foo')
@@ -86,7 +82,7 @@
           // This allows the subsequent pointe events to 'see' through the point we are
           // dragging, and so we can slide the point over the surface of the cow.
           this.point.setSelectable(false)
-          event.setCapture(this, event.intersectionData)
+          event.setCapture(this)
         }
         onPointerMove(event) {
           // Now: when a
@@ -114,7 +110,7 @@
           this.stroke = new TreeItem('stroke')
           scene.getRoot().addChild(this.stroke)
           this.addPoint(event, event.intersectionData)
-          event.setCapture(this, event.intersectionData)
+          event.setCapture(this)
         }
         addPoint(event, intersectionData) {
           const pos = event.pointerRay.start.add(event.pointerRay.dir.scale(intersectionData.dist))
@@ -142,12 +138,19 @@
         if (event.intersectionData) {
           if (event.intersectionData.geomItem.geomParam.getValue() == sphere) {
             movePointTool.startMove(event)
+            event.stopPropagation()
           } else {
             makeStrokeTool.startStroke(event)
+            event.stopPropagation()
           }
         }
       })
       // renderer.getViewport().debugGeomShader = true
+
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
+      }
     </script>
   </head>
   <body class="bg-blue-100 h-full">
@@ -156,9 +159,10 @@
       <nav class="border border-blue-400 flex justify-center items-center">nav</nav>
       <main>
         <canvas id="viewport"></canvas>
+        <div id="status" class="hud"></div>
       </main>
       <aside class="border border-blue-400 flex justify-center items-center">aside</aside>
-      <footer class="border border-blue-400 flex justify-center items-center">footer</footer>
+      <footer class="border border-blue-400 flex justify-center items-center"></footer>
     </div>
   </body>
 </html>

@@ -2,10 +2,10 @@ import { EventEmitter } from '../../Utilities/index'
 
 import '../../SceneTree/GeomItem'
 import { GeomItem } from '../../SceneTree/GeomItem'
-import { VisibilityChangedEvent } from '../../Utilities/Events/VisibilityChangedEvent'
 import { RenderState } from '../types/renderer'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { CADBody, StateChangedEvent } from '../..'
+import { VisibilityChangedEvent, TransparencyChangedEvent } from '../../Utilities/Events'
 
 const GLGeomItemChangeType = {
   GEOMITEM_CHANGED: 0,
@@ -16,7 +16,8 @@ const GLGeomItemChangeType = {
 
 const GLGeomItemFlags = {
   GEOMITEM_FLAG_CUTAWAY: 1, // 1<<0;
-  GEOMITEM_INVISIBLE_IN_GEOMDATA: 2, // 1<<0;
+  GEOMITEM_INVISIBLE_IN_GEOMDATA: 2, // 1<<1;
+  GEOMITEM_TRANSPARENT: 4, // 1<<1;
 }
 
 /** This class is responsible for managing a GeomItem within the renderer.
@@ -41,7 +42,7 @@ class GLGeomItem extends EventEmitter {
   protected geomVisible: boolean
   visible: boolean
   shattered: boolean = false
-  protected culled: boolean = false
+  culled: boolean = false
   protected cutDataChanged: boolean = false
   protected cutData: number[] = []
   protected geomData: any
@@ -76,12 +77,11 @@ class GLGeomItem extends EventEmitter {
     this.materialId = materialId
     this.supportInstancing = supportInstancing
 
-    this.geomVisible = this.geomItem.isVisible()
-    this.visible = this.geomVisible
-    this.culled = false
+    this.visible = this.geomItem.isVisible()
 
-    this.listenerIDs['visibilityChanged'] = this.geomItem.on('visibilityChanged', (event) => {
-      this.updateVisibility()
+    this.listenerIDs['visibilityChanged'] = this.geomItem.on('visibilityChanged', (event: VisibilityChangedEvent) => {
+      this.visible = event.visible
+      this.emit('visibilityChanged', event)
     })
 
     if (geomItem instanceof CADBody) this.shattered = geomItem.shattered
@@ -99,8 +99,11 @@ class GLGeomItem extends EventEmitter {
       if (this.geomItem.isCutawayEnabled()) {
         flags |= GLGeomItemFlags.GEOMITEM_FLAG_CUTAWAY
       }
-      if (geomItem.isSelectable() == false) {
+      if (!geomItem.isSelectable()) {
         flags |= GLGeomItemFlags.GEOMITEM_INVISIBLE_IN_GEOMDATA
+      }
+      if (geomItem.materialParam.value.isTransparent()) {
+        flags |= GLGeomItemFlags.GEOMITEM_TRANSPARENT
       }
 
       this.geomData = [flags, materialId, 0, 0]
@@ -114,6 +117,16 @@ class GLGeomItem extends EventEmitter {
         this.cutDataChanged = true
         this.emit('updated')
       })
+      this.listenerIDs['transparencyChanged'] = this.geomItem.materialParam.on(
+        'transparencyChanged',
+        (event: TransparencyChangedEvent) => {
+          let flags = this.geomData[0]
+          if (event.isTransparent) flags |= GLGeomItemFlags.GEOMITEM_TRANSPARENT
+          else flags &= ~GLGeomItemFlags.GEOMITEM_TRANSPARENT
+          this.geomData[0]
+          this.emit('updated')
+        }
+      )
     }
   }
 
@@ -142,30 +155,13 @@ class GLGeomItem extends EventEmitter {
   }
 
   /**
-   * The updateVisibility method.
-   */
-  updateVisibility(): void {
-    this.geomVisible = this.geomItem.isVisible()
-    const visible = this.geomVisible && !this.culled
-    if (this.visible != visible) {
-      this.visible = visible
-      const event = new VisibilityChangedEvent(visible)
-      this.emit('visibilityChanged', event)
-      this.emit('updated')
-    }
-  }
-
-  /**
    * Sets the additional culled value which controls visiblity
    * @param culled - True if culled, else false.
    */
   setCulled(culled: boolean): void {
     this.culled = culled
-    const visible = this.geomVisible && !this.culled
-    if (this.visible != visible) {
-      this.visible = visible
-      const event = new VisibilityChangedEvent(visible)
-      this.emit('visibilityChanged', event)
+    if (this.visible) {
+      this.emit('cullStateChanged')
     }
   }
 

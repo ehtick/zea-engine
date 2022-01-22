@@ -9,6 +9,7 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
 
     <style>
       body {
@@ -92,10 +93,8 @@
       const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: true })
+      const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false, enableOcclusionCulling: true })
       renderer.setScene(scene)
-      // renderer.outlineThickness = 0.5
-      // renderer.outlineColor = new Color(0.2, 0.2, 0.2, 1)
       renderer.getViewport().backgroundColorParam.value = new Color(0.85, 0.85, 0.85, 1)
       renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
       // renderer.getViewport().debugHighlightedGeomsBuffer = true
@@ -330,7 +329,7 @@
           })
           console.log('parts:' + parts + ' bodies:' + bodies + ' triangles:', triangles)
 
-          postMessage('done-loading')
+          setStatusText('done-loading')
         })
         const xfo = new Xfo()
         xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5)
@@ -343,7 +342,7 @@
         const asset = new GLTFAsset()
         asset.load(url, filename).then(() => {
           renderer.frameAll()
-          postMessage('done-loading')
+          setStatusText('done-loading')
         })
         scene.getRoot().addChild(asset)
         return asset
@@ -394,27 +393,17 @@
       }
       /** COLLAB END */
 
-      const postMessage = (msg, arg) => {
-        console.log(msg, arg)
-        window.postMessage(msg)
-      }
-
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'variant-01') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          postMessage(`done-${data}`)
-        } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          postMessage(`done-${data}`)
+      const cullElement = document.getElementById('cull-stats')
+      renderer.on('CullingUpdated', (event) => {
+        if (event.visible && event.total) {
+          cullElement.textContent = `visible: ${event.visible} / total: ${event.total}`
         }
+      })
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
       }
-
-      window.addEventListener('message', handleMessage, false)
       // }}}
 
       // //////////////////////////////////////
@@ -446,9 +435,12 @@
         <canvas id="viewport"></canvas>
         <div class="stats-display" id="stats"></div>
         <div class="fps-display" id="fps"></div>
+        <div id="cull-stats" class="hud"></div>
       </main>
       <aside class="border border-blue-400 flex justify-center items-center"></aside>
-      <footer class="border border-blue-400 flex justify-center items-center"></footer>
+      <footer class="border border-blue-400 flex justify-center items-center">
+        <div id="status" class="hud"></div>
+      </footer>
     </div>
   </body>
 </html>

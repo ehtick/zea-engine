@@ -8,14 +8,14 @@ import { CameraManipulator } from '../SceneTree/index'
 import { GLRenderer } from './GLRenderer'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { ViewChangedEvent } from '../Utilities/Events/ViewChangedEvent'
-import { POINTER_TYPES } from '../Utilities/Events/ZeaPointerEvent'
+import { POINTER_TYPES, ZeaPointerEvent } from '../Utilities/Events/ZeaPointerEvent'
 import { IntersectionData } from '../Utilities/IntersectionData'
 import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
 import { ZeaWheelEvent } from '../Utilities/Events/ZeaWheelEvent'
 import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent'
 import { ZeaMouseEvent } from '../Utilities/Events/ZeaMouseEvent'
 import { ZeaUIEvent } from '../Utilities/Events/ZeaUIEvent'
-import { GeomDataRenderState, RenderState, ColorRenderState } from './types/renderer'
+import { GeomDataRenderState, RenderState, ColorRenderState, Uniform } from './types/renderer'
 
 let activeViewport: GLViewport = null
 /**
@@ -49,10 +49,12 @@ class GLViewport extends GLBaseViewport {
   protected __tr: Vec2
   protected __prevDownTime: number
   protected __geomDataBuffer: GLTexture2D
-  protected __geomDataBufferSizeFactor: number
+  protected __geomDataBufferSizeFactor: number = 1
   protected __geomDataBufferFbo: GLFbo
-  protected debugGeomShader: boolean
-  protected debugHighlightedGeomsBuffer: boolean = false
+  debugGeomDataBuffer: boolean = false
+  debugOcclusionBuffer: boolean = false
+  debugReductionBuffer: boolean = false
+  debugHighlightedGeomsBuffer: boolean = false
 
   protected __x: number = 0
   protected __y: number = 0
@@ -89,9 +91,6 @@ class GLViewport extends GLBaseViewport {
 
     // //////////////////////////////////
     // Setup GeomData Fbo
-    this.__geomDataBufferSizeFactor = 1
-
-    this.debugGeomShader = false
 
     const gl = this.__renderer.gl
     this.__geomDataBuffer = new GLTexture2D(gl, {
@@ -362,7 +361,7 @@ class GLViewport extends GLBaseViewport {
   renderGeomDataFbo(): void {
     if (this.__geomDataBufferFbo) {
       const geomDataRenderstate: GeomDataRenderState = <GeomDataRenderState>{}
-      this.__initRenderState(geomDataRenderstate)
+      this.initRenderState(geomDataRenderstate)
 
       // Note: GLLinesPass binds a new Fbo, but shares this ones depth buffer.
       geomDataRenderstate.geomDataFbo = this.__geomDataBufferFbo
@@ -574,7 +573,7 @@ class GLViewport extends GLBaseViewport {
    *
    * @param event - The DOM event produced by a pointer
    */
-  onPointerDown(event: ZeaUIEvent): void {
+  onPointerDown(event: ZeaPointerEvent): void {
     this.prepareUIEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
@@ -639,7 +638,7 @@ class GLViewport extends GLBaseViewport {
    *
    * @param event - The event that occurs.
    */
-  onPointerUp(event: ZeaUIEvent): void {
+  onPointerUp(event: ZeaPointerEvent): void {
     this.prepareUIEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
@@ -685,7 +684,7 @@ class GLViewport extends GLBaseViewport {
    *
    * @param event - The event that occurs.
    */
-  onPointerMove(event: ZeaUIEvent): void {
+  onPointerMove(event: ZeaPointerEvent): void {
     this.prepareUIEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
@@ -760,7 +759,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse pointer is moved into this viewport
    * @param event - The event that occurs.
    */
-  onPointerEnter(event: ZeaUIEvent): void {
+  onPointerEnter(event: ZeaPointerEvent): void {
     this.prepareUIEvent(event)
     this.emit('pointerEnter', event)
     if (!event.propagating) return
@@ -775,7 +774,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse pointer is moved out of this viewport
    * @param event - The event that occurs.
    */
-  onPointerLeave(event: ZeaUIEvent): void {
+  onPointerLeave(event: ZeaPointerEvent): void {
     this.prepareUIEvent(event)
     this.emit('pointerLeave', event)
     if (!event.propagating) return
@@ -791,7 +790,7 @@ class GLViewport extends GLBaseViewport {
    * @param event - The event that occurs.
    */
   onKeyDown(event: KeyboardEvent): void {
-    // this.prepareUIEvent(event)
+    this.prepareUIEvent(event)
     if (this.manipulator) {
       this.manipulator.onKeyDown(event)
       if (!event.propagating) return
@@ -804,7 +803,7 @@ class GLViewport extends GLBaseViewport {
    * @param event - The event that occurs.
    */
   onKeyUp(event: KeyboardEvent): void {
-    // this.prepareUIEvent(event)
+    this.prepareUIEvent(event)
     if (this.manipulator) {
       this.manipulator.onKeyUp(event)
       if (!event.propagating) return
@@ -863,11 +862,11 @@ class GLViewport extends GLBaseViewport {
   // Rendering
 
   /**
-   * The __initRenderState method.
+   * The initRenderState method.
    * @param renderstate - The object tracking the current state of the renderer
    * @private
    */
-  __initRenderState(renderstate: RenderState): void {
+  initRenderState(renderstate: RenderState): void {
     // console.log(this.__viewMat.toString())
     renderstate.viewXfo = this.__cameraXfo
     renderstate.viewScale = 1.0
@@ -892,19 +891,25 @@ class GLViewport extends GLBaseViewport {
    */
   draw(): void {
     const renderstate: ColorRenderState = <ColorRenderState>{}
-    this.__initRenderState(renderstate)
+    this.initRenderState(renderstate)
 
     super.draw(renderstate)
 
     // Turn this on to debug the geom data buffer.
-    if (this.debugGeomShader) {
+    if (this.debugGeomDataBuffer) {
       this.renderGeomDataFbo()
       // Note: renderGeomDataFbo would have bound other shaders.
       // and the renderstate used above is no blonger valid. Reset.
       const renderstate: ColorRenderState = <ColorRenderState>{}
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
+
+      const gl = this.__renderer.gl
+      gl.enable(gl.BLEND)
+      gl.blendEquation(gl.FUNC_ADD)
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
       screenQuad.draw(renderstate, this.__geomDataBuffer, new Vec2(0, 0), new Vec2(1, 1))
+      gl.disable(gl.BLEND)
     }
     if (this.debugHighlightedGeomsBuffer) {
       // Note: renderGeomDataFbo would have bound other shaders.
@@ -912,7 +917,44 @@ class GLViewport extends GLBaseViewport {
       const renderstate: ColorRenderState = <ColorRenderState>{}
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
+
+      const gl = this.__renderer.gl
+      gl.enable(gl.BLEND)
+      gl.blendEquation(gl.FUNC_ADD)
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
       screenQuad.draw(renderstate, this.highlightedGeomsBuffer, new Vec2(0, 0), new Vec2(1, 1))
+      gl.disable(gl.BLEND)
+    }
+    if (this.debugOcclusionBuffer) {
+      // @ts-ignore
+      const occlusionDataBuffer = this.__renderer.glGeomItemLibrary.occlusionDataBuffer
+      const screenQuad = this.__renderer.screenQuad!
+      screenQuad.bindShader(renderstate)
+      const imageInif = <Uniform>renderstate.unifs.image
+      occlusionDataBuffer.bindColorTexture(renderstate, imageInif)
+
+      const gl = this.__renderer.gl
+      gl.enable(gl.BLEND)
+      gl.blendEquation(gl.FUNC_ADD)
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+      screenQuad.draw(renderstate, null, new Vec2(0, 0), new Vec2(1, 1))
+      gl.disable(gl.BLEND)
+    }
+    if (this.debugReductionBuffer) {
+      // @ts-ignore
+      const reductionDataBuffer = this.__renderer.glGeomItemLibrary.reductionDataBuffer
+      const screenQuad = this.__renderer.screenQuad!
+      screenQuad.bindShader(renderstate)
+
+      const imageInif = <Uniform>renderstate.unifs.image
+      reductionDataBuffer.bindColorTexture(renderstate, imageInif)
+
+      const gl = this.__renderer.gl
+      gl.enable(gl.BLEND)
+      gl.blendEquation(gl.FUNC_ADD)
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+      screenQuad.draw(renderstate, null, new Vec2(0, 0), new Vec2(1, 1))
+      gl.disable(gl.BLEND)
     }
   }
 }

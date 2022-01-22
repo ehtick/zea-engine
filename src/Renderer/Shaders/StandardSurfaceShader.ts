@@ -9,8 +9,7 @@ import vert from './StandardSurface.vert'
 // @ts-ignore
 import frag from './StandardSurface.frag'
 import { Material } from '../../SceneTree/Material'
-import { shaderLibrary } from '../ShaderLibrary'
-import { MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
+import { MaterialColorParam, ColorSpace } from '../../SceneTree/Parameters/MaterialColorParam'
 import { MaterialFloatParam } from '../../SceneTree/Parameters/MaterialFloatParam'
 import { StandardSurfaceMaterial } from '../../SceneTree/Materials/StandardSurfaceMaterial'
 import { WebGL12RenderingContext } from '../types/webgl'
@@ -61,7 +60,13 @@ class StandardSurfaceShader extends GLShader {
   static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(20) // TODO: no extra space needed right?
 
-    const baseColor = material.getParameter('BaseColor')!.value
+    const baseColorParam = material.getParameter('BaseColor')
+    let baseColor
+    if (baseColorParam instanceof MaterialColorParam && baseColorParam.colorSpace == ColorSpace.Gamma) {
+      baseColor = baseColorParam.value.toLinear()
+    } else {
+      baseColor = baseColorParam.value
+    }
     matData[0] = baseColor.r
     matData[1] = baseColor.g
     matData[2] = baseColor.b

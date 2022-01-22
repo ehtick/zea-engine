@@ -9,12 +9,7 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
-  </head>
-  <body class="bg-blue-100 h-full">
-    <div class="h-full">
-      <canvas id="viewport"></canvas>
-    </div>
-
+    <link rel="stylesheet" href="styles/test.css" />
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
@@ -51,27 +46,22 @@
       const cameraManipulator = renderer.getViewport().getManipulator()
       cameraManipulator.setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.look)
       cameraManipulator.enabledWASDWalkMode = true
+      cameraManipulator.walkModeCollisionDetection.value = true
       cameraManipulator.getParameter('OrbitRate').value = 0.5
 
-      window.postMessage('done-loading')
-
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'variant-01') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          window.postMessage(`done-${data}`)
-        } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          window.postMessage(`done-${data}`)
-        }
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        statusElement.textContent = text
       }
-
-      window.addEventListener('message', handleMessage, false)
+      setStatusText('done-loading')
       // }}}
     </script>
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="h-screen">
+      <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+    </div>
   </body>
 </html>

@@ -1,8 +1,8 @@
-import { Registry } from "../../Registry"
-import { AssetLoadContext } from "../AssetLoadContext"
-import { BinReader } from "../BinReader"
-import { CloneContext } from "../CloneContext"
-import { TreeItem } from "../TreeItem"
+import { Registry } from '../../Registry'
+import { AssetLoadContext } from '../AssetLoadContext'
+import { BinReader } from '../BinReader'
+import { CloneContext } from '../CloneContext'
+import { TreeItem } from '../TreeItem'
 
 /**
  * Represents a Part within a CAD assembly.
@@ -30,50 +30,6 @@ class CADPart extends TreeItem {
     const cloned = new CADPart()
     cloned.copyFrom(this, context)
     return cloned
-  }
-
-  /**
-   * The copyFrom method.
-   * @param {CADPart} src - The src param.
-   * @param {number} flags - The flags param.
-   * @private
-   */
-  copyFrom(src: CADPart, context?: CloneContext) {
-    super.copyFrom(src, context)
-  }
-
-  // ///////////////////////////
-  // Persistence
-
-  /**
-   * Initializes CADPart's asset, material, version and layers; adding current `CADPart` Geometry Item toall the layers in reader
-   *
-   * @param {BinReader} reader - The reader param.
-   * @param {object} context - The context param.
-   */
-  readBinary(reader: BinReader, context: AssetLoadContext): void {
-    super.readBinary(reader, context)
-  }
-
-  /**
-   * The toJSON method encodes this type as a json object for persistences.
-   *
-   * @param {number} flags - The flags param.
-   * @return {object} - The return value.
-   */
-  toJSON(context?: Record<string, any>): Record<string, any> {
-    const j = super.toJSON(context)
-    return j
-  }
-
-  /**
-   * The fromJSON method decodes a json object for this type.
-   *
-   * @param {object} j - The j param.
-   * @param {number} flags - The flags param.
-   */
-  fromJSON(j?: Record<string, any>): void {
-    super.fromJSON(j)
   }
 }
 

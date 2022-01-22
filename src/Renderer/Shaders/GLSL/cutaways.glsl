@@ -1,6 +1,7 @@
 
 const int GEOMITEM_FLAG_CUTAWAY = 1; // 1<<0;
 const int GEOMITEM_INVISIBLE_IN_GEOMDATA = 2; // 1<<1;
+const int GEOMITEM_TRANSPARENT = 4; // 1<<1;
 
 uniform color cutColor;
 

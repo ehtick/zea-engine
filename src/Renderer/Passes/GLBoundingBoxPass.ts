@@ -10,8 +10,7 @@ import { GLGeom } from '../Drawing'
 import { GLShader } from '../GLShader'
 import { RenderState } from '../types/renderer'
 import { ChildAddedEvent } from '../../Utilities/Events/ChildAddedEvent'
-
-const pixelsPerItem = 6 // The number of pixels per draw item.
+import { pixelsPerItem } from '../GLSLConstants.js'
 
 /** Class representing a GL treeitems pass.
  * @extends GLPass
@@ -220,14 +219,19 @@ class GLBoundingBoxPass extends GLPass {
     const pixel2 = new Vec4(new Float32Array(dataArray.buffer, (offset + 8) * 4, 4))
     const pixel3 = new Vec4(new Float32Array(dataArray.buffer, (offset + 12) * 4, 4))
     const pixel4 = new Vec4(new Float32Array(dataArray.buffer, (offset + 16) * 4, 4))
-    const pixel5 = new Vec4(new Float32Array(dataArray.buffer, (offset + 20) * 4, 4))
+    // const pixel5 = new Vec4(new Float32Array(dataArray.buffer, (offset + 20) * 4, 4))
+    const pixel6 = new Vec4(new Float32Array(dataArray.buffer, (offset + 24) * 4, 4))
+    const pixel7 = new Vec4(new Float32Array(dataArray.buffer, (offset + 28) * 4, 4))
 
-    pixel0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x)
-    pixel1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y)
-    pixel2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z)
-    pixel3.set(bbox.p0.x, bbox.p0.y, bbox.p0.z, 0.0)
-    pixel4.set(bbox.p1.x, bbox.p1.y, bbox.p1.z, 0.0)
-    pixel5.set(color.r, color.g, color.b, color.a)
+    let flags = 0
+    pixel0.set(flags, 0, 0, 0)
+    pixel1.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x)
+    pixel2.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y)
+    pixel3.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z)
+    pixel4.set(color.r, color.g, color.b, color.a)
+
+    pixel6.set(bbox.p0.x, bbox.p0.y, bbox.p0.z, 0.0)
+    pixel7.set(bbox.p1.x, bbox.p1.y, bbox.p1.z, 0.0)
   }
 
   // eslint-disable-next-line require-jsdoc
@@ -371,6 +375,8 @@ class GLBoundingBoxPass extends GLPass {
 
     const unifs = renderstate.unifs
 
+    gl.uniform1i(unifs.occlusionCulling.location, 0)
+
     if (!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
       const len = this.__indexArray.length
       for (let i = 0; i < len; i++) {
@@ -388,12 +394,14 @@ class GLBoundingBoxPass extends GLPass {
 
       {
         // The instance transform ids are bound as an instanced attribute.
-        const location = renderstate.attrs.instanceIds.location
+        const location = renderstate.attrs.instancedIds.location
         gl.enableVertexAttribArray(location)
         gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer!)
         gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0)
         gl.vertexAttribDivisor(location, 1) // This makes it instanced
       }
+
+      gl.uniform1i(unifs.instancedDraw.location, 1)
 
       renderstate.bindViewports(unifs, () => {
         this.glgeom!.drawInstanced(renderstate, this.drawCount)

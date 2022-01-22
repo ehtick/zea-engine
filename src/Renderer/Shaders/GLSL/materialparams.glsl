@@ -21,14 +21,16 @@ vec4 getMaterialValue(vec2 materialCoords, int valueIndex) {
 
 vec4 getColorParamValue(vec4 value, sampler2D tex, int texType, vec2 texCoord) {
   if (texType == 0) {
-    return toLinear(value);
+    return value;
   }
   else if (texType == 1 || texType == 2) {
+    // Note: we assume textures are always in gamma space, and must be converted
+    // to linear. I cann't find evidence that 8-bit textures can be in linear space.
     // TODO: Use SRGB textures.
     return toLinear(texture2D(tex, texCoord));
   }
   else if (texType == 3) {
-    // Float HDR Texture
+    // Float HDR Texture. We assume these textures are in linear space.
     return texture2D(tex, texCoord);
   }
   else

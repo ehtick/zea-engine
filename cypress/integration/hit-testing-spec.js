@@ -1,13 +1,11 @@
-describe('hit-testing', () => {
-  it('Capture snapshots', () => {
-    cy.visit('testing-e2e/hit-testing.html', {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+const test = 'hit-testing'
 
-    cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
-    cy.get('canvas').percySnapshot('hit-testing')
+describe(test, () => {
+  it('Capture snapshots', () => {
+    cy.visit('testing-e2e/hit-testing.html')
+
+    cy.get('#status').should('have.text', `done-loading`)
+    cy.get('canvas').percySnapshot(test)
 
     cy.window().then((win) => {
       cy.get('canvas')
