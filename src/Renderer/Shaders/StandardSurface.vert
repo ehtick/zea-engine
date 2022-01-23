@@ -60,6 +60,7 @@ void main(void) {
   v_viewPos       = -viewPos.xyz;
   v_viewNormal    = normalMatrix * normals;
   
+#if defined(DRAW_COLOR)
   // offset slightly the lines and points to make them clearly defined.
   // This ensures that lines drawn over surfaces are solid and not clipped
   // at all by the surface.
@@ -71,6 +72,25 @@ void main(void) {
     float overlay = 0.00003;
     gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
   }  // end 'POINTS'
+
+#elif defined(DRAW_GEOMDATA)
+
+  // For some reason, the 'overlay' value must be inverted when rendering
+  // the geom data buffer in the compounds geoms. 
+  // Its difficult to know why. 
+  // To debug this.
+  // renderer.getViewport().debugGeomDataBuffer = true
+  // in src\Renderer\Drawing\GLGeomItemSetMultiDrawCompoundGeom.ts
+  // enable setting the incorrect passId for lines to make them change color.
+  if (geomType == 1) { // start 'LINES'
+    float overlay = -0.00001;
+    gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
+  } // end 'LINES'
+  else if (geomType == 2) { // start 'POINTS'
+    float overlay = -0.00003;
+    gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
+  }  // end 'POINTS'
+#endif // DRAW_HIGHLIGHT
 
 #ifdef ENABLE_TEXTURES
   v_textureCoord  = texCoords;

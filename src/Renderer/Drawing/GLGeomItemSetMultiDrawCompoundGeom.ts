@@ -825,10 +825,11 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
 
         if (geomType) gl.uniform1i(geomType.location, 1)
 
-        const { passId } = renderstate.unifs
-        if (passId) {
-          gl.uniform1i(passId.location, 3)
-        }
+        // When debugging the lines geomdata buffer, we can enable this line to make lines draw yellow.
+        // const { passId } = renderstate.unifs
+        // if (passId) {
+        //   gl.uniform1i(passId.location, 99)
+        // }
 
         this.multiDrawLines(
           renderstate,
@@ -857,20 +858,20 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       renderstate.boundRendertarget = null
       renderstate.geomDataFbo.bindForWriting(renderstate)
 
-      // this.fattenLinesShader!.bind(renderstate)
-      // gl.disable(gl.DEPTH_TEST)
-      // const { colorTexture, screenSize } = renderstate.unifs
-      // this.linesGeomDataBuffer!.bindToUniform(renderstate, colorTexture)
+      this.fattenLinesShader!.bind(renderstate)
+      gl.disable(gl.DEPTH_TEST)
+      const { colorTexture, screenSize } = renderstate.unifs
+      this.linesGeomDataBuffer!.bindToUniform(renderstate, colorTexture)
 
-      // const geomDataFbo = renderstate.geomDataFbo
-      // gl.uniform2f(screenSize.location, geomDataFbo.width, geomDataFbo.height)
+      const geomDataFbo = renderstate.geomDataFbo
+      gl.uniform2f(screenSize.location, geomDataFbo.width, geomDataFbo.height)
 
-      // this.quad!.bindAndDraw(renderstate)
-      // gl.enable(gl.DEPTH_TEST)
+      this.quad!.bindAndDraw(renderstate)
+      gl.enable(gl.DEPTH_TEST)
 
-      const screenQuad = this.renderer.screenQuad!
-      screenQuad.bindShader(renderstate)
-      screenQuad.draw(renderstate, this.linesGeomDataBuffer)
+      // const screenQuad = this.renderer.screenQuad!
+      // screenQuad.bindShader(renderstate)
+      // screenQuad.draw(renderstate, this.linesGeomDataBuffer)
     }
   }
 
