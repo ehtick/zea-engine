@@ -25,8 +25,6 @@ varying vec3 v_worldPos;
 
 #if defined(DRAW_COLOR)
 
-uniform color cutColor;
-
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
 #endif
