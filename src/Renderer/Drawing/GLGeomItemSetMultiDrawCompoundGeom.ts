@@ -1,6 +1,7 @@
 import { Vec3 } from '../../Math/Vec3'
 import { Plane } from '../../SceneTree'
 import '../../SceneTree/GeomItem'
+import { VisibilityChangedEvent } from '../../Utilities/Events/VisibilityChangedEvent'
 
 import { EventEmitter, MathFunctions, Allocator1D } from '../../Utilities/index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
@@ -23,7 +24,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
   protected glGeomIdsMapping: Record<string, any> = {}
   protected glgeomItemEventHandlers: any[] = []
   protected freeIndices: number[] = []
-  protected visibleItems: GLGeomItem[] = []
+  // protected visibleItems: GLGeomItem[] = []
   protected dirtyGeomItems: Set<number> = new Set()
   protected drawIdsBufferDirty: boolean = true
 
@@ -33,6 +34,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
   protected drawIdsTextures: Record<string, GLTexture2D> = {}
   protected drawElementCounts: Record<string, Int32Array> = {}
   protected drawElementOffsets: Record<string, Int32Array> = {}
+  protected drawOrderToIndex: number[] = []
+  protected indexToDrawIndex: number[] = []
 
   protected highlightedItems: Record<number, number> = {}
   protected highlightedIdsArraysAllocators: Record<string, Allocator1D> = {}
@@ -91,23 +94,63 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     // //////////////////////////////
     // Visibility
     if (glGeomItem.visible) {
-      this.visibleItems.push(glGeomItem)
+      this.indexToDrawIndex[index] = this.drawOrderToIndex.length
+      this.drawOrderToIndex.push(index)
       this.dirtyGeomItems.add(index)
     }
-    eventHandlers.visibilityChanged = (event: Record<string, any>) => {
+    eventHandlers.visibilityChanged = (event: VisibilityChangedEvent) => {
       if (event.visible) {
-        this.visibleItems.push(glGeomItem)
+        this.indexToDrawIndex[index] = this.drawOrderToIndex.length
+        this.drawOrderToIndex.push(index)
       } else {
-        this.visibleItems.splice(this.visibleItems.indexOf(glGeomItem), 1)
+        this.drawOrderToIndex.splice(this.indexToDrawIndex[index], 1)
+        this.indexToDrawIndex[index] = -1
       }
-      this.dirtyGeomItems.add(index)
-      // console.log(this.constructor.name, ' visibleItems', this.visibleItems.length)
+      // console.log(this.constructor.name, ' drawOrderToIndex', this.drawOrderToIndex.length)
       if (!this.drawIdsBufferDirty) {
         this.drawIdsBufferDirty = true
         this.emit('updated')
       }
     }
     glGeomItem.on('visibilityChanged', eventHandlers.visibilityChanged)
+
+    eventHandlers.cullStateChanged = () => {
+      // const drawIndex = this.indexToDrawIndex[index]
+      if (!glGeomItem.culled) {
+        // const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
+        // this.drawElementCounts[drawIndex] = offsetAndCount[1]
+        const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
+        for (let key in this.drawIdsArraysAllocators) {
+          const allocator = this.drawIdsArraysAllocators[key]
+          if (allocator) {
+            const allocation = allocator.getAllocation(index)
+            if (glGeomItem.shattered) {
+              for (let i = 0; i < allocation.size; i++) {
+                const drawId = allocation.start + i
+                this.drawElementCounts[key][drawId] = geomBuffers.subGeomCounts[key][i]
+              }
+            } else {
+              this.drawElementCounts[key][allocation.start] = geomBuffers.counts[key]
+            }
+          }
+        }
+      } else {
+        // this.drawElementCounts[drawIndex] = 0
+        for (let key in this.drawIdsArraysAllocators) {
+          const allocator = this.drawIdsArraysAllocators[key]
+          if (allocator) {
+            const allocation = allocator.getAllocation(index)
+            if (allocation) {
+              for (let i = 0; i < allocation.size; i++) {
+                const drawId = allocation.start + i
+                this.drawElementCounts[key][drawId] = 0
+              }
+            }
+          }
+        }
+      }
+    }
+    glGeomItem.on('cullStateChanged', eventHandlers.cullStateChanged)
 
     // //////////////////////////////
     // Highlighted
@@ -183,6 +226,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     this.glgeomItemEventHandlers[index] = null
     this.freeIndices.push(index)
 
+    // Clear any drawing allocations.
     for (let key in this.drawIdsArraysAllocators) {
       const prevAllocation = this.drawIdsArraysAllocators[key].getAllocation(index)
       if (prevAllocation) {
@@ -195,8 +239,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     }
 
     if (glGeomItem.isVisible()) {
-      const visibleItemIndex = this.visibleItems.indexOf(glGeomItem)
-      this.visibleItems.splice(visibleItemIndex, 1)
+      const drawIndex = this.drawOrderToIndex.indexOf(index)
+      this.drawOrderToIndex.splice(drawIndex, 1)
+      this.indexToDrawIndex[index] = -1
       this.drawIdsBufferDirty = true
     }
     if (glGeomItem.geomItem.isHighlighted()) {
@@ -249,7 +294,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
               this.drawElementCounts[key][prevAllocation.start + i] = 0
             }
           }
-          const newAllocation = this.drawIdsArraysAllocators[key].allocate(index, drawCount)
+          this.drawIdsArraysAllocators[key].allocate(index, drawCount)
         }
       } else {
         for (let key in this.drawIdsArraysAllocators) {
@@ -278,7 +323,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       }
     }
     if (regen) {
-      for (let i = 0; i < this.visibleItems.length; i++) this.dirtyGeomItems.add(i)
+      for (let i = 0; i < this.drawOrderToIndex.length; i++) this.dirtyGeomItems.add(i)
     }
 
     const elementSize = 4 //  Uint32Array for UNSIGNED_INT
@@ -376,7 +421,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       } else if (drawIdsTexture.width < drawIdsTextureSize || drawIdsTexture.height < drawIdsTextureSize) {
         drawIdsTexture.resize(drawIdsTextureSize, drawIdsTextureSize)
 
-        for (let i = 0; i < this.visibleItems.length; i++) this.dirtyGeomItems.add(i)
+        for (let i = 0; i < this.drawOrderToIndex.length; i++) this.dirtyGeomItems.add(i)
         regen = true
       }
       {
@@ -544,7 +589,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         }
       }
       // if (regen) {
-      //   for (let i = 0; i < this.visibleItems.length; i++) this.dirtyGeomItems.add(i)
+      //   for (let i = 0; i < this.drawOrderToIndex.length; i++) this.dirtyGeomItems.add(i)
       // }
 
       const elementSize = 4 //  Uint32Array for UNSIGNED_INT
@@ -702,7 +747,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
-    if (this.visibleItems.length == 0) {
+    if (this.drawOrderToIndex.length == 0) {
       return
     }
     if (this.drawIdsBufferDirty) {
@@ -1098,33 +1143,87 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
    * @param {Vec3} viewPos - The position of the camera that we are sorting relative to.
    */
   sortItems(viewPos: Vec3) {
-    const distances: any[] = []
-    const indices: any[] = []
-    this.visibleItems.forEach((glGeomItem, index) => {
+    const distances: Float32Array = new Float32Array(this.drawOrderToIndex.length)
+    this.drawOrderToIndex.forEach((itemIndex) => {
+      const glGeomItem = this.glGeomItems[itemIndex]
       if (glGeomItem) {
         const mat4 = glGeomItem.geomItem.geomMatParam.value
         const dist = mat4.translation.distanceTo(viewPos)
-        distances.push(dist)
-        indices.push(index)
+        distances[itemIndex] = dist
       }
     })
-    indices.sort((a, b) => distances[b] - distances[a])
+    this.drawOrderToIndex.sort((a, b) => distances[b] - distances[a])
 
-    // TODO:
+    // Now we re-create the drawElementCounts arrays according to the order of the drawn GLGeomItems.
+    // Note: We draw the TRIANGLES, then LINES, then POINTS. We can't draw lines behind transparent geoms.
+    // We could simply not bother sorting the lines and points.
+    const gl = this.gl
+    const drawElementCounts: Record<string, Int32Array> = {}
+    const drawElementOffsets: Record<string, Int32Array> = {}
+    const drawOffsets: Record<string, number> = {
+      TRIANGLES: 0,
+      LINES: 0,
+      POINTS: 0,
+    }
+    this.drawOrderToIndex.forEach((itemIndex, drawIndex) => {
+      const glGeomItem = this.glGeomItems[itemIndex]
+      if (glGeomItem) {
+        for (let key in this.drawIdsArraysAllocators) {
+          const drawOffset = drawOffsets[key]
+          const allocation = this.drawIdsArraysAllocators[key].getAllocation(itemIndex)
+          for (let i = 0; i < allocation.size; i++) {
+            const drawSubIndex = drawOffset + i
+            const srcdrawId = allocation.start + i
+            drawElementCounts[key][drawSubIndex] = this.drawElementCounts[key][srcdrawId][i]
+            drawElementOffsets[key][drawSubIndex] = this.drawElementOffsets[key][srcdrawId][i]
+          }
 
-    // const visibleItems: any[] = []
-    // const drawElementCounts = new Int32Array(this.drawElementCounts['TRIANGLES'].length)
-    // const drawElementOffsets = new Int32Array(this.drawElementOffsets['TRIANGLES'].length)
-    // indices.forEach((tgtIndex, srcIndex) => {
-    //   visibleItems[srcIndex] = this.visibleItems[tgtIndex]
-    //   drawElementCounts[srcIndex] = this.drawElementCounts['TRIANGLES'][tgtIndex]
-    //   drawElementOffsets[srcIndex] = this.drawElementOffsets['TRIANGLES'][tgtIndex]
-    //   this.drawIdsArrays['TRIANGLES'][srcIndex] = this.visibleItems[tgtIndex].geomItemId
-    // })
-    // this.visibleItems = visibleItems
-    // this.drawElementCounts['TRIANGLES'] = drawElementCounts
-    // this.drawElementOffsets['TRIANGLES'] = drawElementOffsets
-    // this.drawIdsBufferDirty = true
+          ////////////////////////////////////////
+          //
+          const drawIdsArray = this.drawIdsArrays[key]
+          let drawIdsTexture = this.drawIdsTextures[key]
+          const tex = drawIdsTexture
+          const texWidth = drawIdsTexture.width
+          gl.bindTexture(gl.TEXTURE_2D, tex.glTex)
+          const level = 0
+          const height = 1
+          const format = tex.getFormat()
+          const type = tex.getType()
+
+          const start = drawOffset
+          const drawCount = allocation.size
+
+          const xoffset = start % texWidth
+          const rows = Math.ceil((xoffset + drawCount) / texWidth)
+          let consumed = 0
+          let remaining = drawCount
+          let rowStart = xoffset
+          for (let i = 0; i < rows; i++) {
+            let width
+            if (rowStart + remaining > texWidth) {
+              width = texWidth - rowStart
+              rowStart = 0
+            } else {
+              width = remaining
+            }
+            const x = (start + consumed) % texWidth
+            const y = Math.floor((start + consumed) / texWidth)
+            const data = drawIdsArray.subarray((start + consumed) * 4, (start + consumed + width) * 4)
+            if (data.length != width * 4) {
+              throw new Error('Invalid drawIds subarray :' + data.length + ' width:' + width)
+            }
+            gl.texSubImage2D(gl.TEXTURE_2D, level, x, y, width, height, format, type, data)
+            consumed += width
+            remaining -= width
+          }
+          drawOffsets[key] += allocation.size
+        }
+        this.indexToDrawIndex[itemIndex] = drawIndex
+      }
+    })
+    this.drawElementCounts = drawElementCounts
+    this.drawElementOffsets = drawElementOffsets
+    this.drawIdsBufferDirty = true
   }
 
   /**

@@ -81,7 +81,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       this.indexToDrawIndex[index] = this.drawOrderToIndex.length
       this.drawOrderToIndex.push(index)
     }
-    eventHandlers.visibilityChanged = (event: Record<string, any>) => {
+    eventHandlers.visibilityChanged = (event: VisibilityChangedEvent) => {
       if (event.visible) {
         this.indexToDrawIndex[index] = this.drawOrderToIndex.length
         this.drawOrderToIndex.push(index)
