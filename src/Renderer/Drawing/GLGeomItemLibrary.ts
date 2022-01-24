@@ -414,13 +414,13 @@ class GLGeomItemLibrary extends EventEmitter {
     // return
     if (data.newlyCulled) {
       data.newlyCulled.forEach((index: number) => {
-        this.glGeomItems[index].setCulled(true)
+        if (this.glGeomItems[index]) this.glGeomItems[index].setCulled(true)
       })
     }
     if (data.newlyUnCulled) {
       data.newlyUnCulled.forEach((index: number) => {
         // console.log('newlyUnCulled:', this.glGeomItems[index].geomItem.getName())
-        this.glGeomItems[index].setCulled(false)
+        if (this.glGeomItems[index]) this.glGeomItems[index].setCulled(false)
       })
     }
     this.renderer.requestRedraw()
@@ -854,6 +854,9 @@ class GLGeomItemLibrary extends EventEmitter {
     delete this.glGeomItemsMap[geomItem.getId()]
 
     this.removedItemIndices.push(index)
+    if (this.dirtyWorkerItemIndices.has(index)) {
+      this.dirtyWorkerItemIndices.delete(index)
+    }
 
     this.renderer.requestRedraw()
 
