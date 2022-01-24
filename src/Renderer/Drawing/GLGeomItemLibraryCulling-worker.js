@@ -327,6 +327,7 @@ const handleMessage = (data, postMessage) => {
   } else if (data.type == 'UpdateGeomItems') {
     data.removedItemIndices.forEach((id) => {
       geomItemsData[id] = null
+      outOfFrustum[id] = true
     })
     data.geomItems.forEach((geomItem) => {
       const isNew = geomItemsData[geomItem.id] == undefined

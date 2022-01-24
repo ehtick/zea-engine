@@ -13,16 +13,65 @@
 
     <script type="module">
       import '../dist/index.umd.js'
-      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, Material, GeomItem, LDRImage, TreeItem, CADAsset } =
-        zeaEngine
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Color,
+        Xfo,
+        Sphere,
+        Material,
+        GeomItem,
+        LDRImage,
+        TreeItem,
+        CADAsset,
+        LinesProxy,
+      } = zeaEngine
 
       const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvas, {
+        hideSplash: true,
+        antialias: false,
+        enableOcclusionCulling: true,
+        debugOcclusionBuffer: false,
+      })
       renderer.setScene(scene)
+      // renderer.getViewport().debugGeomDataBuffer = true
 
-      scene.setupGrid(10.0, 10)
+      // scene.setupGrid(10.0, 10)
+
+      /** HIGHLIGHT START */
+      let highlightedItem
+      renderer.getViewport().on('pointerOverGeom', (event) => {
+        const item = event.intersectionData.geomItem
+        if (item) {
+          highlightedItem = item
+          highlightedItem.addHighlight('pointerOverGeom', new Color(0, 0.7, 0, 0.3), true)
+        }
+      })
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
+        highlightedItem.removeHighlight('pointerOverGeom', true)
+        highlightedItem = null
+      })
+      renderer.getViewport().on('keyDown', (event) => {
+        if (event.key == 'f') renderer.frameAll()
+      })
+      renderer.getViewport().on('pointerUp', (event) => {
+        if (event.intersectionData) {
+          const geomItem = event.intersectionData.geomItem
+          console.log('', geomItem.getPath())
+        }
+      })
+      renderer.getViewport().on('keyDown', (event) => {
+        if (event.key == 'f') renderer.frameAll()
+        else if (event.key == 'd') {
+          renderer.getViewport().debugGeomDataBuffer = !renderer.getViewport().debugGeomDataBuffer
+          renderer.requestRedraw()
+        }
+      })
+      /** HIGHLIGHT START */
 
       const url = 'data/Dead_eye_bearing.zcad'
       const asset = new CADAsset()
@@ -42,12 +91,12 @@
         statusElement.textContent = text
       }
       document.getElementById('variant-01').addEventListener('click', function (event) {
-        scene.getRoot().removeChild(1)
+        scene.getRoot().removeAllChildren()
         setStatusText(`done-variant-01`)
       })
       document.getElementById('variant-02').addEventListener('click', function (event) {
         const asset = new CADAsset()
-        asset.load(url).then(() => {
+        asset.load('data/HC_SRO4.zcad').then(() => {
           renderer.frameAll()
         })
         asset.getGeometryLibrary().on('loaded', () => {
@@ -55,6 +104,45 @@
         })
         scene.getRoot().addChild(asset)
       })
+      document.getElementById('variant-03').addEventListener('click', function (event) {
+        scene.getRoot().removeAllChildren()
+        const asset = new CADAsset()
+        scene.getRoot().addChild(asset)
+        asset.load('data/HC_SRO4.zcad').then(() => {
+          renderer.frameAll()
+        })
+        asset.getGeometryLibrary().on('loaded', () => {
+          scene.getRoot().removeAllChildren()
+          setStatusText(`done-variant-02`)
+        })
+      })
+      document.getElementById('variant-04').addEventListener('click', function (event) {
+        scene.getRoot().removeAllChildren()
+        const asset = new CADAsset()
+        scene.getRoot().addChild(asset)
+        asset.load('data/Dead_eye_bearing.zcad').then(() => {
+          renderer.frameAll()
+        })
+        asset.getGeometryLibrary().on('loaded', () => {
+          const removedItems = []
+          let total = 0
+          asset.traverse((item) => {
+            if (item instanceof GeomItem) {
+              total++
+              if (!(item.geomParam.value instanceof LinesProxy)) {
+                removedItems.push(item)
+              }
+            }
+          })
+          removedItems.forEach((item) => {
+            const owner = item.getOwner()
+            owner.removeChildByHandle(item)
+          })
+          console.log('total:', total, removedItems.length)
+          setStatusText(`done-variant-02`)
+        })
+      })
+
       // }}}
     </script>
   </head>
@@ -65,6 +153,8 @@
       <div class="variant-buttons">
         <button class="variant-button" id="variant-01">variant-01</button>
         <button class="variant-button" id="variant-02">variant-02</button>
+        <button class="variant-button" id="variant-03">variant-03</button>
+        <button class="variant-button" id="variant-04">variant-04</button>
       </div>
     </div>
   </body>
