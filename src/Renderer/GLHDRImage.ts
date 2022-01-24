@@ -32,7 +32,6 @@ class GLHDRImage extends GLTexture2D {
     super(gl)
 
     this.hdrImage = hdrImage
-    this.hdrImage.setMetadata('gltexture', this)
     const loadImage = () => {
       this.__unpackHDRImage(this.hdrImage.getParams())
     }

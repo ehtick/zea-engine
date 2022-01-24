@@ -106,30 +106,24 @@ class GLRenderer extends GLBaseRenderer {
         return
       }
 
-      this.__glEnvMap = <GLEnvMap>env.getMetadata('gltexture')
-      if (!this.__glEnvMap) {
-        if (env.type === 'FLOAT') {
-          this.addShaderPreprocessorDirective('ENABLE_PBR')
-          this.__glEnvMap = new GLEnvMap(this, env)
-        }
-        // } else if (env.isStreamAtlas()) { // TODO: are these two lines still needed?
-        //   this.__glEnvMap = new GLImageStream(gl, env)
-        // else {
-        //   this.__glEnvMap = new GLTexture2D(this.__gl, env)
-        // }
+      if (env.type === 'FLOAT') {
+        this.addShaderPreprocessorDirective('ENABLE_PBR')
+        this.__glEnvMap = new GLEnvMap(this, env)
       }
+      // } else if (env.isStreamAtlas()) { // TODO: are these two lines still needed?
+      //   this.__glEnvMap = new GLImageStream(gl, env)
+      // else {
+      //   this.__glEnvMap = new GLTexture2D(this.__gl, env)
+      // }
     } else {
       // Note: The difference between an EnvMap and a BackgroundMap, is that
       // An EnvMap must be HDR, and can be convolved for reflections.
       // A Background map can be simply an image.
       const backgroundMap = env
-      this.__glBackgroundMap = backgroundMap.getMetadata('gltexture')
-      if (!this.__glBackgroundMap) {
-        if (backgroundMap.type === 'FLOAT') {
-          this.__glBackgroundMap = new GLHDRImage(this.__gl, <HDRImage>backgroundMap) // todo: is this cast ok?
-        } else {
-          this.__glBackgroundMap = new GLTexture2D(this.__gl, backgroundMap)
-        }
+      if (backgroundMap.type === 'FLOAT') {
+        this.__glBackgroundMap = new GLHDRImage(this.__gl, <HDRImage>backgroundMap) // todo: is this cast ok?
+      } else {
+        this.__glBackgroundMap = new GLTexture2D(this.__gl, backgroundMap)
       }
       this.__glBackgroundMap.on('loaded', () => {
         this.requestRedraw()

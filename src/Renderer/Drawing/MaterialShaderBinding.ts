@@ -104,7 +104,7 @@ class SimpleUniformBinding extends ParamUniformBinding {
     this.bind = this.bindValue
 
     const genGLTex = (image: BaseImage) => {
-      let gltexture = <GLTexture2D>image.getMetadata('gltexture')
+      let gltexture = GLTexture2D.getCachedGLTexture2D(image)
       const textureType = 1
       if (!gltexture) {
         if (image.type === 'FLOAT') {
@@ -112,6 +112,7 @@ class SimpleUniformBinding extends ParamUniformBinding {
         } else {
           gltexture = new GLTexture2D(gl, image)
         }
+        GLTexture2D.setCachedGLTexture2D(image, gltexture)
       }
       this.texBinding = gltexture.preBind(this.textureUnif, unifs)
       gltexture.on('updated', () => {
@@ -156,7 +157,7 @@ class SimpleUniformBinding extends ParamUniformBinding {
       }
 
       const disconnectImage = () => {
-        const gltexture = boundImage.getMetadata('gltexture')
+        const gltexture = GLTexture2D.getCachedGLTexture2D(boundImage)
         gltexture.removeRef(this)
         this.texBinding = null
         this.gltexture = null
@@ -377,7 +378,7 @@ class ColorUniformBinding extends ParamUniformBinding {
 
     const genGLTex = (image: BaseImage) => {
       boundImage = image
-      let gltexture = <GLTexture2D>image.getMetadata('gltexture')
+      let gltexture = GLTexture2D.getCachedGLTexture2D(image)
       const textureType = 1
       if (!gltexture) {
         if (image.type === 'FLOAT') {
@@ -385,6 +386,7 @@ class ColorUniformBinding extends ParamUniformBinding {
         } else {
           gltexture = new GLTexture2D(gl, image)
         }
+        GLTexture2D.setCachedGLTexture2D(image, gltexture)
       }
       this.texBinding = gltexture.preBind(this.textureUnif, unifs)
       gltexture.on('updated', () => {
