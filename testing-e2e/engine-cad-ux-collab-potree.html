@@ -84,7 +84,7 @@
       const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false, enableOcclusionCulling: true })
       renderer.setScene(scene)
       renderer.getViewport().backgroundColorParam.value = new Color(0.85, 0.85, 0.85, 1)
-      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
+      renderer.getViewport().debugGeomDataBuffer = urlParams.has('debugGeomDataBuffer')
 
       const envMap = new EnvMap()
       envMap.load('data/StudioG.zenv')
@@ -134,7 +134,7 @@
       renderer.getViewport().on('keyDown', (event) => {
         if (event.key == 'f') renderer.frameAll()
         else if (event.key == 'd') {
-          renderer.getViewport().debugGeomShader = !renderer.getViewport().debugGeomShader
+          renderer.getViewport().debugGeomDataBuffer = !renderer.getViewport().debugGeomDataBuffer
           renderer.requestRedraw()
         }
       })
