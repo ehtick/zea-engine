@@ -139,9 +139,7 @@ class GLGeomItemLibrary extends EventEmitter {
         if (this.enableOcclusionCulling) {
           // First full the items that the frustum culling removed.
           if (message.data.newlyCulled) {
-            this.applyCullResults({
-              newlyCulled: message.data.newlyCulled,
-            })
+            this.applyCullResults(message.data)
           }
           this.calculateOcclusionCulling(message.data.inFrustumIndices)
         } else {
