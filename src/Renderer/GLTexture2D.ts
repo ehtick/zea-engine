@@ -61,7 +61,6 @@ class GLTexture2D extends RefCounted {
     if (params != undefined) {
       if (params instanceof BaseImage) {
         this.__image = params
-        this.__image.setMetadata('gltexture', this)
         const imageUpdated = () => {
           // this.bufferData(data);
           const params = this.__image!.getParams()
@@ -618,12 +617,23 @@ class GLTexture2D extends RefCounted {
    */
   destroy(): void {
     super.destroy()
-    if (this.__image) {
-      this.__image.setMetadata('gltexture', undefined)
-    }
     this.__gl.deleteTexture(this.__gltex)
     this.__gltex = null
   }
+
+  /**
+   * @private
+   */
+  static getCachedGLTexture2D(image: BaseImage): GLTexture2D {
+    return gltextureCache[image.getId()]
+  }
+  /**
+   * @private
+   */
+  static setCachedGLTexture2D(image: BaseImage, gltexture: GLTexture2D): void {
+    gltextureCache[image.getId()] = gltexture
+  }
 }
+const gltextureCache: Record<number, GLTexture2D> = {}
 
 export { GLTexture2D }
