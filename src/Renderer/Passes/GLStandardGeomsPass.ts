@@ -42,8 +42,6 @@ class GLStandardGeomsPass extends GLPass {
         {
           if (this.filterGeomItem(geomItem)) {
             this.addGeomItem(geomItem)
-
-            geomItem.setMetadata('glpass', this)
             return true
           } else {
             return false
@@ -63,7 +61,7 @@ class GLStandardGeomsPass extends GLPass {
    * @return - The return value.
    */
   itemRemovedFromScene(treeItem: TreeItem, rargs: Record<string, any>): boolean {
-    if (treeItem instanceof GeomItem && treeItem.getMetadata('glpass') == this) {
+    if (treeItem instanceof GeomItem) {
       return this.removeGeomItem(treeItem)
     }
     return false
