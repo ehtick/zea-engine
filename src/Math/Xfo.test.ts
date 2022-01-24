@@ -84,17 +84,60 @@ describe('Xfo', () => {
   })
 
   it('calculates the inverse of the xfo', () => {
-    const xfo = new Xfo(new Vec3(1, 2, 3), new Quat(0, 1, 0, 0), new Vec3(8, 9, 10))
+    const xfo = new Xfo(new Vec3(1, 2, 3), new Quat(0, 1, 0, 0), new Vec3(2, 2, 2))
     const resultXfo = xfo.inverse()
 
     expect(resultXfo.toJSON()).toEqual({
       ori: { w: 0, x: -0, y: -1, z: -0 },
-      tr: { x: 8, y: -18, z: 30 },
-      sc: { x: 8, y: 9, z: 10 },
+      tr: { x: 0.5, y: -1, z: 1.5 },
+      sc: { x: 0.5, y: 0.5, z: 0.5 },
     })
   })
 
-  it('transforms xfo with a specified Vec3', () => {
+  it('transforms a Vec3 by an Xfo and its inverse', () => {
+    const xfo = new Xfo()
+    xfo.tr.set(1, 1, 1)
+
+    // Rotate by 90 degress around Z axis.
+    xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)
+    xfo.sc.set(2, 1, 1)
+    const invXfo = xfo.inverse()
+
+    const vec3 = new Vec3(1, 1, 0)
+    const transformedTr = xfo.transformVec3(vec3)
+    // logic
+    // sc: (1, 1, 0) >> scaled X * 2 == (2, 1, 0 )
+    // ori: (2, 1, 0) >> rotated 90 degress == (-1, 2, 0)
+    // tr: (-1, 2, 0) >> add (1, 1, 1) == (0, 3, 1)
+    expect(transformedTr.approxEqual(new Vec3(0, 3, 1), 0.001)).toBeTruthy()
+
+    const vec3_1 = invXfo.transformVec3(transformedTr)
+
+    expect(vec3_1.approxEqual(vec3, 0.001)).toBeTruthy()
+  })
+
+  it('transforms an Xfo by an Xfo and its inverse', () => {
+    const xfo = new Xfo()
+    xfo.tr.set(1, 1, 1)
+
+    // Rotate by 90 degress around Z axis.
+    xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)
+    xfo.sc.set(2, 1, 1)
+    const invXfo = xfo.inverse()
+
+    const xfo2 = new Xfo(new Vec3(1, 1, 0))
+    const transformedXfo = xfo.multiply(xfo2)
+
+    expect(transformedXfo.tr.approxEqual(new Vec3(0, 3, 1), 0.001)).toBeTruthy()
+
+    // Note: I don't think this is possible.
+    // (Inverting an Xfo with a non-uniform scales)
+    const xfo2_1 = transformedXfo.multiply(invXfo)
+    expect(xfo2_1.ori.approxEqual(xfo2.ori, 0.001)).toBeTruthy()
+    // expect(xfo2_1.approxEqual(xfo2, 0.001)).toBeTruthy()
+  })
+
+  it('transforms Vec3 by Xfo', () => {
     const xfo = new Xfo(new Vec3(1, 2, 3), new Quat(1, 0, 0, 0), new Vec3(8, 9, 10))
     const transformedTr = xfo.transformVec3(new Vec3(3, 4, 3))
 

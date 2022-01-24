@@ -136,14 +136,20 @@ class Xfo {
    */
   multiply(xfo: Xfo): Xfo {
     let this_sc = this.sc
-    if (!this.sc.is111()) {
+
+    // check for non-uniform scale.
+    if (
+      Math.abs(this.sc.y - this.sc.x) > 0.001 ||
+      Math.abs(this.sc.z - this.sc.x) > 0.001 ||
+      Math.abs(this.sc.z - this.sc.y) > 0.001
+    ) {
       const rot4 = this.ori.toMat4()
       const sclM4 = new Mat4(this.sc.x, 0, 0, 0, 0, this.sc.y, 0, 0, 0, 0, this.sc.z, 0, 0, 0, 0, 1.0)
-      const resM4 = rot4.multiply(sclM4)
+      const resM4 = sclM4.multiply(rot4)
       this_sc = new Vec3(resM4.xAxis.length(), resM4.yAxis.length(), resM4.zAxis.length())
     }
     const result = new Xfo(
-      this.tr.add(this.ori.rotateVec3(this_sc.multiply(xfo.tr))),
+      this.tr.add(this.ori.rotateVec3(this.sc.multiply(xfo.tr))),
       this.ori.multiply(xfo.ori),
       this_sc.multiply(xfo.sc)
     )
@@ -159,11 +165,16 @@ class Xfo {
     const result = new Xfo()
     result.ori = this.ori.inverse()
 
-    if (!this.sc.is111()) {
+    // check for non-uniform scale.
+    if (
+      Math.abs(this.sc.y - this.sc.x) > 0.001 ||
+      Math.abs(this.sc.z - this.sc.x) > 0.001 ||
+      Math.abs(this.sc.z - this.sc.y) > 0.001
+    ) {
       const rot4 = result.ori.toMat4()
       const sclM4 = new Mat4(this.sc.x, 0, 0, 0, 0, this.sc.y, 0, 0, 0, 0, this.sc.z, 0, 0, 0, 0, 1.0)
-      const resM4 = rot4.multiply(sclM4)
-      result.sc = new Vec3(resM4.xAxis.length(), resM4.yAxis.length(), resM4.zAxis.length())
+      const resM4 = sclM4.multiply(rot4)
+      result.sc = new Vec3(1 / resM4.xAxis.length(), 1 / resM4.yAxis.length(), 1 / resM4.zAxis.length())
     } else {
       result.sc = this.sc.inverse()
     }
