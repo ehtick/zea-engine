@@ -490,12 +490,12 @@ class GLGeomItemLibrary extends EventEmitter {
     const gl = this.renderer.gl
 
     const renderstate: GeomDataRenderState = <GeomDataRenderState>{ shaderopts: {} }
+    this.renderer.bindGLBaseRenderer(renderstate)
     renderstate.directives = [...this.renderer.directives, '#define DRAW_GEOMDATA']
     renderstate.shaderopts.directives = renderstate.directives
     renderstate.floatGeomBuffer = true
     renderstate.occlusionCulling = 1
 
-    this.renderer.bindGLBaseRenderer(renderstate)
     if (this.xrPresenting) {
       this.xrViewport.initCullingRenderState(renderstate)
       renderstate.viewports[0].fovY = this.xrFovY
