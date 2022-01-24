@@ -108,6 +108,7 @@ class GLBaseRenderer extends ParameterOwner {
   protected __renderGeomDataFbosRequested: boolean = false
   protected __shaders: Record<string, GLShader> = {}
   protected __passes: Record<number, GLPass[]> = {}
+  private passAssignments: Record<number, number> = {}
   protected __passesRegistrationOrder: GLPass[] = []
   protected __passCallbacks: any[] = []
 
@@ -464,6 +465,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
       handled = pass.itemAddedToScene(treeItem, rargs)
       if (handled) {
+        this.passAssignments[treeItem.getId()] = i
         if (!rargs.continueInSubTree) return
         break
       }
@@ -499,28 +501,14 @@ class GLBaseRenderer extends ParameterOwner {
     treeItem.removeListenerById('childAdded', listenerIDs['childAdded'])
     treeItem.removeListenerById('childRemoved', listenerIDs['childRemoved'])
 
-    for (let i = this.__passesRegistrationOrder.length - 1; i >= 0; i--) {
-      const pass = this.__passesRegistrationOrder[i]
+    const passId = this.passAssignments[id]
+    if (passId != undefined) {
+      const pass = this.getPass(passId)
       const rargs = {
         continueInSubTree: true,
       }
-      const handled = pass.itemRemovedFromScene(treeItem, rargs)
-      if (handled) {
-        if (!rargs.continueInSubTree) return
-        break
-      }
-    }
-
-    for (const passCbs of this.__passCallbacks) {
-      if (!passCbs.itemRemovedFn) continue
-      const rargs = {
-        continueInSubTree: true,
-      }
-      const handled = passCbs.itemRemovedFn(treeItem, rargs)
-      if (handled) {
-        if (!rargs.continueInSubTree) return
-        break
-      }
+      pass.itemRemovedFromScene(treeItem, rargs)
+      delete this.passAssignments[id]
     }
 
     // Traverse the tree adding items till we hit the leaves (which are usually GeomItems).
