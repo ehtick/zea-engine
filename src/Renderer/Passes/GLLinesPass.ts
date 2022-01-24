@@ -107,7 +107,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
   drawGeomData(renderstate: GeomDataRenderState): void {
     const gl = this.__gl!
     //  Note: lines in VR are not fattened...
-    if (renderstate.geomDataFbo) {
+    if (renderstate.geomDataFbo && !renderstate.occlusionCulling) {
       if (!this.linesGeomDataBuffer) {
         this.linesGeomDataBuffer = new GLTexture2D(gl, {
           type: this.__renderer.floatGeomBuffer ? 'FLOAT' : 'UNSIGNED_BYTE',
@@ -157,7 +157,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
     }
     super.drawGeomData(renderstate)
 
-    if (renderstate.geomDataFbo) {
+    if (renderstate.geomDataFbo && !renderstate.occlusionCulling) {
       renderstate.geomDataFbo.bindForWriting(renderstate)
 
       this.fattenLinesShader!.bind(renderstate)
