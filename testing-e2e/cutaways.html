@@ -39,7 +39,7 @@
       const scene = new Scene()
       const domElement = document.getElementById('viewport')
       const renderer = new GLRenderer(domElement, { antialias: false })
-      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
+      renderer.getViewport().debugGeomDataBuffer = urlParams.has('debugGeomDataBuffer')
       renderer.setScene(scene)
 
       scene.setupGrid(40.0, 10)

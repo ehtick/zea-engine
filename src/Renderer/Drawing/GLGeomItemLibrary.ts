@@ -139,9 +139,7 @@ class GLGeomItemLibrary extends EventEmitter {
         if (this.enableOcclusionCulling) {
           // First full the items that the frustum culling removed.
           if (message.data.newlyCulled) {
-            this.applyCullResults({
-              newlyCulled: message.data.newlyCulled,
-            })
+            this.applyCullResults(message.data)
           }
           this.calculateOcclusionCulling(message.data.inFrustumIndices)
         } else {
@@ -414,13 +412,13 @@ class GLGeomItemLibrary extends EventEmitter {
     // return
     if (data.newlyCulled) {
       data.newlyCulled.forEach((index: number) => {
-        this.glGeomItems[index].setCulled(true)
+        if (this.glGeomItems[index]) this.glGeomItems[index].setCulled(true)
       })
     }
     if (data.newlyUnCulled) {
       data.newlyUnCulled.forEach((index: number) => {
         // console.log('newlyUnCulled:', this.glGeomItems[index].geomItem.getName())
-        this.glGeomItems[index].setCulled(false)
+        if (this.glGeomItems[index]) this.glGeomItems[index].setCulled(false)
       })
     }
     this.renderer.requestRedraw()
@@ -490,12 +488,12 @@ class GLGeomItemLibrary extends EventEmitter {
     const gl = this.renderer.gl
 
     const renderstate: GeomDataRenderState = <GeomDataRenderState>{ shaderopts: {} }
+    this.renderer.bindGLBaseRenderer(renderstate)
     renderstate.directives = [...this.renderer.directives, '#define DRAW_GEOMDATA']
     renderstate.shaderopts.directives = renderstate.directives
     renderstate.floatGeomBuffer = true
     renderstate.occlusionCulling = 1
 
-    this.renderer.bindGLBaseRenderer(renderstate)
     if (this.xrPresenting) {
       this.xrViewport.initCullingRenderState(renderstate)
       renderstate.viewports[0].fovY = this.xrFovY
@@ -854,6 +852,9 @@ class GLGeomItemLibrary extends EventEmitter {
     delete this.glGeomItemsMap[geomItem.getId()]
 
     this.removedItemIndices.push(index)
+    if (this.dirtyWorkerItemIndices.has(index)) {
+      this.dirtyWorkerItemIndices.delete(index)
+    }
 
     this.renderer.requestRedraw()
 

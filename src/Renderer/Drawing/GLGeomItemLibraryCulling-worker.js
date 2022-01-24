@@ -252,8 +252,20 @@ const onDoneFrustumCull = (postMessage) => {
       // }
       if (newlyCulled.length > 0 || newlyUnCulled.length > 0 || !inFrustumDrawIdsBufferPopulated) {
         const inFrustumIndices = generateInFrustumIndices()
-        if (newlyCulled.length > 0) {
-          postMessage({ type: 'InFrustumIndices', newlyCulled, inFrustumIndices }, [inFrustumIndices.buffer])
+
+        // When occlusion culling is on, we only uncull items after they
+        // are detected in the occlusion buffer. Transparent items are not
+        // rendered to the occlusion buffer, so must be unculled immediately.
+        const newlyUnCulled_transparent = []
+        newlyUnCulled.forEach((index) => {
+          if (index > 0 && geomItemsData[index] && geomItemsData[index].visible && geomItemsData[index].isTransparent)
+            newlyUnCulled_transparent.push(index)
+        })
+        if (newlyCulled.length > 0 || newlyUnCulled_transparent.length > 0) {
+          postMessage(
+            { type: 'InFrustumIndices', newlyCulled, newlyUnCulled: newlyUnCulled_transparent, inFrustumIndices },
+            [inFrustumIndices.buffer]
+          )
         } else {
           postMessage({ type: 'InFrustumIndices', inFrustumIndices }, [inFrustumIndices.buffer])
         }
@@ -327,6 +339,7 @@ const handleMessage = (data, postMessage) => {
   } else if (data.type == 'UpdateGeomItems') {
     data.removedItemIndices.forEach((id) => {
       geomItemsData[id] = null
+      outOfFrustum[id] = true
     })
     data.geomItems.forEach((geomItem) => {
       const isNew = geomItemsData[geomItem.id] == undefined

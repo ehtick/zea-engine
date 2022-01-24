@@ -61,7 +61,7 @@
         floatGeomBuffer: urlParams.has('webgl') ? false : true,
         antialias: false,
       })
-      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
+      renderer.getViewport().debugGeomDataBuffer = urlParams.has('debugGeomDataBuffer')
       renderer.setScene(scene)
       scene.setupGrid()
 

@@ -36,7 +36,7 @@
         webglContextType: urlParams.has('webgl') ? urlParams.get('webgl') : undefined,
       })
       renderer.setScene(scene)
-      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
+      renderer.getViewport().debugGeomDataBuffer = urlParams.has('debugGeomDataBuffer')
 
       scene.setupGrid(10.0, 10)
 

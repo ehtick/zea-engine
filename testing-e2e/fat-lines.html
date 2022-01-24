@@ -44,7 +44,7 @@
       renderer.frameAll()
 
       const urlParams = new URLSearchParams(window.location.search)
-      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
+      renderer.getViewport().debugGeomDataBuffer = urlParams.has('debugGeomDataBuffer')
 
       /** HIGHLIGHT START */
       let highlightedItem
