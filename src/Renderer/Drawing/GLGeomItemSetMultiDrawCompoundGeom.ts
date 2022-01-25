@@ -1,6 +1,7 @@
 import { Vec3 } from '../../Math/Vec3'
 import { Plane } from '../../SceneTree'
 import '../../SceneTree/GeomItem'
+import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
 import { VisibilityChangedEvent } from '../../Utilities/Events/VisibilityChangedEvent'
 
 import { EventEmitter, MathFunctions, Allocator1D } from '../../Utilities/index'
@@ -190,13 +191,17 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
 
     // //////////////////////////////
     // ShatterState
-    eventHandlers.shatterStateChanged = () => {
-      this.dirtyGeomItems.add(index)
-      this.drawIdsBufferDirty = true
+    eventHandlers.shatterStateChanged = (event: StateChangedEvent) => {
+      // const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
+      // if (geomBuffers.materials.length == 0)
+      {
+        this.dirtyGeomItems.add(index)
+        this.drawIdsBufferDirty = true
 
-      // We need the new GeomData Fbos written so we can
-      // detect these subgeoms.
-      this.renderer.renderGeomDataFbos()
+        // We need the new GeomData Fbos written so we can
+        // detect these subgeoms.
+        this.renderer.renderGeomDataFbos()
+      }
     }
     glGeomItem.on('shatterStateChanged', eventHandlers.shatterStateChanged)
 
@@ -272,7 +277,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         // Here we calculate how many draws for each type of geometry, each
         // compound goem needs. We then allocate the space we have specified.
         let drawCounts: Record<string, number> = {}
-        if (glGeomItem.shattered || geomBuffers.materials.length > 0) {
+        if (glGeomItem.shattered /*|| geomBuffers.materials.length > 0*/) {
           // for shattered geoms, we draw once for each subgeom for each element type
           drawCounts['TRIANGLES'] = geomBuffers.subGeomCounts['TRIANGLES'].length
           drawCounts['LINES'] = geomBuffers.subGeomCounts['LINES'].length
@@ -295,7 +300,6 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           if (prevAllocation) {
             // Zero the previous allocation to remove any rendering.
             for (let i = 0; i < prevAllocation.size; i++) {
-              this.drawElementOffsets[key][prevAllocation.start + i] = 0
               this.drawElementCounts[key][prevAllocation.start + i] = 0
             }
           }
@@ -308,7 +312,6 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
             if (prevAllocation) {
               // Clear the previous allocation to remove any rendering.
               for (let i = 0; i < prevAllocation.size; i++) {
-                this.drawElementOffsets[key][prevAllocation.start + i] = 0
                 this.drawElementCounts[key][prevAllocation.start + i] = 0
               }
             }
@@ -340,7 +343,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
       const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
 
-      if (glGeomItem.shattered || geomBuffers.materials.length > 0) {
+      if (glGeomItem.shattered /*|| geomBuffers.materials.length > 0*/) {
         let subIndex = 0
         const addSubGeoms = (offsets: Uint32Array, counts: Uint8Array | Uint16Array | Uint32Array, type: string) => {
           const allocator = this.drawIdsArraysAllocators[type]
