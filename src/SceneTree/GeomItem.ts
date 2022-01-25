@@ -117,13 +117,11 @@ class GeomItem extends BaseGeomItem {
 
   /**
    * The _cleanBoundingBox method.
-   * @param bbox - The bounding box value.
-   * @return - The return value.
    * @private
    */
-  _cleanBoundingBox(bbox: Box3): Box3 {
-    if (this.disableBoundingBox) return bbox
-    bbox = super._cleanBoundingBox(bbox)
+  _cleanBoundingBox(): Box3 {
+    if (this.disableBoundingBox) return new Box3()
+    const bbox = super._cleanBoundingBox()
     if (this.geomBBox) {
       // Note: this bbox is the global bounding box of the geomItem
       // transformed into the space of the geometry. We reapply

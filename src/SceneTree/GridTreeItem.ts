@@ -68,20 +68,14 @@ class GridTreeItem extends TreeItem {
     geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)
     zAxisLineItem.geomOffsetXfoParam.value = geomOffset
     this.addChild(zAxisLineItem, false)
-
-    const bBox = this._cleanBoundingBox(this.boundingBoxParam.value)
-    this.boundingBoxParam.value = bBox
   }
 
   /**
-   *
    * @private
-   * @param bBox
    * @return - Reset Bounding Box
    */
-  _cleanBoundingBox(bBox: Box3): Box3 {
-    bBox.reset()
-    return bBox
+  _cleanBoundingBox(): Box3 {
+    return new Box3()
   }
 }
 

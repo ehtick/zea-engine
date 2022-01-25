@@ -21,6 +21,7 @@ import { AssetLoadContext } from '../AssetLoadContext'
 class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
   // protected dirty: boolean, value, name
   protected treeItem: TreeItem
+  protected dirty: boolean = true
   /**
    * Creates an instance of BoundingBoxParameter.
    * @param name - Name of the parameter
@@ -29,11 +30,6 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
   constructor(name: string = '', treeItem: TreeItem) {
     super(name, new Box3(), 'Box3')
     this.treeItem = treeItem
-    this.dirty = true
-  }
-
-  setParameterAsDirty(): void {
-    this.dirty = true
   }
 
   /**
@@ -43,12 +39,11 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
    * @memberof BoundingBoxParameter
    */
   setDirty(index: number): boolean {
-    const result = super.setDirty(index)
-    if (result) {
+    if (!this.dirty) {
       this.dirty = true
+      this.emit('valueChanged')
     }
-    // console.warn('check this if this method needs to be overloaded')
-    return result
+    return true
   }
 
   /**
@@ -58,7 +53,7 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
    */
   getValue(): Box3 {
     if (this.dirty) {
-      this.__value = this.treeItem._cleanBoundingBox(this.__value)
+      this.__value = this.treeItem._cleanBoundingBox()
       this.dirty = false
     }
     return this.__value
@@ -84,6 +79,19 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
     bBox3Clone.value = this.__value?.clone()
 
     return bBox3Clone
+  }
+
+  // ////////////////////////////////////////
+  // Persistence
+
+  /**
+   * The loadValue is used to change the value of a parameter, without triggering a
+   * valueChanges, or setting the USER_EDITED state.
+   *
+   * @param value - The context value.
+   */
+  loadValue(value: Box3): void {
+    this.__value = value.clone()
   }
 }
 

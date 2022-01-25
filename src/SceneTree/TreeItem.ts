@@ -349,8 +349,8 @@ class TreeItem extends BaseItem {
    * @return - The return value.
    * @private
    */
-  _cleanBoundingBox(bbox: Box3): Box3 {
-    bbox.reset()
+  _cleanBoundingBox(): Box3 {
+    const bbox = new Box3()
     this.__childItems.forEach((childItem: TreeItem) => {
       if (childItem.isVisible()) {
         // console.log(" - ", childItem.constructor.name, childItem.getName(), childItem.globalXfoParam.value.sc.x, childItem.getBoundingBox().toString())
@@ -360,14 +360,6 @@ class TreeItem extends BaseItem {
     })
     // console.log(this.getName(), bbox.toString())
     return bbox
-  }
-
-  /**
-   * The _childBBoxChanged method.
-   * @private
-   */
-  protected childBBoxChanged(): void {
-    this.setBoundingBoxDirty()
   }
 
   /**
