@@ -1,7 +1,19 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
 import { Mat4, Vec2, Vec3, Vec4, Xfo } from '../../Math/index'
-import { DataImage, FlatSurfaceMaterial, Plane } from '../../SceneTree/index'
+import {
+  CompoundGeom,
+  CompoundGeomProxy,
+  DataImage,
+  FlatSurfaceMaterial,
+  Lines,
+  LinesProxy,
+  Mesh,
+  MeshProxy,
+  Plane,
+  Points,
+  PointsProxy,
+} from '../../SceneTree/index'
 import { GLGeomItemFlags, GLGeomItem } from './GLGeomItem'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLTexture2D } from '../GLTexture2D'
@@ -431,6 +443,7 @@ class GLGeomItemLibrary extends EventEmitter {
       unCulled: data.newlyUnCulled?.length,
       visible: data.visible,
       total: data.total,
+      geomStats: data.geomStats,
     })
   }
 
@@ -1008,6 +1021,26 @@ class GLGeomItemLibrary extends EventEmitter {
 
     const isTransparent = geomItem.materialParam.value.isTransparent()
 
+    const geomStats = {
+      triangles: 0,
+      lines: 0,
+      points: 0,
+    }
+    const geom = geomItem.geomParam.value
+    if (geom instanceof CompoundGeom || geom instanceof CompoundGeomProxy) {
+      geomStats.triangles += geom.getNumTriangles()
+      geomStats.lines += geom.getNumLineSegments()
+      geomStats.points += geom.getNumPoints()
+    } else if (geom instanceof Mesh || geom instanceof MeshProxy) {
+      geomStats.triangles += geom.getNumTriangles()
+    } else if (geom instanceof Lines || geom instanceof LinesProxy) {
+      geomStats.lines += geom.getNumLineSegments()
+    } else if (geom instanceof Points || geom instanceof PointsProxy) {
+      geomStats.points += geom.getNumVertices()
+    } else {
+      throw new Error('Unsupported geom type:' + geom.constructor.name)
+    }
+
     return {
       id: index,
       boundingRadius,
@@ -1015,6 +1048,7 @@ class GLGeomItemLibrary extends EventEmitter {
       cullable,
       visible: geomItem.isVisible(),
       isTransparent,
+      geomStats,
     }
   }
 

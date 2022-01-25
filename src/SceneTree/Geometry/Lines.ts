@@ -60,6 +60,15 @@ class Lines extends BaseGeom {
   }
 
   /**
+   * Returns the number of line segments.
+   *
+   * @return - Returns the number of segments.
+   */
+  getNumLineSegments(): number {
+    return this.__indices.length / 2
+  }
+
+  /**
    * Sets the number of line segments in the lines geometry.
    * **Important:** It resets indices values.
    *

@@ -198,12 +198,12 @@ class CompoundGeomProxy extends BaseProxy {
   }
 
   /**
-   * Returns the number line segments in this lines proxy geometry
+   * Returns the number of triangles in this mesh proxy geometry.
    *
    * @return - The return value.
    */
-  getNumPoints() {
-    return this.counts['POINTS']
+  getNumTriangles() {
+    return this.counts['TRIANGLES'] / 3
   }
 
   /**
@@ -216,12 +216,12 @@ class CompoundGeomProxy extends BaseProxy {
   }
 
   /**
-   * Returns the number of triangles in this mesh proxy geometry.
+   * Returns the number line segments in this lines proxy geometry
    *
    * @return - The return value.
    */
-  getNumTriangles() {
-    return this.counts['TRIANGLES'] / 3
+  getNumPoints() {
+    return this.counts['POINTS']
   }
 }
 

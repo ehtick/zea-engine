@@ -142,6 +142,33 @@ class CompoundGeom extends BaseGeom {
     return result
   }
 
+  /**
+   * Returns the number of triangles in this mesh proxy geometry.
+   *
+   * @return - The return value.
+   */
+  getNumTriangles() {
+    return this.counts['TRIANGLES'] / 3
+  }
+
+  /**
+   * Returns the number line segments in this lines proxy geometry
+   *
+   * @return - The return value.
+   */
+  getNumLineSegments() {
+    return this.counts['LINES'] / 2
+  }
+
+  /**
+   * Returns the number line segments in this lines proxy geometry
+   *
+   * @return - The return value.
+   */
+  getNumPoints() {
+    return this.counts['POINTS']
+  }
+
   // ////////////////////////////////////////
   // Persistence
 

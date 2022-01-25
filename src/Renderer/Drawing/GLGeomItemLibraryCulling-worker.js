@@ -61,6 +61,27 @@ let frustumCulledCount = 0
 let newlyCulled = []
 let newlyUnCulled = []
 
+let visibleCount = 0
+const totaleGeomStats = {
+  triangles: 0,
+  lines: 0,
+  points: 0,
+}
+const geomStats_add = (geomStats) => {
+  // console.log('geomStats_add:', geomStats.triangles, totaleGeomStats.triangles)
+  visibleCount++
+  totaleGeomStats.triangles += geomStats.triangles
+  totaleGeomStats.lines += geomStats.lines
+  totaleGeomStats.points += geomStats.points
+}
+const geomStats_subtract = (geomStats) => {
+  // console.log('geomStats_subtract:', geomStats.triangles, totaleGeomStats.triangles)
+  visibleCount--
+  totaleGeomStats.triangles -= geomStats.triangles
+  totaleGeomStats.lines -= geomStats.lines
+  totaleGeomStats.points -= geomStats.points
+}
+
 let cameraPos
 let cameraInvOri
 let isOrthographic = false
@@ -96,6 +117,9 @@ const checkGeomItem = (geomItemData) => {
   // Some items, like Handles and the grid, or or the VR controllers that should not be culled.
   if (!geomItemData.cullable) {
     unCull(geomItemData.id)
+    return
+  }
+  if (!geomItemData.visible) {
     return
   }
   const boundingRadius = geomItemData.boundingRadius
@@ -231,53 +255,78 @@ const generateInFrustumIndices = () => {
 }
 
 const onDoneFrustumCull = (postMessage) => {
-  // console.log('onDoneFrustumCull newlyCulled:', newlyCulled.length, 'newlyUnCulled:', newlyUnCulled.length)
-  // if (newlyCulled.length > 0 || newlyUnCulled.length > 0)
-  {
-    if (!enableOcclusionCulling) {
-      const countInFrustum = geomItemsData.length - 1 - frustumCulledCount
-      postMessage({
-        type: 'CullResults',
-        newlyCulled,
-        newlyUnCulled,
-        visible: countInFrustum,
-        total: geomItemsData.length - 1,
-      })
-    } else {
-      // console.log('FrustumCullResults:', 'newlyCulled:', newlyCulled, 'newlyUnCulled:', newlyUnCulled, outOfFrustum)
-      // const countInFrustum = geomItemsData.length - 1 - frustumCulledCount
+  if (!enableOcclusionCulling) {
+    const countInFrustum = geomItemsData.length - 1 - frustumCulledCount
 
-      // if (countInFrustum > 300) {
-      //   console.log('countInFrustum:', countInFrustum)
-      // }
-      if (newlyCulled.length > 0 || newlyUnCulled.length > 0 || !inFrustumDrawIdsBufferPopulated) {
-        const inFrustumIndices = generateInFrustumIndices()
-
-        // When occlusion culling is on, we only uncull items after they
-        // are detected in the occlusion buffer. Transparent items are not
-        // rendered to the occlusion buffer, so must be unculled immediately.
-        const newlyUnCulled_transparent = []
-        newlyUnCulled.forEach((index) => {
-          if (index > 0 && geomItemsData[index] && geomItemsData[index].visible && geomItemsData[index].isTransparent)
-            newlyUnCulled_transparent.push(index)
-        })
-        if (newlyCulled.length > 0 || newlyUnCulled_transparent.length > 0) {
-          postMessage(
-            { type: 'InFrustumIndices', newlyCulled, newlyUnCulled: newlyUnCulled_transparent, inFrustumIndices },
-            [inFrustumIndices.buffer]
-          )
-        } else {
-          postMessage({ type: 'InFrustumIndices', inFrustumIndices }, [inFrustumIndices.buffer])
-        }
-        inFrustumDrawIdsBufferPopulated = true
-      } else {
-        // Note: the inFrustumDrawIdsBuffer is already up to date we can skip this.
-        postMessage({ type: 'InFrustumIndices' })
+    newlyCulled.forEach((index) => {
+      if (index > 0 && geomItemsData[index] && geomItemsData[index].visible) {
+        geomStats_subtract(geomItemsData[index].geomStats)
       }
+    })
+    newlyUnCulled.forEach((index) => {
+      if (index > 0 && geomItemsData[index] && geomItemsData[index].visible) {
+        geomStats_add(geomItemsData[index].geomStats)
+      }
+    })
+
+    postMessage({
+      type: 'CullResults',
+      newlyCulled,
+      newlyUnCulled,
+      visible: countInFrustum,
+      total: geomItemsData.length - 1,
+      geomStats: totaleGeomStats,
+    })
+  } else {
+    // console.log('FrustumCullResults:', 'newlyCulled:', newlyCulled, 'newlyUnCulled:', newlyUnCulled, outOfFrustum)
+    // const countInFrustum = geomItemsData.length - 1 - frustumCulledCount
+
+    // if (countInFrustum > 300) {
+    //   console.log('countInFrustum:', countInFrustum)
+    // }
+    if (newlyCulled.length > 0 || newlyUnCulled.length > 0 || !inFrustumDrawIdsBufferPopulated) {
+      const inFrustumIndices = generateInFrustumIndices()
+
+      newlyCulled.forEach((index) => {
+        if (index > 0 && geomItemsData[index] && geomItemsData[index].visible && !occluded[index]) {
+          geomStats_subtract(geomItemsData[index].geomStats)
+        }
+      })
+
+      // When occlusion culling is on, we only uncull items after they
+      // are detected in the occlusion buffer. Transparent items are not
+      // rendered to the occlusion buffer, so must be unculled immediately.
+      const newlyUnCulled_transparent = []
+      newlyUnCulled.forEach((index) => {
+        if (index > 0 && geomItemsData[index] && geomItemsData[index].visible && geomItemsData[index].isTransparent) {
+          newlyUnCulled_transparent.push(index)
+          geomStats_add(geomItemsData[index].geomStats)
+        }
+      })
+      if (newlyCulled.length > 0 || newlyUnCulled_transparent.length > 0) {
+        postMessage(
+          {
+            type: 'InFrustumIndices',
+            newlyCulled,
+            newlyUnCulled: newlyUnCulled_transparent,
+            visible: visibleCount,
+            total: geomItemsData.length - 1,
+            geomStats: totaleGeomStats,
+            inFrustumIndices,
+          },
+          [inFrustumIndices.buffer]
+        )
+      } else {
+        postMessage({ type: 'InFrustumIndices', inFrustumIndices }, [inFrustumIndices.buffer])
+      }
+      inFrustumDrawIdsBufferPopulated = true
+    } else {
+      // Note: the inFrustumDrawIdsBuffer is already up to date we can skip this.
+      postMessage({ type: 'InFrustumIndices' })
     }
-    newlyCulled = []
-    newlyUnCulled = []
   }
+  newlyCulled = []
+  newlyUnCulled = []
 }
 
 // ///////////////////////////////////////////////
@@ -288,24 +337,27 @@ const processOcclusionData = (data) => {
 
   const newlyCulled = []
   const newlyUnCulled = []
-  let visibleCount = 0
   visibleItems.some((value, index) => {
     if (index == 0) return false
     if (index >= geomItemsData.length) return true
 
+    const geomItemData = geomItemsData[index]
     if (!outOfFrustum[index]) {
       if (value == 0) {
         // Not transparent object can not be occlusion culled, because we do not render them to the
         // occlusion buffer. This means they cannot occlude, or be considered occluded.
-        if (!occluded[index] && geomItemsData[index].cullable && !geomItemsData[index].isTransparent) {
+        if (!occluded[index] && geomItemData.cullable && geomItemData.visible && !geomItemData.isTransparent) {
           occluded[index] = true
-          if (!outOfFrustum[index]) newlyCulled.push(index)
+          if (!outOfFrustum[index]) {
+            newlyCulled.push(index)
+            geomStats_subtract(geomItemData.geomStats)
+          }
         }
       } else {
-        visibleCount++
         if (occluded[index]) {
           occluded[index] = false
           newlyUnCulled.push(index)
+          geomStats_add(geomItemData.geomStats)
         }
       }
     } else {
@@ -323,6 +375,7 @@ const processOcclusionData = (data) => {
       newlyUnCulled,
       visible: visibleCount,
       total: geomItemsData.length - 1,
+      geomStats: totaleGeomStats,
     })
   }
 }
@@ -338,16 +391,30 @@ const handleMessage = (data, postMessage) => {
     onViewChanged(data, postMessage)
   } else if (data.type == 'UpdateGeomItems') {
     data.removedItemIndices.forEach((id) => {
+      if (geomItemsData[index] && geomItemsData[index].visible) {
+        geomStats_subtract(geomItemsData[id].geomStats)
+      }
       geomItemsData[id] = null
       outOfFrustum[id] = true
     })
     data.geomItems.forEach((geomItem) => {
       const isNew = geomItemsData[geomItem.id] == undefined
+      // are either adding a new item, or unhiding an existing item.
+      const becomingVisible = isNew ? geomItem.visible : !geomItemsData[geomItem.id].visible && geomItem.visible
+      const becomingInVisible = isNew ? false : geomItemsData[geomItem.id].visible && !geomItem.visible
       geomItemsData[geomItem.id] = geomItem
       // New geoms default to being un-culled
       // Existing geoms that may be changing state, like changing
       // visibility or transformations should simply update.
-      if (isNew) outOfFrustum[geomItem.id] = false
+      if (isNew) {
+        outOfFrustum[geomItem.id] = false
+      }
+      if (becomingVisible) {
+        geomStats_add(geomItem.geomStats)
+      }
+      if (becomingInVisible) {
+        geomStats_subtract(geomItem.geomStats)
+      }
       checkGeomItem(geomItemsData[geomItem.id])
     })
     inFrustumDrawIdsBufferPopulated = false
