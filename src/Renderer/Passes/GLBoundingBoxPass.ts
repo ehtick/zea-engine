@@ -1,5 +1,5 @@
 import { Color, Vec4 } from '../../Math/index'
-import { LinesCuboid, TreeItem } from '../../SceneTree/index'
+import { GeomItem, LinesCuboid, TreeItem } from '../../SceneTree/index'
 import { BoundingBoxShader } from '../Shaders/BoundingBoxShader'
 import { GLLines } from '../Drawing/GLLines'
 import { GLPass, PassType } from './GLPass'
@@ -12,7 +12,7 @@ import { RenderState } from '../types/renderer'
 import { ChildAddedEvent } from '../../Utilities/Events/ChildAddedEvent'
 import { pixelsPerItem } from '../GLSLConstants.js'
 
-/** Class representing a GL treeitems pass.
+/** Class representing a GL treeItems pass.
  * @extends GLPass
  * @private
  */
@@ -28,7 +28,7 @@ class GLBoundingBoxPass extends GLPass {
   protected glshader?: GLShader
 
   protected __modelMatrixArray: Array<Float32Array> = []
-  protected __treeitemDataArray: Array<Array<number>> = []
+  protected __treeItemDataArray: Array<Array<number>> = []
   protected __tintColorArray: Array<Array<number>> = []
 
   protected __instanceIdsBuffer?: WebGLBuffer
@@ -37,7 +37,7 @@ class GLBoundingBoxPass extends GLPass {
   protected __drawItemsTexture?: GLTexture2D
   protected __width: number = 0
   /**
-   * Create a GL treeitems pass.
+   * Create a GL treeItems pass.
    */
   constructor() {
     super()
@@ -128,39 +128,39 @@ class GLBoundingBoxPass extends GLPass {
 
   /**
    * The bindTreeItem method.
-   * @param treeitem - The treeitem value.
+   * @param treeItem - The treeItem value.
    */
-  bindTreeItem(treeitem: TreeItem): void {
+  bindTreeItem(treeItem: TreeItem): void {
     let index: number
     let index_check = this.freeIndices.pop()
     if (index_check) index = index_check
     else index = this.boxes.length
-    this.idToIndex[treeitem.getId()] = index
+    this.idToIndex[treeItem.getId()] = index
 
     const visibilityChanged = () => {
-      if (treeitem.isVisible()) {
+      if (treeItem.isVisible()) {
         this.drawCount++
-        // The treeitem Xfo might have changed while it was
+        // The treeItem Xfo might have changed while it was
         // not visible. We need to update here.
         this.dirtyBoxes.add(index)
       } else this.drawCount--
       this.indexArrayUpdateNeeded = true
     }
-    treeitem.on('visibilityChanged', visibilityChanged)
+    treeItem.on('visibilityChanged', visibilityChanged)
 
     const xfoChanged = () => {
-      if (treeitem.isVisible()) {
+      if (treeItem.isVisible()) {
         this.dirtyBoxes.add(index)
         this.emit('updated')
       }
     }
-    treeitem.globalXfoParam.on('valueChanged', xfoChanged)
-    treeitem.boundingBoxParam.on('valueChanged', xfoChanged)
+    treeItem.globalXfoParam.on('valueChanged', xfoChanged)
+    treeItem.boundingBoxParam.on('valueChanged', xfoChanged)
 
-    if (treeitem.isVisible()) this.drawCount++
+    if (treeItem.isVisible()) this.drawCount++
     // TODO: make this a type
     this.boxes[index] = {
-      treeitem,
+      treeItem,
       visibilityChanged,
       xfoChanged,
     }
@@ -172,24 +172,24 @@ class GLBoundingBoxPass extends GLPass {
 
   /**
    * The unbindTreeItem method.
-   * @param treeitem - The treeitem value.
+   * @param treeItem - The treeItem value.
    */
-  unbindTreeItem(treeitem: TreeItem): void {
-    if (!(treeitem.getId() in this.idToIndex)) {
+  unbindTreeItem(treeItem: TreeItem): void {
+    if (!(treeItem.getId() in this.idToIndex)) {
       console.warn('Billboard already removed.')
       return
     }
-    const index = this.idToIndex[treeitem.getId()]
-    const treeitemData = this.boxes[index]
+    const index = this.idToIndex[treeItem.getId()]
+    const treeItemData = this.boxes[index]
 
-    treeitem.off('visibilityChanged', treeitemData.visibilityChanged)
-    treeitem.globalXfoParam.off('valueChanged', treeitemData.xfoChanged)
-    treeitem.boundingBoxParam.off('valueChanged', treeitemData.xfoChanged)
+    treeItem.off('visibilityChanged', treeItemData.visibilityChanged)
+    treeItem.globalXfoParam.off('valueChanged', treeItemData.xfoChanged)
+    treeItem.boundingBoxParam.off('valueChanged', treeItemData.xfoChanged)
 
     this.boxes[index] = null
     this.freeIndices.push(index)
 
-    if (treeitem.isVisible()) this.drawCount--
+    if (treeItem.isVisible()) this.drawCount--
 
     this.indexArrayUpdateNeeded = true
 
@@ -200,18 +200,24 @@ class GLBoundingBoxPass extends GLPass {
 
   /**
    * The __populateBoxesDataArray method.
-   * @param treeitemData - The treeitemData value.
+   * @param treeItemData - The treeItemData value.
    * @param index - The index value.
    * @param dataArray - The dataArray value.
    * @private
    */
-  __populateBoxesDataArray(treeitemData: any, index: number, dataArray: any): void {
-    const treeitem = treeitemData.treeitem
-    const globalXfoParam = treeitem.globalXfoParam
-    const geomMatParam = treeitem.geomMatParam
-    const color = geomMatParam ? new Color(1, 0, 0, 1) : new Color(0, 0, 1, 1)
-    const mat4 = geomMatParam ? geomMatParam.value : globalXfoParam.value.toMat4()
-    const bbox = treeitem.boundingBoxParam.value
+  __populateBoxesDataArray(treeItemData: any, index: number, dataArray: any): void {
+    const treeItem = treeItemData.treeItem
+
+    let color
+    let mat4
+    if (treeItem instanceof GeomItem) {
+      color = new Color(1, 0, 0, 1)
+      mat4 = treeItem.geomMatParam.value
+    } else {
+      color = new Color(0, 0, 1, 1)
+      mat4 = treeItem.globalXfoParam.value.toMat4()
+    }
+    const bbox = treeItem.boundingBoxParam.value
 
     const offset = index * pixelsPerItem * 4
     const pixel0 = new Vec4(new Float32Array(dataArray.buffer, offset * 4, 4))
@@ -246,7 +252,7 @@ class GLBoundingBoxPass extends GLPass {
     this.__indexArray = new Float32Array(this.drawCount)
     let offset = 0
     for (let i = 0; i < this.boxes.length; i++) {
-      if (this.boxes[i] && this.boxes[i].treeitem.isVisible()) {
+      if (this.boxes[i] && this.boxes[i].treeItem.isVisible()) {
         this.__indexArray[offset] = i
         offset++
       }
@@ -317,13 +323,13 @@ class GLBoundingBoxPass extends GLPass {
       return
     }
 
-    const treeitemData = this.boxes[index]
-    if (!treeitemData.treeitem.isVisible()) return
+    const treeItemData = this.boxes[index]
+    if (!treeItemData.treeItem.isVisible()) return
 
     const gl = this.__gl!
 
     const dataArray = new Float32Array(pixelsPerItem * 4)
-    this.__populateBoxesDataArray(treeitemData, 0, dataArray)
+    this.__populateBoxesDataArray(treeItemData, 0, dataArray)
 
     gl.bindTexture(gl.TEXTURE_2D, this.__drawItemsTexture.glTex)
     const xoffset = (index * pixelsPerItem) % this.__width
@@ -381,7 +387,7 @@ class GLBoundingBoxPass extends GLPass {
       const len = this.__indexArray.length
       for (let i = 0; i < len; i++) {
         // gl.uniformMatrix4fv(unifs.modelMatrix.location, false, this.__modelMatrixArray[i])
-        // gl.uniform4fv(unifs.treeitemData.location, this.__treeitemDataArray[i])
+        // gl.uniform4fv(unifs.treeItemData.location, this.__treeItemDataArray[i])
         // gl.uniform4fv(unifs.tintColor.location, this.__tintColorArray[i])
 
         renderstate.bindViewports(unifs, () => {
