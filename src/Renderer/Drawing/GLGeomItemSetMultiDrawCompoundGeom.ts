@@ -268,6 +268,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       const glGeomItem = this.glGeomItems[index]!
       if (glGeomItem.isVisible()) {
         const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
+
+        // Here we calculate how many draws for each type of geometry, each
+        // compound goem needs. We then allocate the space we have specified.
         let drawCounts: Record<string, number> = {}
         if (glGeomItem.shattered || geomBuffers.materials.length > 0) {
           // for shattered geoms, we draw once for each subgeom for each element type
@@ -318,7 +321,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     for (let key in this.drawIdsArraysAllocators) {
       const allocator = this.drawIdsArraysAllocators[key]
       if (!this.drawElementCounts[key] || allocator.reservedSpace > this.drawElementCounts[key].length) {
-        if (this.drawElementCounts[key] && allocator.reservedSpace > this.drawElementCounts[key].length) regen = true
+        if (this.drawElementCounts[key] && allocator.reservedSpace > this.drawElementCounts[key].length) {
+          regen = true
+        }
         this.drawIdsArrays[key] = new Float32Array(allocator.reservedSpace * 4) // one RGBA pixel per drawn geometry.
         this.drawElementOffsets[key] = new Int32Array(allocator.reservedSpace)
         this.drawElementCounts[key] = new Int32Array(allocator.reservedSpace)
