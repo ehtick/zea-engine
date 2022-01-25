@@ -64,6 +64,13 @@
         postMessage('done-loading')
       })
 
+      const cullElement = document.getElementById('cull-stats')
+      renderer.on('CullingUpdated', (event) => {
+        if (event.visible != undefined && event.total != undefined) {
+          cullElement.textContent = `visible: ${event.visible} / total: ${event.total} visible triangles:${event.geomStats.triangles} `
+        }
+      })
+
       // {{{ Messages handler.
       const statusElement = document.getElementById('status')
       const setStatusText = (text) => {
@@ -80,6 +87,7 @@
     <div class="h-screen">
       <canvas class="absolute" id="renderer"></canvas>
       <div id="status" class="hud"></div>
+      <div id="cull-stats" class="hud"></div>
       <div class="variant-buttons">
         <button class="variant-button" id="variant-01">variant-01</button>
       </div>

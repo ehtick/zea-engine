@@ -66,9 +66,9 @@
       // renderer.on('CullingUpdated', (event) => {
       //   console.log(`visible: ${event.visible} / total: ${event.total}`)
       // })
-      renderer.on('occlusionCullingProfilingData', (event) => {
-        console.log(`occlusionCulling: ${JSON.stringify(event)}`)
-      })
+      // renderer.on('occlusionCullingProfilingData', (event) => {
+      //   console.log(`occlusionCulling: ${JSON.stringify(event)}`)
+      // })
 
       const postMessage = (msg) => {
         console.log(msg)
@@ -77,14 +77,14 @@
       renderer.once('CullingUpdated', () => {
         postMessage('done-loading')
       })
-      renderer.on('occlusionCullingProfilingData', (event) => {
-        const { queryReduceSceneGeoms, queryReduceBBoxes } = event
-        cullElement.textContent = `occlusionCulling Reduction: ${queryReduceSceneGeoms}, ${queryReduceBBoxes}`
-      })
+      // renderer.on('occlusionCullingProfilingData', (event) => {
+      //   const { queryReduceSceneGeoms, queryReduceBBoxes } = event
+      //   cullElement.textContent = `occlusionCulling Reduction: ${queryReduceSceneGeoms}, ${queryReduceBBoxes}`
+      // })
       const cullElement = document.getElementById('cull-stats')
       renderer.on('CullingUpdated', (event) => {
         if (event.visible != undefined && event.total != undefined) {
-          cullElement.textContent = `visible: ${event.visible} / total: ${event.total}`
+          cullElement.textContent = `visible: ${event.visible} / total: ${event.total} visible triangles:${event.geomStats.triangles} `
         }
       })
 

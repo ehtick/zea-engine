@@ -189,7 +189,7 @@
       renderer.on('CullingUpdated', (event) => {
         cullElement.textContent = `visible: ${event.visible} / total: ${event.total} triangles: ${
           geomItemCount * geom.getNumTriangles()
-        } visible triangles: ${event.visible * geom.getNumTriangles()}`
+        } visible triangles:${event.geomStats.triangles} `
       })
     </script>
     <style>

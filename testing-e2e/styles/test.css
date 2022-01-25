@@ -35,3 +35,10 @@
   font-size: 16px;
   user-select: none;
 }
+
+#cull-stats {
+  color: rgb(0, 0, 0);
+  position: fixed;
+  bottom: 40px;
+  left: 10px;
+}

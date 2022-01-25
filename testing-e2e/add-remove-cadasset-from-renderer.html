@@ -10,7 +10,14 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
     <link rel="stylesheet" href="styles/test.css" />
-
+    <style>
+      #cull-stats {
+        position: fixed;
+        bottom: 35px;
+        left: 10px;
+        font-size: 20px;
+      }
+    </style>
     <script type="module">
       import '../dist/index.umd.js'
       const {
@@ -34,6 +41,7 @@
       const renderer = new GLRenderer(canvas, {
         hideSplash: true,
         antialias: false,
+        enableFrustumCulling: true,
         enableOcclusionCulling: true,
         debugOcclusionBuffer: false,
       })
@@ -144,12 +152,19 @@
       })
 
       // }}}
+      const cullElement = document.getElementById('cull-stats')
+      renderer.on('CullingUpdated', (event) => {
+        if (event.visible && event.total) {
+          cullElement.textContent = `visible: ${event.visible} / total: ${event.total} triangles:${event.geomStats.triangles} `
+        }
+      })
     </script>
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
       <canvas id="viewport"></canvas>
       <div id="status" class="hud"></div>
+      <div id="cull-stats" class="hud"></div>
       <div class="variant-buttons">
         <button class="variant-button" id="variant-01">variant-01</button>
         <button class="variant-button" id="variant-02">variant-02</button>
