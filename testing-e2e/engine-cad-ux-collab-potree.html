@@ -40,19 +40,25 @@
         padding: 0.5em;
         gap: 1em;
       }
-      .stats-display {
-        position: fixed;
-        bottom: 25px;
-        left: 10px;
-        color: #333333;
-        font-size: 24px;
-      }
       .fps-display {
         position: fixed;
         bottom: 10px;
         right: 10px;
         color: #333333;
         font-size: 45px;
+      }
+      .stats-display {
+        position: fixed;
+        bottom: 60px;
+        left: 10px;
+        color: #333333;
+        font-size: 20px;
+      }
+      #cull-stats {
+        position: fixed;
+        bottom: 35px;
+        left: 10px;
+        font-size: 20px;
       }
     </style>
     <!-- <script src="https://websocket-staging.zea.live/socket.io/socket.io.js"></script>
@@ -93,7 +99,12 @@
       const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false, enableOcclusionCulling: true })
+      const renderer = new GLRenderer(canvas, {
+        debugGeomIds: false,
+        antialias: false,
+        enableFrustumCulling: true,
+        enableOcclusionCulling: true,
+      })
       renderer.setScene(scene)
       renderer.getViewport().backgroundColorParam.value = new Color(0.85, 0.85, 0.85, 1)
       renderer.getViewport().debugGeomDataBuffer = urlParams.has('debugGeomDataBuffer')
@@ -104,7 +115,7 @@
 
       globalThis.renderer = renderer
 
-      // scene.setupGrid(1.0, 10, new Color(0.2, 0.2, 0.2))
+      scene.setupGrid(100.0, 10, new Color(0.2, 0.2, 0.2))
 
       canvas.addEventListener(
         'webglcontextlost',
@@ -113,8 +124,8 @@
         },
         false
       )
-      // const boundingBoxPass = new GLBoundingBoxPass()
-      // renderer.addPass(boundingBoxPass)
+      const boundingBoxPass = new GLBoundingBoxPass()
+      renderer.addPass(boundingBoxPass)
 
       const ortho = document.getElementById('ortho')
       ortho.addEventListener('click', () => {
@@ -298,7 +309,7 @@
         stats.textContent = `Loading...`
         const asset = new CADAsset()
         const context = new AssetLoadContext()
-        context.units = 'meters'
+        context.units = 'millimeters'
         context.camera = context
         asset.load(url, context).then(() => {
           treeLoadTime = ((performance.now() - start) / 1000).toFixed(2)
@@ -353,7 +364,7 @@
         } else if (filename.endsWith('gltf') || filename.endsWith('glb')) {
           res = loadGLTFAsset(url, filename)
         }
-        // boundingBoxPass.addTreeItem(res, true)
+        boundingBoxPass.addTreeItem(res, true)
         return res
       }
       let assetUrl = 'data/Dead_eye_bearing.zcad'
