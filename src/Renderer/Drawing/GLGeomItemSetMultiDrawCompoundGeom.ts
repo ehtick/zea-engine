@@ -825,8 +825,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     })
 
     //  Note: lines in VR are not fattened...
-
-    if (renderstate.geomDataFbo) {
+    const enableLineFattening = false
+    if (renderstate.geomDataFbo && enableLineFattening) {
       if (!this.linesGeomDataBuffer) {
         this.linesGeomDataBuffer = new GLTexture2D(gl, {
           type: this.renderer.floatGeomBuffer ? 'FLOAT' : 'UNSIGNED_BYTE',
@@ -918,7 +918,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       }
     })
 
-    if (this.linesGeomDataBuffer && renderstate.geomDataFbo) {
+    if (this.linesGeomDataBuffer && renderstate.geomDataFbo && enableLineFattening) {
       renderstate.boundRendertarget = null
       renderstate.geomDataFbo.bindForWriting(renderstate)
 
@@ -939,10 +939,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
 
       // Re-bind the previously bound geomdata shader.
       geomDataShader.bind(renderstate, geomDataShaderKey)
-
-      // const screenQuad = this.renderer.screenQuad!
-      // screenQuad.bindShader(renderstate)
-      // screenQuad.draw(renderstate, this.linesGeomDataBuffer)
+      this.renderer.glGeomLibrary.bind(renderstate)
     }
   }
 
@@ -998,7 +995,6 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     gl.depthFunc(gl.LEQUAL)
 
     const { drawIdsTexture } = renderstate.unifs
-    this.renderer.glGeomLibrary.bind(renderstate)
 
     const { geomType } = renderstate.unifs
     renderstate.bindViewports(unifs, () => {
