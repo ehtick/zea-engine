@@ -4,6 +4,13 @@
 import { EventEmitter } from '../Utilities/index'
 import { TreeItem } from './TreeItem'
 
+// Note: browsers have a maximum number of resources they can load at once
+// before they start throwing errors.
+// The error from Chrome is: Failed to load resource: net::ERR_INSUFFICIENT_RESOURCES
+// We limit the number of concurrent resource loads here
+// by pushing loads into a queue.
+const MAX_LOAD_COUNT = 2000
+
 /**
  * Class for delegating resource loading, enabling an abstraction of a cloud file system to be implemented.
  *
@@ -54,6 +61,9 @@ class ResourceLoader extends EventEmitter {
   protected plugins: Record<string, any>
   public systemUrls: Record<string, string>
   public commonResources: Record<string, TreeItem>
+
+  private loadCount: number = 0
+  private queue: Array<any> = []
   /**
    * Create a resource loader.
    */
@@ -101,20 +111,53 @@ class ResourceLoader extends EventEmitter {
 
     this.incrementWorkload()
 
-    const promise = plugin.loadFile(url)
+    if (this.loadCount < MAX_LOAD_COUNT) {
+      this.loadCount++
+      const promise = plugin.loadFile(url)
 
-    promise.then(
-      () => {
-        this.incrementWorkDone()
-        this.emit('loaded', { url })
-      },
-      () => {
-        // Error
-        this.incrementWorkDone()
-      }
-    )
+      promise.then(
+        () => {
+          this.loadCount--
+          this.incrementWorkDone()
+          this.emit('loaded', { url })
 
-    return promise
+          while (this.loadCount < MAX_LOAD_COUNT && this.queue.length > 0) {
+            const callback = this.queue.pop()
+            callback()
+          }
+        },
+        () => {
+          // Error
+          this.incrementWorkDone()
+        }
+      )
+
+      return promise
+    } else {
+      const promise = new Promise<void>((resolve, reject) => {
+        this.queue.push(() => {
+          this.loadCount++
+          const loadFilePromise = plugin.loadFile(url)
+          loadFilePromise.then(
+            (data: any) => {
+              this.loadCount--
+              this.incrementWorkDone()
+              this.emit('loaded', { url })
+              while (this.loadCount < MAX_LOAD_COUNT && this.queue.length > 0) {
+                const callback = this.queue.pop()
+                callback()
+              }
+              resolve(data)
+            },
+            () => {
+              // Error
+              this.incrementWorkDone()
+            }
+          )
+        })
+      })
+      return promise
+    }
   }
 
   /**
