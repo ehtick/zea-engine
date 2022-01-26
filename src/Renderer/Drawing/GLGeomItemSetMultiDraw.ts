@@ -528,8 +528,12 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     this.drawOrderToIndex.forEach((itemIndex) => {
       const glGeomItem = this.glGeomItems[itemIndex]
       if (glGeomItem) {
-        const mat4 = glGeomItem.geomItem.geomMatParam.value
-        const dist = mat4.translation.distanceTo(viewPos)
+        const bbox = glGeomItem.geomItem.boundingBoxParam.value
+        // Calculate the disance to the surface of the bounding sphere.
+        // TODO: calculate the distance the nearest point on the bounding box.
+        const center = bbox.center()
+        const size = bbox.size()
+        const dist = center.distanceTo(viewPos) - size
         distances[itemIndex] = dist
       }
     })
