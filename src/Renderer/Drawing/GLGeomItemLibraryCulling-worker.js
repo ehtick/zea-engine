@@ -390,12 +390,12 @@ const handleMessage = (data, postMessage) => {
   } else if (data.type == 'ViewChanged') {
     onViewChanged(data, postMessage)
   } else if (data.type == 'UpdateGeomItems') {
-    data.removedItemIndices.forEach((id) => {
+    data.removedItemIndices.forEach((index) => {
       if (geomItemsData[index] && geomItemsData[index].visible) {
-        geomStats_subtract(geomItemsData[id].geomStats)
+        geomStats_subtract(geomItemsData[index].geomStats)
       }
-      geomItemsData[id] = null
-      outOfFrustum[id] = true
+      geomItemsData[index] = null
+      outOfFrustum[index] = true
     })
     data.geomItems.forEach((geomItem) => {
       const isNew = geomItemsData[geomItem.id] == undefined
