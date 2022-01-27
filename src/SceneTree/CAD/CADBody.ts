@@ -18,49 +18,26 @@ import { CADAsset } from './CADAsset'
  * @extends BaseGeomItem
  */
 class CADBody extends BaseGeomItem {
-  __cadAsset: CADAsset
   /**
    * Creates an instance of CADBody setting up the initial configuration for Material and Color parameters.
    *
    * @param {string} name - The name value.
-   * @param {CADAsset} cadAsset - The cadAsset value.
    */
-  constructor(name?: string, cadAsset?: CADAsset) {
+  constructor(name?: string) {
     super(name)
-    this.__cadAsset = cadAsset // Note: used in testing scenes.
-  }
-
-  /**
-   * Returns the `CADAsset` object in current `CADBody`
-   *
-   * @return {CADAsset} - The return value.
-   */
-  getCADAsset(): CADAsset {
-    return this.__cadAsset
   }
 
   /**
    * The clone method constructs a new CADBody, copies its values
    * from this item and returns it.
    *
-   * @param {object} context - The context value.
-   * @return {CADBody} - The return value.
+   * @param context - The CloneContext param.
+   * @return - The cloned instance.
    */
   clone(context: CloneContext): CADBody {
     const cloned = new CADBody()
     cloned.copyFrom(this, context)
     return cloned
-  }
-
-  /**
-   * The copyFrom method.
-   * @param {CADBody} src - The src param.
-   * @param {object} context - The context value.
-   * @private
-   */
-  copyFrom(src: CADBody, context: CloneContext): void{
-    super.copyFrom(src, context)
-    this.__cadAsset = src.getCADAsset()
   }
 
   // ///////////////////////////
@@ -74,9 +51,6 @@ class CADBody extends BaseGeomItem {
    */
   readBinary(reader: BinReader, context: AssetLoadContext): void {
     super.readBinary(reader, context)
-
-    // Cache only in debug mode.
-    this.__cadAsset = <CADAsset>context.assetItem
 
     // Note: the bodyDescId is now deprecated as it is part of the parametric surface evaluation code.
     // The BinReader must read the value to continue loading others.
