@@ -83,7 +83,9 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
         this.indexToDrawIndex[index] = this.drawOrderToIndex.length
         this.drawOrderToIndex.push(index)
       } else {
-        this.drawOrderToIndex.splice(this.indexToDrawIndex[index], 1)
+        // Note: as items are removed, the indexToDrawIndex values get broken and must be updated.
+        const drawOrderIndex = this.drawOrderToIndex.indexOf(index)
+        this.drawOrderToIndex.splice(drawOrderIndex, 1)
         this.indexToDrawIndex[index] = -1
       }
       // console.log(this.constructor.name, ' drawOrderToIndex', this.drawOrderToIndex.length)
