@@ -41,7 +41,7 @@ class XRef extends CADAsset {
    * @param {XRef} src - The XRef to copy from.
    * @param {object} context - The context value.
    */
-  copyFrom(src?: XRef, context?: CloneContext):void {
+  copyFrom(src?: XRef, context?: CloneContext): void {
     // Note: the XRef has a localXfo that positions it relative
     // to the parent assembly. We need to avoid losing that values
     // when cloning all the others.
@@ -59,7 +59,7 @@ class XRef extends CADAsset {
    * @paramreader - The reader param.
    * @param context - The load context param.
    */
-  readBinary(reader: BinReader, context: AssetLoadContext):void {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     reader.loadStr() // read type
     const name = reader.loadStr() // read name
     this.setName(name)
@@ -78,9 +78,11 @@ class XRef extends CADAsset {
 
     // @ts-ignore will be fixed in #579
     if (!context.resources[relativePath]) {
-      // Generate a path based on the path of the parent CADAsset.
-      // const stem = relativePath.substring(0, relativePath.lastIndexOf('.'))
-      // context.resources[relativePath] = context.folder + stem + '.zcad'
+      // CAD systems seem to have flexible path resolution strategies that we can't support.
+      // e.g. looking in multiple folders for a file.
+      // The relative paths often break.
+      // If the user provides a mapping table, we will use it, else
+      // we assume files will all be in the same folder.
       if (relativePath.includes('/')) {
         relativePath = relativePath.slice(relativePath.lastIndexOf('/') + 1)
       } else if (relativePath.includes('\\')) {
@@ -96,7 +98,7 @@ class XRef extends CADAsset {
     // @ts-ignore will be fixed in #579
     if (context.resources[relativePath]) {
       // @ts-ignore will be fixed in #579
-      console.log('resolving XRef:', relativePath, ' > ', context.resources[relativePath])
+      // console.log('resolving XRef:', relativePath, ' > ', context.resources[relativePath])
       // @ts-ignore will be fixed in #579
       const url = context.resources[relativePath]
       context.incrementAsync()
