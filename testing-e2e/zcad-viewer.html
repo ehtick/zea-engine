@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html class="h-full">
+  <head>
+    <title>Zea CAD Viewer</title>
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="./data/favicon-32x32.png"
+    />
+    <meta charset="UTF-8" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.9/tailwind.min.css"
+    />
+    <link rel="stylesheet" href="./src/styles.css"/>
+    <!-- <link rel="stylesheet" href="styles/test.css" /> -->
+    <style>
+      .fps-display {
+        position: fixed;
+        bottom: 35px;
+        right: 10px;
+        color: #333333;
+        font-size: 25px;
+      }
+      .status-display {
+        position: fixed;
+        bottom: 2px;
+        left: 10px;
+        color: #ffffff;
+        font-size: 18px;
+      }
+      .cull-stats {
+        position: fixed;
+        bottom: 2px;
+        right: 10px;
+        color: #ffffff;
+        font-size: 18px;
+      }
+      #bottomPanel {
+        height: 30px;
+
+      }
+    </style>
+    <script src="../dist/index.umd.js"></script>
+    <script src="./src/zea-fps-display.js" type="module"></script>
+    <script src="../node_modules/@zeainc/zea-tree-view/dist/zeatreeview.umd.development.js"></script>
+  </head>
+
+  <body class="overflow-hidden h-full">
+    <div class="h-full flex flex-col">
+      <header class="p-2">
+        <img src="./data/logo-zea.svg" id="logo"></img>
+      </header>
+      <main class="flex flex-col flex-1">
+        <div class="flex-1" id="topPanel">
+          <div class="splitter">
+            <div id="leftPanel">
+              <zea-tree-view
+                id="tree"
+                class="select-none"
+              ></zea-tree-view>
+            </div>
+            <div class="separator" id="separatorV"></div>
+            <div id="mainPanel" class="flex-1">
+              <div id="canvas-holder">
+                <canvas id="canvas" > </canvas>
+              </div>
+              <div class="xr-button hidden" id="xr-button"></div>
+              <div id="cull-stats" class="cull-stats"></div>
+              <!-- Uncomment for an Fps display. however, not for testing. (tests will continuously fail)
+                <zea-fps-display class="fps-display" id="fps"></zea-fps-display>
+               -->
+              <progress class="progress-display" id="progress" value="0" max="100">
+                0%
+              </progress>
+            </div>
+          </div>
+        </div>
+        <!-- Uncomment these lines to provide a resizable bottom panel
+        <div class="separator" id="separatorH"></div>-->
+        <div id="bottomPanel">
+              <div class="status-display" id="status"></div>
+        </div> 
+      </main>
+    </div>
+    <script type="module">
+      import dragElement from './src/panels.js'
+      const separatorV = document.getElementById("separatorV");
+      const leftPanel = document.getElementById("leftPanel");
+      const mainPanel = document.getElementById("mainPanel");
+      dragElement(separatorV, leftPanel, mainPanel, "H");
+
+      const separatorH = document.getElementById("separatorH");
+      const topPanel = document.getElementById("topPanel");
+      const bottomPanel = document.getElementById("bottomPanel");
+      if (separatorH && topPanel && bottomPanel) {
+        dragElement(separatorH, topPanel, bottomPanel, "V");
+      }
+    </script>
+
+    <script type="module">
+
+import '../../node_modules/@zeainc/zea-ux/dist/index.umd.js'
+/* eslint-disable require-jsdoc */
+function init() {
+  const {
+    Color,
+    Vec3,
+    Scene,
+    GLRenderer,
+    EnvMap,
+    resourceLoader,
+    GeomItem,
+    MeshProxy,
+    LinesProxy,
+    AssetLoadContext,
+    CADAsset,
+    CADBody,
+  } = zeaEngine
+
+  const urlParams = new URLSearchParams(window.location.search)
+  const scene = new Scene()
+  // scene.setupGrid(10.0, 10)
+
+  const renderer = new GLRenderer(document.getElementById('canvas'), {
+    debugGeomIds: false,
+    antialias: false,
+    enableFrustumCulling: true,
+    enableOcclusionCulling: true,
+  })
+
+  // renderer.solidAngleLimit = 0.0;
+  renderer.setScene(scene)
+  renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 10), new Vec3(0, 0, 1.5))
+  // renderer.getViewport().backgroundColorParam.value = new Color(1, 0, 0)
+
+  const envMap = new EnvMap()
+  envMap.load('./data/StudioG.zenv')
+  scene.setEnvMap(envMap)
+
+  const appData = { scene, renderer }
+
+  /** SELECTION START */
+  const { SelectionManager, SelectionTool } = window.zeaUx
+
+  const selectionManager = new SelectionManager(appData, {
+    enableXfoHandles: true,
+  })
+  appData.selectionManager = selectionManager
+
+  // Users can enable the handles using a menu or hotkey.
+  selectionManager.showHandles(false)
+
+  const selectionTool = new SelectionTool(appData)
+  const filterItemSelection = (item) => {
+    return item
+  }
+  selectionTool.setSelectionFilter(filterItemSelection)
+
+  // Note: the alpha value determines  the fill of the highlight.
+  const selectionColor = new Color('#F9CE03')
+  selectionColor.a = 0.1
+  const subtreeColor = selectionColor //.lerp(new Color(1, 1, 1, 0), 0.5)
+  selectionManager.selectionGroup.highlightColorParam.value = selectionColor
+  selectionManager.selectionGroup.getParameter('SubtreeHighlightColor').value = subtreeColor
+
+  // Color the selection rect.
+  const selectionRectColor = new Color(0, 0, 0, 1)
+  selectionTool.rectItem.materialParam.value.getParameter('BaseColor').value = selectionRectColor
+
+  /** SELECTION END */
+
+  // Setup FPS Display
+  const fpsElement = document.getElementById('fps')
+  if (fpsElement) fpsElement.renderer = renderer
+
+  // Setup TreeView Display
+  const treeElement = document.getElementById('tree')
+  treeElement.setTreeItem(scene.getRoot(), appData)
+  treeElement.setSelectionManager(selectionManager)
+
+  // let highlightedItem
+  const highlightColor = new Color('#F9CE03')
+  highlightColor.a = 0.1
+  const filterItem = (item) => {
+    while (item && !(item instanceof CADBody)) item = item.getOwner()
+    return item
+  }
+  // renderer.getViewport().on('pointerOverGeom', (event) => {
+  //   highlightedItem = filterItem(event.intersectionData.geomItem)
+  //   if (highlightedItem) highlightedItem.addHighlight('pointerOverGeom', highlightColor, true)
+  // })
+  // renderer.getViewport().on('pointerLeaveGeom', (event) => {
+  //   if (highlightedItem) {
+  //     highlightedItem.removeHighlight('pointerOverGeom', true)
+  //     highlightedItem = null
+  //   }
+  // })
+  renderer.getViewport().on('pointerDown', (event) => {
+    if (event.intersectionData) {
+      const geomItem = filterItem(event.intersectionData.geomItem)
+      if (geomItem) {
+        console.log(geomItem.getPath())
+
+        const geom = event.intersectionData.geomItem.getParameter('Geometry').getValue()
+        console.log(geom.getNumVertices(), event.intersectionData.geomItem.geomIndex)
+        // const globalXfo = event.intersectionData.geomItem
+        //   .getParameter("GlobalXfo")
+        //   .getValue();
+        // console.log(globalXfo.sc.toString());
+
+        let item = event.intersectionData.geomItem
+        while (item) {
+          const globalXfo = item.getParameter('LocalXfo').getValue()
+          console.log(item.getName(), globalXfo.sc.toString())
+          item = item.getOwner()
+        }
+      }
+    }
+  })
+
+  resourceLoader.on('progressIncremented', (event) => {
+    const pct = document.getElementById('progress')
+    pct.value = event.percent
+    if (event.percent >= 100) {
+      setTimeout(() => pct.classList.add('hidden'), 1000)
+    }
+  })
+
+  renderer.getXRViewport().then((xrvp) => {
+    fpsElement.style.bottom = '70px'
+
+    const xrButton = document.getElementById('xr-button')
+    xrButton.textContent = 'Launch VR'
+    xrButton.classList.remove('hidden')
+
+    xrvp.on('presentingChanged', (event) => {
+      const { state } = event
+      if (state) {
+        xrButton.textContent = 'Exit VR'
+      } else {
+        xrButton.textContent = 'Launch VR'
+      }
+    })
+
+    xrButton.addEventListener('click', function (event) {
+      xrvp.togglePresenting()
+    })
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key == ' ') {
+        xrvp.togglePresenting()
+      }
+    })
+  })
+
+  if (urlParams.has('profile')) {
+    renderer.startContinuousDrawing()
+  }
+
+  // ////////////////////////////////////////////
+  // Load the asset
+
+  const asset = new CADAsset()
+  const zcad = urlParams.has('zcad') ? urlParams.get('zcad') : '../data/HC_SRO4.zcad'
+  if (zcad) {
+    const context = new AssetLoadContext()
+    context.camera = renderer.getViewport().getCamera()
+    asset.load(zcad, context).then(() => {
+      renderer.frameAll()
+    })
+    asset.getGeometryLibrary().on('loaded', () => {
+      setStatusText('done-loading')
+    })
+  }
+
+  scene.getRoot().addChild(asset)
+
+  const cullElement = document.getElementById('cull-stats')
+  renderer.on('CullingUpdated', (event) => {
+    if (event.visible && event.total) {
+      cullElement.textContent = `visible: ${event.visible} / total: ${event.total}`
+    }
+  })
+  const statusElement = document.getElementById('status')
+  const setStatusText = (text) => {
+    statusElement.textContent = text
+  }
+}
+
+
+// To enable simple authentication in this app
+// change this value to true.
+if (false) {
+  // Show the login page.
+  const login = document.getElementById("login");
+  login.show(()=> {
+    // When it is closed, init the scene.
+    init()
+  })
+} else {
+  init()
+}
+    </script>
+  </body>
+</html>

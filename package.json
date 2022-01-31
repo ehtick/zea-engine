@@ -79,6 +79,7 @@
     "@zeainc/jsdocs2md": "^0.0.8",
     "@zeainc/zea-collab": "^5.2.0",
     "@zeainc/zea-potree": "^3.2.1",
+    "@zeainc/zea-tree-view": "^0.0.6",
     "@zeainc/zea-ux": "^3.2.0",
     "babel-jest": "^27.0.5",
     "copyfiles": "latest",

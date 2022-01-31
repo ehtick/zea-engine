@@ -2427,6 +2427,13 @@
     lodash "^4.17.21"
     rollup-plugin-base64 "^1.0.1"
 
+"@zeainc/zea-engine@^4":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@zeainc/zea-engine/-/zea-engine-4.1.0.tgz#3757308300faec5f3ed99849bd56db558cce9b4b"
+  integrity sha512-wdEV8QuU6TXtkphnlowzM6EecHpyEtJ9txOKMZC1iDSoCq5xaYqm/94gLSwYAVVRbQ/kVobGiyHbz/idkn0Gig==
+  dependencies:
+    lodash-es "^4.17.21"
+
 "@zeainc/zea-potree@^3.2.1":
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/@zeainc/zea-potree/-/zea-potree-3.2.1.tgz#874dd2f7f80e0132e5b55bb1e4f238a07231de12"
@@ -2443,6 +2450,14 @@
     webpack "^4.41.2"
     worker-loader "^2.0.0"
 
+"@zeainc/zea-tree-view@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@zeainc/zea-tree-view/-/zea-tree-view-0.0.6.tgz#cfd2848ae5a3bc934605c3c2e8a2fbea75cc3431"
+  integrity sha512-O7U4FA35Mb3tC49xg8bRLer/IaPUPDsvnvfThlB6UFtLpAT3EAdphKJ58hAPp7XSdU6DYB50yGhiu9aERPHvVA==
+  dependencies:
+    "@zeainc/zea-engine" "^4"
+    "@zeainc/zea-ux" "^4"
+
 "@zeainc/zea-ux@^3.2.0":
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/@zeainc/zea-ux/-/zea-ux-3.2.1.tgz#d794d7193bdf945fea10e0a59e55995b17c40abc"
@@ -2450,6 +2465,14 @@
   dependencies:
     "@zeainc/zea-cad" "^3.3.0"
     "@zeainc/zea-engine" "^3.11"
+    dom-to-image "^2.6.0"
+
+"@zeainc/zea-ux@^4":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@zeainc/zea-ux/-/zea-ux-4.0.3.tgz#254644f153516b78768d2af11e477e468ca453be"
+  integrity sha512-7hK1CmuSqXS4o5pJTXpT3qyARvLGLyb26S4B2u48rzIaLbpIUKN54uxcDVxrZS9HUEsZlFcEeVX0U4EP7ENj3w==
+  dependencies:
+    "@zeainc/zea-engine" "^4"
     dom-to-image "^2.6.0"
 
 JSONStream@^1.0.4:
