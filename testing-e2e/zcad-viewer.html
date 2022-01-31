@@ -36,6 +36,14 @@
         color: #ffffff;
         font-size: 18px;
       }
+      #surface-info {
+        position: fixed;
+        top: 50px;
+        right: 10px;
+        width: 340px;
+        color: #333333;
+        font-size: 12px;
+      }
       #bottomPanel {
         height: 30px;
 
@@ -66,6 +74,7 @@
                 <canvas id="canvas" > </canvas>
               </div>
               <div class="xr-button hidden" id="xr-button"></div>
+              <div id="surface-info"></div>
               <div id="cull-stats" class="cull-stats"></div>
               <!-- Uncomment for an Fps display. however, not for testing. (tests will continuously fail)
                 <zea-fps-display class="fps-display" id="fps"></zea-fps-display>
@@ -116,6 +125,8 @@ function init() {
     AssetLoadContext,
     CADAsset,
     CADBody,
+    CompoundGeom,
+    StringFunctions
   } = zeaEngine
 
   const urlParams = new URLSearchParams(window.location.search)
@@ -180,44 +191,118 @@ function init() {
   treeElement.setSelectionManager(selectionManager)
 
   // let highlightedItem
+
+  /** HIGHLIGHT START */
+  let highlightKey
+  let highlightedItem
+
   const highlightColor = new Color('#F9CE03')
   highlightColor.a = 0.1
   const filterItem = (item) => {
     while (item && !(item instanceof CADBody)) item = item.getOwner()
     return item
   }
+
+
   // renderer.getViewport().on('pointerOverGeom', (event) => {
-  //   highlightedItem = filterItem(event.intersectionData.geomItem)
-  //   if (highlightedItem) highlightedItem.addHighlight('pointerOverGeom', highlightColor, true)
-  // })
-  // renderer.getViewport().on('pointerLeaveGeom', (event) => {
-  //   if (highlightedItem) {
-  //     highlightedItem.removeHighlight('pointerOverGeom', true)
-  //     highlightedItem = null
+  //   const item = event.intersectionData.geomItem
+  //   if (item) {
+  //     if (highlightedItem == item) highlightedItem.removeHighlight(highlightKey, true)
+  //     highlightedItem = item
+  //     if (event.intersectionData.componentId >= 0) {
+  //       highlightKey = 'pointerOverGeom:' + event.intersectionData.componentId
+  //     } else {
+  //       highlightKey = 'pointerOverGeom'
+  //     }
+  //     highlightedItem.addHighlight(highlightKey, highlightColor, true)
   //   }
   // })
-  renderer.getViewport().on('pointerDown', (event) => {
+  // renderer.getViewport().on('pointerLeaveGeom', (event) => {
+  //   highlightedItem.removeHighlight(highlightKey, true)
+  //   highlightedItem = null
+  // })
+  renderer.getViewport().on('pointerMove', (event) => {
     if (event.intersectionData) {
-      const geomItem = filterItem(event.intersectionData.geomItem)
-      if (geomItem) {
-        console.log(geomItem.getPath())
-
-        const geom = event.intersectionData.geomItem.getParameter('Geometry').getValue()
-        console.log(geom.getNumVertices(), event.intersectionData.geomItem.geomIndex)
-        // const globalXfo = event.intersectionData.geomItem
-        //   .getParameter("GlobalXfo")
-        //   .getValue();
-        // console.log(globalXfo.sc.toString());
-
-        let item = event.intersectionData.geomItem
-        while (item) {
-          const globalXfo = item.getParameter('LocalXfo').getValue()
-          console.log(item.getName(), globalXfo.sc.toString())
-          item = item.getOwner()
+      const item = event.intersectionData.geomItem
+      if (item) {
+        if (highlightedItem && highlightedItem != item) {
+          highlightedItem.removeHighlight(highlightKey, true)
+          if (highlightedItem instanceof CADBody) {
+            highlightedItem.setShatterState(false)
+          }
         }
+        highlightedItem = item
+        let key
+        if (event.intersectionData.componentId >= 0) {
+          key = 'pointerOverGeom:' + event.intersectionData.componentId
+          if (key != highlightKey) {
+            highlightedItem.removeHighlight(highlightKey, true)
+            highlightKey = key
+            highlightedItem.addHighlight(highlightKey, highlightColor, true)
+          }
+        } else {
+          if (item instanceof CADBody) {
+            item.setShatterState(true)
+            return
+          }
+          highlightKey = 'pointerOverGeom'
+          highlightedItem.addHighlight(highlightKey, highlightColor, true)
+        }
+      }
+    } else {
+      if (highlightedItem) {
+        highlightedItem.removeHighlight(highlightKey, true)
+        if (highlightedItem instanceof CADBody) {
+          highlightedItem.setShatterState(false)
+        }
+        highlightedItem = null
       }
     }
   })
+  renderer.getViewport().on('keyDown', (event) => {
+    if (event.key == 'f') renderer.frameAll()
+  })
+  renderer.getViewport().on('pointerDown', (event) => {
+    if (event.intersectionData) {
+      const geomItem = event.intersectionData.geomItem
+      if (geomItem instanceof CADBody && geomItem.geomParam.value instanceof CompoundGeom) {
+        geomItem.cadAsset.loadMetadata().then(() => {
+          const geom = geomItem.geomParam.value
+
+          const subGeom = geom.subGeoms[event.intersectionData.componentId]
+          const json = subGeom.toJSON()
+          const surfaceInfoElement = document.getElementById('surface-info')
+          surfaceInfoElement.innerHTML = ''
+          // surfaceInfoElement.textContent = JSON.stringify(json, null, 2)
+          for (let key in json.params) {
+            const p = document.createElement('p')
+            p.textContent = `${key} : ${StringFunctions.stringifyJSONWithFixedPrecision(json.params[key].value, 0, 3)}`
+            surfaceInfoElement.appendChild(p)
+          }
+          // textContent.split('\n').forEach(line => {
+          //   const p = document.createElement('p')
+          //   p.textContent = line
+          //   surfaceInfoElement.appendChild(p)
+          // })
+        })
+      }
+    }
+  })
+  renderer.getViewport().on('pointerUp', (event) => {
+    if (event.intersectionData) {
+      const geomItem = event.intersectionData.geomItem
+      console.log('', geomItem.getPath())
+    }
+  })
+  renderer.getViewport().on('keyDown', (event) => {
+    if (event.key == 'f') renderer.frameAll()
+    else if (event.key == 'd') {
+      renderer.getViewport().debugGeomDataBuffer = !renderer.getViewport().debugGeomDataBuffer
+      renderer.requestRedraw()
+    }
+  })
+  /** HIGHLIGHT START */
+
 
   resourceLoader.on('progressIncremented', (event) => {
     const pct = document.getElementById('progress')
