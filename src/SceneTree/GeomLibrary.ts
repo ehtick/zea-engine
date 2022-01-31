@@ -22,6 +22,7 @@ import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'
 import { BaseGeom } from './Geometry/BaseGeom'
 import { AssetLoadContext } from './AssetLoadContext'
 import { AssetItem } from '.'
+import { Registry } from '../Registry'
 
 const numCores = SystemDesc.hardwareConcurrency - 1 // always leave one main thread code spare.
 
@@ -415,6 +416,25 @@ class GeomLibrary extends EventEmitter {
    */
   toString(): string {
     return JSON.stringify(this.toJSON(), null, 2)
+  }
+
+  /**
+   *
+   */
+  loadMetadata(data: Uint8Array, context: AssetLoadContext): void {
+    const reader = new BinReader(data.buffer, 0, SystemDesc.isMobileDevice)
+    const toc = reader.loadUInt32Array()
+    for (let i = 0; i < toc.length; i++) {
+      try {
+        const geom = this.geoms[i]
+        if (geom instanceof CompoundGeom) {
+          reader.seek(toc[i]) // Reset the pointer to the start of the item data.
+          geom.loadMetadata(reader, context)
+        }
+      } catch (e) {
+        console.warn('Error loading tree item: ', e)
+      }
+    }
   }
 
   static shutDownWorkers(): void {

@@ -2,8 +2,10 @@ import { BinReader } from '../BinReader'
 import { AssetLoadContext } from '../AssetLoadContext'
 import { BaseItem, Material, MaterialLibrary } from '..'
 import { BaseProxy } from './GeomProxies'
+import { Registry } from '../../Registry'
 
 class SubGeom extends BaseItem {}
+Registry.register('SubGeom', SubGeom)
 
 /**
  * Class representing a point primitive drawing type, every vertex specified is a point.
@@ -75,8 +77,8 @@ class CompoundGeom extends BaseProxy {
   /**
    * Sets state of current geometry(Including line segments) using a binary reader object.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, unknown>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   loadMetadata(metadataReader: BinReader, context: AssetLoadContext): void {
     const toc = metadataReader.loadUInt32Array()

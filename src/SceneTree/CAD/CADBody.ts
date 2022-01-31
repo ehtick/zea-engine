@@ -8,6 +8,7 @@ import { CloneContext } from '../CloneContext'
 import { Material } from '../Material'
 import { CADAsset } from './CADAsset'
 import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
+import { resourceLoader } from '../resourceLoader'
 
 /**
  * Represents a Body within a CAD Part. A Body is made up of either a single mesh or a collection of meshes, one for each surface.
@@ -17,6 +18,7 @@ import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
  */
 class CADBody extends GeomItem {
   shattered: boolean = false
+  cadAsset: CADAsset = null
   /**
    * Creates an instance of CADBody setting up the initial configuration for Material and Color parameters.
    *
@@ -74,6 +76,7 @@ class CADBody extends GeomItem {
    * @param context - The context param.
    */
   readBinary(reader: BinReader, context: AssetLoadContext): void {
+    this.cadAsset = <CADAsset>context.assetItem
     if (context.versions['zea-engine'].compare([3, 9, 0]) < 0) {
       BaseGeomItem.prototype.readBinary.call(this, reader, context)
       // Note: the bodyDescId is now deprecated as it is part of the parametric surface evaluation code.

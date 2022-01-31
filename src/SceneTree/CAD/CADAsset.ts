@@ -19,6 +19,8 @@ class CADAsset extends AssetItem {
   cadfileVersion: Version
   numCADBodyItems: number
   __loadPromise: any
+  private metadataLoadPromise: Promise<void>
+  private metadataLoaded: boolean = false
   url: string
   __datafileLoaded: () => void
   __datafileParam: any
@@ -137,6 +139,12 @@ class CADAsset extends AssetItem {
 
           if (entries.geoms) {
             this.geomLibrary.readBinaryBuffer(filename, entries.geoms.buffer, context)
+
+            // If metadata is available, load it straight away.
+            if (entries.geomsdata) {
+              this.geomLibrary.loadMetadata(entries.geomsdata, context)
+              this.metadataLoaded = true
+            }
           } else if (entries['geomLibrary.json']) {
             entries['desc.json']
             const geomLibraryJSON = JSON.parse(new TextDecoder('utf-8').decode(entries['geomLibrary.json']))
@@ -159,6 +167,38 @@ class CADAsset extends AssetItem {
     })
 
     return this.__loadPromise
+  }
+
+  /**
+   *
+   */
+  loadMetadata(): Promise<void> {
+    if (this.metadataLoadPromise) return this.metadataLoadPromise
+    this.metadataLoadPromise = new Promise((resolve, reject) => {
+      if (this.metadataLoaded) resolve()
+      const url = this.url
+      const base = url.substring(0, url.lastIndexOf('.'))
+      const metaDataUrl = base + '.zmetadata'
+      console.log(metaDataUrl)
+      resourceLoader.incrementWorkload()
+      resourceLoader.loadFile('archive', metaDataUrl).then(
+        (entries) => {
+          const context = new AssetLoadContext()
+          context.versions['zea-cad'] = this.getVersion()
+          context.versions['zea-engine'] = this.getEngineDataVersion()
+          this.geomLibrary.loadMetadata(entries.geomsdata, context)
+          resourceLoader.incrementWorkDone(1)
+          this.metadataLoaded = true
+          resolve()
+        },
+        (error) => {
+          resourceLoader.incrementWorkDone(1)
+          this.emit('error', error)
+          reject(error)
+        }
+      )
+    })
+    return this.metadataLoadPromise
   }
 
   // ////////////////////////////////////////
