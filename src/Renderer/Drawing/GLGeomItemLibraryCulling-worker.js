@@ -62,24 +62,41 @@ let newlyCulled = []
 let newlyUnCulled = []
 
 let visibleCount = 0
-const totaleGeomStats = {
+const totalGeomStats = {
   triangles: 0,
   lines: 0,
   points: 0,
 }
+const visibleGeomStats = {
+  triangles: 0,
+  lines: 0,
+  points: 0,
+}
+const geomStats_addTotal = (geomStats) => {
+  // console.log('geomStats_add:', geomStats.triangles, visibleGeomStats.triangles)
+  totalGeomStats.triangles += geomStats.triangles
+  totalGeomStats.lines += geomStats.lines
+  totalGeomStats.points += geomStats.points
+}
+const geomStats_subtractTotal = (geomStats) => {
+  // console.log('geomStats_subtract:', geomStats.triangles, visibleGeomStats.triangles)
+  totalGeomStats.triangles -= geomStats.triangles
+  totalGeomStats.lines -= geomStats.lines
+  totalGeomStats.points -= geomStats.points
+}
 const geomStats_add = (geomStats) => {
-  // console.log('geomStats_add:', geomStats.triangles, totaleGeomStats.triangles)
+  // console.log('geomStats_add:', geomStats.triangles, visibleGeomStats.triangles)
   visibleCount++
-  totaleGeomStats.triangles += geomStats.triangles
-  totaleGeomStats.lines += geomStats.lines
-  totaleGeomStats.points += geomStats.points
+  visibleGeomStats.triangles += geomStats.triangles
+  visibleGeomStats.lines += geomStats.lines
+  visibleGeomStats.points += geomStats.points
 }
 const geomStats_subtract = (geomStats) => {
-  // console.log('geomStats_subtract:', geomStats.triangles, totaleGeomStats.triangles)
+  // console.log('geomStats_subtract:', geomStats.triangles, visibleGeomStats.triangles)
   visibleCount--
-  totaleGeomStats.triangles -= geomStats.triangles
-  totaleGeomStats.lines -= geomStats.lines
-  totaleGeomStats.points -= geomStats.points
+  visibleGeomStats.triangles -= geomStats.triangles
+  visibleGeomStats.lines -= geomStats.lines
+  visibleGeomStats.points -= geomStats.points
 }
 
 let cameraPos
@@ -275,7 +292,8 @@ const onDoneFrustumCull = (postMessage) => {
       newlyUnCulled,
       visible: countInFrustum,
       total: geomItemsData.length - 1,
-      geomStats: totaleGeomStats,
+      visibleGeomStats,
+      totalGeomStats,
     })
   } else {
     // console.log('FrustumCullResults:', 'newlyCulled:', newlyCulled, 'newlyUnCulled:', newlyUnCulled, outOfFrustum)
@@ -311,7 +329,8 @@ const onDoneFrustumCull = (postMessage) => {
             newlyUnCulled: newlyUnCulled_transparent,
             visible: visibleCount,
             total: geomItemsData.length - 1,
-            geomStats: totaleGeomStats,
+            visibleGeomStats,
+            totalGeomStats,
             inFrustumIndices,
           },
           [inFrustumIndices.buffer]
@@ -375,7 +394,8 @@ const processOcclusionData = (data) => {
       newlyUnCulled,
       visible: visibleCount,
       total: geomItemsData.length - 1,
-      geomStats: totaleGeomStats,
+      visibleGeomStats,
+      totalGeomStats,
     })
   }
 }
@@ -391,31 +411,45 @@ const handleMessage = (data, postMessage) => {
     onViewChanged(data, postMessage)
   } else if (data.type == 'UpdateGeomItems') {
     data.removedItemIndices.forEach((index) => {
-      if (geomItemsData[index] && geomItemsData[index].visible) {
-        geomStats_subtract(geomItemsData[index].geomStats)
+      const geomItem = geomItemsData[index]
+      if (geomItem && geomItem.visible) {
+        geomStats_subtractTotal(geomItem.geomStats)
+        if (!enableOcclusionCulling || !occluded[index]) {
+          geomStats_subtract(geomItem.geomStats)
+        }
       }
       geomItemsData[index] = null
       outOfFrustum[index] = true
     })
     data.geomItems.forEach((geomItem) => {
-      const isNew = geomItemsData[geomItem.id] == undefined
-      // are either adding a new item, or unhiding an existing item.
-      const becomingVisible = isNew ? geomItem.visible : !geomItemsData[geomItem.id].visible && geomItem.visible
-      const becomingInVisible = isNew ? false : geomItemsData[geomItem.id].visible && !geomItem.visible
-      geomItemsData[geomItem.id] = geomItem
+      const index = geomItem.id
       // New geoms default to being un-culled
       // Existing geoms that may be changing state, like changing
       // visibility or transformations should simply update.
-      if (isNew) {
-        outOfFrustum[geomItem.id] = false
+      if (!geomItemsData[index]) {
+        outOfFrustum[index] = false
+        if (geomItem.visible) {
+          geomStats_addTotal(geomItem.geomStats)
+          geomStats_add(geomItem.geomStats)
+        }
+      } else {
+        // are either adding a new item, or unhiding an existing item.
+        const becomingVisible = !geomItemsData[index].visible && geomItem.visible
+        const becomingInVisible = geomItemsData[index].visible && !geomItem.visible
+        if (becomingVisible) {
+          geomStats_addTotal(geomItem.geomStats)
+          if (!outOfFrustum[index] && !occluded[index]) {
+            geomStats_add(geomItem.geomStats)
+          }
+        } else if (becomingInVisible) {
+          geomStats_subtractTotal(geomItem.geomStats)
+          if (!outOfFrustum[index] && (!enableOcclusionCulling || !occluded[index])) {
+            geomStats_subtract(geomItem.geomStats)
+          }
+        }
       }
-      if (becomingVisible) {
-        geomStats_add(geomItem.geomStats)
-      }
-      if (becomingInVisible) {
-        geomStats_subtract(geomItem.geomStats)
-      }
-      checkGeomItem(geomItemsData[geomItem.id])
+      geomItemsData[index] = geomItem
+      checkGeomItem(geomItemsData[index])
     })
     inFrustumDrawIdsBufferPopulated = false
     onDoneFrustumCull(postMessage)

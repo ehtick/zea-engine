@@ -443,7 +443,8 @@ class GLGeomItemLibrary extends EventEmitter {
       unCulled: data.newlyUnCulled?.length,
       visible: data.visible,
       total: data.total,
-      geomStats: data.geomStats,
+      visibleGeomStats: data.visibleGeomStats,
+      totalGeomStats: data.totalGeomStats,
     })
   }
 
