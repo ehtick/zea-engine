@@ -1,7 +1,9 @@
 /* eslint-disable require-jsdoc */
 import { SystemDesc } from '../SystemDesc'
 import { BinReader } from './BinReader'
-import { BaseProxy, PointsProxy, LinesProxy, MeshProxy, CompoundGeomProxy } from './Geometry/GeomProxies'
+import { BaseProxy, PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies'
+import { CompoundGeom } from './Geometry/CompoundGeom'
+
 import { EventEmitter } from '../Utilities/index'
 import { resourceLoader } from './resourceLoader'
 
@@ -357,7 +359,7 @@ class GeomLibrary extends EventEmitter {
           proxy = new MeshProxy(geomData)
           break
         case 'CompoundGeom':
-          proxy = new CompoundGeomProxy(geomData, this.assetItem.getMaterialLibrary())
+          proxy = new CompoundGeom(geomData, this.assetItem.getMaterialLibrary())
           break
         default:
           throw new Error('Unsupported Geom type:')

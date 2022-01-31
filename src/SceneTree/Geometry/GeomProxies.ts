@@ -62,45 +62,6 @@ class BaseProxy extends EventEmitter {
   genBuffers(): any {
     return this.__buffers
   }
-
-  // ////////////////////////////////////////
-  // Metadata
-
-  /**
-   * The getMetadata method.
-   * @param key - The key value.
-   * @return - The return value.
-   */
-  getMetadata(key: string): any {
-    return this.__metaData.get(key)
-  }
-
-  /**
-   * The hasMetadata method.
-   * @param key - The key value.
-   * @return - The return value.
-   */
-  hasMetadata(key: string): any {
-    return this.__metaData.has(key)
-  }
-
-  /**
-   * The setMetadata method.
-   * @param key - The key value.
-   * @param metaData - The metaData value.
-   */
-  setMetadata(key: string, metaData: any): void {
-    this.__metaData.set(key, metaData)
-  }
-
-  /**
-   * Removes metadata for a given key.
-   *
-   * @param key - The key value.
-   */
-  deleteMetadata(key: string): void {
-    this.__metaData.delete(key)
-  }
 }
 
 /** Class representing a points proxy.

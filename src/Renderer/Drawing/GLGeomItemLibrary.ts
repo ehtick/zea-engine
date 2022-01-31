@@ -3,7 +3,6 @@ import { EventEmitter } from '../../Utilities/index'
 import { Mat4, Vec2, Vec3, Vec4, Xfo } from '../../Math/index'
 import {
   CompoundGeom,
-  CompoundGeomProxy,
   DataImage,
   FlatSurfaceMaterial,
   Lines,
@@ -1028,7 +1027,7 @@ class GLGeomItemLibrary extends EventEmitter {
       points: 0,
     }
     const geom = geomItem.geomParam.value
-    if (geom instanceof CompoundGeom || geom instanceof CompoundGeomProxy) {
+    if (geom instanceof CompoundGeom) {
       geomStats.triangles += geom.getNumTriangles()
       geomStats.lines += geom.getNumLineSegments()
       geomStats.points += geom.getNumPoints()

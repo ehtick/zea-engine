@@ -4,7 +4,7 @@ import { Lines } from './Lines'
 import { Mesh } from './Mesh'
 import { BinReader } from '../BinReader'
 import { Version } from '../Version'
-import { CompoundGeom } from './CompoundGeom'
+import { CompoundGeomLoader } from './CompoundGeomLoader'
 
 // key, toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice, genBuffersOpts, context
 const parseGeomsBinary = (data: any, callback: any): void => {
@@ -48,7 +48,7 @@ const parseGeomsBinary = (data: any, callback: any): void => {
         geom = new Mesh()
         break
       case 'CompoundGeom':
-        geom = new CompoundGeom()
+        geom = new CompoundGeomLoader()
         break
       default:
         throw new Error('Unsupported Geom type:' + className)
