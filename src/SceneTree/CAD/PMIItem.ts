@@ -1,3 +1,4 @@
+import { CADBody } from '.'
 import { Color } from '../../Math/Color'
 import { Registry } from '../../Registry'
 import { CloneContext } from '../CloneContext'
@@ -67,22 +68,41 @@ class PMIItem extends TreeItem {
     const pmiContainer = (this.getOwner() as TreeItem).getOwner() // TODO: check
     const pmiOwner = (pmiContainer as TreeItem).getOwner()
     if (pmiOwner) {
+      const linkedBodies: Record<number, CADBody> = {}
+      const linkedBodyElements: Record<number, Array<string>> = {}
       const linkedEntitiesParam = this.getParameter('LinkedEntities')
       if (linkedEntitiesParam) {
         const linkedEntityPaths = linkedEntitiesParam.getValue()
-        linkedEntityPaths.forEach((pathStr: string) => {
+        linkedEntityPaths.forEach((pathStr: string, index: number) => {
           const path = pathStr.split(', ')
+          const elemId = path.pop()
           try {
-            const linkedEntity = pmiOwner.resolvePath(path) as TreeItem
-            if (linkedEntity) {
-              linkedEntity.addHighlight(name, color, true)
+            const cadBody = pmiOwner.resolvePath(path) as CADBody
+            if (cadBody && cadBody instanceof CADBody) {
+              if (cadBody.getNumChildren() == 0) {
+                cadBody.setShatterState(true)
+                if (!linkedBodies[cadBody.getId()]) {
+                  linkedBodies[cadBody.getId()] = cadBody
+                  linkedBodyElements[cadBody.getId()] = []
+                }
+                linkedBodyElements[cadBody.getId()].push(elemId)
+              } else {
+                const linkedEntity = cadBody.getChildByName(elemId)
+                if (linkedEntity) linkedEntity.addHighlight(name, color, true)
+              }
+              // linkedEntity.addHighlight(name + ':' + elemId, color, true)
             } else {
               console.log('linkedEntity.addHighlight(name, color, true):failed')
             }
           } catch (e) {
-            console.log((e as Record<string, any>).message)
+            console.log(index + ':' + (e as Record<string, any>).message)
           }
         })
+        for (let key in linkedBodies) {
+          const cadBody = linkedBodies[key]
+          const elemIds = linkedBodyElements[key]
+          cadBody.addHighlight(name + ':' + elemIds.toString(), color, true)
+        }
       }
     }
   }
@@ -98,18 +118,41 @@ class PMIItem extends TreeItem {
     const pmiContainer = (this.getOwner() as TreeItem).getOwner()
     const pmiOwner = (pmiContainer as TreeItem).getOwner()
     if (pmiOwner) {
+      const linkedBodies: Record<number, CADBody> = {}
+      const linkedBodyElements: Record<number, Array<string>> = {}
       const linkedEntitiesParam = this.getParameter('LinkedEntities')
       if (linkedEntitiesParam) {
         const linkedEntityPaths = linkedEntitiesParam.getValue()
         linkedEntityPaths.forEach((pathStr: string) => {
           const path = pathStr.split(', ')
+          const elemId = path.pop()
           try {
-            const linkedEntity = pmiOwner.resolvePath(path) as TreeItem
-            if (linkedEntity) {
-              linkedEntity.removeHighlight(name, true)
+            const cadBody = pmiOwner.resolvePath(path) as CADBody
+            if (cadBody && cadBody instanceof CADBody) {
+              if (cadBody.getNumChildren() == 0) {
+                cadBody.setShatterState(false)
+                if (!linkedBodies[cadBody.getId()]) {
+                  linkedBodies[cadBody.getId()] = cadBody
+                  linkedBodyElements[cadBody.getId()] = []
+                }
+                linkedBodyElements[cadBody.getId()].push(elemId)
+              } else {
+                const linkedEntity = cadBody.getChildByName(elemId)
+                if (linkedEntity) linkedEntity.removeHighlight(name, true)
+              }
+              // linkedEntity.addHighlight(name + ':' + elemId, color, true)
+            } else {
+              console.log('linkedEntity.addHighlight(name, color, true):failed')
             }
-          } catch (e) {}
+          } catch (e) {
+            console.log((e as Record<string, any>).message)
+          }
         })
+        for (let key in linkedBodies) {
+          const cadBody = linkedBodies[key]
+          const elemIds = linkedBodyElements[key]
+          cadBody.removeHighlight(name + ':' + elemIds.toString(), true)
+        }
       }
     }
   }
