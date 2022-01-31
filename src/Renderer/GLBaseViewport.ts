@@ -415,6 +415,9 @@ class GLBaseViewport extends ParameterOwner {
       this.highlightedGeomsBufferFbo.bindForWriting(renderstate)
       this.highlightedGeomsBufferFbo.clear()
 
+      // Highlighted geoms should always be rendered 2-sided
+      gl.disable(gl.CULL_FACE)
+
       gl.disable(gl.BLEND)
       gl.enable(gl.DEPTH_TEST)
       gl.depthFunc(gl.LESS)
@@ -449,6 +452,8 @@ class GLBaseViewport extends ParameterOwner {
 
         gl.disable(gl.BLEND)
       }
+
+      gl.enable(gl.CULL_FACE)
     }
   }
 
