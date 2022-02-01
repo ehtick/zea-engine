@@ -113,6 +113,15 @@ class Box2 {
     return result
   }
 
+  /**
+   * Clones this Vec2 and returns a new Vec2.
+   *
+   * @return - Returns a new Vec2.
+   */
+  clone(): Box2 {
+    return new Box2(this.p0.clone(), this.p1.clone())
+  }
+
   // ////////////////////////////////////////
   // Persistence
 
