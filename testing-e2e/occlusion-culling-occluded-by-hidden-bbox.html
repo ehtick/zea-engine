@@ -90,7 +90,10 @@
 
       const statusElement = document.getElementById('status')
       const setStatusText = (text) => {
-        statusElement.textContent = text
+        // Give the GPU time to finish any queued commands.
+        setTimeout(() => {
+          statusElement.textContent = text
+        }, 50)
       }
 
       document.getElementById('variant-01').addEventListener('click', function (event) {

@@ -81,7 +81,7 @@
       const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false, enableOcclusionCulling: true })
+      const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false, enableOcclusionCulling: false })
       renderer.setScene(scene)
       renderer.getViewport().backgroundColorParam.value = new Color(0.85, 0.85, 0.85, 1)
       renderer.getViewport().debugGeomDataBuffer = urlParams.has('debugGeomDataBuffer')
@@ -316,7 +316,10 @@
       // {{{ Variants
       const statusElement = document.getElementById('status')
       const setStatusText = (text) => {
-        statusElement.textContent = text
+        // Give the GPU time to finish any queued commands.
+        setTimeout(() => {
+          statusElement.textContent = text
+        }, 50)
       }
       // }}}
     </script>
