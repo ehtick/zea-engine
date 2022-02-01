@@ -336,7 +336,19 @@ const onDoneFrustumCull = (postMessage) => {
           [inFrustumIndices.buffer]
         )
       } else {
-        postMessage({ type: 'InFrustumIndices', inFrustumIndices }, [inFrustumIndices.buffer])
+        postMessage(
+          {
+            type: 'InFrustumIndices',
+            inFrustumIndices,
+            newlyCulled: [],
+            newlyUnCulled: [],
+            visible: visibleCount,
+            total: geomItemsData.length - 1,
+            visibleGeomStats,
+            totalGeomStats,
+          },
+          [inFrustumIndices.buffer]
+        )
       }
       inFrustumDrawIdsBufferPopulated = true
     } else {
