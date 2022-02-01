@@ -554,8 +554,6 @@ class GLRenderer extends GLBaseRenderer {
 
     super.drawScene(renderstate)
     // console.log("Draw Calls:" + renderstate['drawCalls']);
-
-    this.emit('redrawOccurred')
   }
 }
 
