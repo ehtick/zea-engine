@@ -103,32 +103,23 @@
         }
       })
 
-      const postMessage = (msg) => {
-        console.log(msg)
-        window.postMessage(msg)
-      }
-      postMessage('done-loading')
-
       // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'variant-01') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          renderer.once('CullingUpdated', () => {
-            postMessage(`done-${data}`)
-          })
-        } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          renderer.once('CullingUpdated', () => {
-            postMessage(`done-${data}`)
-          })
-        }
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        // Give the GPU time to finish any queued commands.
+        setTimeout(() => {
+          statusElement.textContent = text
+        }, 50)
       }
+      setStatusText('done-loading')
 
-      window.addEventListener('message', handleMessage, false)
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-10, 10, 2.7), new Vec3(0, 0, 0.4))
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-01`)
+        })
+      })
+      // }}}
       // }}}
 
       // //////////////////////////////
@@ -249,6 +240,10 @@
       <div class="button" id="button">XR Device Not Detected</div>
       <div id="fps-display" class="hud"></div>
       <div id="cull-stats" class="hud"></div>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+      </div>
     </div>
   </body>
 </html>

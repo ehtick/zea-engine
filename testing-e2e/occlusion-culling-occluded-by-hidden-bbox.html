@@ -70,12 +70,8 @@
         console.log(`occlusionCulling: ${JSON.stringify(event)}`)
       })
 
-      const postMessage = (msg) => {
-        console.log(msg)
-        window.postMessage(msg)
-      }
       renderer.once('CullingUpdated', () => {
-        postMessage('done-loading')
+        setStatusText('done-loading')
       })
       renderer.on('occlusionCullingProfilingData', (event) => {
         const { queryReduceSceneGeoms, queryReduceBBoxes } = event
