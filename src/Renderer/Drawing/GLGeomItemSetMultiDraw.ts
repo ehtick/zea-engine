@@ -60,7 +60,6 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param glGeomItem - The glGeomItem value.
    */
   addGLGeomItem(glGeomItem: GLGeomItem): void {
-    const start = performance.now()
     const index: number = this.freeIndices.length > 0 ? this.freeIndices.pop()! : this.glGeomItems.length
 
     // Keep track of which geomitems use which geoms, so we can update the offset and count array if they change.
