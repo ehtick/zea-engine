@@ -560,8 +560,10 @@ class GLBaseRenderer extends ParameterOwner {
       return
     }
 
-    const width = Math.max(4, newWidth)
-    const height = Math.max(4, newHeight)
+    const { devicePixelRatio } = window
+
+    const width = Math.max(4, newWidth) * devicePixelRatio
+    const height = Math.max(4, newHeight) * devicePixelRatio
 
     this.__glcanvas.width = width
     this.__glcanvas.height = height
@@ -621,6 +623,8 @@ class GLBaseRenderer extends ParameterOwner {
     // causing an infinite loop of resizing.
     this.__glcanvas.parentElement.style.overflow = 'hidden'
     this.__glcanvas.style.position = 'absolute'
+    this.__glcanvas.style.width = '100%'
+    this.__glcanvas.style.height = '100%'
 
     // Rapid resizing of the canvas would cause issues with WebGL.
     // FrameBuffer objects would end up all black. So here we throttle
