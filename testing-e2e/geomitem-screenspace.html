@@ -123,10 +123,8 @@
       // {{{ Variants
       const statusElement = document.getElementById('status')
       const setStatusText = (text) => {
-        // Give the GPU time to finish any queued commands.
-        setTimeout(() => {
-          statusElement.textContent = text
-        }, 50)
+        renderer.forceRender()
+        statusElement.textContent = text
       }
       setStatusText('done-loading')
       document.getElementById('variant-01').addEventListener('click', function (event) {

@@ -79,10 +79,8 @@
       // {{{ Variants
       const statusElement = document.getElementById('status')
       const setStatusText = (text) => {
-        // Give the GPU time to finish any queued commands.
-        setTimeout(() => {
-          statusElement.textContent = text
-        }, 50)
+        renderer.forceRender()
+        statusElement.textContent = text
       }
       setStatusText('done-loading')
 
@@ -102,7 +100,9 @@
       document.getElementById('variant-03').addEventListener('click', function (event) {
         // Now look back, so that the scene gets frustum un-culled.
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(0, 0, 0.4))
-        setStatusText(`done-variant-03`)
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-03`)
+        })
       })
       document.getElementById('variant-04').addEventListener('click', function (event) {
         scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem2))

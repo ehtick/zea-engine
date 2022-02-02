@@ -116,10 +116,8 @@
       // {{{ Variants
       const statusElement = document.getElementById('status')
       const setStatusText = (text) => {
-        // Give the GPU time to finish any queued commands.
-        setTimeout(() => {
-          statusElement.textContent = text
-        }, 50)
+        renderer.forceRender()
+        statusElement.textContent = text
       }
       document.getElementById('variant-01').addEventListener('click', function (event) {
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
