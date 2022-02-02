@@ -3,4 +3,5 @@ export * from './EventEmitter'
 export * from './Allocator1D'
 export * from './StringFunctions'
 export * from './MathFunctions'
-
+export * from './IntersectionData'
+export * from './Events/index'

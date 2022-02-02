@@ -149,6 +149,7 @@
 
       const statusElement = document.getElementById('status')
       const setStatusText = (text) => {
+        renderer.forceRender()
         statusElement.textContent = text
       }
     </script>

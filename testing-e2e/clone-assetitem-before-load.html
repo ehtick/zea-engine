@@ -45,6 +45,7 @@
 
       const statusElement = document.getElementById('status')
       const setStatusText = (text) => {
+        renderer.forceRender()
         statusElement.textContent = text
       }
       Promise.all([new Promise((resolve) => asset2.getGeometryLibrary().on('loaded', resolve))]).then(() => {

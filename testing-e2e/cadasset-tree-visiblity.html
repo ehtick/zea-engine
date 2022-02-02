@@ -4,17 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>geomitem-material-visibility-changes - Zea Engine</title>
+    <title>cadasset-tree-visiblity - Zea Engine</title>
 
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
     <link rel="stylesheet" href="styles/test.css" />
 
-    <script src="../dist/index.umd.js"></script>
-
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Sphere, SimpleSurfaceMaterial, GeomItem, TreeItem } = zeaEngine
+      import '../dist/index.umd.js'
+      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, Material, GeomItem, LDRImage, TreeItem, CADAsset } =
+        zeaEngine
 
       const canvas = document.getElementById('viewport')
 
@@ -24,46 +24,41 @@
 
       scene.setupGrid(10.0, 10)
 
-      const material = new SimpleSurfaceMaterial('surfaces')
-      material.baseColorParam.value = new Color(1, 0, 1, 1)
+      const url = 'data/HC_SRO4.zcad'
+      const asset = new CADAsset()
+      asset.load(url).then(() => {
+        renderer.frameAll()
+      })
+      asset.getGeometryLibrary().on('loaded', () => {
+        setStatusText('done-loading')
+      })
+      scene.getRoot().addChild(asset)
 
-      const treeItem = new TreeItem('Parent')
-      const geomItem = new GeomItem('Sphere', new Sphere(1.5, 46), material)
-      treeItem.addChild(geomItem)
-      scene.getRoot().addChild(treeItem)
-
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, 5, 2.7), new Vec3(0, 0, 0.4))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(0, 0, 0.4))
 
       // {{{ Variants
       const statusElement = document.getElementById('status')
       const setStatusText = (text) => {
-        renderer.forceRender()
         statusElement.textContent = text
       }
-      setStatusText('done-loading')
       document.getElementById('variant-01').addEventListener('click', function (event) {
-        treeItem.visibleParam.value = false
+        asset.visibleParam.value = false
         setStatusText(`done-variant-01`)
       })
       document.getElementById('variant-02').addEventListener('click', function (event) {
-        treeItem.visibleParam.value = true
+        asset.visibleParam.value = true
         setStatusText(`done-variant-02`)
-      })
-      document.getElementById('variant-03').addEventListener('click', function (event) {
-        geomItem.visibleParam.value = false
-        setStatusText(`done-variant-03`)
       })
       // }}}
     </script>
   </head>
   <body class="bg-blue-100 h-full">
-    <div class="h-screen">
+    <div class="h-full">
       <canvas id="viewport"></canvas>
       <div id="status" class="hud"></div>
       <div class="variant-buttons">
         <button class="variant-button" id="variant-01">variant-01</button>
         <button class="variant-button" id="variant-02">variant-02</button>
-        <button class="variant-button" id="variant-03">variant-03</button>
       </div>
     </div>
   </body>

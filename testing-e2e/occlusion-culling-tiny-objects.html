@@ -56,12 +56,8 @@
         console.log(`visible: ${event.visible} / total: ${event.total}`)
       })
 
-      const postMessage = (msg) => {
-        console.log(msg)
-        window.postMessage(msg)
-      }
       renderer.once('CullingUpdated', () => {
-        postMessage('done-loading')
+        setStatusText('done-loading')
       })
 
       const cullElement = document.getElementById('cull-stats')
@@ -74,11 +70,14 @@
       // {{{ Messages handler.
       const statusElement = document.getElementById('status')
       const setStatusText = (text) => {
+        renderer.forceRender()
         statusElement.textContent = text
       }
       document.getElementById('variant-01').addEventListener('click', function (event) {
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-10, 10, 2.7), new Vec3(0, 0, 0.4))
-        setStatusText(`done-variant-01`)
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-01`)
+        })
       })
       // }}}
     </script>

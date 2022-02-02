@@ -48,6 +48,7 @@
       // {{{ Variants
       const statusElement = document.getElementById('status')
       const setStatusText = (text) => {
+        renderer.forceRender()
         statusElement.textContent = text
       }
       document.getElementById('variant-01').addEventListener('click', function (event) {

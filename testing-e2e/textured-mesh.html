@@ -99,6 +99,7 @@
 
       const statusElement = document.getElementById('status')
       const setStatusText = (text) => {
+        renderer.forceRender()
         statusElement.textContent = text
       }
       Promise.all(promises).then(() => {

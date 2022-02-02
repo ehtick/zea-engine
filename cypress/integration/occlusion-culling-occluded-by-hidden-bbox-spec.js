@@ -1,12 +1,8 @@
 describe('occlusion-culling-occluded-by-hidden-bbox', () => {
   it('Capture snapshots', () => {
-    cy.visit('testing-e2e/occlusion-culling-occluded-by-hidden-bbox.html', {
-      onBeforeLoad(win) {
-        cy.spy(win, 'postMessage').as('postMessage')
-      },
-    })
+    cy.visit('testing-e2e/occlusion-culling-occluded-by-hidden-bbox.html')
 
-    cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
+    cy.get('#status').should('have.text', `done-loading`)
     cy.get('canvas').percySnapshot('occlusion-culling-occluded-by-hidden-bbox')
 
     // This variant doesn't ever seem to complete in Cypress. Something gets stuck in the web worker.

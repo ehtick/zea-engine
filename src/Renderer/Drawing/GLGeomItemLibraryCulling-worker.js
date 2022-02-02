@@ -311,14 +311,29 @@ const onDoneFrustumCull = (postMessage) => {
         }
       })
 
-      // When occlusion culling is on, we only uncull items after they
-      // are detected in the occlusion buffer. Transparent items are not
-      // rendered to the occlusion buffer, so must be unculled immediately.
-      const newlyUnCulled_transparent = []
-      newlyUnCulled.forEach((index) => {
-        if (index > 0 && geomItemsData[index] && geomItemsData[index].visible && geomItemsData[index].isTransparent) {
-          newlyUnCulled_transparent.push(index)
-          geomStats_add(geomItemsData[index].geomStats)
+      // if (countInFrustum > 300) {
+      //   console.log('countInFrustum:', countInFrustum)
+      // }
+      if (newlyCulled.length > 0 || newlyUnCulled.length > 0 || !inFrustumDrawIdsBufferPopulated) {
+        const inFrustumIndices = generateInFrustumIndices()
+
+        // When occlusion culling is on, we only uncull items after they
+        // are detected in the occlusion buffer. Transparent items are not
+        // rendered to the occlusion buffer, so must be unculled immediately.
+        const newlyUnCulled_transparent = []
+        newlyUnCulled.forEach((index) => {
+          if (index > 0 && geomItemsData[index] && geomItemsData[index].visible && geomItemsData[index].isTransparent) {
+            newlyUnCulled_transparent.push(index)
+            geomStats_add(geomItemsData[index].geomStats)
+          }
+        })
+        if (newlyCulled.length > 0 || newlyUnCulled_transparent.length > 0) {
+          postMessage(
+            { type: 'InFrustumIndices', newlyCulled, newlyUnCulled: newlyUnCulled_transparent, inFrustumIndices },
+            [inFrustumIndices.buffer]
+          )
+        } else {
+          postMessage({ type: 'InFrustumIndices', inFrustumIndices }, [inFrustumIndices.buffer])
         }
       })
       if (newlyCulled.length > 0 || newlyUnCulled_transparent.length > 0) {

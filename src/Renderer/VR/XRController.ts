@@ -1,11 +1,8 @@
 import { SystemDesc } from '../../SystemDesc'
 import { Vec3, Xfo, Mat4, Ray, Color } from '../../Math/index'
 import { BaseTool, GeomItem, Lines, Material, TreeItem, Vec3Attribute } from '../../SceneTree/index'
-import { IntersectionData } from '../../Utilities/IntersectionData'
+import { IntersectionData, EventEmitter, XRPoseEvent, XRControllerEvent } from '../../Utilities/index'
 import { XRViewport } from '.'
-import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent'
-import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent'
-import { EventEmitter } from '../..'
 
 // const line = new Lines()
 // line.setNumVertices(2)

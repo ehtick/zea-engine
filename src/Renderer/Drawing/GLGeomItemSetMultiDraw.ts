@@ -63,7 +63,6 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param glGeomItem - The glGeomItem value.
    */
   addGLGeomItem(glGeomItem: GLGeomItem): void {
-    const start = performance.now()
     const index: number = this.freeIndices.length > 0 ? this.freeIndices.pop()! : this.glGeomItems.length
 
     // Keep track of which geomitems use which geoms, so we can update the offset and count array if they change.
@@ -86,7 +85,9 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
         this.indexToDrawIndex[index] = this.drawOrderToIndex.length
         this.drawOrderToIndex.push(index)
       } else {
-        this.drawOrderToIndex.splice(this.indexToDrawIndex[index], 1)
+        // Note: as items are removed, the indexToDrawIndex values get broken and must be updated.
+        const drawOrderIndex = this.drawOrderToIndex.indexOf(index)
+        this.drawOrderToIndex.splice(drawOrderIndex, 1)
         this.indexToDrawIndex[index] = -1
       }
       // console.log(this.constructor.name, ' drawOrderToIndex', this.drawOrderToIndex.length)

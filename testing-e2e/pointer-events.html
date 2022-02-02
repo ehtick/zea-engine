@@ -87,6 +87,7 @@
 
       const statusElement = document.getElementById('status')
       const setStatusText = (text) => {
+        renderer.forceRender()
         statusElement.textContent = text
       }
       // Register pointer event handlers directly to the geometry.

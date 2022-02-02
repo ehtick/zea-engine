@@ -96,6 +96,7 @@
       // {{{ Variants
       const statusElement = document.getElementById('status')
       const setStatusText = (text) => {
+        renderer.forceRender()
         statusElement.textContent = text
       }
       document.getElementById('variant-01').addEventListener('click', function (event) {
@@ -121,7 +122,7 @@
         })
         asset.getGeometryLibrary().on('loaded', () => {
           scene.getRoot().removeAllChildren()
-          setStatusText(`done-variant-02`)
+          setStatusText(`done-variant-03`)
         })
       })
       document.getElementById('variant-04').addEventListener('click', function (event) {
@@ -147,9 +148,47 @@
             owner.removeChildByHandle(item)
           })
           console.log('total:', total, removedItems.length)
-          setStatusText(`done-variant-02`)
+          setStatusText(`done-variant-04`)
         })
       })
+      // document.getElementById('variant-03').addEventListener('click', function (event) {
+      //   scene.getRoot().removeAllChildren()
+      //   const asset = new CADAsset()
+      //   scene.getRoot().addChild(asset)
+      //   asset.load('data/HC_SRO4.zcad').then(() => {
+      //     renderer.frameAll()
+      //   })
+      //   asset.getGeometryLibrary().on('loaded', () => {
+      //     scene.getRoot().removeAllChildren()
+      //     setStatusText(`done-variant-02`)
+      //   })
+      // })
+      // document.getElementById('variant-04').addEventListener('click', function (event) {
+      //   scene.getRoot().removeAllChildren()
+      //   const asset = new CADAsset()
+      //   scene.getRoot().addChild(asset)
+      //   asset.load('data/Dead_eye_bearing.zcad').then(() => {
+      //     renderer.frameAll()
+      //   })
+      //   asset.getGeometryLibrary().on('loaded', () => {
+      //     const removedItems = []
+      //     let total = 0
+      //     asset.traverse((item) => {
+      //       if (item instanceof GeomItem) {
+      //         total++
+      //         if (!(item.geomParam.value instanceof LinesProxy)) {
+      //           removedItems.push(item)
+      //         }
+      //       }
+      //     })
+      //     removedItems.forEach((item) => {
+      //       const owner = item.getOwner()
+      //       owner.removeChildByHandle(item)
+      //     })
+      //     console.log('total:', total, removedItems.length)
+      //     setStatusText(`done-variant-02`)
+      //   })
+      // })
 
       // }}}
       const cullElement = document.getElementById('cull-stats')

@@ -54,6 +54,7 @@
       // {{{ Variants
       const statusElement = document.getElementById('status')
       const setStatusText = (text) => {
+        renderer.forceRender()
         statusElement.textContent = text
       }
       setStatusText('done-loading')

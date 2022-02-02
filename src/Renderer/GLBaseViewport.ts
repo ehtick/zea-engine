@@ -334,6 +334,8 @@ class GLBaseViewport extends ParameterOwner {
       screenQuad.bindShader(renderstate)
       screenQuad.draw(renderstate, this.offscreenBuffer!)
     }
+
+    this.renderer.emit('redrawOccurred')
   }
 
   /**
