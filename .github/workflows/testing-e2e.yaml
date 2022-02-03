@@ -19,6 +19,6 @@ jobs:
           node-version: '16'
       - run: yarn install --frozen-lockfile
       - run: yarn run start &
-      - run: yarn run test:e2e
+      - run: yarn run test:e2e --spec cypress/integration/sphere-spec.js
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
