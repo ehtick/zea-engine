@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.1.1](https://github.com/ZeaInc/zea-engine/compare/v4.1.0...v4.1.1) (2022-02-03)
+
+
+### Bug Fixes
+
+* A crash when loading multiple assets using a shared AssetLoadContext. ([8a2eb6a](https://github.com/ZeaInc/zea-engine/commit/8a2eb6ae32ef13d7c1ff5646fbecc9eae0d80316))
+* An exception was thrown in the culling worker if an item was removed from the renderer after being considered in the view. ([e2ac458](https://github.com/ZeaInc/zea-engine/commit/e2ac458171f759726400ae97629b10f9703acf8d))
+* Blending is now disabled while debugging the GeomDataBuffer ([7511f88](https://github.com/ZeaInc/zea-engine/commit/7511f88af8229c8ef6bcaf755e506665f82df269))
+* Fixed regression in Multi-Draw when items visibility changes. ([#669](https://github.com/ZeaInc/zea-engine/issues/669)) ([e53663d](https://github.com/ZeaInc/zea-engine/commit/e53663dbe37f3f000b25650c6be3d3973596208c))
+* Fixed WebGL error when occlusion culling occurs before the first GeomData rendering. ([caf19f4](https://github.com/ZeaInc/zea-engine/commit/caf19f4b7af456984561545e63f189d099965203))
+* Transparent geometries, including lines, were not correctly un-culled when the camera moved. Meaning that once a line or transparent geometry went offscreen, it would never be rendered again. ([b1c5b35](https://github.com/ZeaInc/zea-engine/commit/b1c5b354f4602cc5dbe314e8456b20ed53d73bde))
+
 ## [4.1.0](https://github.com/ZeaInc/zea-engine/compare/v4.0.1...v4.1.0) (2022-01-21)
 
 
