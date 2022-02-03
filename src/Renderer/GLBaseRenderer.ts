@@ -658,15 +658,15 @@ class GLBaseRenderer extends ParameterOwner {
 
     // https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
     const resizeObserver = new ResizeObserver(throttledResize)
-    try {
-      // only call us of the number of device pixels changed
-      // @ts-ignore
-      resizeObserver.observe(this.__glcanvas.parentNode, { box: 'device-pixel-content-box' })
-    } catch (ex) {
-      // device-pixel-content-box is not supported so fallback to this
-      // @ts-ignore
-      resizeObserver.observe(this.__glcanvas.parentNode, { box: 'content-box' })
-    }
+    // try {
+    // only call us of the number of device pixels changed
+    // @ts-ignore
+    resizeObserver.observe(this.__glcanvas.parentNode, { box: 'device-pixel-content-box' })
+    // } catch (ex) {
+    // device-pixel-content-box is not supported so fallback to this
+    // @ts-ignore
+    resizeObserver.observe(this.__glcanvas.parentNode, { box: 'content-box' })
+    // }
 
     this.handleResize(this.__glcanvas.parentElement.clientWidth, this.__glcanvas.parentElement.clientHeight)
 
