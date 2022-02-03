@@ -3,7 +3,7 @@ describe(test, () => {
   it('Captures snapshots of variants', () => {
     cy.visit(`testing-e2e/${test}.html`)
 
-    cy.get('canvas').percySnapshot(test)
+    cy.get('body').percySnapshot(test)
 
     /* Eliminating redundant tests while our limit is 5k images per month
     {
