@@ -34,5 +34,11 @@ describe('transparent-geoms-sorting', () => {
       cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`${test} - ${variant}`)
     }
+    {
+      const variant = 'variant-05'
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
+    }
   })
 })

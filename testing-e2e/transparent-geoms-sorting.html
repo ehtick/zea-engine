@@ -38,7 +38,7 @@
       const domElement = document.getElementById('viewport')
       const renderer = new GLRenderer(domElement, {
         antialias: false,
-        enableOcclusionCulling: false,
+        enableOcclusionCulling: true,
         debugOcclusionBuffer: false,
       })
       renderer.setScene(scene)
@@ -71,9 +71,9 @@
       const transparentMaterial = new StandardSurfaceMaterial('surfaces')
       transparentMaterial.baseColorParam.value = baseColor
       transparentMaterial.metallicParam.value = 0.0
-      transparentMaterial.reflectanceParam.value = 0.1
-      transparentMaterial.opacityParam.value = 0.01
-      transparentMaterial.emissiveStrengthParam.value = 0.5
+      transparentMaterial.reflectanceParam.value = 0.4
+      transparentMaterial.roughnessParam.value = 0.01
+      transparentMaterial.opacityParam.value = 0.2
 
       material.roughnessParam.value = 0.5
       for (let i = 0; i < 3; i++) {
@@ -94,6 +94,7 @@
         renderer.forceRender()
         statusElement.textContent = text
       }
+
       document.querySelector('#variant-01').addEventListener('click', () => {
         items.forEach((geomItem, index) => {
           if (index % 3 == 0) {
@@ -131,10 +132,18 @@
         renderer.frameAll()
         setStatusText(`done-variant-04`)
       })
+      document.querySelector('#variant-05').addEventListener('click', () => {
+        // Make all opaque again.
+        items.forEach((geomItem, index) => {
+          geomItem.removeHighlight('Foo')
+          geomItem.materialParam.value = material
+        })
+        setStatusText(`done-variant-05`)
+      })
 
       const cullElement = document.getElementById('cull-stats')
       renderer.on('CullingUpdated', (event) => {
-        cullElement.textContent = `visible: ${event.visible} / total: ${event.total}`
+        cullElement.textContent = `visible: ${event.visible} / ${event.total} triangles: ${event.visibleGeomStats.triangles} / ${event.totalGeomStats.triangles}`
       })
     </script>
   </head>
@@ -169,6 +178,12 @@
         id="variant-04"
       >
         variant-04
+      </button>
+      <button
+        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+        id="variant-05"
+      >
+        variant-05
       </button>
     </div>
   </body>
