@@ -638,7 +638,7 @@ class GLBaseRenderer extends ParameterOwner {
         const displayHeight = Math.round(entry.contentRect.height)
         this.handleResize(displayWidth, displayHeight)
       }
-    }, 1)
+    }, 0)
 
     window.addEventListener('resize', () => {
       // The ResizeObserver below will miss zoom changes, while this
