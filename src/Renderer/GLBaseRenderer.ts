@@ -638,7 +638,7 @@ class GLBaseRenderer extends ParameterOwner {
         const displayHeight = Math.round(entry.contentRect.height)
         this.handleResize(displayWidth, displayHeight)
       }
-    }, 500)
+    }, 1)
 
     window.addEventListener('resize', () => {
       // The ResizeObserver below will miss zoom changes, while this
@@ -661,7 +661,7 @@ class GLBaseRenderer extends ParameterOwner {
     // try {
     // only call us of the number of device pixels changed
     // @ts-ignore
-    resizeObserver.observe(this.__glcanvas.parentNode, { box: 'device-pixel-content-box' })
+    // resizeObserver.observe(this.__glcanvas.parentNode, { box: 'device-pixel-content-box' })
     // } catch (ex) {
     // device-pixel-content-box is not supported so fallback to this
     // @ts-ignore
