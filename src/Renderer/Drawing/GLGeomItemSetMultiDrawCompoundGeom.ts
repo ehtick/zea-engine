@@ -1220,6 +1220,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     if (this.drawIdsBufferDirty) {
       return
     }
+    // The sorting breaks the tellescope dataset is strange ways.
+    // disabling for now.
+    return
     const distances: Float32Array = new Float32Array(this.drawOrderToIndex.length)
     this.drawOrderToIndex.forEach((itemIndex) => {
       const glGeomItem = this.glGeomItems[itemIndex]
