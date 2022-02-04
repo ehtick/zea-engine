@@ -1019,7 +1019,7 @@ class GLGeomItemLibrary extends EventEmitter {
       cullable = false
     }
 
-    const isTransparent = geomItem.materialParam.value.isTransparent()
+    const transparent = geomItem.materialParam.value.isTransparent()
 
     const geomStats = {
       triangles: 0,
@@ -1047,7 +1047,7 @@ class GLGeomItemLibrary extends EventEmitter {
       pos: pos.asArray(),
       cullable,
       visible: geomItem.isVisible(),
-      isTransparent,
+      transparent,
       geomStats,
     }
   }
