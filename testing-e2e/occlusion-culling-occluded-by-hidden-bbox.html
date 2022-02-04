@@ -80,7 +80,7 @@
       const cullElement = document.getElementById('cull-stats')
       renderer.on('CullingUpdated', (event) => {
         if (event.visible != undefined && event.total != undefined) {
-          cullElement.textContent = `visible: ${event.visible} / total: ${event.total} visible triangles:${event.geomStats.triangles} `
+          cullElement.textContent = `visible: ${event.visible} / ${event.total} triangles: ${event.visibleGeomStats.triangles} / ${event.totalGeomStats.triangles}`
         }
       })
 
