@@ -9,6 +9,7 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
 
     <script src="../dist/index.umd.js"></script>
 
@@ -21,9 +22,11 @@
       const scene = new Scene()
       const renderer = new GLRenderer(canvas, {
         hideSplash: true,
+        enableFrustumCulling: true,
         enableOcclusionCulling: true,
         debugOcclusionBuffer: false,
       })
+
       // renderer.getViewport().debugReductionBuffer = true
       renderer.setScene(scene)
 
@@ -38,6 +41,7 @@
       const detail = 40
       const geom = new Sphere(0.3, 2 * detail, detail)
       const simpleMaterial = new SimpleSurfaceMaterial('mat')
+      simpleMaterial.baseColorParam.value.a = 0.1
 
       let geomItemCount = 0
       const addLayers = (layerId, treeItem) => {
@@ -112,9 +116,21 @@
       setStatusText('done-loading')
 
       document.getElementById('variant-01').addEventListener('click', function (event) {
-        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-10, 10, 2.7), new Vec3(0, 0, 0.4))
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-40, 0, 10), new Vec3(10, 10, 10))
         renderer.once('CullingUpdated', () => {
           setStatusText(`done-variant-01`)
+        })
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-1000, 1000, 20), new Vec3(20, 20, 20))
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-02`)
+        })
+      })
+      document.getElementById('variant-03').addEventListener('click', function (event) {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-40, 0, 10), new Vec3(10, 10, 10))
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-03`)
         })
       })
       // }}}
@@ -176,9 +192,7 @@
       })
       const cullElement = document.getElementById('cull-stats')
       renderer.on('CullingUpdated', (event) => {
-        cullElement.textContent = `visible: ${event.visible} / total: ${event.total} triangles: ${
-          geomItemCount * geom.getNumTriangles()
-        } visible triangles:${event.geomStats.triangles} `
+        cullElement.textContent = `visible: ${event.visible} / ${event.total} triangles: ${event.visibleGeomStats.triangles} / ${event.totalGeomStats.triangles}`
       })
     </script>
     <style>
@@ -193,8 +207,8 @@
       }
       #cull-stats {
         position: fixed;
-        bottom: 10px;
-        left: 10px;
+        bottom: 15px;
+        left: 160px;
       }
 
       .label {
@@ -241,6 +255,8 @@
       <div id="status" class="hud"></div>
       <div class="variant-buttons">
         <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+        <button class="variant-button" id="variant-03">variant-03</button>
       </div>
     </div>
   </body>

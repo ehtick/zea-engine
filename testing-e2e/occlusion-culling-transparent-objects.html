@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>occlusion-culling-transparent-objects - Zea Engine</title>
+
+    <link href="data/zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
+
+    <script src="../dist/index.umd.js"></script>
+
+    <script type="module">
+      const { Vec3, Xfo, Color, Sphere, Plane, SimpleSurfaceMaterial, GeomItem, Scene, GLRenderer, TreeItem } =
+        window.zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, {
+        hideSplash: true,
+        enableFrustumCulling: true,
+        enableOcclusionCulling: true,
+        debugOcclusionBuffer: false,
+      })
+
+      // renderer.getViewport().debugReductionBuffer = true
+      renderer.setScene(scene)
+
+      // scene.setupGrid(10.0, 10)
+
+      const tree1 = new TreeItem('tree1')
+      scene.getRoot().addChild(tree1)
+
+      const items = []
+      const addMeshShape = (name, shape, pos, mat) => {
+        const geomItem = new GeomItem(name, shape, mat, new Xfo(pos))
+        scene.getRoot().addChild(geomItem)
+        items.push(geomItem)
+      }
+
+      const sphere = new Sphere(1.4, 80)
+      const baseColor = new Color(0.8, 0, 0)
+      const material = new SimpleSurfaceMaterial('surfaces')
+      material.baseColorParam.value = baseColor
+
+      const transparentMaterial = new SimpleSurfaceMaterial('surfaces')
+      transparentMaterial.baseColorParam.value = baseColor
+      transparentMaterial.opacityParam.value = 0.2
+
+      for (let i = 0; i < 3; i++) {
+        addMeshShape('Sphere' + i, sphere, new Vec3(i * 4, 0, 0), transparentMaterial)
+      }
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(4, 20, 0), new Vec3(4, 0, 0))
+      renderer.getViewport().on('keyDown', (event) => {
+        if (event.key == 'f') {
+          renderer.frameAll()
+        }
+      })
+
+      renderer.on('occlusionCullingProfilingData', (event) => {
+        const { queryReduceSceneGeoms, queryReduceBBoxes } = event
+        console.log(`occlusionCulling Reduction: ${queryReduceSceneGeoms}, ${queryReduceBBoxes}`)
+      })
+      const cullElement = document.getElementById('cull-stats')
+      renderer.on('CullingUpdated', (event) => {
+        cullElement.textContent = `visible: ${event.visible} / ${event.total} triangles: ${event.visibleGeomStats.triangles} / ${event.totalGeomStats.triangles}`
+      })
+
+      // {{{ Messages handler.
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        renderer.forceRender()
+        statusElement.textContent = text
+      }
+      setStatusText('done-loading')
+
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 10, 0), new Vec3(12, 0, 0))
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-01`)
+        })
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(4, 20, 0), new Vec3(4, 0, 0))
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-02`)
+        })
+      })
+      document.getElementById('variant-03').addEventListener('click', function (event) {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-40, 0, 10), new Vec3(10, 10, 10))
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-03`)
+        })
+      })
+      // }}}
+    </script>
+    <style>
+      .hud {
+        color: #333333;
+        font-size: 16px;
+      }
+      #fps-display {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+      }
+      #cull-stats {
+        position: fixed;
+        bottom: 15px;
+        left: 160px;
+      }
+
+      .label {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        margin: 0px;
+        font-family: 'arial';
+        user-select: none;
+      }
+
+      .button {
+        position: absolute;
+        left: 10px;
+        bottom: 30px;
+        margin: 10px;
+
+        font-family: 'arial';
+        background-color: #4caf50; /* Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        user-select: none;
+      }
+      .button:hover {
+        background-color: #78b87a; /* Green */
+      }
+      .button:focus {
+        background-color: #78b87a;
+      }
+    </style>
+  </head>
+  <body class="bg-blue-100">
+    <div class="h-screen">
+      <canvas class="absolute" id="renderer"></canvas>
+      <div class="label" id="buttonHolder"></div>
+      <div class="button" id="button">XR Device Not Detected</div>
+      <div id="fps-display" class="hud"></div>
+      <div id="cull-stats" class="hud"></div>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+        <button class="variant-button" id="variant-03">variant-03</button>
+      </div>
+    </div>
+  </body>
+</html>
