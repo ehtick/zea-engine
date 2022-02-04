@@ -136,13 +136,19 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         // const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
         // this.drawElementCounts[drawIndex] = offsetAndCount[1]
         const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
-        for (let key in this.drawIdsArraysAllocators) {
-          const start = this.indexToOffsets[key][index]
-
+        if (Object.keys(this.drawIdsArraysAllocators).length == 0) {
+          // This item was never visible before and is now being un-culled.
+          // No allications have yet been made for it so we can't simply re-set the count value
+          this.dirtyGeomItems.add(index)
+          this.drawIdsBufferDirty = true
+          return
+        }
+        for (let key in geomBuffers.counts) {
           const allocator = this.drawIdsArraysAllocators[key]
           if (allocator) {
             const allocation = allocator.getAllocation(index)
             if (allocation) {
+              const start = this.indexToOffsets[key][index]
               if (allocation.size > 1) {
                 for (let i = 0; i < allocation.size; i++) {
                   this.drawElementCounts[key][start + i] = geomBuffers.subGeomCounts[key][i]
@@ -150,7 +156,19 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
               } else {
                 this.drawElementCounts[key][start] = geomBuffers.counts[key]
               }
+            } else {
+              // This item was never visible before and is now being un-culled.
+              // No allications have yet been made for it so we can't simply re-set the count value
+              this.dirtyGeomItems.add(index)
+              this.drawIdsBufferDirty = true
+              return
             }
+          } else {
+            // This item was never visible before and is now being un-culled.
+            // No allications have yet been made for it so we can't simply re-set the count value
+            this.dirtyGeomItems.add(index)
+            this.drawIdsBufferDirty = true
+            return
           }
         }
       } else {
