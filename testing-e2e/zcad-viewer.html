@@ -221,30 +221,31 @@ function init() {
   //   highlightedItem.removeHighlight(highlightKey, true)
   //   highlightedItem = null
   // })
+
+
+  const shatterGeomsOnMouseOver = true
   renderer.getViewport().on('pointerMove', (event) => {
     if (event.intersectionData) {
       const item = event.intersectionData.geomItem
       if (item) {
-        if (highlightedItem && highlightedItem != item) {
-          highlightedItem.removeHighlight(highlightKey, true)
-          if (highlightedItem instanceof CADBody) {
-            highlightedItem.setShatterState(false)
-          }
-        }
-        highlightedItem = item
         let key
         if (event.intersectionData.componentId >= 0) {
           key = 'pointerOverGeom:' + event.intersectionData.componentId
           if (key != highlightKey) {
-            highlightedItem.removeHighlight(highlightKey, true)
+            if (highlightedItem) highlightedItem.removeHighlight(highlightKey, true)
+            highlightedItem = item
             highlightKey = key
             highlightedItem.addHighlight(highlightKey, highlightColor, true)
           }
         } else {
-          if (item instanceof CADBody) {
+          if (item instanceof CADBody && shatterGeomsOnMouseOver) {
             item.setShatterState(true)
             return
           }
+          if (highlightedItem && item != highlightedItem) {
+            highlightedItem.removeHighlight(highlightKey, true)
+          }
+          highlightedItem = item
           highlightKey = 'pointerOverGeom'
           highlightedItem.addHighlight(highlightKey, highlightColor, true)
         }
@@ -263,7 +264,7 @@ function init() {
     if (event.key == 'f') renderer.frameAll()
   })
   renderer.getViewport().on('pointerDown', (event) => {
-    if (event.intersectionData) {
+    if (event.intersectionData && event.intersectionData.componentId >= 0) {
       const geomItem = event.intersectionData.geomItem
       if (geomItem instanceof CADBody && geomItem.geomParam.value instanceof CompoundGeom) {
         geomItem.cadAsset.loadMetadata().then(() => {
