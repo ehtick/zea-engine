@@ -81,7 +81,7 @@
       })
       /** HIGHLIGHT START */
 
-      const url = 'data/zcad/3.9.0/HC_SRO4.step.zcad'
+      const url = 'data/zcad/3.9.1/HC_SRO4.step.zcad'
       const asset = new CADAsset()
       asset.load(url).then(() => {
         renderer.frameAll()
@@ -105,7 +105,8 @@
       })
       document.getElementById('variant-02').addEventListener('click', function (event) {
         const asset = new CADAsset()
-        asset.load('data/HC_SRO4.zcad').then(() => {
+        const url = 'data/zcad/3.9.1/HC_SRO4.step.zcad'
+        asset.load(url).then(() => {
           renderer.frameAll()
         })
         asset.getGeometryLibrary().on('loaded', () => {
@@ -117,7 +118,8 @@
         scene.getRoot().removeAllChildren()
         const asset = new CADAsset()
         scene.getRoot().addChild(asset)
-        asset.load('data/HC_SRO4.zcad').then(() => {
+        const url = 'data/zcad/3.9.1/HC_SRO4.step.zcad'
+        asset.load(url).then(() => {
           renderer.frameAll()
         })
         asset.getGeometryLibrary().on('loaded', () => {
@@ -193,8 +195,8 @@
       // }}}
       const cullElement = document.getElementById('cull-stats')
       renderer.on('CullingUpdated', (event) => {
-        if (event.visible && event.total) {
-          cullElement.textContent = `visible: ${event.visible} / total: ${event.total} triangles: ${event.geomStats.triangles} `
+        if (event.visible != undefined && event.total != undefined) {
+          cullElement.textContent = `visible: ${event.visible} / ${event.total} triangles: ${event.visibleGeomStats.triangles} / ${event.totalGeomStats.triangles}`
         }
       })
     </script>
