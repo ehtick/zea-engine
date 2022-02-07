@@ -63,7 +63,6 @@ class CADBody extends GeomItem {
    * @param context - The context param.
    */
   readBinary(reader: BinReader, context: AssetLoadContext): void {
-    this.cadAsset = <CADAsset>context.assetItem
     if (context.versions['zea-engine'].compare([3, 9, 0]) < 0) {
       BaseGeomItem.prototype.readBinary.call(this, reader, context)
       // Note: the bodyDescId is now deprecated as it is part of the parametric surface evaluation code.

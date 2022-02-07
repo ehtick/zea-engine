@@ -40,8 +40,12 @@ class Box3Parameter extends Parameter<Box3> implements IBinaryReader {
   }
 
   fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void {
-    this.__value.p0.fromJSON(j.p0 as Record<string, number>)
-    this.__value.p1.fromJSON(j.p1 as Record<string, number>)
+    if (j.value) {
+      // @ts-ignore
+      this.__value.p0.fromJSON(j.value.p0)
+      // @ts-ignore
+      this.__value.p1.fromJSON(j.value.p1)
+    }
   }
 
   /**
