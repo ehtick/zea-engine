@@ -26,9 +26,9 @@ class GLPointsItemSet extends GLGeomItemSetMultiDraw {
     if (gl.multiDrawArrays) {
       gl.multiDrawArrays(gl.POINTS, offsets, 0, counts, 0, drawCount)
     } else {
-      const { drawId } = renderstate.unifs
+      const { geomItemId } = renderstate.unifs
       for (let i = 0; i < drawCount; i++) {
-        gl.uniform1i(drawId.location, drawIds[i])
+        gl.uniform1i(geomItemId.location, drawIds[i])
         gl.drawArrays(gl.TRIANGLES, offsets[i], counts[i])
       }
     }

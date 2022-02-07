@@ -26,9 +26,9 @@ class GLMeshItemSet extends GLGeomItemSetMultiDraw {
     if (gl.multiDrawElements) {
       gl.multiDrawElements(gl.TRIANGLES, counts, 0, gl.UNSIGNED_INT, offsets, 0, drawCount)
     } else {
-      const { drawId } = renderstate.unifs
+      const { geomItemId } = renderstate.unifs
       for (let i = 0; i < drawCount; i++) {
-        gl.uniform1i(drawId.location, drawIds[i])
+        gl.uniform1i(geomItemId.location, drawIds[i])
         gl.drawElements(gl.TRIANGLES, counts[i], gl.UNSIGNED_INT, offsets[i])
       }
     }

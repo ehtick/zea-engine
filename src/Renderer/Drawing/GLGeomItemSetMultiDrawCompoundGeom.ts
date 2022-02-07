@@ -1120,9 +1120,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     if (gl.multiDrawElements) {
       gl.multiDrawElements(gl.TRIANGLES, counts, 0, gl.UNSIGNED_INT, offsets, 0, drawCount)
     } else {
-      const { drawId } = renderstate.unifs
+      const { geomItemId } = renderstate.unifs
       for (let i = 0; i < drawCount; i++) {
-        gl.uniform1i(drawId.location, drawIds[i * 4])
+        gl.uniform1i(geomItemId.location, drawIds[i * 4])
         gl.drawElements(gl.TRIANGLES, counts[i], gl.UNSIGNED_INT, offsets[i])
       }
     }
@@ -1163,13 +1163,13 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         gl.depthFunc(gl.LEQUAL)
       }
     } else {
-      const { drawId, occluded } = renderstate.unifs
+      const { geomItemId, occluded } = renderstate.unifs
       if (occluded) {
         gl.uniform1i(occluded.location, 0)
       }
 
       for (let i = 0; i < drawCount; i++) {
-        gl.uniform1i(drawId.location, drawIds[i * 4])
+        gl.uniform1i(geomItemId.location, drawIds[i * 4])
         gl.drawElements(gl.LINES, counts[i], gl.UNSIGNED_INT, offsets[i])
       }
 
@@ -1177,7 +1177,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         gl.uniform1i(occluded.location, 1)
         gl.depthFunc(gl.GREATER)
         for (let i = 0; i < drawCount; i++) {
-          gl.uniform1i(drawId.location, drawIds[i * 4])
+          gl.uniform1i(geomItemId.location, drawIds[i * 4])
           gl.drawElements(gl.LINES, counts[i], gl.UNSIGNED_INT, offsets[i])
         }
         gl.depthFunc(gl.LEQUAL)
@@ -1201,9 +1201,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       gl.multiDrawElements(gl.POINTS, counts, 0, gl.UNSIGNED_INT, offsets, 0, drawCount)
       // gl.multiDrawArrays(gl.POINTS, offsets, 0, counts, 0, drawCount)
     } else {
-      const { drawId } = renderstate.unifs
+      const { geomItemId } = renderstate.unifs
       for (let i = 0; i < drawCount; i++) {
-        gl.uniform1i(drawId.location, drawIds[i * 4])
+        gl.uniform1i(geomItemId.location, drawIds[i * 4])
         gl.drawElements(gl.POINTS, counts[i], gl.UNSIGNED_INT, offsets[i])
       }
     }

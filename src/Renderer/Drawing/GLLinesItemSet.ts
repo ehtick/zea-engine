@@ -38,13 +38,13 @@ class GLLinesItemSet extends GLGeomItemSetMultiDraw {
         gl.depthFunc(gl.LEQUAL)
       }
     } else {
-      const { drawId, occluded } = renderstate.unifs
+      const { geomItemId, occluded } = renderstate.unifs
       if (occluded) {
         gl.uniform1i(occluded.location, 0)
       }
 
       for (let i = 0; i < drawCount; i++) {
-        gl.uniform1i(drawId.location, drawIds[i])
+        gl.uniform1i(geomItemId.location, drawIds[i])
         gl.drawElements(gl.LINES, counts[i], gl.UNSIGNED_INT, offsets[i])
       }
 
@@ -52,7 +52,7 @@ class GLLinesItemSet extends GLGeomItemSetMultiDraw {
         gl.uniform1i(occluded.location, 1)
         gl.depthFunc(gl.GREATER)
         for (let i = 0; i < drawCount; i++) {
-          gl.uniform1i(drawId.location, drawIds[i])
+          gl.uniform1i(geomItemId.location, drawIds[i])
           gl.drawElements(gl.LINES, counts[i], gl.UNSIGNED_INT, offsets[i])
         }
         gl.depthFunc(gl.LEQUAL)
