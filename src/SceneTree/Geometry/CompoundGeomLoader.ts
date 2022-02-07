@@ -2,6 +2,12 @@ import { BaseGeom } from './BaseGeom'
 import { BinReader } from '../BinReader'
 import { AssetLoadContext } from '../AssetLoadContext'
 
+interface SubGeom {
+  materialId: number
+  offset: number
+  count: number
+}
+
 /**
  * @private
  * @extends BaseGeom
@@ -11,6 +17,9 @@ class CompoundGeomLoader extends BaseGeom {
   protected indices: Uint8Array | Uint16Array | Uint32Array = new Uint8Array(0)
   private offsets: Record<string, number> = {}
   private counts: Record<string, number> = {}
+  // For each type of geom (TRIANGLES, LINES)
+  // A material id, and each start and end of the block
+  private materialSubGeoms: Record<string, Array<SubGeom>> = {}
   private subGeomOffsets: Record<string, Uint32Array> = {}
   private subGeomCounts: Record<string, Uint8Array | Uint16Array | Uint32Array> = {}
 
@@ -41,6 +50,7 @@ class CompoundGeomLoader extends BaseGeom {
       subGeomCounts: this.subGeomCounts,
       materialLibraryIndices: this.materialLibraryIndices,
       subGeomMaterialIndices: this.subGeomMaterialIndices,
+      materialSubGeoms: this.materialSubGeoms,
     }
     return result
   }
@@ -127,6 +137,83 @@ class CompoundGeomLoader extends BaseGeom {
     if (numMaterials > 0) {
       this.materialLibraryIndices = reader.loadUInt32Array(numMaterials)
       this.subGeomMaterialIndices = reader.loadUInt8Array(this.numSubGeoms)
+
+      // /////////////////////////////////
+      // Material Groups
+      let offset = 0
+      let currMaterial = -99
+      let currMaterialSubGeom: SubGeom | null = null
+      for (let i = 0; i < this.numSubGeoms; i++) {
+        let key
+        let subGeomOffset = 0
+        if (i < this.subGeomCounts.TRIANGLES.length) {
+          if (!this.materialSubGeoms.TRIANGLES) this.materialSubGeoms.TRIANGLES = []
+          key = 'TRIANGLES'
+        } else if (i < this.subGeomCounts.TRIANGLES.length + this.subGeomCounts.LINES.length) {
+          subGeomOffset = this.subGeomCounts.TRIANGLES.length
+          key = 'LINES'
+          if (!this.materialSubGeoms.LINES) this.materialSubGeoms.LINES = []
+        } else {
+          subGeomOffset = this.subGeomCounts.TRIANGLES.length + this.subGeomCounts.LINES.length
+          key = 'POINTS'
+          if (!this.materialSubGeoms.POINTS) this.materialSubGeoms.POINTS = []
+        }
+        const materialId = this.subGeomMaterialIndices[i]
+        if (currMaterial != materialId) {
+          currMaterial = materialId
+
+          // Note: subGeomMaterialIndices is Uint8Array, and 0 means no custom
+          // material is assigned to the subGeom.
+          // Subtract 1 to get the actual material id.
+          currMaterialSubGeom = {
+            materialId: materialId - 1,
+            offset,
+            count: 0,
+          }
+          for (; i < this.numSubGeoms; i++) {
+            if (currMaterial != this.subGeomMaterialIndices[i]) {
+              break
+            }
+            // When we get to the end og this geom type (e.g .TRIANGLES)
+            // start a new subgeom.
+            if (i - subGeomOffset == this.subGeomCounts[key].length) {
+              // Force the material index to be reset on line 162 above.
+              currMaterial = -99
+              break
+            }
+            currMaterialSubGeom.count += this.subGeomCounts[key][i - subGeomOffset]
+          }
+          offset += currMaterialSubGeom.count
+          this.materialSubGeoms[key].push(currMaterialSubGeom)
+          i--
+        }
+      }
+    } else {
+      this.materialSubGeoms['TRIANGLES'] = [
+        {
+          materialId: -1,
+          offset: 0,
+          count: geomCountsByType[0],
+        },
+      ]
+      if (geomCountsByType[1] > 0) {
+        this.materialSubGeoms['LINES'] = [
+          {
+            materialId: -1,
+            offset: geomCountsByType[0],
+            count: geomCountsByType[1],
+          },
+        ]
+      }
+      if (geomCountsByType[2] > 0) {
+        this.materialSubGeoms['POINTS'] = [
+          {
+            materialId: -1,
+            offset: geomCountsByType[0] + geomCountsByType[1],
+            count: geomCountsByType[2],
+          },
+        ]
+      }
     }
 
     this.emit('geomDataChanged', {})

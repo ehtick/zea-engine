@@ -18,6 +18,12 @@ const deepEquals = (arr0: Array<number>, arr1: Array<number>) => {
   return arr0.length == arr1.length && !arr0.some((v, index) => v != arr1[index])
 }
 
+interface SubGeom {
+  materialId: number
+  offset: number
+  count: number
+}
+
 /** This class abstracts the rendering of a collection of geometries to screen.
  * @extends EventEmitter
  * @private
@@ -44,7 +50,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
 
   // As transparent geometries are re-sorted, the allocations are moved around
   // This array stores the new start position of each geometries allocation.
-  protected indexToOffsets: Record<string, number[]> = {}
+  // Note: sorting is disabled untill we fix all remaining issues.
+  // protected indexToOffsets: Record<string, number[]> = {}
 
   protected highlightedItems: Record<number, Array<number>> = {}
   protected highlightedIdsArraysAllocators: Record<string, Allocator1D> = {}
@@ -148,13 +155,18 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           if (allocator) {
             const allocation = allocator.getAllocation(index)
             if (allocation) {
-              const start = this.indexToOffsets[key][index]
-              if (allocation.size > 1) {
+              // const start = this.indexToOffsets[key][index]
+              const start = allocation.start
+              if (glGeomItem.shattered) {
                 for (let i = 0; i < allocation.size; i++) {
                   this.drawElementCounts[key][start + i] = geomBuffers.subGeomCounts[key][i]
                 }
               } else {
-                this.drawElementCounts[key][start] = geomBuffers.counts[key]
+                const subGeoms = <SubGeom[]>geomBuffers.materialSubGeoms[key]
+                for (let i = 0; i < allocation.size; i++) {
+                  const subGeom = subGeoms[i]
+                  this.drawElementCounts[key][start + i] = subGeom.count
+                }
               }
             } else {
               // This item was never visible before and is now being un-culled.
@@ -174,11 +186,12 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       } else {
         // this.drawElementCounts[drawIndex] = 0
         for (let key in this.drawIdsArraysAllocators) {
-          const start = this.indexToOffsets[key][index]
           const allocator = this.drawIdsArraysAllocators[key]
           if (allocator) {
             const allocation = allocator.getAllocation(index)
             if (allocation) {
+              // const start = this.indexToOffsets[key][index]
+              const start = allocation.start
               for (let i = 0; i < allocation.size; i++) {
                 this.drawElementCounts[key][start + i] = 0
               }
@@ -317,15 +330,15 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         // Here we calculate how many draws for each type of geometry, each
         // compound goem needs. We then allocate the space we have specified.
         let drawCounts: Record<string, number> = {}
-        if (glGeomItem.shattered /*|| geomBuffers.materials.length > 0*/) {
+        if (glGeomItem.shattered) {
           // for shattered geoms, we draw once for each subgeom for each element type
-          drawCounts['TRIANGLES'] = geomBuffers.subGeomCounts['TRIANGLES'].length
-          drawCounts['LINES'] = geomBuffers.subGeomCounts['LINES'].length
-          drawCounts['POINTS'] = geomBuffers.subGeomCounts['POINTS'].length
+          for (let key in geomBuffers.subGeomCounts) {
+            drawCounts[key] = geomBuffers.subGeomCounts[key].length
+          }
         } else {
           // for non-shattered geoms, we just draw once for each element type per GeomItem.
-          for (let key in geomBuffers.counts) {
-            if (geomBuffers.counts[key] > 0) drawCounts[key] = 1
+          for (let key in geomBuffers.materialSubGeoms) {
+            drawCounts[key] = geomBuffers.materialSubGeoms[key].length
           }
         }
         for (let key in drawCounts) {
@@ -383,7 +396,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
       const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
 
-      if (glGeomItem.shattered /*|| geomBuffers.materials.length > 0*/) {
+      if (glGeomItem.shattered) {
         let subIndex = 0
         const addSubGeoms = (offsets: Uint32Array, counts: Uint8Array | Uint16Array | Uint32Array, type: string) => {
           const allocator = this.drawIdsArraysAllocators[type]
@@ -395,8 +408,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
 
           const materials = geomBuffers.materials
 
-          if (!this.indexToOffsets[type]) this.indexToOffsets[type] = []
-          this.indexToOffsets[type][itemIndex] = allocation.start
+          // if (!this.indexToOffsets[type]) this.indexToOffsets[type] = []
+          // this.indexToOffsets[type][itemIndex] = allocation.start
 
           for (let i = 0; i < offsets.length; i++) {
             // The draw id within this element type. (e.g. TRIANGLES, LINES, POINTS)
@@ -408,20 +421,17 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
             // Note: a zero value means no sub-geom was being drawn.
             drawIdsArray[drawId * 4 + 1] = subIndex + 1
 
-            if (materials.length > 0) {
-              // Note: subGeomMaterialIndices is Uint8Array, and 0 means no custom
-              // material is assigned to the subGeom.
+            // Note: subGeomMaterialIndices is Uint8Array, and 0 means no custom
+            // material is assigned to the subGeom.
+            // Subtract 1 to get the actual material id.
+            if (materials.length > 0 && geomBuffers.subGeomMaterialIndices[i] > 0) {
               const materialId = geomBuffers.subGeomMaterialIndices[i] - 1
-              if (materialId >= 0 && geomBuffers.materials[materialId]) {
-                const material = geomBuffers.materials[materialId]
+              const material = geomBuffers.materials[materialId]
 
-                // @ts-ignore
-                this.renderer!.glMaterialLibrary.addMaterial(material)
-                const materialAddr = this.renderer!.glMaterialLibrary.getMaterialAllocation(material)
-                drawIdsArray[drawId * 4 + 2] = materialAddr.start
-              } else {
-                drawIdsArray[drawId * 4 + 2] = 0.0
-              }
+              // @ts-ignore
+              this.renderer!.glMaterialLibrary.addMaterial(material)
+              const materialAddr = this.renderer!.glMaterialLibrary.getMaterialAllocation(material)
+              drawIdsArray[drawId * 4 + 2] = materialAddr.start
             } else {
               drawIdsArray[drawId * 4 + 2] = 0.0
             }
@@ -433,23 +443,52 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         addSubGeoms(geomBuffers.subGeomOffsets['LINES'], geomBuffers.subGeomCounts['LINES'], 'LINES')
         addSubGeoms(geomBuffers.subGeomOffsets['POINTS'], geomBuffers.subGeomCounts['POINTS'], 'POINTS')
       } else {
-        for (let key in geomBuffers.offsets) {
-          const count = geomBuffers.counts[key]
-          if (count == 0) continue
-          const offset = geomBuffers.offsets[key]
+        let subIndex = 0
+        const addSubGeoms = (subGeoms: SubGeom[], type: string) => {
+          const allocator = this.drawIdsArraysAllocators[type]
+          const drawIdsArray = this.drawIdsArrays[type]
+          const drawElementOffsets = this.drawElementOffsets[type]
+          const drawElementCounts = this.drawElementCounts[type]
+          const allocation = allocator.getAllocation(itemIndex)
+          if (!allocation) return
+
+          const materials = geomBuffers.materials
+
+          // if (!this.indexToOffsets[type]) this.indexToOffsets[type] = []
+          // this.indexToOffsets[type][itemIndex] = allocation.start
+
+          for (let i = 0; i < subGeoms.length; i++) {
+            const subGeom = subGeoms[i]
+            // The draw id within this element type. (e.g. TRIANGLES, LINES, POINTS)
+            const drawId = allocation.start + i
+
+            drawElementOffsets[drawId] = offsetAndCount[0] + subGeom.offset * elementSize
+            drawElementCounts[drawId] = subGeom.count
+            drawIdsArray[drawId * 4 + 0] = glGeomItem.geomItemId
+            // Note: a zero value means no sub-geom was being drawn.
+            drawIdsArray[drawId * 4 + 1] = 0
+
+            if (materials.length > 0 && subGeom.materialId >= 0 && geomBuffers.materials[subGeom.materialId]) {
+              const material = geomBuffers.materials[subGeom.materialId]
+
+              // @ts-ignore
+              this.renderer!.glMaterialLibrary.addMaterial(material)
+              const materialAddr = this.renderer!.glMaterialLibrary.getMaterialAllocation(material)
+              drawIdsArray[drawId * 4 + 2] = materialAddr.start
+            } else {
+              drawIdsArray[drawId * 4 + 2] = 0.0
+            }
+            drawIdsArray[drawId * 4 + 3] = 0 // spare
+
+            subIndex++
+          }
+        }
+        for (let key in geomBuffers.materialSubGeoms) {
           const allocator = this.drawIdsArraysAllocators[key]
           const allocation = allocator.getAllocation(itemIndex)
           if (!allocation) continue
-          const drawId = allocation.start
-          this.drawElementOffsets[key][drawId] = offsetAndCount[0] + offset * elementSize
-          this.drawElementCounts[key][drawId] = count
-          const drawIdsArray = this.drawIdsArrays[key]
-          drawIdsArray[drawId * 4 + 0] = glGeomItem.geomItemId
-          drawIdsArray[drawId * 4 + 1] = 0
-          drawIdsArray[drawId * 4 + 2] = 0
-
-          if (!this.indexToOffsets[key]) this.indexToOffsets[key] = []
-          this.indexToOffsets[key][itemIndex] = allocation.start
+          const subGeoms = <SubGeom[]>geomBuffers.materialSubGeoms[key]
+          addSubGeoms(subGeoms, key)
         }
       }
     })
@@ -587,7 +626,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         const index = Number.parseInt(key)
         const subGeomIndices = this.highlightedItems[key]
         const glGeomItem = this.glGeomItems[index]!
-        // if (glGeomItem.isVisible()) {
+
         const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
         let drawCounts: Record<string, number> = {
           TRIANGLES: 0,
@@ -615,33 +654,12 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         }
         for (let key in drawCounts) {
           const drawCount = drawCounts[key]
-          // if (drawCount == 0) continue
-
+          if (drawCount == 0) continue
           if (!this.highlightedIdsArraysAllocators[key]) {
             this.highlightedIdsArraysAllocators[key] = new Allocator1D()
           }
-          // const prevAllocation = this.highlightedIdsArraysAllocators[key].getAllocation(index)
-          // if (drawCount == 0 && prevAllocation) {
-          //   this.highlightedIdsArraysAllocators[key].deallocate(index)
-          // }
-
           this.highlightedIdsArraysAllocators[key].allocate(index, drawCount)
-          // if (prevAllocation && prevAllocation.start != newAllocation.start && this.drawIdsArrays[key]) {
-          //   // Clear the previous allocation to remove any rendering.
-          //   for (let i = 0; i < prevAllocation.size; i++) {
-          //     this.highlightedIdsArray[key][prevAllocation.start + i] = 0
-          //     this.highlightElementOffsets[key][prevAllocation.start + i] = 0
-          //     this.highlightElementCounts[key][prevAllocation.start + i] = 0
-          //   }
-          // }
         }
-        // } else {
-        //   for (let key in this.highlightedIdsArraysAllocators) {
-        //     if (this.highlightedIdsArraysAllocators[key]) {
-        //       this.highlightedIdsArraysAllocators[key].deallocate(index)
-        //     }
-        //   }
-        // }
       }
 
       // let regen = false
@@ -654,9 +672,6 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           this.highlightElementCounts[key] = new Int32Array(allocator.reservedSpace)
         }
       }
-      // if (regen) {
-      //   for (let i = 0; i < this.drawOrderToIndex.length; i++) this.dirtyGeomItems.add(i)
-      // }
 
       const elementSize = 4 //  Uint32Array for UNSIGNED_INT
       for (let key in this.highlightedItems) {
@@ -688,10 +703,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
               drawElementCounts[drawId] = counts[subIndex]
               drawIdsArray[drawId * 4 + 0] = glGeomItem.geomItemId
               drawIdsArray[drawId * 4 + 1] = subGeomIndex + 1
-              // drawIdsArray[drawId * 4 + 2] = subGeom.materialId ? subGeom.materialId : -1.0
+              drawIdsArray[drawId * 4 + 2] = 0.0 // materialId
               drawIdsArray[drawId * 4 + 3] = 0.0 // spare
-              //   subIndex++
-              // }
             }
             if (subGeomIndex < geomBuffers.subGeomCounts['TRIANGLES'].length) {
               addSubGeom(
