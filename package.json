@@ -76,7 +76,7 @@
     "@types/jest": "^26.0.23",
     "@types/semver": "^7.3.8",
     "@zeainc/jsdocs2md": "^0.0.8",
-    "@zeainc/zea-tree-view": "^0.0.6",
+    "@zeainc/zea-tree-view": "^0.0.7",
     "@zeainc/zea-ux": "^4.0.3",
     "babel-jest": "^27.0.5",
     "copyfiles": "latest",
