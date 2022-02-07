@@ -320,10 +320,12 @@ const onDoneFrustumCull = (postMessage) => {
           type: 'InFrustumIndices',
           newlyCulled,
           newlyUnCulled: newlyUnCulled_transparent,
+          /* When occlusion culling is running,we only consider
+          culling completed after the occlusion culling is done.
           visible: visibleCount,
           total: geomItemsData.length - 1,
           visibleGeomStats,
-          totalGeomStats,
+          totalGeomStats,*/
           inFrustumIndices,
         },
         [inFrustumIndices.buffer]

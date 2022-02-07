@@ -155,10 +155,12 @@ class GLGeomItemLibrary extends EventEmitter {
           this.calculateOcclusionCulling(message.data.inFrustumIndices)
         } else {
           this.applyCullResults(message.data)
+          this.emitCullingUpdateData(message.data)
           workerReady = true
         }
       } else if (message.data.type == 'CullResults') {
         this.applyCullResults(message.data)
+        this.emitCullingUpdateData(message.data)
         workerReady = true
       } else if (message.data.type == 'Done') {
         // Used mostly to make our unit testing robust.
@@ -433,9 +435,15 @@ class GLGeomItemLibrary extends EventEmitter {
       })
     }
     this.renderer.requestRedraw()
+  }
+
+  /**
+   * @private
+   * @param data
+   */
+  emitCullingUpdateData(data: Record<string, any>): void {
     // Used mostly to make our unit testing robust.
     // Also to help display render stats.
-    // TODO: Bundle render stats.
     // console.log(`visible: ${data.visible} / total: ${data.total}`)
     this.renderer.emit('CullingUpdated', {
       culled: data.newlyCulled?.length,
