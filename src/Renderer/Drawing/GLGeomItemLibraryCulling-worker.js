@@ -388,17 +388,17 @@ const processOcclusionData = (data) => {
       // }
     }
   })
-  if (newlyCulled.length > 0 || newlyUnCulled.length > 0) {
-    postMessage({
-      type: 'CullResults',
-      newlyCulled,
-      newlyUnCulled,
-      visible: visibleCount,
-      total: geomItemsData.length - 1,
-      visibleGeomStats,
-      totalGeomStats,
-    })
-  }
+  // Note: even if occlusion culling did nt filter out any more items
+  // we must emit this message to the mains worker so it knows that culling is completed.
+  postMessage({
+    type: 'CullResults',
+    newlyCulled,
+    newlyUnCulled,
+    visible: visibleCount,
+    total: geomItemsData.length - 1,
+    visibleGeomStats,
+    totalGeomStats,
+  })
 }
 
 // ///////////////////////////////////////////////
