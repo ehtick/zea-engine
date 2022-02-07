@@ -91,12 +91,6 @@
           setStatusText(`done-variant-02`)
         })
       })
-      document.getElementById('variant-03').addEventListener('click', function (event) {
-        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-40, 0, 10), new Vec3(10, 10, 10))
-        renderer.once('CullingUpdated', () => {
-          setStatusText(`done-variant-03`)
-        })
-      })
       // }}}
     </script>
     <style>
