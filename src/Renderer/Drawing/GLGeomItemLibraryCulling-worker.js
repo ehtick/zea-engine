@@ -360,7 +360,7 @@ const processOcclusionData = (data) => {
     if (index >= geomItemsData.length) return true
 
     const geomItemData = geomItemsData[index]
-    if (!geomItemData.cullable || !geomItemData.visible || geomItemData.transparent) return false
+    if (!geomItemData || !geomItemData.cullable || !geomItemData.visible || geomItemData.transparent) return false
 
     if (!outOfFrustum[index]) {
       if (value == 0) {
