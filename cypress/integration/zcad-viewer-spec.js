@@ -9,17 +9,26 @@ describe('zcad-viewer-Dead_eye_bearing', () => {
 })
 describe('zcad-viewer-gear_box_final_asm', () => {
   it('Capture snapshots', () => {
-    cy.visit(`testing-e2e/zcad-viewer.html?zcad=data/zcad/3.9.1/gear_box_final_asm.zcad`)
+    cy.visit(`testing-e2e/zcad-viewer.html?zcad=data/zcad/3.9.1/gear_box_final_asm.stp.zcad`)
 
     cy.get('#status').should('have.text', `done-loading`)
     const test = 'zcad-viewer-gear_box_final_asm'
     cy.get('canvas').percySnapshot('zcad-viewer-gear_box_final_asm')
   })
 })
+describe('zcad-viewer-Autruche', () => {
+  it('Capture snapshots', () => {
+    cy.visit(`testing-e2e/zcad-viewer.html?zcad=data/zcad/3.9.1/Autruche.stp.zca`)
+
+    cy.get('#status').should('have.text', `done-loading`)
+    const test = 'zcad-viewer-Autruche'
+    cy.get('canvas').percySnapshot('zcad-viewer-Autruche')
+  })
+})
 
 describe('zcad-viewer-HC_SRO4', () => {
   it('Capture snapshots', () => {
-    cy.visit(`testing-e2e/zcad-viewer.html?zcad=data/zcad/3.9.1/HC_SRO4.zcad`)
+    cy.visit(`testing-e2e/zcad-viewer.html?zcad=data/zcad/3.9.1/HC_SRO4.step.zcad`)
 
     cy.get('#status').should('have.text', `done-loading`)
     const test = 'zcad-viewer-HC_SRO4'
