@@ -30,13 +30,13 @@
       const context = new AssetLoadContext()
       context.units = 'Millimeters'
       const asset1 = new CADAsset()
-      asset1.load('data/Dead_eye_bearing.zcad', context)
+      asset1.load('data/zcad/3.9.1/Dead_eye_bearing.stp.zcad', context)
       promises.push(new Promise((resolve) => asset1.getGeometryLibrary().on('loaded', resolve)))
       asset1.globalXfoParam.value = new Xfo(new Vec3(-85, 0, 0))
       scene.getRoot().addChild(asset1)
 
       const asset2 = new CADAsset()
-      promises.push(asset2.load('data/Dead_eye_bearing.zcad', context))
+      asset2.load('data/zcad/3.9.1/Dead_eye_bearing.stp.zcad', context)
       promises.push(new Promise((resolve) => asset2.getGeometryLibrary().on('loaded', resolve)))
       asset2.globalXfoParam.value = new Xfo(new Vec3(85, 0, 0))
       scene.getRoot().addChild(asset2)

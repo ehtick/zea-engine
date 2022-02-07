@@ -18,7 +18,7 @@ describe('zcad-viewer-gear_box_final_asm', () => {
 })
 describe('zcad-viewer-Autruche', () => {
   it('Capture snapshots', () => {
-    cy.visit(`testing-e2e/zcad-viewer.html?zcad=data/zcad/3.9.1/Autruche.stp.zca`)
+    cy.visit(`testing-e2e/zcad-viewer.html?zcad=data/zcad/3.9.1/Autruche.stp.zcad`)
 
     cy.get('#status').should('have.text', `done-loading`)
     const test = 'zcad-viewer-Autruche'
