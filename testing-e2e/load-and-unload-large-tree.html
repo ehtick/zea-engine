@@ -74,29 +74,6 @@
 
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(40, 90, 3))
 
-      const loadZCADAsset = (url, filename) => {
-        const asset = new CADAsset()
-        asset.load(url).then(() => {
-          renderer.frameAll()
-        })
-        asset.getGeometryLibrary().on('loaded', () => {
-          setStatusText('done-loading')
-        })
-        scene.getRoot().addChild(asset)
-        return asset
-      }
-
-      const loadAsset = (url, filename) => {
-        let res
-        if (filename.endsWith('zcad')) {
-          res = loadZCADAsset(url, filename)
-        } else if (filename.endsWith('gltf') || filename.endsWith('glb')) {
-          res = loadGLTFAsset(url, filename)
-        }
-        boundingBoxPass.addTreeItem(res, true)
-        return res
-      }
-
       function createAndDestroyCadAsset(index) {
         const cadAsset = new CADAsset()
         cadAsset.load('data/hospital/Autodesk_Hospital_Structural.zcad')
