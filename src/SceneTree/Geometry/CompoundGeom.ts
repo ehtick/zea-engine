@@ -1,6 +1,8 @@
 import { BinReader } from '../BinReader'
 import { AssetLoadContext } from '../AssetLoadContext'
-import { BaseItem, Material, MaterialLibrary } from '..'
+import { BaseItem } from '../BaseItem'
+import { Material } from '../Material'
+import { MaterialLibrary } from '../MaterialLibrary'
 import { BaseProxy } from './GeomProxies'
 import { Registry } from '../../Registry'
 

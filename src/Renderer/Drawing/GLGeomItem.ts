@@ -1,11 +1,8 @@
 import { EventEmitter } from '../../Utilities/index'
-
-import '../../SceneTree/GeomItem'
-import { GeomItem } from '../../SceneTree/GeomItem'
+import { GeomItem, CADBody } from '../../SceneTree'
 import { RenderState } from '../types/renderer'
 import { WebGL12RenderingContext } from '../types/webgl'
-import { CADBody, StateChangedEvent } from '../..'
-import { VisibilityChangedEvent, TransparencyChangedEvent } from '../../Utilities/Events'
+import { VisibilityChangedEvent, TransparencyChangedEvent, StateChangedEvent } from '../../Utilities/Events'
 
 const GLGeomItemChangeType = {
   GEOMITEM_CHANGED: 0,

@@ -1,4 +1,4 @@
-import { CADBody } from '.'
+import { CADBody } from './CADBody'
 import { Color } from '../../Math/Color'
 import { Registry } from '../../Registry'
 import { CloneContext } from '../CloneContext'
