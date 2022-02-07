@@ -1,4 +1,4 @@
-import { Xfo, Box3, Vec3, Mat4, Color } from '../../Math/index'
+import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
 import { AssetLoadContext } from '../AssetLoadContext'
 import { BaseGeomItem } from '../BaseGeomItem'
@@ -8,7 +8,6 @@ import { CloneContext } from '../CloneContext'
 import { Material } from '../Material'
 import { CADAsset } from './CADAsset'
 import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
-import { resourceLoader } from '../resourceLoader'
 
 /**
  * Represents a Body within a CAD Part. A Body is made up of either a single mesh or a collection of meshes, one for each surface.
@@ -18,12 +17,10 @@ import { resourceLoader } from '../resourceLoader'
  */
 class CADBody extends GeomItem {
   shattered: boolean = false
-  cadAsset: CADAsset = null
   /**
    * Creates an instance of CADBody setting up the initial configuration for Material and Color parameters.
    *
    * @param {string} name - The name value.
-   * @param {CADAsset} cadAsset - The cadAsset value.
    */
   constructor(name?: string) {
     super(name)
@@ -47,23 +44,13 @@ class CADBody extends GeomItem {
    * The clone method constructs a new CADBody, copies its values
    * from this item and returns it.
    *
-   * @param {object} context - The context value.
-   * @return {CADBody} - The return value.
+   * @param context - The CloneContext param.
+   * @return - The cloned instance.
    */
   clone(context: CloneContext): CADBody {
     const cloned = new CADBody()
     cloned.copyFrom(this, context)
     return cloned
-  }
-
-  /**
-   * The copyFrom method.
-   * @param {CADBody} src - The src param.
-   * @param {object} context - The context value.
-   * @private
-   */
-  copyFrom(src: CADBody, context: CloneContext): void {
-    super.copyFrom(src, context)
   }
 
   // ///////////////////////////

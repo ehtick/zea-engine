@@ -9,36 +9,34 @@ import { resourceLoader } from '../resourceLoader'
 import { Version } from '../Version'
 
 /**
- * Class representing a CAD asset.
+ * Class for loading zcad files.
+ * The CADAsset is a TreeItem and can be added to the scene tree.
  *
  * **Events**
- * * **loaded:** Triggered when the  asset is loaded
+ * * **loaded:** Emitted when the  asset is loaded
  * @extends AssetItem
  */
 class CADAsset extends AssetItem {
-  cadfileVersion: Version
-  numCADBodyItems: number
-  __loadPromise: any
+  cadfileVersion: Version = new Version('0,0,0')
+  url: string
   private metadataLoadPromise: Promise<void>
   private metadataLoaded: boolean = false
-  url: string
-  __datafileLoaded: () => void
-  __datafileParam: any
+  private loadPromise: Promise<any>
+
   /**
    * Create a CAD asset.
    * @param {string} name - The name value.
    */
   constructor(name?: string) {
     super(name)
-    this.cadfileVersion = new Version('0,0,0')
   }
 
   /**
    * The clone method constructs a new XRef, copies its values
    * from this item and returns it.
    *
-   * @param {number} flags - The flags param.
-   * @return {XRef} - The return value.
+   * @param context - The CloneContext param.
+   * @return - The cloned instance.
    */
   clone(context?: CloneContext): CADAsset {
     const cloned = new CADAsset()
@@ -50,9 +48,9 @@ class CADAsset extends AssetItem {
   // Persistence
 
   /**
-   * Returns the versioon of the data loaded by thie CADAsset.
+   * Returns the version of the data loaded by the CADAsset.
    *
-   * @return {string} - The return value.
+   * @return - The version value.
    */
   getVersion(): Version {
     return this.cadfileVersion
@@ -65,8 +63,8 @@ class CADAsset extends AssetItem {
    * @param {AssetLoadContext} context - The load context object that provides additional data such as the units of the scene we are loading into.
    */
   readRootLevelBinary(reader: BinReader, context: AssetLoadContext): void {
-    this.numCADBodyItems = 0
-
+    // Reset the versions dictionary. We don't want a shared context to provide from other asset loads.
+    context.versions = {}
     context.versions['zea-cad'] = new Version(reader.loadStr())
     // @ts-ignore
     context.sdk = reader.loadStr()
@@ -78,13 +76,13 @@ class CADAsset extends AssetItem {
 
   /**
    * Loads all the geometries and metadata from the asset file.
-   * @param {string} url - The URL of the asset to load
-   * @param {AssetLoadContext} context - The load context object that provides additional data such as paths to external references.
-   * @return {Promise} - Returns a promise that resolves once the load of the tree is complete. Geometries, textures and other resources might still be loading.
+   * @param url - The URL of the asset to load
+   * @param context - The load context object that provides additional data such as paths to external references.
+   * @return - Returns a promise that resolves once the load of the tree is complete. Geometries, textures and other resources might still be loading.
    */
-  load(url: string, context = new AssetLoadContext()): any {
-    if (this.__loadPromise) return this.__loadPromise
-    this.__loadPromise = new Promise((resolve, reject) => {
+  load(url: string, context = new AssetLoadContext()): Promise<void> {
+    if (this.loadPromise) return this.loadPromise
+    this.loadPromise = new Promise((resolve, reject) => {
       const folder = url.lastIndexOf('/') > -1 ? url.substring(0, url.lastIndexOf('/')) + '/' : ''
       const filename = url.lastIndexOf('/') > -1 ? url.substring(url.lastIndexOf('/') + 1) : ''
       const stem = filename.substring(0, filename.lastIndexOf('.'))
@@ -155,7 +153,6 @@ class CADAsset extends AssetItem {
             resourceLoader.incrementWorkDone(1)
           }
 
-          // console.log(this.__name, " NumBaseItems:", this.getNumBaseItems(), " NumCADBodyItems:", this.numCADBodyItems)
           context.decrementAsync()
         },
         (error) => {
@@ -166,7 +163,7 @@ class CADAsset extends AssetItem {
       )
     })
 
-    return this.__loadPromise
+    return this.loadPromise
   }
 
   /**
@@ -199,43 +196,6 @@ class CADAsset extends AssetItem {
       )
     })
     return this.metadataLoadPromise
-  }
-
-  // ////////////////////////////////////////
-  // Persistence
-
-  /**
-   * The fromJSON method decodes a json object for this type.
-   *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context param.
-   * @param {callback} onDone - The onDone param.
-   */
-  // TODO: can't pass in onDone
-  fromJSON(j: Record<string, any>, context: Record<string, any>): void {
-    //, onDone
-    const loadAssetJSON = () => {
-      //const flags = TreeItem.LoadFlags.LOAD_FLAG_LOADING_BIN_TREE_VALUES
-      super.fromJSON(j, context) //, flags, onDone
-      context.decAsyncCount()
-
-      // If the asset is nested within a bigger asset, then
-      // this subtree can noow be flagged as loded(and added to the renderer);
-      if (!this.loaded) {
-        this.emit('loaded')
-        this.loaded = true
-      }
-    }
-
-    if (j.params && j.params.DataFilePath) {
-      this.__datafileLoaded = loadAssetJSON
-      context.incAsyncCount()
-      const filePathJSON = j.params.DataFilePath
-      delete j.params.DataFilePath
-      this.__datafileParam.fromJSON(filePathJSON, context)
-    } else {
-      loadAssetJSON()
-    }
   }
 }
 

@@ -1,6 +1,4 @@
 import { Registry } from '../../Registry'
-import { AssetLoadContext } from '../AssetLoadContext'
-import { BinReader } from '../BinReader'
 import { CloneContext } from '../CloneContext'
 import { TreeItem } from '../TreeItem'
 
@@ -13,7 +11,7 @@ class CADPart extends TreeItem {
   /**
    * Creates an instance of CADPart setting up the initial configuration for Material and Color parameters.
    *
-   * @param {string} name - The name value.
+   * @param name - The name value.
    */
   constructor(name?: string) {
     super(name)
@@ -23,8 +21,8 @@ class CADPart extends TreeItem {
    * The clone method constructs a new CADPart, copies its values
    * from this item and returns it.
    *
-   * @param {number} flags - The flags param.
-   * @return {CADPart} - The return value.
+   * @param context - The CloneContext param.
+   * @return - The cloned instance.
    */
   clone(context?: CloneContext): CADPart {
     const cloned = new CADPart()

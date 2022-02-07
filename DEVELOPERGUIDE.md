@@ -136,9 +136,10 @@ yarn docs
 ```
 Commit changes.
 
-4. Push the main branch and the tags in one action like this. This will cause a publish to NPM
+4. Push the main branch and the tags in one action like this.
+This will cause a publish to NPM
 ```bash
-git push --follow-tags origin main
+git push && git push --tags
 ```
 
 6. Check that the release process completes in GitHub.
