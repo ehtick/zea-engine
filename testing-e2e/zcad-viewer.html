@@ -267,7 +267,7 @@ function init() {
     if (event.intersectionData && event.intersectionData.componentId >= 0) {
       const geomItem = event.intersectionData.geomItem
       if (geomItem instanceof CADBody && geomItem.geomParam.value instanceof CompoundGeom) {
-        geomItem.cadAsset.loadMetadata().then(() => {
+        geomItem.assetItem.loadMetadata().then(() => {
           const geom = geomItem.geomParam.value
 
           const subGeom = geom.subGeoms[event.intersectionData.componentId]
