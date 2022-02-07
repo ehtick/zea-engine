@@ -23,7 +23,7 @@ Registry.register('SubGeom', SubGeom)
  */
 class CompoundGeom extends BaseProxy {
   private counts: Record<string, number>
-  private materials: Array<Material> = []
+  materials: Array<Material> = []
   protected subGeomMaterialIndices: Uint8Array = new Uint8Array(0)
 
   subGeoms: Array<SubGeom> = []

@@ -1,5 +1,5 @@
 import { Vec3 } from '../../Math/Vec3'
-import { Plane } from '../../SceneTree'
+import { CompoundGeom, Plane } from '../../SceneTree'
 import '../../SceneTree/GeomItem'
 import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
 import { VisibilityChangedEvent } from '../../Utilities/Events/VisibilityChangedEvent'
@@ -256,6 +256,15 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       }
     }
     glGeomItem.on('shatterStateChanged', eventHandlers.shatterStateChanged)
+
+    {
+      // Here we add any materials to the GLMaterial library so we can draw the geom.
+      // @ts-ignore
+      const geom = <CompoundGeom>glGeomItem.geomItem.geomParam.value
+      geom.materials.forEach((material) => {
+        this.renderer!.glMaterialLibrary.addMaterial(material)
+      })
+    }
 
     this.glGeomItems[index] = glGeomItem
     this.glgeomItemEventHandlers[index] = eventHandlers
