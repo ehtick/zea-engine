@@ -52,6 +52,7 @@
     }
   },
   "dependencies": {
+    "caniuse-lite": "^1.0.30001309",
     "lodash-es": "^4.17.21"
   },
   "size-limit": [
