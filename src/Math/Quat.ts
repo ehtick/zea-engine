@@ -986,17 +986,15 @@ class Quat {
    * @param t - Interpolation amount between the two inputs.
    * @return - Returns a new Quat.
    */
-  slerp(other: Quat, t: number): Quat {
-    /// https://www.lix.polytechnique.fr/~nielsen/WEBvisualcomputing/programs/slerp.cpp
-    // const dotProduct = this.x * other.x + this.y * other.y + this.z * other.z + this.w * other.w
+  slerp(other: Quat, lambda: number): Quat {
+    /// https://www.geometrictools.com/Documentation/FastAndAccurateSlerp.pdf
     const dotProduct = this.dot(other)
 
+    if (dotProduct > 0.999) return this
+
     // algorithm adapted from Shoemake's paper
-    const lambda = t / 2
-
-    let theta = Math.acos(dotProduct)
-    if (theta < 0.0) theta = -theta
-
+    // lambda is in (0, π/2]
+    const theta = Math.acos(dotProduct)
     const st = Math.sin(theta)
     const sut = Math.sin(lambda * theta)
     const sout = Math.sin((1 - lambda) * theta)
