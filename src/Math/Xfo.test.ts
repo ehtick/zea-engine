@@ -116,25 +116,75 @@ describe('Xfo', () => {
     expect(vec3_1.approxEqual(vec3, 0.001)).toBeTruthy()
   })
 
-  it('transforms an Xfo by an Xfo and its inverse', () => {
+  it('transforms an Xfo with uniform scale by its inverse', () => {
     const xfo = new Xfo()
     xfo.tr.set(1, 1, 1)
+    // Rotate by 90 degress around Z axis.
+    xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)
+    xfo.sc.set(0.001, 0.001, 0.001)
 
+    const invXfo = xfo.inverse()
+    const xfo2 = invXfo.multiply(xfo)
+    const identity = new Xfo()
+
+    expect(xfo2.tr.approxEqual(identity.tr, 0.001)).toBeTruthy()
+    expect(xfo2.ori.approxEqual(identity.ori, 0.001)).toBeTruthy()
+    expect(xfo2.sc.approxEqual(identity.sc, 0.001)).toBeTruthy()
+  })
+
+  it('transforms an Xfo with uniform scale by an Xfo and its inverse', () => {
+    const parentGlobal = new Xfo()
+    parentGlobal.tr.set(1, 1, 1)
+    // Rotate by 90 degress around Z axis.
+    parentGlobal.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)
+    parentGlobal.sc.set(0.001, 0.001, 0.001)
+
+    const childGlobal = new Xfo(new Vec3(-1, -1, 1))
+
+    const invParentGlobal = parentGlobal.inverse()
+    const childLocal = invParentGlobal.multiply(childGlobal)
+    const childGlobal2 = parentGlobal.multiply(childLocal)
+
+    console.log(childGlobal.tr.toString(), childGlobal2.tr.toString())
+    console.log(childGlobal.ori.toString(), childGlobal2.ori.toString())
+    console.log(childGlobal.sc.toString(), childGlobal2.sc.toString())
+
+    expect(childGlobal.tr.approxEqual(childGlobal2.tr, 0.001)).toBeTruthy()
+    expect(childGlobal.ori.approxEqual(childGlobal2.ori, 0.001)).toBeTruthy()
+    expect(childGlobal.sc.approxEqual(childGlobal2.sc, 0.001)).toBeTruthy()
+  })
+
+  it('transforms an Xfo with non-uniform scale  by an Xfo and its inverse', () => {
+    const xfo = new Xfo()
+    xfo.tr.set(1, 1, 1)
     // Rotate by 90 degress around Z axis.
     xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)
     xfo.sc.set(2, 1, 1)
+
+    //           x
+    //           |
+    //   y       |
+    //   |    y--*
+    //   |
+    //   |
+    //    -------- x
+    //
+
     const invXfo = xfo.inverse()
 
     const xfo2 = new Xfo(new Vec3(1, 1, 0))
     const transformedXfo = xfo.multiply(xfo2)
+    console.log(transformedXfo.toString())
 
     expect(transformedXfo.tr.approxEqual(new Vec3(0, 3, 1), 0.001)).toBeTruthy()
+    expect(transformedXfo.sc.approxEqual(new Vec3(1, 2, 1), 0.001)).toBeTruthy()
 
     // Note: I don't think this is possible.
     // (Inverting an Xfo with a non-uniform scales)
     const xfo2_1 = transformedXfo.multiply(invXfo)
+    // expect(xfo2_1.tr.approxEqual(xfo2.tr, 0.001)).toBeTruthy()
     expect(xfo2_1.ori.approxEqual(xfo2.ori, 0.001)).toBeTruthy()
-    // expect(xfo2_1.approxEqual(xfo2, 0.001)).toBeTruthy()
+    // expect(xfo2_1.sc.approxEqual(xfo2.sc, 0.001)).toBeTruthy()
   })
 
   it('transforms Vec3 by Xfo', () => {
