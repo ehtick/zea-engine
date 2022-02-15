@@ -24,7 +24,7 @@ image.load("https://storage.googleapis.com/zea-playground-assets/zea-engine/text
 
 ## Hierarchy
 
-- [`FileImage`](SceneTree_Images_FileImage.FileImage)
+- [`HDRImage`](SceneTree_Images_HDRImage.HDRImage)
 
   ↳ **`VLHImage`**
 
@@ -46,25 +46,25 @@ Create a LDR image.
 
 #### Overrides
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[constructor](SceneTree_Images_FileImage.FileImage#constructor)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[constructor](SceneTree_Images_HDRImage.HDRImage#constructor)
 
 #### Defined in
 
-[src/SceneTree/Images/VLHImage.ts:30](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/Images/VLHImage.ts#L30)
+[src/SceneTree/Images/VLHImage.ts:30](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/Images/VLHImage.ts#L30)
 
 ## Properties
 
 ### \_\_data
 
-• `Protected` **\_\_data**: `HTMLImageElement` = `null`
+• `Protected` **\_\_data**: `HDRImageData`
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[__data](SceneTree_Images_FileImage.FileImage#__data)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[__data](SceneTree_Images_HDRImage.HDRImage#__data)
 
 #### Defined in
 
-[src/SceneTree/Images/FileImage.ts:16](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/Images/FileImage.ts#L16)
+[src/SceneTree/Images/HDRImage.ts:24](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/Images/HDRImage.ts#L24)
 
 ___
 
@@ -74,11 +74,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[__id](SceneTree_Images_FileImage.FileImage#__id)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[__id](SceneTree_Images_HDRImage.HDRImage#__id)
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -88,11 +88,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[__metaData](SceneTree_Images_FileImage.FileImage#__metadata)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[__metaData](SceneTree_Images_HDRImage.HDRImage#__metadata)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:41](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L41)
+[src/SceneTree/BaseItem.ts:41](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L41)
 
 ___
 
@@ -102,11 +102,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[__name](SceneTree_Images_FileImage.FileImage#__name)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[__name](SceneTree_Images_HDRImage.HDRImage#__name)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:36](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L36)
+[src/SceneTree/BaseItem.ts:36](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L36)
 
 ___
 
@@ -116,11 +116,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[__ownerItem](SceneTree_Images_FileImage.FileImage#__owneritem)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[__ownerItem](SceneTree_Images_HDRImage.HDRImage#__owneritem)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:37](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L37)
+[src/SceneTree/BaseItem.ts:37](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L37)
 
 ___
 
@@ -130,11 +130,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[__path](SceneTree_Images_FileImage.FileImage#__path)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[__path](SceneTree_Images_HDRImage.HDRImage#__path)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:38](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L38)
+[src/SceneTree/BaseItem.ts:38](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L38)
 
 ___
 
@@ -144,11 +144,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[__selectable](SceneTree_Images_FileImage.FileImage#__selectable)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[__selectable](SceneTree_Images_HDRImage.HDRImage#__selectable)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:39](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L39)
+[src/SceneTree/BaseItem.ts:39](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L39)
 
 ___
 
@@ -158,11 +158,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[__selected](SceneTree_Images_FileImage.FileImage#__selected)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[__selected](SceneTree_Images_HDRImage.HDRImage#__selected)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:40](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L40)
+[src/SceneTree/BaseItem.ts:40](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L40)
 
 ___
 
@@ -172,25 +172,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[alphaFromLuminance](SceneTree_Images_FileImage.FileImage#alphafromluminance)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[alphaFromLuminance](SceneTree_Images_HDRImage.HDRImage#alphafromluminance)
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:47](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseImage.ts#L47)
-
-___
-
-### crossOrigin
-
-• **crossOrigin**: `string`
-
-#### Inherited from
-
-[FileImage](SceneTree_Images_FileImage.FileImage).[crossOrigin](SceneTree_Images_FileImage.FileImage#crossorigin)
-
-#### Defined in
-
-[src/SceneTree/Images/FileImage.ts:14](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/Images/FileImage.ts#L14)
+[src/SceneTree/BaseImage.ts:47](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseImage.ts#L47)
 
 ___
 
@@ -200,11 +186,25 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[deprecatedParamMapping](SceneTree_Images_FileImage.FileImage#deprecatedparammapping)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[deprecatedParamMapping](SceneTree_Images_HDRImage.HDRImage#deprecatedparammapping)
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:25](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/ParameterOwner.ts#L25)
+[src/SceneTree/ParameterOwner.ts:25](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ParameterOwner.ts#L25)
+
+___
+
+### exposure
+
+• **exposure**: `number` = `1.0`
+
+#### Inherited from
+
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[exposure](SceneTree_Images_HDRImage.HDRImage#exposure)
+
+#### Defined in
+
+[src/SceneTree/Images/HDRImage.ts:22](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/Images/HDRImage.ts#L22)
 
 ___
 
@@ -214,11 +214,25 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[format](SceneTree_Images_FileImage.FileImage#format)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[format](SceneTree_Images_HDRImage.HDRImage#format)
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:39](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseImage.ts#L39)
+[src/SceneTree/BaseImage.ts:39](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseImage.ts#L39)
+
+___
+
+### hdrTint
+
+• **hdrTint**: [`Color`](../../Math/Math_Color.Color)
+
+#### Inherited from
+
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[hdrTint](SceneTree_Images_HDRImage.HDRImage#hdrtint)
+
+#### Defined in
+
+[src/SceneTree/Images/HDRImage.ts:23](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/Images/HDRImage.ts#L23)
 
 ___
 
@@ -228,11 +242,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[height](SceneTree_Images_FileImage.FileImage#height)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[height](SceneTree_Images_HDRImage.HDRImage#height)
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:38](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseImage.ts#L38)
+[src/SceneTree/BaseImage.ts:38](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseImage.ts#L38)
 
 ___
 
@@ -242,11 +256,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[listeners](SceneTree_Images_FileImage.FileImage#listeners)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[listeners](SceneTree_Images_HDRImage.HDRImage#listeners)
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -256,11 +270,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[loaded](SceneTree_Images_FileImage.FileImage#loaded)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[loaded](SceneTree_Images_HDRImage.HDRImage#loaded)
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:41](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseImage.ts#L41)
+[src/SceneTree/BaseImage.ts:41](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseImage.ts#L41)
 
 ___
 
@@ -270,11 +284,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[magFilter](SceneTree_Images_FileImage.FileImage#magfilter)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[magFilter](SceneTree_Images_HDRImage.HDRImage#magfilter)
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:46](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseImage.ts#L46)
+[src/SceneTree/BaseImage.ts:46](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseImage.ts#L46)
 
 ___
 
@@ -284,11 +298,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[minFilter](SceneTree_Images_FileImage.FileImage#minfilter)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[minFilter](SceneTree_Images_HDRImage.HDRImage#minfilter)
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:45](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseImage.ts#L45)
+[src/SceneTree/BaseImage.ts:45](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseImage.ts#L45)
 
 ___
 
@@ -298,11 +312,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[mipMapped](SceneTree_Images_FileImage.FileImage#mipmapped)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[mipMapped](SceneTree_Images_HDRImage.HDRImage#mipmapped)
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:42](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseImage.ts#L42)
+[src/SceneTree/BaseImage.ts:42](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseImage.ts#L42)
 
 ___
 
@@ -312,11 +326,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[paramEventListenerIDs](SceneTree_Images_FileImage.FileImage#parameventlistenerids)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[paramEventListenerIDs](SceneTree_Images_HDRImage.HDRImage#parameventlistenerids)
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/ParameterOwner.ts#L22)
+[src/SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ParameterOwner.ts#L22)
 
 ___
 
@@ -326,11 +340,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[paramMapping](SceneTree_Images_FileImage.FileImage#parammapping)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[paramMapping](SceneTree_Images_HDRImage.HDRImage#parammapping)
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/ParameterOwner.ts#L23)
+[src/SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ParameterOwner.ts#L23)
 
 ___
 
@@ -340,11 +354,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[params](SceneTree_Images_FileImage.FileImage#params)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[params](SceneTree_Images_HDRImage.HDRImage#params)
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:24](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/ParameterOwner.ts#L24)
+[src/SceneTree/ParameterOwner.ts:24](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ParameterOwner.ts#L24)
 
 ___
 
@@ -354,25 +368,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[type](SceneTree_Images_FileImage.FileImage#type)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[type](SceneTree_Images_HDRImage.HDRImage#type)
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:40](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseImage.ts#L40)
-
-___
-
-### url
-
-• **url**: `string`
-
-#### Inherited from
-
-[FileImage](SceneTree_Images_FileImage.FileImage).[url](SceneTree_Images_FileImage.FileImage#url)
-
-#### Defined in
-
-[src/SceneTree/Images/FileImage.ts:15](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/Images/FileImage.ts#L15)
+[src/SceneTree/BaseImage.ts:40](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseImage.ts#L40)
 
 ___
 
@@ -382,11 +382,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[width](SceneTree_Images_FileImage.FileImage#width)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[width](SceneTree_Images_HDRImage.HDRImage#width)
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:37](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseImage.ts#L37)
+[src/SceneTree/BaseImage.ts:37](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseImage.ts#L37)
 
 ___
 
@@ -396,11 +396,11 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[wrapS](SceneTree_Images_FileImage.FileImage#wraps)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[wrapS](SceneTree_Images_HDRImage.HDRImage#wraps)
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:43](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseImage.ts#L43)
+[src/SceneTree/BaseImage.ts:43](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseImage.ts#L43)
 
 ___
 
@@ -410,13 +410,39 @@ ___
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[wrapT](SceneTree_Images_FileImage.FileImage#wrapt)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[wrapT](SceneTree_Images_HDRImage.HDRImage#wrapt)
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:44](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseImage.ts#L44)
+[src/SceneTree/BaseImage.ts:44](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseImage.ts#L44)
 
 ## Methods
+
+### \_\_decodeData
+
+▸ `Private` **__decodeData**(`entries`): `Promise`<`void`\>
+
+The __decodeData method.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `entries` | `Record`<`string`, `any`\> | The entries value. |
+
+#### Returns
+
+`Promise`<`void`\>
+
+#### Inherited from
+
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[__decodeData](SceneTree_Images_HDRImage.HDRImage#__decodedata)
+
+#### Defined in
+
+[src/SceneTree/Images/HDRImage.ts:50](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/Images/HDRImage.ts#L50)
+
+___
 
 ### addParameter
 
@@ -440,11 +466,11 @@ Adds `Parameter` object to the owner's parameter list.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[addParameter](SceneTree_Images_FileImage.FileImage#addparameter)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[addParameter](SceneTree_Images_HDRImage.HDRImage#addparameter)
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:135](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/ParameterOwner.ts#L135)
+[src/SceneTree/ParameterOwner.ts:135](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ParameterOwner.ts#L135)
 
 ___
 
@@ -470,11 +496,11 @@ This is used to handle migrating parameters to new names.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[addParameterDeprecationMapping](SceneTree_Images_FileImage.FileImage#addparameterdeprecationmapping)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[addParameterDeprecationMapping](SceneTree_Images_HDRImage.HDRImage#addparameterdeprecationmapping)
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:92](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/ParameterOwner.ts#L92)
+[src/SceneTree/ParameterOwner.ts:92](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ParameterOwner.ts#L92)
 
 ___
 
@@ -498,11 +524,11 @@ Clones this base item and returns a new base item.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[clone](SceneTree_Images_FileImage.FileImage#clone)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[clone](SceneTree_Images_HDRImage.HDRImage#clone)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:319](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L319)
+[src/SceneTree/BaseItem.ts:319](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L319)
 
 ___
 
@@ -531,11 +557,11 @@ data from the source object.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[copyFrom](SceneTree_Images_FileImage.FileImage#copyfrom)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[copyFrom](SceneTree_Images_HDRImage.HDRImage#copyfrom)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:335](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L335)
+[src/SceneTree/BaseItem.ts:335](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L335)
 
 ___
 
@@ -557,11 +583,11 @@ Removes metadata for a given key.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[deleteMetadata](SceneTree_Images_FileImage.FileImage#deletemetadata)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[deleteMetadata](SceneTree_Images_HDRImage.HDRImage#deletemetadata)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:263](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L263)
+[src/SceneTree/BaseItem.ts:263](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L263)
 
 ___
 
@@ -584,11 +610,11 @@ Triggers all listener functions in an event.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[emit](SceneTree_Images_FileImage.FileImage#emit)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[emit](SceneTree_Images_HDRImage.HDRImage#emit)
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -611,11 +637,11 @@ Decodes a json object for this type.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[fromJSON](SceneTree_Images_FileImage.FileImage#fromjson)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[fromJSON](SceneTree_Images_HDRImage.HDRImage#fromjson)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:289](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L289)
+[src/SceneTree/BaseItem.ts:289](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L289)
 
 ___
 
@@ -633,32 +659,33 @@ Returns the unmangled name of the class.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[getClassName](SceneTree_Images_FileImage.FileImage#getclassname)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[getClassName](SceneTree_Images_HDRImage.HDRImage#getclassname)
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L33)
 
 ___
 
-### getDOMElement
+### getHDRTint
 
-▸ **getDOMElement**(): `HTMLImageElement`
+▸ `Private` **getHDRTint**(): [`Color`](../../Math/Math_Color.Color)
 
-Returns the HTML DOM element used to load the image file.
-Be
+The getHDRTint method.
 
 #### Returns
 
-`HTMLImageElement`
+[`Color`](../../Math/Math_Color.Color)
+
+- The return value.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[getDOMElement](SceneTree_Images_FileImage.FileImage#getdomelement)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[getHDRTint](SceneTree_Images_HDRImage.HDRImage#gethdrtint)
 
 #### Defined in
 
-[src/SceneTree/Images/FileImage.ts:51](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/Images/FileImage.ts#L51)
+[src/SceneTree/Images/HDRImage.ts:156](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/Images/HDRImage.ts#L156)
 
 ___
 
@@ -678,11 +705,11 @@ Returns the unique id of the object.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[getId](SceneTree_Images_FileImage.FileImage#getid)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[getId](SceneTree_Images_HDRImage.HDRImage#getid)
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -706,11 +733,11 @@ Gets Item's meta-data value by passing the `key` string.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[getMetadata](SceneTree_Images_FileImage.FileImage#getmetadata)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[getMetadata](SceneTree_Images_HDRImage.HDRImage#getmetadata)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:234](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L234)
+[src/SceneTree/BaseItem.ts:234](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L234)
 
 ___
 
@@ -728,11 +755,11 @@ Returns the name of the base item.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[getName](SceneTree_Images_FileImage.FileImage#getname)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[getName](SceneTree_Images_HDRImage.HDRImage#getname)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:76](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L76)
+[src/SceneTree/BaseItem.ts:76](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L76)
 
 ___
 
@@ -750,11 +777,11 @@ Returns the number of parameters current object has.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[getNumParameters](SceneTree_Images_FileImage.FileImage#getnumparameters)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[getNumParameters](SceneTree_Images_HDRImage.HDRImage#getnumparameters)
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:41](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/ParameterOwner.ts#L41)
+[src/SceneTree/ParameterOwner.ts:41](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ParameterOwner.ts#L41)
 
 ___
 
@@ -773,11 +800,11 @@ The item is a child of the current owner.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[getOwner](SceneTree_Images_FileImage.FileImage#getowner)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[getOwner](SceneTree_Images_HDRImage.HDRImage#getowner)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:156](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L156)
+[src/SceneTree/BaseItem.ts:156](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L156)
 
 ___
 
@@ -801,11 +828,11 @@ Returns `Parameter` object using the given name
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[getParameter](SceneTree_Images_FileImage.FileImage#getparameter)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[getParameter](SceneTree_Images_HDRImage.HDRImage#getparameter)
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:102](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/ParameterOwner.ts#L102)
+[src/SceneTree/ParameterOwner.ts:102](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ParameterOwner.ts#L102)
 
 ___
 
@@ -829,11 +856,11 @@ Returns `Parameter` object in a given index
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[getParameterByIndex](SceneTree_Images_FileImage.FileImage#getparameterbyindex)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[getParameterByIndex](SceneTree_Images_HDRImage.HDRImage#getparameterbyindex)
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:70](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/ParameterOwner.ts#L70)
+[src/SceneTree/ParameterOwner.ts:70](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ParameterOwner.ts#L70)
 
 ___
 
@@ -857,11 +884,11 @@ Returns the index of a parameter in parameter list.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[getParameterIndex](SceneTree_Images_FileImage.FileImage#getparameterindex)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[getParameterIndex](SceneTree_Images_HDRImage.HDRImage#getparameterindex)
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:60](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/ParameterOwner.ts#L60)
+[src/SceneTree/ParameterOwner.ts:60](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ParameterOwner.ts#L60)
 
 ___
 
@@ -879,11 +906,11 @@ Returns all the parameters of the object.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[getParameters](SceneTree_Images_FileImage.FileImage#getparameters)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[getParameters](SceneTree_Images_HDRImage.HDRImage#getparameters)
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:50](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/ParameterOwner.ts#L50)
+[src/SceneTree/ParameterOwner.ts:50](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ParameterOwner.ts#L50)
 
 ___
 
@@ -891,7 +918,7 @@ ___
 
 ▸ **getParams**(): [`ImageParams`](../SceneTree_BaseImage.ImageParams)
 
-The getParams method.
+Returns all parameters and class state values.
 
 #### Returns
 
@@ -901,11 +928,11 @@ The getParams method.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[getParams](SceneTree_Images_FileImage.FileImage#getparams)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[getParams](SceneTree_Images_HDRImage.HDRImage#getparams)
 
 #### Defined in
 
-[src/SceneTree/Images/FileImage.ts:122](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/Images/FileImage.ts#L122)
+[src/SceneTree/Images/HDRImage.ts:133](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/Images/HDRImage.ts#L133)
 
 ___
 
@@ -923,11 +950,11 @@ Returns the current path of the item in the tree as an array of names.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[getPath](SceneTree_Images_FileImage.FileImage#getpath)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[getPath](SceneTree_Images_HDRImage.HDRImage#getpath)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:113](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L113)
+[src/SceneTree/BaseItem.ts:113](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L113)
 
 ___
 
@@ -951,11 +978,11 @@ Checks to see if there is metadata for a given key.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[hasMetadata](SceneTree_Images_FileImage.FileImage#hasmetadata)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[hasMetadata](SceneTree_Images_HDRImage.HDRImage#hasmetadata)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:244](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L244)
+[src/SceneTree/BaseItem.ts:244](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L244)
 
 ___
 
@@ -979,11 +1006,11 @@ Validates if the specified parameter exists in the object.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[hasParameter](SceneTree_Images_FileImage.FileImage#hasparameter)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[hasParameter](SceneTree_Images_HDRImage.HDRImage#hasparameter)
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:80](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/ParameterOwner.ts#L80)
+[src/SceneTree/ParameterOwner.ts:80](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ParameterOwner.ts#L80)
 
 ___
 
@@ -1011,11 +1038,11 @@ It replaces the event in the specified index.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[insertParameter](SceneTree_Images_FileImage.FileImage#insertparameter)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[insertParameter](SceneTree_Images_HDRImage.HDRImage#insertparameter)
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:149](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/ParameterOwner.ts#L149)
+[src/SceneTree/ParameterOwner.ts:149](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ParameterOwner.ts#L149)
 
 ___
 
@@ -1033,11 +1060,11 @@ Returns true if loaded.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[isLoaded](SceneTree_Images_FileImage.FileImage#isloaded)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[isLoaded](SceneTree_Images_HDRImage.HDRImage#isloaded)
 
 #### Defined in
 
-[src/SceneTree/BaseImage.ts:65](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseImage.ts#L65)
+[src/SceneTree/BaseImage.ts:65](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseImage.ts#L65)
 
 ___
 
@@ -1055,11 +1082,11 @@ Returns a boolean indicating if this item is selectable.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[isSelectable](SceneTree_Images_FileImage.FileImage#isselectable)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[isSelectable](SceneTree_Images_HDRImage.HDRImage#isselectable)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:185](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L185)
+[src/SceneTree/BaseItem.ts:185](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L185)
 
 ___
 
@@ -1077,41 +1104,61 @@ The isSelected method.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[isSelected](SceneTree_Images_FileImage.FileImage#isselected)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[isSelected](SceneTree_Images_HDRImage.HDRImage#isselected)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:209](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L209)
+[src/SceneTree/BaseItem.ts:209](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L209)
+
+___
+
+### isStream
+
+▸ **isStream**(): `boolean`
+
+Returns if the data is a stream or not.
+
+#### Returns
+
+`boolean`
+
+- The return value.
+
+#### Inherited from
+
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[isStream](SceneTree_Images_HDRImage.HDRImage#isstream)
+
+#### Defined in
+
+[src/SceneTree/Images/HDRImage.ts:124](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/Images/HDRImage.ts#L124)
 
 ___
 
 ### load
 
-▸ **load**(`url`, `format?`): `Promise`<`void`\>
+▸ **load**(`url`): `Promise`<`void`\>
 
-Uses the specify url to load an Image element and adds it to the data library.
-Sets the state of the current object.
+Loads a vlh file given a URL.
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `url` | `string` | `undefined` | The url value. |
-| `format` | `string` | `'RGB'` | The format value. |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `url` | `string` | The URL of the vlh file to load |
 
 #### Returns
 
 `Promise`<`void`\>
 
-Returns a promise that resolves once the image is loaded.
+- Returns a promise that resolves once the initial load is complete
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[load](SceneTree_Images_FileImage.FileImage#load)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[load](SceneTree_Images_HDRImage.HDRImage#load)
 
 #### Defined in
 
-[src/SceneTree/Images/FileImage.ts:63](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/Images/FileImage.ts#L63)
+[src/SceneTree/Images/HDRImage.ts:84](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/Images/HDRImage.ts#L84)
 
 ___
 
@@ -1134,11 +1181,11 @@ Removes a listener function from the specified event, using either the function 
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[off](SceneTree_Images_FileImage.FileImage#off)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[off](SceneTree_Images_HDRImage.HDRImage#off)
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -1163,11 +1210,11 @@ Adds a listener function for a given event name.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[on](SceneTree_Images_FileImage.FileImage#on)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[on](SceneTree_Images_HDRImage.HDRImage#on)
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -1201,11 +1248,11 @@ asset.once('loaded', () => {
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[once](SceneTree_Images_FileImage.FileImage#once)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[once](SceneTree_Images_HDRImage.HDRImage#once)
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -1228,11 +1275,11 @@ to perform general updates (see GLPass or BaseItem).
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[parameterValueChanged](SceneTree_Images_FileImage.FileImage#parametervaluechanged)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[parameterValueChanged](SceneTree_Images_HDRImage.HDRImage#parametervaluechanged)
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:124](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/ParameterOwner.ts#L124)
+[src/SceneTree/ParameterOwner.ts:124](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ParameterOwner.ts#L124)
 
 ___
 
@@ -1240,14 +1287,14 @@ ___
 
 ▸ **readBinary**(`reader`, `context`): `void`
 
-The readBinary method.
+Sets state of current Image using a binary reader object, and adds it to the resource loader.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `reader` | [`BinReader`](../SceneTree_BinReader.BinReader) | The reader param. |
-| `context` | [`AssetLoadContext`](../SceneTree_AssetLoadContext.AssetLoadContext) | The context param. |
+| `reader` | [`BinReader`](../SceneTree_BinReader.BinReader) | The reader value. |
+| `context` | `Record`<`string`, `any`\> | The context value. |
 
 #### Returns
 
@@ -1255,11 +1302,11 @@ The readBinary method.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[readBinary](SceneTree_Images_FileImage.FileImage#readbinary)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[readBinary](SceneTree_Images_HDRImage.HDRImage#readbinary)
 
 #### Defined in
 
-[src/SceneTree/Images/FileImage.ts:138](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/Images/FileImage.ts#L138)
+[src/SceneTree/Images/HDRImage.ts:169](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/Images/HDRImage.ts#L169)
 
 ___
 
@@ -1282,11 +1329,11 @@ remove listener by ID returned from #on
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[removeListenerById](SceneTree_Images_FileImage.FileImage#removelistenerbyid)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[removeListenerById](SceneTree_Images_HDRImage.HDRImage#removelistenerbyid)
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -1310,11 +1357,11 @@ Removes `Parameter` from owner, by using parameter's name.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[removeParameter](SceneTree_Images_FileImage.FileImage#removeparameter)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[removeParameter](SceneTree_Images_HDRImage.HDRImage#removeparameter)
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:176](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/ParameterOwner.ts#L176)
+[src/SceneTree/ParameterOwner.ts:176](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ParameterOwner.ts#L176)
 
 ___
 
@@ -1338,11 +1385,11 @@ Replaces old `Parameter` by passing a new one with the same name.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[replaceParameter](SceneTree_Images_FileImage.FileImage#replaceparameter)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[replaceParameter](SceneTree_Images_HDRImage.HDRImage#replaceparameter)
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:198](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/ParameterOwner.ts#L198)
+[src/SceneTree/ParameterOwner.ts:198](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ParameterOwner.ts#L198)
 
 ___
 
@@ -1369,32 +1416,25 @@ end of the path.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[resolvePath](SceneTree_Images_FileImage.FileImage#resolvepath)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[resolvePath](SceneTree_Images_HDRImage.HDRImage#resolvepath)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:128](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L128)
+[src/SceneTree/BaseItem.ts:128](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L128)
 
 ___
 
-### setCrossOrigin
+### setHDRTint
 
-▸ **setCrossOrigin**(`crossOrigin`): `void`
+▸ `Private` **setHDRTint**(`hdrTint`): `void`
 
-Defines how to handle cross origin request.
-
-**Possible values:**
-* **anonymous** - CORS requests for this element will have the credentials flag set to 'same-origin'.
-* **use-credentials** - CORS requests for this element will have the credentials flag set to 'include'.
-* **""** - Setting the attribute name to an empty value, like crossorigin or crossorigin="", is the same as anonymous.
-
-**`default`** anonymous
+The setHDRTint method.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `crossOrigin` | `string` | The crossOrigin value. |
+| `hdrTint` | [`Color`](../../Math/Math_Color.Color) | The hdrTint value. |
 
 #### Returns
 
@@ -1402,38 +1442,11 @@ Defines how to handle cross origin request.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[setCrossOrigin](SceneTree_Images_FileImage.FileImage#setcrossorigin)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[setHDRTint](SceneTree_Images_HDRImage.HDRImage#sethdrtint)
 
 #### Defined in
 
-[src/SceneTree/Images/FileImage.ts:42](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/Images/FileImage.ts#L42)
-
-___
-
-### setImageURL
-
-▸ **setImageURL**(`url`, `format?`): `void`
-
-Loads in Image file using the given URL
-
-#### Parameters
-
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `url` | `string` | `undefined` | The url value. |
-| `format` | `string` | `'RGB'` | The format value. Can be 'RGB' or 'RGBA' for files that contain an alpha channel. This will cause objects to be drawn using the Transparent pass. |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[FileImage](SceneTree_Images_FileImage.FileImage).[setImageURL](SceneTree_Images_FileImage.FileImage#setimageurl)
-
-#### Defined in
-
-[src/SceneTree/Images/FileImage.ts:114](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/Images/FileImage.ts#L114)
+[src/SceneTree/Images/HDRImage.ts:147](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/Images/HDRImage.ts#L147)
 
 ___
 
@@ -1456,11 +1469,11 @@ Assigns metadata to a given key.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[setMetadata](SceneTree_Images_FileImage.FileImage#setmetadata)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[setMetadata](SceneTree_Images_HDRImage.HDRImage#setmetadata)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:254](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L254)
+[src/SceneTree/BaseItem.ts:254](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L254)
 
 ___
 
@@ -1484,11 +1497,11 @@ Sets the name of the base item(Updates path).
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[setName](SceneTree_Images_FileImage.FileImage#setname)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[setName](SceneTree_Images_HDRImage.HDRImage#setname)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:86](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L86)
+[src/SceneTree/BaseItem.ts:86](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L86)
 
 ___
 
@@ -1510,11 +1523,11 @@ The setOwner method assigns a new owner to the item.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[setOwner](SceneTree_Images_FileImage.FileImage#setowner)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[setOwner](SceneTree_Images_HDRImage.HDRImage#setowner)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:166](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L166)
+[src/SceneTree/BaseItem.ts:166](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L166)
 
 ___
 
@@ -1538,11 +1551,11 @@ Modifies the selectability of this item.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[setSelectable](SceneTree_Images_FileImage.FileImage#setselectable)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[setSelectable](SceneTree_Images_HDRImage.HDRImage#setselectable)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:195](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L195)
+[src/SceneTree/BaseItem.ts:195](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L195)
 
 ___
 
@@ -1566,11 +1579,11 @@ Changes the current state of the selection of this item.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[setSelected](SceneTree_Images_FileImage.FileImage#setselected)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[setSelected](SceneTree_Images_HDRImage.HDRImage#setselected)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:219](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L219)
+[src/SceneTree/BaseItem.ts:219](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L219)
 
 ___
 
@@ -1594,11 +1607,11 @@ Encodes the current object as a json object.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[toJSON](SceneTree_Images_FileImage.FileImage#tojson)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[toJSON](SceneTree_Images_HDRImage.HDRImage#tojson)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:276](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L276)
+[src/SceneTree/BaseItem.ts:276](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L276)
 
 ___
 
@@ -1622,11 +1635,11 @@ Converts object's JSON value and converts it to a string.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[toString](SceneTree_Images_FileImage.FileImage#tostring)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[toString](SceneTree_Images_HDRImage.HDRImage#tostring)
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:303](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/ParameterOwner.ts#L303)
+[src/SceneTree/ParameterOwner.ts:303](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ParameterOwner.ts#L303)
 
 ___
 
@@ -1643,11 +1656,11 @@ recomputes and caches the path of this item.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[updatePath](SceneTree_Images_FileImage.FileImage#updatepath)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[updatePath](SceneTree_Images_HDRImage.HDRImage#updatepath)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:101](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L101)
+[src/SceneTree/BaseItem.ts:101](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L101)
 
 ___
 
@@ -1666,9 +1679,9 @@ This method is used in debugging memory consumption.
 
 #### Inherited from
 
-[FileImage](SceneTree_Images_FileImage.FileImage).[getNumBaseItems](SceneTree_Images_FileImage.FileImage#getnumbaseitems)
+[HDRImage](SceneTree_Images_HDRImage.HDRImage).[getNumBaseItems](SceneTree_Images_HDRImage.HDRImage#getnumbaseitems)
 
 #### Defined in
 
-[src/SceneTree/BaseItem.ts:64](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/BaseItem.ts#L64)
+[src/SceneTree/BaseItem.ts:64](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/BaseItem.ts#L64)
 

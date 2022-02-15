@@ -61,6 +61,8 @@ renderer.getXRViewport().then((xrvp) => {
 
   ↳ **`XRController`**
 
+  ↳↳ [`VRController`](Renderer_VR_XRController.VRController)
+
 ## Constructors
 
 ### constructor
@@ -83,7 +85,7 @@ Create a VR controller.
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:102](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L102)
+[src/Renderer/VR/XRController.ts:102](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L102)
 
 ## Properties
 
@@ -97,7 +99,7 @@ Create a VR controller.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -107,7 +109,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:70](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L70)
+[src/Renderer/VR/XRController.ts:70](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L70)
 
 ___
 
@@ -117,7 +119,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:94](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L94)
+[src/Renderer/VR/XRController.ts:94](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L94)
 
 ___
 
@@ -127,7 +129,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:89](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L89)
+[src/Renderer/VR/XRController.ts:89](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L89)
 
 ___
 
@@ -137,7 +139,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:69](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L69)
+[src/Renderer/VR/XRController.ts:69](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L69)
 
 ___
 
@@ -147,7 +149,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:72](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L72)
+[src/Renderer/VR/XRController.ts:72](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L72)
 
 ___
 
@@ -157,7 +159,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:91](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L91)
+[src/Renderer/VR/XRController.ts:91](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L91)
 
 ___
 
@@ -171,7 +173,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -181,7 +183,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:82](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L82)
+[src/Renderer/VR/XRController.ts:82](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L82)
 
 ___
 
@@ -191,7 +193,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:90](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L90)
+[src/Renderer/VR/XRController.ts:90](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L90)
 
 ___
 
@@ -201,7 +203,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:81](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L81)
+[src/Renderer/VR/XRController.ts:81](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L81)
 
 ___
 
@@ -211,7 +213,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:73](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L73)
+[src/Renderer/VR/XRController.ts:73](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L73)
 
 ___
 
@@ -221,7 +223,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:86](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L86)
+[src/Renderer/VR/XRController.ts:86](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L86)
 
 ___
 
@@ -231,7 +233,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:79](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L79)
+[src/Renderer/VR/XRController.ts:79](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L79)
 
 ___
 
@@ -241,7 +243,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:84](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L84)
+[src/Renderer/VR/XRController.ts:84](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L84)
 
 ___
 
@@ -251,7 +253,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:80](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L80)
+[src/Renderer/VR/XRController.ts:80](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L80)
 
 ___
 
@@ -261,7 +263,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:85](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L85)
+[src/Renderer/VR/XRController.ts:85](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L85)
 
 ___
 
@@ -271,7 +273,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:78](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L78)
+[src/Renderer/VR/XRController.ts:78](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L78)
 
 ___
 
@@ -281,7 +283,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:87](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L87)
+[src/Renderer/VR/XRController.ts:87](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L87)
 
 ___
 
@@ -291,7 +293,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:75](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L75)
+[src/Renderer/VR/XRController.ts:75](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L75)
 
 ___
 
@@ -301,7 +303,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:88](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L88)
+[src/Renderer/VR/XRController.ts:88](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L88)
 
 ___
 
@@ -311,7 +313,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:74](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L74)
+[src/Renderer/VR/XRController.ts:74](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L74)
 
 ___
 
@@ -321,7 +323,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:83](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L83)
+[src/Renderer/VR/XRController.ts:83](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L83)
 
 ___
 
@@ -331,7 +333,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:71](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L71)
+[src/Renderer/VR/XRController.ts:71](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L71)
 
 ## Methods
 
@@ -358,7 +360,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -380,7 +382,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -398,7 +400,7 @@ The getControllerStageLocalXfo method.
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:282](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L282)
+[src/Renderer/VR/XRController.ts:282](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L282)
 
 ___
 
@@ -416,7 +418,7 @@ The getControllerTipStageLocalXfo method.
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:290](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L290)
+[src/Renderer/VR/XRController.ts:290](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L290)
 
 ___
 
@@ -434,7 +436,7 @@ The getGeomItemAtTip method.
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:382](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L382)
+[src/Renderer/VR/XRController.ts:382](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L382)
 
 ___
 
@@ -452,7 +454,7 @@ The getHandedness method.
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:226](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L226)
+[src/Renderer/VR/XRController.ts:226](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L226)
 
 ___
 
@@ -474,7 +476,7 @@ The getId method.
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:234](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L234)
+[src/Renderer/VR/XRController.ts:234](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L234)
 
 ___
 
@@ -492,7 +494,7 @@ The getTipItem method.
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:250](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L250)
+[src/Renderer/VR/XRController.ts:250](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L250)
 
 ___
 
@@ -510,7 +512,7 @@ The getTipXfo method.
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:258](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L258)
+[src/Renderer/VR/XRController.ts:258](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L258)
 
 ___
 
@@ -528,7 +530,7 @@ The getTouchPadValue method.
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:266](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L266)
+[src/Renderer/VR/XRController.ts:266](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L266)
 
 ___
 
@@ -546,7 +548,7 @@ The getTreeItem method.
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:242](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L242)
+[src/Renderer/VR/XRController.ts:242](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L242)
 
 ___
 
@@ -564,7 +566,7 @@ The isButtonPressed method.
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:274](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L274)
+[src/Renderer/VR/XRController.ts:274](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L274)
 
 ___
 
@@ -591,7 +593,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -620,7 +622,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -658,7 +660,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -685,7 +687,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -709,5 +711,5 @@ The updatePose method.
 
 #### Defined in
 
-[src/Renderer/VR/XRController.ts:302](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Renderer/VR/XRController.ts#L302)
+[src/Renderer/VR/XRController.ts:302](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/VR/XRController.ts#L302)
 

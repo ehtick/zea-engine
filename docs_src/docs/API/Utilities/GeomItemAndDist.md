@@ -9,13 +9,23 @@ custom_edit_url: null
 
 ## Properties
 
+### componentId
+
+• **componentId**: `number`
+
+#### Defined in
+
+[src/Utilities/IntersectionData.ts:6](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/IntersectionData.ts#L6)
+
+___
+
 ### dist
 
 • **dist**: `number`
 
 #### Defined in
 
-[src/Utilities/IntersectionData.ts:6](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/IntersectionData.ts#L6)
+[src/Utilities/IntersectionData.ts:7](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/IntersectionData.ts#L7)
 
 ___
 
@@ -25,5 +35,5 @@ ___
 
 #### Defined in
 
-[src/Utilities/IntersectionData.ts:5](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/IntersectionData.ts#L5)
+[src/Utilities/IntersectionData.ts:5](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/IntersectionData.ts#L5)
 

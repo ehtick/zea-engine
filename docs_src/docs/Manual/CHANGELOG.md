@@ -5,6 +5,35 @@ sidebar_position: 5
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.2.0](https://github.com/ZeaInc/zea-engine/compare/v4.1.1...v4.2.0) (2022-02-15)
+
+
+### Features
+
+* Added getHighlightName to TreeItem to return the name of the current highlight. ([94563c8](https://github.com/ZeaInc/zea-engine/commit/94563c8f479a864f18fa1b72b6c6eb69686a642e))
+* Compressed geometries version 3.9.1 and above now store quantized vertices using 16bits per channel for positions and textureCoords. This improves compression quality while also reducing zcad file size. ([fbe8c02](https://github.com/ZeaInc/zea-engine/commit/fbe8c02ffabd826e0583f91f4b05047d05a263c1))
+* Duplicate registration of classes now fails on the second attempt, instead of overwriting previous classes. ([3f0e5cc](https://github.com/ZeaInc/zea-engine/commit/3f0e5ccb9e320cd6d4527a8c7d22ccbc31c48311))
+* Implemented Box2Parameter and Box3Parameter to store custom data loaded from zcad. ([6422103](https://github.com/ZeaInc/zea-engine/commit/64221034d87a9870bd9e3c134cba7ad6d388c2df))
+* Implemented CompoundGeom and GLGeomItemSetMultiDrawCompoundGeom to support geometries featuring multiple geom geoms of different primitive types. ([21f2370](https://github.com/ZeaInc/zea-engine/commit/21f237052961eb9a2b60277394f6b9718d3cd3ac))
+* ResourceLoader now caps concurrent resource requests at 2000, thereby addressing an issue where the browser generates errors if too many resources are created at the same time. ([e22dbd5](https://github.com/ZeaInc/zea-engine/commit/e22dbd580bf7d9acfae7e2bd4cb765bf99e96809))
+* The Renderer now tracks the number of visible triangles, lines and points, giving useful feedback to the developer. ([9bf084c](https://github.com/ZeaInc/zea-engine/commit/9bf084c8cd9387be1f79a7bae14e14c52cbb93ce))
+
+
+### Bug Fixes
+
+* [#581](https://github.com/ZeaInc/zea-engine/issues/581) - When an InstanceItem clones, it must also cone the reference item when it asynchronously clones. ([b77ee0b](https://github.com/ZeaInc/zea-engine/commit/b77ee0b78d670f870858f21b031da96692490ac7))
+* A regression in bounding box calculation meant instanced geometries could have the incorrect bounding box. ([f648494](https://github.com/ZeaInc/zea-engine/commit/f6484941f774266ff6d39c984d142e7628de5dab))
+* A regression in the Math library was fixed. Inverting Xfo values that contained non-uniform scale values would not correctly invert the scale component. ([a972289](https://github.com/ZeaInc/zea-engine/commit/a9722896c7a52f6fd1fe266a33a08b9559a60518))
+* An exception was thrown in the culling worker if an item was removed from the renderer after being considered in the view. ([71edd57](https://github.com/ZeaInc/zea-engine/commit/71edd57b9bad9c585b73f68db06777292abf58c1))
+* Blending is now disabled while debugging the GeomDataBuffer ([f204789](https://github.com/ZeaInc/zea-engine/commit/f204789686b8939f4719f007de7f70a17f6bfc46))
+* Cleaned up bug causing bounding box to always be considered dirty. ([07176a6](https://github.com/ZeaInc/zea-engine/commit/07176a6e700573e67b63bc95eaf21832708b8fcc))
+* Correctly implemented 'clone' option in BinReader. ([6514343](https://github.com/ZeaInc/zea-engine/commit/6514343c2d424d6813d8534768f40a5cbf55ca0c))
+* Fixed WebGL error when occlusion culling occurs before the first GeomData rendering. ([61e14f8](https://github.com/ZeaInc/zea-engine/commit/61e14f8104afb3a94e2c5b733961afed9ba6b8e3))
+* items being un-culled before being drawn for the need to be added to the dirtyGeomItems so the buffers get populated. ([367c9f6](https://github.com/ZeaInc/zea-engine/commit/367c9f69816b69bd646da281cf154ac495df4a08))
+* Persisted Materials now can be reloaded constructing the concrete material class. e.g. SimpleSurfaceMaterial instead of just Material ([9382989](https://github.com/ZeaInc/zea-engine/commit/93829895fbae0dc8f0e15ef67d01a6b8a3518b2d))
+* Quat.slerp threw an exception if the 2 quats were identical or very similar. Slerp now assumes that the angle is always 0..PI/2 ([c169837](https://github.com/ZeaInc/zea-engine/commit/c16983722a0d91fe82cdc9e2d2630362acdb22c9))
+* Transparent geometries, including lines, were not correctly un-culled when the camera moved. Meaning that once a line or transparent geometry went offscreen, it would never be rendered again. ([4f45024](https://github.com/ZeaInc/zea-engine/commit/4f4502465d49685be97cab48d854e721976bccdc))
+
 ### [4.1.1](https://github.com/ZeaInc/zea-engine/compare/v4.1.0...v4.1.1) (2022-02-03)
 
 

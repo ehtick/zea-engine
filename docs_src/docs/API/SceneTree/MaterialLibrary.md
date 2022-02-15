@@ -39,7 +39,7 @@ Create a material library.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:26](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L26)
+[src/SceneTree/MaterialLibrary.ts:27](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L27)
 
 ## Properties
 
@@ -53,7 +53,7 @@ Create a material library.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -63,17 +63,27 @@ ___
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:19](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L19)
+[src/SceneTree/MaterialLibrary.ts:19](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L19)
 
 ___
 
 ### \_\_materials
 
-• `Protected` **\_\_materials**: `Record`<`string`, [`Material`](SceneTree_Material.Material)\> = `{}`
+• `Protected` **\_\_materials**: [`Material`](SceneTree_Material.Material)[] = `[]`
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:20](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L20)
+[src/SceneTree/MaterialLibrary.ts:20](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L20)
+
+___
+
+### \_\_materialsMap
+
+• `Protected` **\_\_materialsMap**: `Record`<`string`, `number`\> = `{}`
+
+#### Defined in
+
+[src/SceneTree/MaterialLibrary.ts:21](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L21)
 
 ___
 
@@ -83,7 +93,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:18](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L18)
+[src/SceneTree/MaterialLibrary.ts:18](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L18)
 
 ___
 
@@ -97,7 +107,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -107,7 +117,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:17](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L17)
+[src/SceneTree/MaterialLibrary.ts:17](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L17)
 
 ___
 
@@ -117,7 +127,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:21](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L21)
+[src/SceneTree/MaterialLibrary.ts:22](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L22)
 
 ## Methods
 
@@ -139,7 +149,7 @@ The addImage method.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:140](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L140)
+[src/SceneTree/MaterialLibrary.ts:141](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L141)
 
 ___
 
@@ -161,7 +171,7 @@ Add a material.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:108](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L108)
+[src/SceneTree/MaterialLibrary.ts:108](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L108)
 
 ___
 
@@ -177,7 +187,7 @@ The clear method.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:38](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L38)
+[src/SceneTree/MaterialLibrary.ts:40](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L40)
 
 ___
 
@@ -204,7 +214,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -227,7 +237,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:213](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L213)
+[src/SceneTree/MaterialLibrary.ts:214](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L214)
 
 ___
 
@@ -249,7 +259,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -273,7 +283,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -298,7 +308,7 @@ The getImage method.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:151](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L151)
+[src/SceneTree/MaterialLibrary.ts:152](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L152)
 
 ___
 
@@ -316,7 +326,7 @@ The getImageNames method.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:163](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L163)
+[src/SceneTree/MaterialLibrary.ts:164](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L164)
 
 ___
 
@@ -341,7 +351,7 @@ The getMaterial method.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:119](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L119)
+[src/SceneTree/MaterialLibrary.ts:120](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L120)
 
 ___
 
@@ -359,7 +369,7 @@ The getMaterialNames method.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:86](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L86)
+[src/SceneTree/MaterialLibrary.ts:87](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L87)
 
 ___
 
@@ -377,7 +387,7 @@ The getMaterials method.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:78](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L78)
+[src/SceneTree/MaterialLibrary.ts:79](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L79)
 
 ___
 
@@ -395,7 +405,7 @@ The getNumMaterials method.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:70](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L70)
+[src/SceneTree/MaterialLibrary.ts:71](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L71)
 
 ___
 
@@ -417,7 +427,7 @@ The getPath method.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:49](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L49)
+[src/SceneTree/MaterialLibrary.ts:50](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L50)
 
 ___
 
@@ -441,7 +451,7 @@ The hasImage method.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:132](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L132)
+[src/SceneTree/MaterialLibrary.ts:133](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L133)
 
 ___
 
@@ -465,7 +475,7 @@ The hasMaterial method.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:100](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L100)
+[src/SceneTree/MaterialLibrary.ts:100](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L100)
 
 ___
 
@@ -487,7 +497,7 @@ The load method.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:179](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L179)
+[src/SceneTree/MaterialLibrary.ts:180](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L180)
 
 ___
 
@@ -514,7 +524,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -543,7 +553,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -581,7 +591,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -604,7 +614,7 @@ The readBinary method.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:234](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L234)
+[src/SceneTree/MaterialLibrary.ts:235](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L235)
 
 ___
 
@@ -631,7 +641,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -662,7 +672,7 @@ end of the path.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:62](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L62)
+[src/SceneTree/MaterialLibrary.ts:63](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L63)
 
 ___
 
@@ -686,7 +696,7 @@ The toJSON method encodes the current object as a json object.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:202](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L202)
+[src/SceneTree/MaterialLibrary.ts:203](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L203)
 
 ___
 
@@ -704,5 +714,5 @@ The toString method.
 
 #### Defined in
 
-[src/SceneTree/MaterialLibrary.ts:292](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/SceneTree/MaterialLibrary.ts#L292)
+[src/SceneTree/MaterialLibrary.ts:298](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/MaterialLibrary.ts#L298)
 

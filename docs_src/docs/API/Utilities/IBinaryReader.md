@@ -10,7 +10,8 @@ custom_edit_url: null
 ## Implemented by
 
 - [`BooleanParameter`](../SceneTree/Parameters/SceneTree_Parameters_BooleanParameter.BooleanParameter)
-- [`BoundingBoxParameter`](../SceneTree/Parameters/SceneTree_Parameters_BoundingBoxParameter.BoundingBoxParameter)
+- [`Box2Parameter`](../SceneTree/Parameters/SceneTree_Parameters_Box2Parameter.Box2Parameter)
+- [`Box3Parameter`](../SceneTree/Parameters/SceneTree_Parameters_Box3Parameter.Box3Parameter)
 - [`ColorParameter`](../SceneTree/Parameters/SceneTree_Parameters_ColorParameter.ColorParameter)
 - [`Mat3Parameter`](../SceneTree/Parameters/SceneTree_Parameters_Mat3Parameter.Mat3Parameter)
 - [`Mat4Parameter`](../SceneTree/Parameters/SceneTree_Parameters_Mat4Parameter.Mat4Parameter)
@@ -45,5 +46,5 @@ The readBinary method.
 
 #### Defined in
 
-[src/Utilities/IBinaryReader.ts:11](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Utilities/IBinaryReader.ts#L11)
+[src/Utilities/IBinaryReader.ts:11](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/IBinaryReader.ts#L11)
 

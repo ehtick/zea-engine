@@ -31,7 +31,7 @@ p1 is a Vec2 with [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-
 
 #### Defined in
 
-[src/Math/Box2.ts:22](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Math/Box2.ts#L22)
+[src/Math/Box2.ts:22](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Math/Box2.ts#L22)
 
 ## Properties
 
@@ -41,7 +41,7 @@ p1 is a Vec2 with [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-
 
 #### Defined in
 
-[src/Math/Box2.ts:8](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Math/Box2.ts#L8)
+[src/Math/Box2.ts:8](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Math/Box2.ts#L8)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[src/Math/Box2.ts:9](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Math/Box2.ts#L9)
+[src/Math/Box2.ts:9](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Math/Box2.ts#L9)
 
 ## Methods
 
@@ -73,7 +73,7 @@ Expands the Box2 to contain the new point.
 
 #### Defined in
 
-[src/Math/Box2.ts:78](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Math/Box2.ts#L78)
+[src/Math/Box2.ts:78](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Math/Box2.ts#L78)
 
 ___
 
@@ -91,7 +91,25 @@ Returns the center point of a Box2.
 
 #### Defined in
 
-[src/Math/Box2.ts:109](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Math/Box2.ts#L109)
+[src/Math/Box2.ts:109](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Math/Box2.ts#L109)
+
+___
+
+### clone
+
+▸ **clone**(): [`Box2`](Math_Box2.Box2)
+
+Clones this Vec2 and returns a new Vec2.
+
+#### Returns
+
+[`Box2`](Math_Box2.Box2)
+
+- Returns a new Vec2.
+
+#### Defined in
+
+[src/Math/Box2.ts:121](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Math/Box2.ts#L121)
 
 ___
 
@@ -109,7 +127,7 @@ Returns the size of a Box2 - the same as size().
 
 #### Defined in
 
-[src/Math/Box2.ts:100](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Math/Box2.ts#L100)
+[src/Math/Box2.ts:100](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Math/Box2.ts#L100)
 
 ___
 
@@ -127,7 +145,7 @@ Returns `true` if the box has been expanded to contain a point.
 
 #### Defined in
 
-[src/Math/Box2.ts:64](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Math/Box2.ts#L64)
+[src/Math/Box2.ts:64](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Math/Box2.ts#L64)
 
 ___
 
@@ -146,7 +164,7 @@ and [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/Ja
 
 #### Defined in
 
-[src/Math/Box2.ts:52](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Math/Box2.ts#L52)
+[src/Math/Box2.ts:52](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Math/Box2.ts#L52)
 
 ___
 
@@ -169,7 +187,7 @@ Sets both Vec2 points
 
 #### Defined in
 
-[src/Math/Box2.ts:41](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Math/Box2.ts#L41)
+[src/Math/Box2.ts:41](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Math/Box2.ts#L41)
 
 ___
 
@@ -187,7 +205,7 @@ Returns the length of the diagonal of the box.
 
 #### Defined in
 
-[src/Math/Box2.ts:91](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Math/Box2.ts#L91)
+[src/Math/Box2.ts:91](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Math/Box2.ts#L91)
 
 ___
 
@@ -205,7 +223,7 @@ Encodes `Box2` Class as a JSON object for persistence.
 
 #### Defined in
 
-[src/Math/Box2.ts:124](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Math/Box2.ts#L124)
+[src/Math/Box2.ts:133](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Math/Box2.ts#L133)
 
 ___
 
@@ -223,5 +241,5 @@ Calls `toJSON` method and stringifies it.
 
 #### Defined in
 
-[src/Math/Box2.ts:136](https://github.com/ZeaInc/zea-engine/blob/61f5bb376/src/Math/Box2.ts#L136)
+[src/Math/Box2.ts:145](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Math/Box2.ts#L145)
 
