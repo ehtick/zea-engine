@@ -23,6 +23,12 @@ varying vec3 v_worldPos;
   out vec4 fragColor;
 #endif
 
+
+// Now that we render multiple types of geometry from a single shader
+// we need to know what kind of geometry it is...
+uniform int geomType;
+import 'geomType.glsl'
+
 #if defined(DRAW_COLOR)
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
@@ -31,11 +37,6 @@ uniform float exposure;
 
 uniform mat4 cameraMatrix;
 uniform int isOrthographic;
-
-
-// Now that we render multiple types of geometry from a single shader
-// we need to know what kind of geometry it is...
-uniform int geomType;
 
 #ifndef ENABLE_MULTI_DRAW
 
@@ -142,17 +143,14 @@ void main(void) {
         return;
     }
   }
-  
-#if defined(DRAW_COLOR)
-#ifdef ENABLE_MULTI_DRAW
   vec2 materialCoords = v_geomItemData.zw;
   if (v_drawItemIds.z > 0.5) {
     materialCoords.x = v_drawItemIds.z;
   }
-#endif
+  
+#if defined(DRAW_COLOR)
 
-
-  if (geomType == 0) { // start 'TRIANGLES'
+  if (geomType == TRIANGLES) { // start 'TRIANGLES'
 
   // Cutaways
   if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
@@ -208,6 +206,7 @@ void main(void) {
 
   material.emission         = matValue2.r;
   material.opacity          = matValue2.g * matValue0.a;
+  if (material.opacity < 0.001) discard;
 
 #else // ENABLE_MULTI_DRAW
 
@@ -231,6 +230,8 @@ void main(void) {
   material.ambientOcclusion = getLuminanceParamValue(AmbientOcclusion, AmbientOcclusionTex, AmbientOcclusionTexType, texCoord);
   material.baseColor     = baseColor.rgb;
   
+  material.opacity       = Opacity * baseColor.a;
+  if (material.opacity < 0.001) discard;
 
 #ifdef ENABLE_PBR
 
@@ -249,7 +250,6 @@ void main(void) {
 #endif // ENABLE_PBR
   material.emission         = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexType, texCoord);
 #endif // ENABLE_TEXTURES
-  material.opacity       = Opacity * baseColor.a;
 
 #ifdef ENABLE_TEXTURES
 #ifdef ENABLE_PBR
@@ -270,20 +270,30 @@ void main(void) {
   // fragColor = vec4(vec3(material.ambientOcclusion), 1.0);
 
   } // end 'TRIANGLES'
-  else if (geomType == 1) { // start 'LINES'
+  else if (geomType == LINES) { // start 'LINES'
 #ifdef ENABLE_MULTI_DRAW
     vec4 edgeColor      = getMaterialValue(materialCoords, 3);
+    vec4 matValue2      = getMaterialValue(materialCoords, 2);
+    float opacity       = matValue2.g;
 #else 
     vec4 edgeColor      = EdgeColor;
+    vec4 opacity        = Opacity;
 #endif // ENABLE_MULTI_DRAW
+    edgeColor.a = opacity;
+    if (edgeColor.a < 0.001) discard;
     fragColor = edgeColor;
   } // end 'LINES'
-  else if (geomType == 2) { // start 'POINTS'
+  else if (geomType == POINTS) { // start 'POINTS'
 #ifdef ENABLE_MULTI_DRAW
     vec4 pointColor      = getMaterialValue(materialCoords, 4);
+    vec4 matValue2      = getMaterialValue(materialCoords, 2);
+    float opacity       = matValue2.g;
 #else 
     vec4 pointColor      = PointColor;
+    vec4 opacity        = Opacity;
 #endif // ENABLE_MULTI_DRAW
+    pointColor.a = opacity;
+    if (pointColor.a < 0.001) discard;
     fragColor = pointColor;
   }  // end 'POINTS'
   
@@ -312,6 +322,42 @@ void main(void) {
       return;
     }
   }
+
+
+  // We can make geoms invisible to hide them. 
+  // Avoid drawig GeomData for geoms that are completely transparent.
+  if (geomType == TRIANGLES) { // start 'TRIANGLES'
+    vec4 matValue0      = getMaterialValue(materialCoords, 0);
+    vec4 matValue2      = getMaterialValue(materialCoords, 2);
+    float opacity          = matValue2.g * matValue0.a;
+    if (opacity < 0.001) {
+      discard;
+      return;
+    }
+  } // end 'TRIANGLES'
+  else if (geomType == LINES) { // start 'LINES'
+#ifdef ENABLE_MULTI_DRAW
+    vec4 edgeColor      = getMaterialValue(materialCoords, 3);
+#else 
+    vec4 edgeColor      = EdgeColor;
+#endif // ENABLE_MULTI_DRAW
+    if (edgeColor.a < 0.001) {
+      discard;
+      return;
+    }
+  } // end 'LINES'
+  else if (geomType == POINTS) { // start 'POINTS'
+#ifdef ENABLE_MULTI_DRAW
+    vec4 pointColor      = getMaterialValue(materialCoords, 4);
+#else 
+    vec4 pointColor      = PointColor;
+#endif // ENABLE_MULTI_DRAW
+    if (pointColor.a < 0.001) {
+      discard;
+      return;
+    }
+  }  // end 'POINTS'
+
   
   fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_drawItemIds.x, v_drawItemIds.y, isOrthographic);
    

@@ -9,6 +9,7 @@ import cutaways from './cutaways.glsl'
 import debugColors from './debugColors.glsl'
 import drawItemId from './drawItemId.glsl' //
 import geomItemId from './geomItemId.glsl'
+import geomType from './geomType.glsl'
 import drawItemTexture from './drawItemTexture.glsl'
 import envmapDualfisheye from './envmap-dualfisheye.glsl'
 import envmapEquirect from './envmap-equirect.glsl'
@@ -42,6 +43,7 @@ shaderLibrary.setShaderModule('cutaways.glsl', cutaways)
 shaderLibrary.setShaderModule('debugColors.glsl', debugColors)
 shaderLibrary.setShaderModule('drawItemId.glsl', drawItemId) // Needed for backwards compatiblity with older versions of ux.
 shaderLibrary.setShaderModule('geomItemId.glsl', geomItemId)
+shaderLibrary.setShaderModule('geomType.glsl', geomType)
 shaderLibrary.setShaderModule('drawItemTexture.glsl', drawItemTexture)
 shaderLibrary.setShaderModule('envmap-dualfisheye.glsl', envmapDualfisheye)
 shaderLibrary.setShaderModule('envmap-equirect.glsl', envmapEquirect)

@@ -46,8 +46,29 @@
       }
       #bottomPanel {
         height: 30px;
-
       }
+
+      
+    .rendermode-buttons {
+     left: 150px;
+      top: 2px; 
+      display: block;
+      position: fixed;
+    }
+
+    .rendermode-button {
+      top: 10px;
+      font-family: 'arial';
+      background-color: #f9ce03; /* Green */
+      border: none;
+      color: black;
+      padding: 4px 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      user-select: none;
+    }
     </style>
     <script src="../dist/index.umd.js"></script>
     <script src="./src/zea-fps-display.js" type="module"></script>
@@ -58,6 +79,10 @@
     <div class="h-full flex flex-col">
       <header class="p-2">
         <img src="./data/logo-zea.svg" id="logo"></img>
+        <div class="rendermode-buttons">
+          <button class="rendermode-button" id="rendermode-Wireframe">Wireframe</button>
+          <button class="rendermode-button" id="rendermode-Flat">Flat</button>
+        </div>
       </header>
       <main class="flex flex-col flex-1">
         <div class="flex-1" id="topPanel">
@@ -110,6 +135,54 @@
     <script type="module">
 
 import '../../node_modules/@zeainc/zea-ux/dist/index.umd.js'
+
+
+function setRendermodeWireframe (treeItem) {
+  const { CADBody, CADAsset } = zeaEngine
+  treeItem.traverse(item => {
+    if (item instanceof CADAsset) {
+      const materialLibrary = item.materialLibrary
+      const materials = materialLibrary.getMaterials()
+      materials.forEach((material) => {
+        if(material.getShaderName() == "StandardSurfaceShader" ) {
+          material.getParameter('BaseColor').value.a = 0
+          material.getParameter('Reflectance').value = 0
+          material.getParameter('EmissiveStrength').value = 1
+        }
+      })
+    }
+    if (item instanceof CADBody) {
+      const material = item.materialParam.value
+      material.getParameter('BaseColor').value.a = 0
+      material.getParameter('Reflectance').value = 0
+      material.getParameter('EmissiveStrength').value = 1
+    }
+  })
+}
+
+function setRendermodeFlat (treeItem) {
+  const { CADBody, CADAsset } = zeaEngine
+  treeItem.traverse(item => {
+    if (item instanceof CADAsset) {
+      const materialLibrary = item.materialLibrary
+      const materials = materialLibrary.getMaterials()
+      materials.forEach((material) => {
+        if(material.getShaderName() == "StandardSurfaceShader" ) {
+          material.getParameter('BaseColor').value.a = 0
+          material.getParameter('Reflectance').value = 0
+          material.getParameter('EmissiveStrength').value = 1
+        }
+      })
+    }
+    if (item instanceof CADBody) {
+      const material = item.materialParam.value
+      material.getParameter('BaseColor').value.a = 0
+      material.getParameter('Reflectance').value = 0
+      material.getParameter('EmissiveStrength').value = 1
+    }
+  })
+}
+
 /* eslint-disable require-jsdoc */
 function init() {
   const {
@@ -134,8 +207,8 @@ function init() {
   // scene.setupGrid(10.0, 10)
 
   const renderer = new GLRenderer(document.getElementById('canvas'), {
-    debugGeomIds: false,
     antialias: false,
+    debugGeomDataBuffer: false,
     enableFrustumCulling: false,
     enableOcclusionCulling: false,
   })
@@ -257,6 +330,7 @@ function init() {
           highlightedItem.setShatterState(false)
         }
         highlightedItem = null
+        highlightKey = ''
       }
     }
   })
@@ -343,6 +417,14 @@ function init() {
   if (urlParams.has('profile')) {
     renderer.startContinuousDrawing()
   }
+
+  // ////////////////////////////////////////////
+  // Render Modes
+  
+  const rendermodeWireframe = document.getElementById('rendermode-Wireframe')
+  rendermodeWireframe.addEventListener('click', () => {
+      setRendermodeWireframe(asset)
+  })
 
   // ////////////////////////////////////////////
   // Load the asset

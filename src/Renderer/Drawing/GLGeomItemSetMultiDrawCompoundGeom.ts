@@ -18,6 +18,12 @@ const deepEquals = (arr0: Array<number>, arr1: Array<number>) => {
   return arr0.length == arr1.length && !arr0.some((v, index) => v != arr1[index])
 }
 
+enum GeomType {
+  TRIANGLES = 0,
+  LINES = 1,
+  POINTS = 2,
+}
+
 interface SubGeom {
   materialId: number
   offset: number
@@ -294,6 +300,10 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     this.glgeomItemEventHandlers[index] = null
     this.freeIndices.push(index)
 
+    if (this.dirtyGeomItems.has(index)) {
+      this.dirtyGeomItems.delete(index)
+    }
+
     // Clear any drawing allocations.
     for (let key in this.drawIdsArraysAllocators) {
       const prevAllocation = this.drawIdsArraysAllocators[key].getAllocation(index)
@@ -401,7 +411,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     const elementSize = 4 //  Uint32Array for UNSIGNED_INT
     this.dirtyGeomItems.forEach((itemIndex) => {
       const glGeomItem = this.glGeomItems[itemIndex]!
-      if (!glGeomItem.isVisible()) return
+      if (!glGeomItem || !glGeomItem.isVisible()) return
       const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
       const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
 
@@ -865,13 +875,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
 
     const gl = this.renderer.gl
     const unifs = renderstate.unifs
-
-    gl.depthFunc(gl.LEQUAL)
-
-    const { drawIdsTexture } = unifs
-    this.renderer.glGeomLibrary.bind(renderstate)
-
-    const { geomType } = unifs
+    const { drawIdsTexture, geomType } = unifs
 
     const counts: Record<string, Int32Array> = this.drawElementCounts
     const offsets: Record<string, Int32Array> = this.drawElementOffsets
@@ -883,7 +887,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       if (drawIdsArray['TRIANGLES'] && allocators['TRIANGLES'].allocatedSpace > 0) {
         drawIdsTextures['TRIANGLES'].bindToUniform(renderstate, drawIdsTexture)
 
-        if (geomType) gl.uniform1i(geomType.location, 2)
+        if (geomType) gl.uniform1i(geomType.location, GeomType.TRIANGLES)
 
         this.multiDrawMeshes(
           renderstate,
@@ -896,7 +900,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     })
 
     //  Note: lines in VR are not fattened...
-    const enableLineFattening = false
+    const enableLineFattening = true
     if (renderstate.geomDataFbo && enableLineFattening) {
       if (!this.linesGeomDataBuffer) {
         this.linesGeomDataBuffer = new GLTexture2D(gl, {
@@ -958,7 +962,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       if (drawIdsArray['LINES'] && allocators['LINES'].allocatedSpace > 0) {
         drawIdsTextures['LINES'].bindToUniform(renderstate, drawIdsTexture)
 
-        if (geomType) gl.uniform1i(geomType.location, 1)
+        if (geomType) gl.uniform1i(geomType.location, GeomType.LINES)
 
         // When debugging the lines geomdata buffer, we can enable this line to make lines draw yellow.
         // const { passId } = renderstate.unifs
@@ -977,7 +981,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       if (drawIdsArray['POINTS'] && allocators['POINTS'].allocatedSpace > 0) {
         drawIdsTextures['POINTS'].bindToUniform(renderstate, drawIdsTexture)
 
-        if (geomType) gl.uniform1i(geomType.location, 0)
+        if (geomType) gl.uniform1i(geomType.location, GeomType.POINTS)
 
         this.multiDrawPoints(
           renderstate,
@@ -1011,6 +1015,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       // Re-bind the previously bound geomdata shader.
       geomDataShader.bind(renderstate, geomDataShaderKey)
       this.renderer.glGeomLibrary.bind(renderstate)
+      this.renderer.glMaterialLibrary.bind(renderstate)
     }
   }
 
@@ -1068,27 +1073,26 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
 
     gl.depthFunc(gl.LEQUAL)
 
-    const { drawIdsTexture } = renderstate.unifs
+    const { drawIdsTexture, geomType } = renderstate.unifs
 
-    const { geomType } = renderstate.unifs
     renderstate.bindViewports(unifs, () => {
-      if (drawIdsArray['TRIANGLES'] && allocators['TRIANGLES'].allocatedSpace > 0) {
-        drawIdsTextures['TRIANGLES'].bindToUniform(renderstate, drawIdsTexture)
+      if (drawIdsArray['POINTS'] && allocators['POINTS'].allocatedSpace > 0) {
+        drawIdsTextures['POINTS'].bindToUniform(renderstate, drawIdsTexture)
 
-        if (geomType) gl.uniform1i(geomType.location, 0)
+        if (geomType) gl.uniform1i(geomType.location, GeomType.POINTS)
 
-        this.multiDrawMeshes(
+        this.multiDrawPoints(
           renderstate,
-          drawIdsArray['TRIANGLES'],
-          counts['TRIANGLES'],
-          offsets['TRIANGLES'],
-          allocators['TRIANGLES'].allocatedSpace
+          drawIdsArray['POINTS'],
+          counts['POINTS'],
+          offsets['POINTS'],
+          allocators['POINTS'].allocatedSpace
         )
       }
       if (drawIdsArray['LINES'] && allocators['LINES'].allocatedSpace > 0) {
         drawIdsTextures['LINES'].bindToUniform(renderstate, drawIdsTexture)
 
-        if (geomType) gl.uniform1i(geomType.location, 1)
+        if (geomType) gl.uniform1i(geomType.location, GeomType.LINES)
 
         this.multiDrawLines(
           renderstate,
@@ -1098,17 +1102,17 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           allocators['LINES'].allocatedSpace
         )
       }
-      if (drawIdsArray['POINTS'] && allocators['POINTS'].allocatedSpace > 0) {
-        drawIdsTextures['POINTS'].bindToUniform(renderstate, drawIdsTexture)
+      if (drawIdsArray['TRIANGLES'] && allocators['TRIANGLES'].allocatedSpace > 0) {
+        drawIdsTextures['TRIANGLES'].bindToUniform(renderstate, drawIdsTexture)
 
-        if (geomType) gl.uniform1i(geomType.location, 2)
+        if (geomType) gl.uniform1i(geomType.location, GeomType.TRIANGLES)
 
-        this.multiDrawPoints(
+        this.multiDrawMeshes(
           renderstate,
-          drawIdsArray['POINTS'],
-          counts['POINTS'],
-          offsets['POINTS'],
-          allocators['POINTS'].allocatedSpace
+          drawIdsArray['TRIANGLES'],
+          counts['TRIANGLES'],
+          offsets['TRIANGLES'],
+          allocators['TRIANGLES'].allocatedSpace
         )
       }
     })
