@@ -82,6 +82,8 @@
         <div class="rendermode-buttons">
           <button class="rendermode-button" id="rendermode-Wireframe">Wireframe</button>
           <button class="rendermode-button" id="rendermode-Flat">Flat</button>
+          <button class="rendermode-button" id="rendermode-HiddenLine">HiddenLine</button>
+          <button class="rendermode-button" id="rendermode-PBR">PBR</button>
         </div>
       </header>
       <main class="flex flex-col flex-1">
@@ -137,51 +139,129 @@
 import '../../node_modules/@zeainc/zea-ux/dist/index.umd.js'
 
 
+const { CADBody, CADAsset } = zeaEngine
+const materialCache = {}
+
+const resetMaterial = (material) => {
+    if (! materialCache[material.getId()]) {
+      materialCache[material.getId()] = {
+        BaseColor: material.getParameter('BaseColor').value.clone(),
+        Reflectance: material.getParameter('Reflectance').value,
+        EmissiveStrength: material.getParameter('EmissiveStrength').value
+      }
+    }
+    else {
+      const values = materialCache[material.getId()]
+      material.getParameter('BaseColor').value = values.BaseColor.clone()
+      material.getParameter('Reflectance').value= values.Reflectance
+      material.getParameter('EmissiveStrength').value= values.EmissiveStrength
+    }
+  }
+
 function setRendermodeWireframe (treeItem) {
-  const { CADBody, CADAsset } = zeaEngine
+  const processed = {}
+  const modifyMaterial = (material) => {
+    if (processed[material.getId()]) return
+    processed[material.getId()] = true
+    resetMaterial(material)
+
+    material.getParameter('BaseColor').value.a = 0
+    material.getParameter('Reflectance').value = 0
+    material.getParameter('EmissiveStrength').value = 1
+  }
   treeItem.traverse(item => {
     if (item instanceof CADAsset) {
       const materialLibrary = item.materialLibrary
       const materials = materialLibrary.getMaterials()
       materials.forEach((material) => {
         if(material.getShaderName() == "StandardSurfaceShader" ) {
-          material.getParameter('BaseColor').value.a = 0
-          material.getParameter('Reflectance').value = 0
-          material.getParameter('EmissiveStrength').value = 1
+          modifyMaterial(material)
         }
       })
     }
     if (item instanceof CADBody) {
       const material = item.materialParam.value
-      material.getParameter('BaseColor').value.a = 0
-      material.getParameter('Reflectance').value = 0
-      material.getParameter('EmissiveStrength').value = 1
+      modifyMaterial(material)
     }
   })
 }
 
 function setRendermodeFlat (treeItem) {
-  const { CADBody, CADAsset } = zeaEngine
+  const processed = {}
+  const modifyMaterial = (material) => {
+    if (processed[material.getId()]) return
+    processed[material.getId()] = true
+    resetMaterial(material)
+    material.getParameter('Reflectance').value = 0
+    material.getParameter('EmissiveStrength').value = 1
+  }
   treeItem.traverse(item => {
     if (item instanceof CADAsset) {
       const materialLibrary = item.materialLibrary
       const materials = materialLibrary.getMaterials()
       materials.forEach((material) => {
         if(material.getShaderName() == "StandardSurfaceShader" ) {
-          material.getParameter('BaseColor').value.a = 0
-          material.getParameter('Reflectance').value = 0
-          material.getParameter('EmissiveStrength').value = 1
+          modifyMaterial(material)
         }
       })
     }
     if (item instanceof CADBody) {
       const material = item.materialParam.value
-      material.getParameter('BaseColor').value.a = 0
-      material.getParameter('Reflectance').value = 0
-      material.getParameter('EmissiveStrength').value = 1
+      modifyMaterial(material)
     }
   })
 }
+
+function setRendermodeHiddenLine(treeItem, backgroundColor) {
+  const processed = {}
+  const modifyMaterial = (material) => {
+    if (processed[material.getId()]) return
+    processed[material.getId()] = true
+    resetMaterial(material)
+    material.getParameter('BaseColor').value = backgroundColor
+    material.getParameter('Reflectance').value = 0
+    material.getParameter('EmissiveStrength').value = 1
+  }
+  treeItem.traverse(item => {
+    if (item instanceof CADAsset) {
+      const materialLibrary = item.materialLibrary
+      const materials = materialLibrary.getMaterials()
+      materials.forEach((material) => {
+        if(material.getShaderName() == "StandardSurfaceShader" ) {
+          modifyMaterial(material)
+        }
+      })
+    }
+    if (item instanceof CADBody) {
+      const material = item.materialParam.value
+      modifyMaterial(material)
+    }
+  })
+}
+function setRendermodePBR(treeItem, backgroundColor) {
+  const processed = {}
+  const modifyMaterial = (material) => {
+    if (processed[material.getId()]) return
+    processed[material.getId()] = true
+    resetMaterial(material)
+  }
+  treeItem.traverse(item => {
+    if (item instanceof CADAsset) {
+      const materialLibrary = item.materialLibrary
+      const materials = materialLibrary.getMaterials()
+      materials.forEach((material) => {
+        if(material.getShaderName() == "StandardSurfaceShader" ) {
+          modifyMaterial(material)
+        }
+      })
+    }
+    if (item instanceof CADBody) {
+      const material = item.materialParam.value
+      modifyMaterial(material)
+    }
+  })
+}
+
 
 /* eslint-disable require-jsdoc */
 function init() {
@@ -213,6 +293,7 @@ function init() {
     enableOcclusionCulling: false,
   })
 
+  // renderer.outlineThickness = 1
   // renderer.solidAngleLimit = 0.0;
   renderer.setScene(scene)
   renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 10), new Vec3(0, 0, 1.5))
@@ -420,11 +501,19 @@ function init() {
 
   // ////////////////////////////////////////////
   // Render Modes
-  
-  const rendermodeWireframe = document.getElementById('rendermode-Wireframe')
-  rendermodeWireframe.addEventListener('click', () => {
+  document.getElementById('rendermode-Wireframe').addEventListener('click', () => {
       setRendermodeWireframe(asset)
   })
+  document.getElementById('rendermode-Flat').addEventListener('click', () => {
+    setRendermodeFlat(asset)
+  })
+  document.getElementById('rendermode-HiddenLine').addEventListener('click', () => {
+    setRendermodeHiddenLine(asset, renderer.getViewport().backgroundColorParam.value.toLinear())
+  })
+  document.getElementById('rendermode-PBR').addEventListener('click', () => {
+    setRendermodePBR(asset)
+  })
+  // 
 
   // ////////////////////////////////////////////
   // Load the asset
