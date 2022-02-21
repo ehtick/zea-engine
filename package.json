@@ -52,7 +52,6 @@
     }
   },
   "dependencies": {
-    "caniuse-lite": "^1.0.30001309",
     "lodash-es": "^4.17.21"
   },
   "size-limit": [
@@ -80,6 +79,7 @@
     "@zeainc/zea-tree-view": "^0.0.7",
     "@zeainc/zea-ux": "^4.0.3",
     "babel-jest": "^27.0.5",
+    "caniuse-lite": "^1.0.30001312",
     "copyfiles": "latest",
     "cypress": "9.3.1",
     "es-dev-server": "^2.1.0",
