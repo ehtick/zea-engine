@@ -102,23 +102,66 @@ function extract({ resourceId, url }) {
   })
 }
 
-function returnData(event, data) {
+/**
+ * Listen for messages sent to the worker.
+ * @private
+ */
+function handleMessage(data, postMessage) {
+  if (data.type == 'init') {
+    unpack = initunpack(wasmUrl)
+    unpack.onRuntimeInitialized = () => {
+      postMessage({ type: 'WASM_LOADED' })
+    }
+  } else if (data.type == 'fetch') {
+    extract(data).then(
+      (unpacked) => {
+        returnData(data, unpacked, postMessage)
+      },
+      (err) => {
+        const result = {
+          taskId: data.taskId,
+          type: 'ERROR',
+          resourceId: data.resourceId,
+          url: data.url,
+        }
+        postMessage(result)
+      }
+    )
+  } else if (data.type == 'unpack') {
+    const { buffer } = data
 
-  const [state, list] = data;
+    if (!unpackBridge) {
+      throw new Error('unpackBridge not detected')
+    }
+    if (!unpack) {
+      throw new Error('unpack not detected')
+    }
+
+    const extractor = unpackBridge.createExtractorFromData(buffer)
+    const unpacked = extractor.extractAll()
+    returnData(data, unpacked, postMessage)
+  }
+}
+
+function returnData(data, unpacked, postMessage) {
+
+  const [state, list] = unpacked;
   if (state.state == 'FAIL') {
     const result = {
+      taskId: data.taskId,
       type: 'ERROR',
       reason: state.reason,
       msg: state.msg,
-      resourceId: event.data.resourceId,
-      url: event.data.url
+      resourceId: data.resourceId,
+      url: data.url
     };
-    self.postMessage(result);
+    postMessage(result);
     return;
   }
   const result = {
+      taskId: data.taskId,
       type: 'FINISHED',
-      resourceId: event.data.resourceId,
+      resourceId: data.resourceId,
       entries: {}
   };
 
@@ -129,42 +172,14 @@ function returnData(event, data) {
       transferables.push(file.extract[1].buffer);
     }
   }
-  self.postMessage(result, transferables);
+  postMessage(result, transferables);
 }
 
-/**
- * Listen for messages sent to the worker.
- * @private
- */
-onmessage = function(event) {
-  if(event.data.type == 'init') {
-    unpack = initunpack(wasmUrl);
-    unpack.onRuntimeInitialized = () => postMessage({ type: 'WASM_LOADED' });
-  }
-  else if(event.data.type == 'fetch') {
-  	extract(event.data).then(unpacked => {
-      returnData(event, unpacked)
-    }, err => {
-      const result = {
-          type: 'ERROR',
-          resourceId: event.data.resourceId,
-          url: event.data.url
-      };
-      self.postMessage(result);
-    })
-  }
-  else if(event.data.type == 'unpack') {
-    const { buffer } = event.data;
-    
-    if (!unpackBridge) { throw new Error('unpackBridge not detected'); }
-    if (!unpack) { throw new Error('unpack not detected'); }
 
-    const extractor = unpackBridge.createExtractorFromData(buffer)
-    const unpacked = extractor.extractAll()
-    returnData(event, unpacked)
-  }
-};
-
+onmessage = function (event) {
+  handleMessage(event.data, self.postMessage)
+}
+export { handleMessage }
 /**
  * When the WASM runtime has been initialized on the unpack.js module, send a message indicating
  * that the library is ready.
