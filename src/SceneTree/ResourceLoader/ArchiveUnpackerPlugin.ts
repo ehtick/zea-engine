@@ -30,7 +30,6 @@ import { ResourceLoader } from '../resourceLoader'
 import { WorkerPool } from '../../Utilities/WorkerPool'
 // @ts-ignore
 import ArchiveUnpackerWorker from 'web-worker:./ArchiveUnpacker-worker.js'
-import { resolve } from 'cypress/types/bluebird'
 class ArchiveUnpackerWorkerPool extends WorkerPool<ArchiveUnpackerWorker> {
   constructor() {
     super(true)
@@ -103,11 +102,14 @@ class ArchiveUnpackerPlugin {
         .then((buffer) => {
           const resourceId = url
           this.threadPool
-            .addTask({
-              type: 'unpack',
-              resourceId,
-              buffer,
-            })
+            .addTask(
+              {
+                type: 'unpack',
+                resourceId,
+                buffer,
+              },
+              [buffer]
+            )
             .then((data: object) => {
               // @ts-ignore
               // if (data.type == 'FINISHED') resolve(data.entries)
