@@ -206,12 +206,13 @@ class GeomLibrary extends EventEmitter {
     // TODO: Use SharedArrayBuffer once available.
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer
 
-    if (numGeomLibraries > 1) {
+    const isHugeFile = buffer.byteLength > 20000000
+    if (numGeomLibraries > 1 && !isHugeFile) {
       // In scenes loading many files, we just load each file on a different worker.
-      // This has one big advantage that we don't
+      // This has one big advantage that we don't clone the buffer using the 'slice' method
+      // potentially reducing temporary memory consumption by a lot.
       const geomsRange = [0, numGeoms]
       const byteOffset = 0
-      console.log('addTask:', geomsRange)
       geomParserWorkerPool
         .addTask(
           {
@@ -230,7 +231,6 @@ class GeomLibrary extends EventEmitter {
           [buffer]
         )
         .then((results) => {
-          console.log('doneTask:', geomsRange)
           // @ts-ignore
           this.__receiveGeomDatas(results)
         })
@@ -266,7 +266,6 @@ class GeomLibrary extends EventEmitter {
 
         // ////////////////////////////////////////////
         // Multi Threaded Parsing
-        console.log('addTask:', geomsRange)
         geomParserWorkerPool
           .addTask(
             {
@@ -285,7 +284,6 @@ class GeomLibrary extends EventEmitter {
             [bufferSlice]
           )
           .then((results) => {
-            console.log('doneTask:', geomsRange)
             // @ts-ignore
             this.__receiveGeomDatas(results)
           })
