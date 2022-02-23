@@ -1,31 +1,41 @@
 import { SystemDesc } from '../SystemDesc'
 
+interface TaskData {
+  taskData: object
+  transferables: Array<Transferable>
+}
 interface Task {
   taskId: number
-  dataFactory: (workerId: number) => object
+  dataFactory: (workerId: number) => TaskData
 }
 
 let taskCounter = 0
-export class WorkerPool<WorkerClass> {
+export abstract class WorkerPool<WorkerClass> {
   workers: WorkerClass[] = []
   taskPromiseResolves: Record<number, (value: object | PromiseLike<object>) => void> = {}
 
   taskQueue: Array<Task> = []
   availableWorkers: number[] = []
+  terminationTimeouts: number[] = []
   terminateWorkersWhenFree: boolean = true
+  terminationLatency: number = 1000
 
   constructor(terminateWorkersWhenFree: boolean) {
     this.terminateWorkersWhenFree = terminateWorkersWhenFree
   }
 
-  addTask(taskData: object): Promise<object> {
-    return this.addTaskCallback(() => taskData)
+  addTask(taskData: object, transferables: Array<Transferable>): Promise<object> {
+    return this.addTaskCallback(() => {
+      return {
+        taskData,
+        transferables,
+      }
+    })
   }
 
-  addTaskCallback(dataFactory: (workerId: number) => object): Promise<object> {
+  addTaskCallback(dataFactory: (workerId: number) => TaskData): Promise<object> {
     taskCounter++
     const taskId = taskCounter
-    // console.log('addTask:', taskId)
     return new Promise<object>(async (resolve) => {
       this.taskPromiseResolves[taskId] = resolve
       // @ts-ignore
@@ -35,10 +45,10 @@ export class WorkerPool<WorkerClass> {
       })
 
       const numCores = SystemDesc.hardwareConcurrency - 1 // always leave one main thread code spare.
-      if (this.workers.length < numCores - 1) {
-        await this.addWorker()
+      if (this.availableWorkers.length > 0) {
         this.consumeTask()
-      } else if (this.availableWorkers.length > 0) {
+      } else if (this.workers.length < numCores - 1) {
+        await this.addWorker()
         this.consumeTask()
       }
     })
@@ -46,17 +56,29 @@ export class WorkerPool<WorkerClass> {
 
   consumeTask() {
     const workerId = this.availableWorkers.pop()
+    if (this.terminationTimeouts[workerId] != -1) {
+      clearTimeout(this.terminationTimeouts[workerId])
+      this.terminationTimeouts[workerId] = -1
+    }
+    // Note: a new worker can be allocated, but another worker
+    // consumes the task before the new worker picks up the task.
+    if (this.taskQueue.length == 0) {
+      if (this.terminateWorkersWhenFree) this.scheduleWorkerTermination(workerId)
+      else this.availableWorkers.push(workerId)
+      return
+    }
     const task = this.taskQueue.pop()
-    const taskData = task.dataFactory(workerId)
+    const { taskData, transferables } = task.dataFactory(workerId)
     // @ts-ignore
     taskData.taskId = task.taskId
     // @ts-ignore
-    this.workers[workerId].postMessage(taskData)
+    this.workers[workerId].postMessage(taskData, transferables)
   }
 
   async addWorker(): Promise<void> {
     const worker = await this.constructWorker()
     const workerId = this.workers.length
+    this.terminationTimeouts[workerId] = -1
     // @ts-ignore
     worker.onmessage = (event: Record<string, any>) => {
       if (event.data.taskId in this.taskPromiseResolves) {
@@ -65,24 +87,31 @@ export class WorkerPool<WorkerClass> {
         this.taskPromiseResolves[taskId](event.data)
         delete this.taskPromiseResolves[taskId]
       }
-
+      this.availableWorkers.push(workerId)
       if (this.taskQueue.length > 0) {
-        this.availableWorkers.push(workerId)
         this.consumeTask()
       } else {
-        if (this.terminateWorkersWhenFree) this.terminateWorker(workerId)
-        else this.availableWorkers.push(workerId)
+        if (this.terminateWorkersWhenFree) {
+          this.scheduleWorkerTermination(workerId)
+        }
       }
     }
     this.workers.push(worker)
     this.availableWorkers.push(workerId)
   }
 
-  constructWorker(): WorkerClass {
-    return null
+  scheduleWorkerTermination(workerId: number): void {
+    // @ts-ignore
+    this.terminationTimeouts[workerId] = setTimeout(() => {
+      this.terminateWorker(workerId)
+    }, this.terminationLatency)
   }
 
+  abstract constructWorker(): Promise<WorkerClass>
+
   terminateWorker(workerId: number): void {
+    // @ts-ignore
+    this.workers[workerId].terminate()
     this.workers[workerId] = null
   }
 
