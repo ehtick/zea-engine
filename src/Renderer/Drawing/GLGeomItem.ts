@@ -77,8 +77,12 @@ class GLGeomItem extends EventEmitter {
     this.visible = this.geomItem.isVisible()
 
     this.listenerIDs['visibilityChanged'] = this.geomItem.on('visibilityChanged', (event: VisibilityChangedEvent) => {
+      const wasVisible = !this.culled && this.visible
       this.visible = event.visible
-      this.emit('visibilityChanged', event)
+      const isVisible = !this.culled && this.visible
+      if (wasVisible != isVisible) {
+        this.emit('visibilityChanged', new VisibilityChangedEvent(isVisible))
+      }
     })
 
     if (geomItem instanceof CADBody) this.shattered = geomItem.shattered
@@ -156,9 +160,11 @@ class GLGeomItem extends EventEmitter {
    * @param culled - True if culled, else false.
    */
   setCulled(culled: boolean): void {
+    const wasVisible = !this.culled && this.visible
     this.culled = culled
-    if (this.visible) {
-      this.emit('cullStateChanged')
+    const isVisible = !this.culled && this.visible
+    if (wasVisible != isVisible) {
+      this.emit('visibilityChanged', new VisibilityChangedEvent(isVisible))
     }
   }
 

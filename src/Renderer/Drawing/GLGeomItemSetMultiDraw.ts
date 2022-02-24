@@ -81,33 +81,16 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       this.drawOrderToIndex.push(index)
     }
     eventHandlers.visibilityChanged = (event: VisibilityChangedEvent) => {
-      if (event.visible) {
-        this.indexToDrawIndex[index] = this.drawOrderToIndex.length
-        this.drawOrderToIndex.push(index)
-      } else {
-        // Note: as items are removed, the indexToDrawIndex values get broken and must be updated.
-        const drawOrderIndex = this.drawOrderToIndex.indexOf(index)
-        this.drawOrderToIndex.splice(drawOrderIndex, 1)
-        this.indexToDrawIndex[index] = -1
-      }
-      // console.log(this.constructor.name, ' drawOrderToIndex', this.drawOrderToIndex.length)
-      if (!this.drawIdsBufferDirty) {
-        this.drawIdsBufferDirty = true
-        this.emit('updated')
-      }
-    }
-    glGeomItem.on('visibilityChanged', eventHandlers.visibilityChanged)
-
-    eventHandlers.cullStateChanged = () => {
       const drawIndex = this.indexToDrawIndex[index]
-      if (!glGeomItem.culled) {
+      if (event.visible) {
         const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
         this.drawElementCounts[drawIndex] = offsetAndCount[1]
       } else {
         this.drawElementCounts[drawIndex] = 0
       }
+      this.emit('updated')
     }
-    glGeomItem.on('cullStateChanged', eventHandlers.cullStateChanged)
+    glGeomItem.on('visibilityChanged', eventHandlers.visibilityChanged)
 
     // //////////////////////////////
     // Highlighted
@@ -156,7 +139,6 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     const eventHandlers = this.glgeomItemEventHandlers[index]
     glGeomItem.geomItem.off('highlightChanged', eventHandlers.highlightChanged)
     glGeomItem.off('visibilityChanged', eventHandlers.visibilityChanged)
-    glGeomItem.off('cullStateChanged', eventHandlers.cullStateChanged)
 
     this.glGeomItems[index] = null
     this.glgeomItemEventHandlers[index] = null

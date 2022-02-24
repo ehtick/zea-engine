@@ -120,43 +120,23 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       this.drawOrderToIndex.push(index)
       this.dirtyGeomItems.add(index)
     }
-    eventHandlers.visibilityChanged = (event: VisibilityChangedEvent) => {
-      if (event.visible) {
-        this.indexToDrawIndex[index] = this.drawOrderToIndex.length
-        this.drawOrderToIndex.push(index)
-      } else {
-        const drawOrderIndex = this.drawOrderToIndex.indexOf(index)
-        if (drawOrderIndex >= 0) {
-          this.drawOrderToIndex.splice(drawOrderIndex, 1)
-        } else {
-          // So far we are not seeing this warning.
-          console.log('index not in drawOrderToIndex array')
-        }
-        this.indexToDrawIndex[index] = -1
-      }
-      // this.dirtyGeomItems.add(index)
-      // console.log(this.constructor.name, ' drawOrderToIndex', this.drawOrderToIndex.length)
-      if (!this.drawIdsBufferDirty) {
-        this.drawIdsBufferDirty = true
-        this.emit('updated')
-      }
-    }
-    glGeomItem.on('visibilityChanged', eventHandlers.visibilityChanged)
 
-    eventHandlers.cullStateChanged = () => {
+    eventHandlers.visibilityChanged = (event: VisibilityChangedEvent) => {
       // const drawIndex = this.indexToDrawIndex[index]
-      if (!glGeomItem.culled) {
+      if (event.visible) {
         // const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
         // this.drawElementCounts[drawIndex] = offsetAndCount[1]
         const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
         if (Object.keys(this.drawIdsArraysAllocators).length == 0) {
           // This item was never visible before and is now being un-culled.
-          // No allications have yet been made for it so we can't simply re-set the count value
+          // No allocations have yet been made for it so we can't simply re-set the count value
           this.dirtyGeomItems.add(index)
           this.drawIdsBufferDirty = true
+          this.emit('updated')
           return
         }
         for (let key in geomBuffers.counts) {
+          if (geomBuffers.counts[key] == 0) continue
           const allocator = this.drawIdsArraysAllocators[key]
           if (allocator) {
             const allocation = allocator.getAllocation(index)
@@ -176,16 +156,18 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
               }
             } else {
               // This item was never visible before and is now being un-culled.
-              // No allications have yet been made for it so we can't simply re-set the count value
+              // No allocations have yet been made for it so we can't simply re-set the count value
               this.dirtyGeomItems.add(index)
               this.drawIdsBufferDirty = true
+              this.emit('updated')
               return
             }
           } else {
             // This item was never visible before and is now being un-culled.
-            // No allications have yet been made for it so we can't simply re-set the count value
+            // No allocations have yet been made for it so we can't simply re-set the count value
             this.dirtyGeomItems.add(index)
             this.drawIdsBufferDirty = true
+            this.emit('updated')
             return
           }
         }
@@ -205,8 +187,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           }
         }
       }
+      this.emit('updated')
     }
-    glGeomItem.on('cullStateChanged', eventHandlers.cullStateChanged)
+    glGeomItem.on('visibilityChanged', eventHandlers.visibilityChanged)
 
     // //////////////////////////////
     // Highlighted
