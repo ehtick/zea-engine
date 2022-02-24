@@ -3,6 +3,9 @@ import { Color } from '../../Math/Color'
 import { Registry } from '../../Registry'
 import { CloneContext } from '../CloneContext'
 import { TreeItem } from '../TreeItem'
+import { GeomItem } from '../GeomItem'
+import { Material } from '../Material'
+import { ColorSpace, MaterialColorParam } from '..'
 
 /**
  * Represents a view of PMI data. within a CAD assembly.
@@ -10,6 +13,7 @@ import { TreeItem } from '../TreeItem'
  * @extends TreeItem
  */
 class PMIItem extends TreeItem {
+  private materialMapping: Record<number, Material> = {}
   /**
    * Creates an instance of PMIItem setting up the initial configuration for Material and Color parameters.
    *
@@ -63,7 +67,39 @@ class PMIItem extends TreeItem {
    * @param {boolean} propagateToChildren - A boolean indicating whether to propagate to children.
    */
   addHighlight(name?: string, color?: Color, propagateToChildren = false): void {
-    super.addHighlight(name, color, propagateToChildren)
+    super.addHighlight(name, color, false)
+
+    // Instead of adding highlights around the PMI text, which makes it difficult to read
+    // we clone the material and modify it so the text, symbols, and line colors
+    // become the highlight color.
+    if (propagateToChildren) {
+      const baseColor = color.clone()
+      baseColor.a = 1.0 // highlight colors often have zero alpha, as it controls the highlight fill.
+      const materialCache: Record<number, Material> = {}
+      this.traverse((treeItem: TreeItem) => {
+        if (treeItem instanceof GeomItem) {
+          const material = treeItem.materialParam.value
+          this.materialMapping[treeItem.getId()] = material
+          if (!(material.getId() in materialCache)) {
+            const highlightMaterial = material.clone()
+            if (highlightMaterial.hasParameter('BaseColor')) {
+              const param = highlightMaterial.getParameter('BaseColor')
+              if (param instanceof MaterialColorParam) param.colorSpace = ColorSpace.Gamma
+              param.setValue(baseColor)
+            }
+            if (highlightMaterial.hasParameter('Overlay')) {
+              highlightMaterial.getParameter('Overlay').setValue(0.85)
+            }
+            treeItem.materialParam.value = highlightMaterial
+
+            // We can reuse this material on other PMI items with the same
+            // original material
+            materialCache[material.getId()] = highlightMaterial
+          }
+          treeItem.materialParam.value = materialCache[material.getId()]
+        }
+      })
+    }
 
     const pmiContainer = (this.getOwner() as TreeItem).getOwner() // TODO: check
     const pmiOwner = (pmiContainer as TreeItem).getOwner()
@@ -114,7 +150,20 @@ class PMIItem extends TreeItem {
    * @param {boolean} propagateToChildren - A boolean indicating whether to propagate to children.
    */
   removeHighlight(name: string, propagateToChildren = false): void {
-    super.removeHighlight(name, propagateToChildren)
+    // super.removeHighlight(name, propagateToChildren)
+    super.removeHighlight(name, false)
+
+    if (propagateToChildren) {
+      this.traverse((treeItem: TreeItem) => {
+        if (treeItem instanceof GeomItem) {
+          if (treeItem.getId() in this.materialMapping) {
+            treeItem.materialParam.value = this.materialMapping[treeItem.getId()]
+            delete this.materialMapping[treeItem.getId()]
+          }
+        }
+      })
+    }
+
     const pmiContainer = (this.getOwner() as TreeItem).getOwner()
     const pmiOwner = (pmiContainer as TreeItem).getOwner()
     if (pmiOwner) {

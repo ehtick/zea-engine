@@ -160,6 +160,7 @@ class MaterialColorParam extends ColorParameter {
    */
   clone(): MaterialColorParam {
     const clonedParam = new MaterialColorParam(this.name, this.__value?.clone())
+    clonedParam.colorSpace = this.colorSpace
     return clonedParam
   }
 }

@@ -420,25 +420,25 @@ function init() {
     if (event.intersectionData && event.intersectionData.componentId >= 0) {
       const geomItem = event.intersectionData.geomItem
       if (geomItem instanceof CADBody && geomItem.geomParam.value instanceof CompoundGeom) {
-        geomItem.assetItem.loadMetadata().then(() => {
-          const geom = geomItem.geomParam.value
+        // geomItem.assetItem.loadMetadata().then(() => {
+        //   const geom = geomItem.geomParam.value
 
-          const subGeom = geom.subGeoms[event.intersectionData.componentId]
-          const json = subGeom.toJSON()
-          const surfaceInfoElement = document.getElementById('surface-info')
-          surfaceInfoElement.innerHTML = ''
-          // surfaceInfoElement.textContent = JSON.stringify(json, null, 2)
-          for (let key in json.params) {
-            const p = document.createElement('p')
-            p.textContent = `${key} : ${StringFunctions.stringifyJSONWithFixedPrecision(json.params[key].value, 0, 3)}`
-            surfaceInfoElement.appendChild(p)
-          }
-          // textContent.split('\n').forEach(line => {
-          //   const p = document.createElement('p')
-          //   p.textContent = line
-          //   surfaceInfoElement.appendChild(p)
-          // })
-        })
+        //   const subGeom = geom.subGeoms[event.intersectionData.componentId]
+        //   const json = subGeom.toJSON()
+        //   const surfaceInfoElement = document.getElementById('surface-info')
+        //   surfaceInfoElement.innerHTML = ''
+        //   // surfaceInfoElement.textContent = JSON.stringify(json, null, 2)
+        //   for (let key in json.params) {
+        //     const p = document.createElement('p')
+        //     p.textContent = `${key} : ${StringFunctions.stringifyJSONWithFixedPrecision(json.params[key].value, 0, 3)}`
+        //     surfaceInfoElement.appendChild(p)
+        //   }
+        //   // textContent.split('\n').forEach(line => {
+        //   //   const p = document.createElement('p')
+        //   //   p.textContent = line
+        //   //   surfaceInfoElement.appendChild(p)
+        //   // })
+        // })
       }
     }
   })
