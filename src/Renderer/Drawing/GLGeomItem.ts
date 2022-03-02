@@ -144,7 +144,7 @@ class GLGeomItem extends EventEmitter {
    * @return - The return value.
    */
   isVisible(): boolean {
-    return this.visible
+    return !this.culled && this.visible
   }
 
   /**

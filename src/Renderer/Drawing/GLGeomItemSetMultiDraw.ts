@@ -214,7 +214,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
         const glGeomItem = this.glGeomItems[itemIndex]!
         const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
         this.drawElementOffsets[drawIndex] = offsetAndCount[0]
-        this.drawElementCounts[drawIndex] = glGeomItem.culled ? 0 : offsetAndCount[1]
+        this.drawElementCounts[drawIndex] = glGeomItem.isVisible() ? offsetAndCount[1] : 0
         this.drawIdsArray[drawIndex] = glGeomItem.geomItemId
 
         // Note: as items are removed, these indices must be updated.
@@ -389,7 +389,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     }
     // Note: updateDrawIDsBuffer first, as this avoids a case where the buffers stay dirty
     // because the last item was removed.
-    if (this.drawOrderToIndex.length == 0) {
+    if (this.drawIdsArray.length == 0) {
       return
     }
     if (this.drawIdsTexture) {
