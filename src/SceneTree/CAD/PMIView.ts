@@ -1,4 +1,8 @@
-import { TreeItem, BinReader, AssetLoadContext } from '..'
+import { CADAsset } from '.'
+import { TreeItem } from '../TreeItem'
+import { Camera } from '../Camera'
+import { BinReader } from '../BinReader'
+import { AssetLoadContext } from '../AssetLoadContext'
 import { Registry } from '../../Registry'
 import { CloneContext } from '../CloneContext'
 import { PMIItem } from './PMIItem'
@@ -9,7 +13,7 @@ import { PMIItem } from './PMIItem'
  * @extends PMIItem
  */
 class PMIView extends PMIItem {
-  camera: any
+  camera: Camera
   /**
    * Creates an instance of PMIView setting up the initial configuration for Material and Color parameters.
    *
@@ -34,91 +38,90 @@ class PMIView extends PMIItem {
   }
 
   /**
-   * Changes the current state of the selection of this item.
-   * Note: the PMIView also ajusts the camera when activated.
-   * The camera should have been provided in the AssetLoadContext when the CADAsset was loaded.
-   * ```
-   * const asset = new CADAsset()
-   * const context = new AssetLoadContext()
-   * context.camera = renderer.getViewport().getCamera()
-   * asset.load(zcad, context).then(() => {
-   *   console.log("Done")
-   * })
-   * ```
-   *
-   * @emits `selectedChanged` with selected state
-   * @param sel - Boolean indicating the new selection state.
-   */
-  setSelected(sel: boolean):void {
-    super.setSelected(sel)
-    if (sel) this.activate()
-    else this.deactivate()
-  }
-
-  /**
    * Activates the PMIView, adjusting visibility of the PMI items and the camera Xfo
    */
-  activate():void {
+  activate(): void {
     super.activate()
 
+    let graphicalItems: string[] = []
     if (this.hasParameter('GraphicalElements')) {
-      const pmiContainer = (this.getOwner() as TreeItem).getOwner() as TreeItem
-      const pmiOwner = (pmiContainer as TreeItem).getOwner()
-      if (pmiOwner) {
-        const pmiItems: TreeItem[] = []
-        pmiContainer.traverse((item: TreeItem) => {
-          if (item instanceof PMIView) return
-          if (item instanceof PMIItem) pmiItems.push(item)
-        })
-        const graphicalItems = this.getParameter('GraphicalElements').getValue()
-        pmiItems.forEach((pmiItem) => {
-          const visible = graphicalItems.includes(pmiItem.getName())
-          pmiItem.setVisible(visible)
-        })
-      }
+      graphicalItems = this.getParameter('GraphicalElements').getValue()
+    }
+    const findAssetItem = (): CADAsset | null => {
+      let item: TreeItem = this
+      while (item && !(item instanceof CADAsset)) item = item.getParentItem()
+      if (item instanceof CADAsset) return item
+      return null
+    }
+    const assetItem = findAssetItem()
+    const pmiContainer = this.getParentItem().getParentItem()
+    const pmiOwner = pmiContainer.getParentItem()
+    if (pmiOwner) {
+      const pmiItems: TreeItem[] = []
+      pmiContainer.traverse((item: TreeItem) => {
+        if (item instanceof PMIView) return
+        if (item instanceof PMIItem) pmiItems.push(item)
+      })
+      pmiItems.forEach((pmiItem) => {
+        const visible = graphicalItems.includes(pmiItem.getName())
+        pmiItem.setVisible(visible)
+      })
     }
 
     if (this.camera) {
-      const cameraXfo = this.getParameter('GlobalXfo').getValue().clone()
+      const cameraXfo = this.localXfoParam.value.clone()
       const TargetPoint = this.getParameter('TargetPoint').getValue()
       const CameraType = this.getParameter('CameraType').getValue()
-      if (CameraType == 'Camera_Orthographic') {
-        this.camera.setIsOrthographic(1)
-      }
 
-      // const UpDirection = this.getParameter('UpDirection').getValue()
-      TargetPoint.scaleInPlace(cameraXfo.sc.z)
-      const dist = cameraXfo.tr.distanceTo(TargetPoint) // * cameraXfo.sc.z
+      cameraXfo.tr.scaleInPlace(assetItem.unitsScale)
+      TargetPoint.scaleInPlace(assetItem.unitsScale)
+
+      const dist = cameraXfo.tr.distanceTo(TargetPoint)
       cameraXfo.sc.set(1.0, 1.0, 1.0)
 
-      this.camera.getParameter('GlobalXfo').setValue(cameraXfo)
+      this.camera.globalXfoParam.value = cameraXfo
       this.camera.setFocalDistance(dist)
+
+      if (CameraType == 'Camera_Orthographic') {
+        this.camera.setIsOrthographic(1, 0)
+        // When switching from perspective to ortho here is how the zoom is computed:
+        // _zoom = 1.f;
+        // float coef = _targetDistance * CATTan(CATDegreeToRadian * _viewAngle);
+        // if (coef > 0.f) _zoom = 1./ coef;
+        if (this.hasParameter('CameraZoom') && assetItem) {
+          const CameraZoom = this.getParameter('CameraZoom').getValue()
+          const FrustHeight = (1 / CameraZoom) * assetItem.unitsScale * 2
+          this.camera.setFrustumHeight(FrustHeight)
+        }
+      }
     }
   }
 
   /**
    * Deactivates the PMIItem
    */
-  deactivate():void {
+  deactivate(): void {
     super.deactivate()
 
-    if (this.hasParameter('GraphicalElements')) {
-      const pmiContainer = (this.getOwner() as TreeItem).getOwner() as TreeItem
-      const pmiOwner = pmiContainer.getOwner()
-      if (pmiOwner) {
-        const pmiItems: TreeItem[] = []
-        pmiContainer.traverse((item: TreeItem) => {
-          if (item instanceof PMIView) return
-          if (item instanceof PMIItem) pmiItems.push(item)
-        })
-        pmiItems.forEach((pmiItem) => {
-          pmiItem.setVisible(true)
-        })
-      }
-    }
-    if (this.camera) {
-      this.camera.setIsOrthographic(0)
-    }
+    // if (this.hasParameter('GraphicalElements')) {
+    //   const pmiContainer = (this.getOwner() as TreeItem).getOwner() as TreeItem
+    //   const pmiOwner = pmiContainer.getOwner()
+    //   if (pmiOwner) {
+    //     const pmiItems: TreeItem[] = []
+    //     pmiContainer.traverse((item: TreeItem) => {
+    //       if (item instanceof PMIView) return
+    //       if (item instanceof PMIItem) pmiItems.push(item)
+    //     })
+    //     pmiItems.forEach((pmiItem) => {
+    //       pmiItem.setVisible(true)
+    //     })
+    //   }
+    // }
+
+    // // Note: leave the camera as is
+    // if (this.camera) {
+    //   this.camera.setIsOrthographic(0)
+    // }
   }
 
   // ///////////////////////////
@@ -129,12 +132,10 @@ class PMIView extends PMIItem {
    * @param reader - The reader param.
    * @param context - The context param.
    */
-  readBinary(reader: BinReader, context: AssetLoadContext):void {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     super.readBinary(reader, context)
 
-    // @ts-ignore
     if (context.camera) {
-      // @ts-ignore
       this.camera = context.camera
     }
   }
