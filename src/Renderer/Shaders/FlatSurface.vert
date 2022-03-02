@@ -15,6 +15,12 @@ import 'geomItemId.glsl'
 import 'drawItemTexture.glsl'
 import 'modelMatrix.glsl'
 
+#ifdef ENABLE_MULTI_DRAW
+import 'materialparams.glsl'
+#else
+uniform float Overlay;
+#endif
+
 /* VS Outputs */
 varying vec4 v_drawItemIds;
 varying vec4 v_geomItemData;
@@ -43,5 +49,20 @@ void main(void) {
   v_textureCoord.y = 1.0 - v_textureCoord.y;// Flip y
 #endif
 
+  //////////////////////////////////////////////
+  // Overlay
+
+#ifdef ENABLE_MULTI_DRAW
+  vec2 materialCoords = v_geomItemData.zw;
+  vec4 materialValue1 = getMaterialValue(materialCoords, 1);
+  float overlay = materialValue1.x;
+#else
+  float overlay = Overlay;
+#endif
+
+  gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
+
+  //////////////////////////////////////////////
+  
   v_worldPos      = (modelMatrix * pos).xyz;
 }

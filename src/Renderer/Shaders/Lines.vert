@@ -57,7 +57,6 @@ void main(void) {
 #ifdef ENABLE_MULTI_DRAW
   vec2 materialCoords = v_geomItemData.zw;
   vec4 materialValue1 = getMaterialValue(materialCoords, 1);
-  int maintainScreenSize = int(materialValue1.x + 0.5);
   float overlay = materialValue1.y;
 #else
   float overlay = Overlay;

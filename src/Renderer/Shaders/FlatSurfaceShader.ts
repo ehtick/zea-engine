@@ -60,7 +60,7 @@ class FlatSurfaceShader extends GLShader {
    * @return - The return value.
    */
   static getPackedMaterialData(material: Material): Float32Array {
-    const matData = new Float32Array(4)
+    const matData = new Float32Array(8)
     const baseColorParam = material.getParameter('BaseColor')
     let baseColor
     if (baseColorParam instanceof MaterialColorParam && baseColorParam.colorSpace == ColorSpace.Gamma) {
@@ -72,6 +72,9 @@ class FlatSurfaceShader extends GLShader {
     matData[1] = baseColor.g
     matData[2] = baseColor.b
     matData[3] = baseColor.a
+
+    const overlayParam = material.getParameter('Overlay')
+    if (overlayParam) matData[4] = overlayParam.getValue()
     return matData
   }
 
