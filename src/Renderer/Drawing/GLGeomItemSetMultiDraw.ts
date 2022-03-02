@@ -75,14 +75,16 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       this.glGeomIdsMapping[glGeomItem.geomId].push(index)
     }
 
+    // Note: we now allocate the draw index right away.
+    // Visibility only controls the element count value
+    this.indexToDrawIndex[index] = this.drawOrderToIndex.length
+    this.drawOrderToIndex.push(index)
+
     const eventHandlers: Record<string, any> = {}
 
     // //////////////////////////////
     // Visibility
-    if (glGeomItem.visible) {
-      this.indexToDrawIndex[index] = this.drawOrderToIndex.length
-      this.drawOrderToIndex.push(index)
-    }
+
     eventHandlers.visibilityChanged = (event: VisibilityChangedEvent) => {
       const drawIndex = this.indexToDrawIndex[index]
       if (event.visible) {

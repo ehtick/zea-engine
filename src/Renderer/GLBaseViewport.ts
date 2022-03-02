@@ -43,10 +43,10 @@ class GLBaseViewport extends ParameterOwner {
   protected __canvasWidth: number = 0
   protected __canvasHeight: number = 0
   protected fb: Array<WebGLFramebuffer | null> | null = null
-  protected colorRenderbuffer: any
+  protected colorRenderbuffer: WebGLRenderbuffer
   protected depthBuffer: WebGLRenderbuffer | null = null
   protected EXT_frag_depth: EXT_frag_depth | null = null
-  protected manipulator: any
+  protected manipulator: BaseTool
   protected depthRange: number[] = [0, 0]
 
   /**
