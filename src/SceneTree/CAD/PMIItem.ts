@@ -5,7 +5,21 @@ import { CloneContext } from '../CloneContext'
 import { TreeItem } from '../TreeItem'
 import { GeomItem } from '../GeomItem'
 import { Material } from '../Material'
-import { ColorSpace, MaterialColorParam } from '..'
+import { BinReader } from '../BinReader'
+import { AssetLoadContext } from '../AssetLoadContext'
+import { MaterialColorParam, ColorSpace } from '../Parameters/MaterialColorParam'
+import { CADAsset } from './CADAsset'
+import { Cuboid } from '../Geometry/Shapes'
+import { FlatSurfaceMaterial } from '../Materials/FlatSurfaceMaterial'
+
+const plane = new Cuboid(1, 1, 1)
+const planeMaterial = new FlatSurfaceMaterial('plane')
+planeMaterial.baseColorParam.value = new Color(1, 1, 0, 0.001)
+planeMaterial.overlayParam.value = -0.001
+class PMIPickingPlane extends GeomItem {
+  addHighlight(name?: string, color?: Color, propagateToChildren = false): void {}
+  removeHighlight(name: string, propagateToChildren = false): void {}
+}
 
 /**
  * Represents a view of PMI data. within a CAD assembly.
@@ -77,6 +91,7 @@ class PMIItem extends TreeItem {
       baseColor.a = 1.0 // highlight colors often have zero alpha, as it controls the highlight fill.
       const materialCache: Record<number, Material> = {}
       this.traverse((treeItem: TreeItem) => {
+        if (treeItem instanceof PMIPickingPlane) return false
         if (treeItem instanceof GeomItem) {
           const material = treeItem.materialParam.value
           this.materialMapping[treeItem.getId()] = material
@@ -87,11 +102,24 @@ class PMIItem extends TreeItem {
               if (param instanceof MaterialColorParam) param.colorSpace = ColorSpace.Gamma
               param.setValue(baseColor)
             }
+            if (highlightMaterial.hasParameter('EdgeColor')) {
+              const param = highlightMaterial.getParameter('EdgeColor')
+              if (param instanceof MaterialColorParam) param.colorSpace = ColorSpace.Gamma
+              param.setValue(baseColor)
+            }
             if (highlightMaterial.hasParameter('Overlay')) {
               highlightMaterial.getParameter('Overlay').setValue(0.85)
             }
-            treeItem.materialParam.value = highlightMaterial
 
+            // This *hack* forces PMI text to be rendered to the transparent layer
+            // which means it will not have an outline drawn around it.
+            // Maybe we should add PMI to the 'OverLay' pass.
+            // This would assume that the overlay pass does not clear the depth buffer, which
+            // it does right now.
+            // @ts-ignore
+            highlightMaterial.__isTransparent = true
+
+            treeItem.materialParam.value = highlightMaterial
             // We can reuse this material on other PMI items with the same
             // original material
             materialCache[material.getId()] = highlightMaterial
@@ -110,6 +138,7 @@ class PMIItem extends TreeItem {
       if (linkedEntitiesParam) {
         const linkedEntityPaths = linkedEntitiesParam.getValue()
         linkedEntityPaths.forEach((pathStr: string, index: number) => {
+          if (pathStr == '') return
           const path = pathStr.split(', ')
           const elemId = path.pop()
           try {
@@ -128,7 +157,7 @@ class PMIItem extends TreeItem {
               }
               // linkedEntity.addHighlight(name + ':' + elemId, color, true)
             } else {
-              console.log('linkedEntity.addHighlight(name, color, true):failed')
+              console.log('linkedEntity.addHighlight(name, color, true):', path)
             }
           } catch (e) {
             console.log(index + ':' + (e as Record<string, any>).message)
@@ -173,6 +202,7 @@ class PMIItem extends TreeItem {
       if (linkedEntitiesParam) {
         const linkedEntityPaths = linkedEntitiesParam.getValue()
         linkedEntityPaths.forEach((pathStr: string) => {
+          if (pathStr == '') return
           const path = pathStr.split(', ')
           const elemId = path.pop()
           try {
@@ -204,6 +234,62 @@ class PMIItem extends TreeItem {
         }
       }
     }
+  }
+
+  // ///////////////////////////
+  // Persistence
+
+  /**
+   * Load the binary data for this class
+   * @param reader - The reader param.
+   * @param context - The context param.
+   */
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
+    super.readBinary(reader, context)
+
+    this.traverse((item) => {
+      if (item instanceof GeomItem) {
+        const material = item.materialParam.value
+        if (material.getShaderName() == 'StandardSurfaceShader') {
+          material.setShaderName('FlatSurfaceShader')
+        }
+        // This *hack* forces PMI text to be rendered to the transparent layer
+        // which means it will not have an outline drawn around it.
+        // Maybe we should add PMI to the 'OverLay' pass.
+        // This would assume that the overlay pass does not clear the depth buffer, which
+        // it does right now.
+        // @ts-ignore
+        material.__isTransparent = true
+      }
+    })
+
+    // Here we place a transparent plane behind the PMI Text to enable
+    // easier clicking on PMI items in the 3d Viewport.
+    context.assetItem.getGeometryLibrary().once('loaded', () => {
+      this.traverse((item) => {
+        // Note: We could implement a PMIText class that is generated in the bridge
+        // when processing PMI, so we don't need to do this hacky name check.
+        // Then the Text would be able to generate the plane during load.
+        if (item.getName().startsWith('Text')) {
+          const planeItems: GeomItem[] = []
+          item.traverse((item) => {
+            if (item instanceof GeomItem) {
+              const geom = item.geomParam.value
+              const bbox = geom.getBoundingBox()
+
+              const planeGeomItem = new PMIPickingPlane('plane', plane, planeMaterial)
+              const xfo = item.localXfoParam.value.multiply(item.geomOffsetXfoParam.value)
+              xfo.tr.addInPlace(bbox.center())
+              xfo.sc.multiplyInPlace(bbox.diagonal())
+              planeGeomItem.localXfoParam.value = xfo
+              planeItems.push(planeGeomItem)
+            }
+          }, false)
+          planeItems.forEach((planeItem) => item.addChild(planeItem, false))
+          return false
+        }
+      }, false)
+    })
   }
 }
 

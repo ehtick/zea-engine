@@ -278,6 +278,7 @@ function init() {
     AssetLoadContext,
     CADAsset,
     CADBody,
+    PMIItem,
     CompoundGeom,
     StringFunctions
   } = zeaEngine
@@ -293,8 +294,9 @@ function init() {
     enableOcclusionCulling: false,
   })
 
-  // renderer.outlineThickness = 1
-  // renderer.solidAngleLimit = 0.0;
+  renderer.outlineThickness = 0.5
+  renderer.outlineSensitivity = 5
+  
   renderer.setScene(scene)
   renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 10), new Vec3(0, 0, 1.5))
   // renderer.getViewport().backgroundColorParam.value = new Color(1, 0, 0)
@@ -351,7 +353,7 @@ function init() {
   const highlightColor = new Color('#F9CE03')
   highlightColor.a = 0.1
   const filterItem = (item) => {
-    while (item && !(item instanceof CADBody)) item = item.getOwner()
+    while (item && !((item instanceof CADBody) || (item instanceof PMIItem))) item = item.getOwner()
     return item
   }
 
@@ -397,7 +399,7 @@ function init() {
           if (highlightedItem && item != highlightedItem) {
             highlightedItem.removeHighlight(highlightKey, true)
           }
-          highlightedItem = item
+          highlightedItem = filterItem(item)
           highlightKey = 'pointerOverGeom'
           highlightedItem.addHighlight(highlightKey, highlightColor, true)
         }
@@ -417,28 +419,34 @@ function init() {
     if (event.key == 'f') renderer.frameAll()
   })
   renderer.getViewport().on('pointerDown', (event) => {
-    if (event.intersectionData && event.intersectionData.componentId >= 0) {
-      const geomItem = event.intersectionData.geomItem
-      if (geomItem instanceof CADBody && geomItem.geomParam.value instanceof CompoundGeom) {
-        // geomItem.assetItem.loadMetadata().then(() => {
-        //   const geom = geomItem.geomParam.value
+    if (event.intersectionData) {
+      if (event.intersectionData.componentId >= 0) {
+        // const geomItem = filterItem(event.intersectionData.geomItem)
+        // if (geomItem instanceof CADBody && geomItem.geomParam.value instanceof CompoundGeom) {
+        //   // geomItem.assetItem.loadMetadata().then(() => {
+        //   //   const geom = geomItem.geomParam.value
 
-        //   const subGeom = geom.subGeoms[event.intersectionData.componentId]
-        //   const json = subGeom.toJSON()
-        //   const surfaceInfoElement = document.getElementById('surface-info')
-        //   surfaceInfoElement.innerHTML = ''
-        //   // surfaceInfoElement.textContent = JSON.stringify(json, null, 2)
-        //   for (let key in json.params) {
-        //     const p = document.createElement('p')
-        //     p.textContent = `${key} : ${StringFunctions.stringifyJSONWithFixedPrecision(json.params[key].value, 0, 3)}`
-        //     surfaceInfoElement.appendChild(p)
-        //   }
-        //   // textContent.split('\n').forEach(line => {
-        //   //   const p = document.createElement('p')
-        //   //   p.textContent = line
-        //   //   surfaceInfoElement.appendChild(p)
+        //   //   const subGeom = geom.subGeoms[event.intersectionData.componentId]
+        //   //   const json = subGeom.toJSON()
+        //   //   const surfaceInfoElement = document.getElementById('surface-info')
+        //   //   surfaceInfoElement.innerHTML = ''
+        //   //   // surfaceInfoElement.textContent = JSON.stringify(json, null, 2)
+        //   //   for (let key in json.params) {
+        //   //     const p = document.createElement('p')
+        //   //     p.textContent = `${key} : ${StringFunctions.stringifyJSONWithFixedPrecision(json.params[key].value, 0, 3)}`
+        //   //     surfaceInfoElement.appendChild(p)
+        //   //   }
+        //   //   // textContent.split('\n').forEach(line => {
+        //   //   //   const p = document.createElement('p')
+        //   //   //   p.textContent = line
+        //   //   //   surfaceInfoElement.appendChild(p)
+        //   //   // })
         //   // })
-        // })
+        // }
+      } else {
+        const item = filterItem(event.intersectionData.geomItem)
+        if (item)
+          selectionManager.toggleItemSelection(item, event.ctrlKey)
       }
     }
   })
