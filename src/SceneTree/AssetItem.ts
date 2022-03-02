@@ -49,9 +49,9 @@ class AssetItem extends TreeItem {
   materialLibrary: MaterialLibrary = new MaterialLibrary()
   loaded: boolean = false
 
-  protected engineDataVersion?: Version
-  protected unitsScale: number = 1.0
-  protected units: string = 'meters'
+  engineDataVersion?: Version
+  unitsScale: number = 1.0
+  units: string = 'meters'
 
   /**
    * Create an asset item.

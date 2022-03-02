@@ -3,8 +3,8 @@ import { Version } from './Version'
 import { BaseItem } from './BaseItem'
 import { Parameter } from './Parameters/Parameter'
 import { AssetItem } from './AssetItem'
-import { GeomItem } from './GeomItem'
 import { BaseGeomItem } from './BaseGeomItem'
+import { Camera } from './Camera'
 
 /**
  * Provides a context for loading assets. This context can provide the units of the loading scene.
@@ -13,19 +13,18 @@ import { BaseGeomItem } from './BaseGeomItem'
  * to resolve the URL of an external reference that a given asset is expecting to find.
  */
 export class AssetLoadContext extends EventEmitter {
-  units: string
-  protected assets: Record<string, any>
-  protected resources: Record<string, any>
-  versions: Record<string, Version>
-  url: string
-  folder: string
-  protected sdk: string
-  assetItem: AssetItem
-  numTreeItems: number
-  numGeomItems: number
-  protected postLoadCallbacks: Array<() => void>
-  protected asyncCount: number
-
+  units: string = 'meters'
+  protected assets: Record<string, any> = {}
+  protected resources: Record<string, any> = {}
+  versions: Record<string, Version> = {}
+  url: string = ''
+  folder: string = ''
+  camera: Camera = null
+  assetItem: AssetItem = null
+  numTreeItems: number = 0
+  numGeomItems: number = 0
+  protected postLoadCallbacks: Array<() => void> = []
+  protected asyncCount: number = 0
 
   addGeomToLayer: (geomItem: BaseGeomItem, layer: string) => void
   /**
@@ -37,15 +36,6 @@ export class AssetLoadContext extends EventEmitter {
     this.units = context ? context.units : 'meters'
     this.assets = context ? context.assets : {}
     this.resources = context ? context.resources : {}
-    this.versions = {}
-    this.url = ''
-    this.folder = ''
-    this.sdk = ''
-    this.assetItem = null
-    this.numTreeItems = 0
-    this.numGeomItems = 0
-    this.postLoadCallbacks = [] // Post load callbacks.
-    this.asyncCount = 0
   }
 
   /**
@@ -55,7 +45,7 @@ export class AssetLoadContext extends EventEmitter {
    * As each external reference starts to load, it increments this counter, letting the owning
    * Asset know to wait till the children are loaded before emitting its own 'loaded' event.
    */
-  incrementAsync(): void  {
+  incrementAsync(): void {
     this.asyncCount++
   }
 
@@ -63,7 +53,7 @@ export class AssetLoadContext extends EventEmitter {
    * As each external reference completes loading, it decrements this counter allowing the owning
    * asset to know that the subtrees are loaded.
    */
-  decrementAsync(): void  {
+  decrementAsync(): void {
     this.asyncCount--
 
     // Wait for all nested XRefs to load before considering this asset loaded.
@@ -79,7 +69,11 @@ export class AssetLoadContext extends EventEmitter {
    * @param onSucceed called with the successful result of the path resolution.
    * @param onFail called when the path resolution fails.
    */
-  resolvePath(path: Array<string>, onSucceed: (result: BaseItem | Parameter<any>) => void, onFail: (e: Error) => void): void  {
+  resolvePath(
+    path: Array<string>,
+    onSucceed: (result: BaseItem | Parameter<any>) => void,
+    onFail: (e: Error) => void
+  ): void {
     // Note: Why not return a Promise here?
     // Promise evaluation is always async, so
     // all promises will be resolved after the current call stack
@@ -113,7 +107,7 @@ export class AssetLoadContext extends EventEmitter {
    * e.g. an instance will
    * @param postLoadCallback
    */
-  addPLCB(postLoadCallback: () => void): void  {
+  addPLCB(postLoadCallback: () => void): void {
     this.postLoadCallbacks.push(postLoadCallback)
   }
 }
