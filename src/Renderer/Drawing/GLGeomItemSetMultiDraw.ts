@@ -21,6 +21,9 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   protected glgeomItemEventHandlers: any[] = []
   protected freeIndices: number[] = []
 
+  // The last camera position from which the data was sorted
+  protected viewPos: Vec3 = new Vec3()
+
   // Mapping from the array of glGeomItems, to the actual rendering
   // order. When rendering transparent geoms, we sort this array.
 
@@ -152,6 +155,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       const drawIndex = this.drawOrderToIndex.indexOf(index)
       this.drawOrderToIndex.splice(drawIndex, 1)
       this.indexToDrawIndex[index] = -1
+      this.drawElementCounts[drawIndex] = 0
       this.drawIdsBufferDirty = true
     }
     if (glGeomItem.geomItem.isHighlighted()) {
@@ -522,20 +526,16 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     })
     this.drawOrderToIndex.sort((a, b) => distances[b] - distances[a])
 
-    const drawElementCounts = new Int32Array(this.drawElementCounts.length)
-    const drawElementOffsets = new Int32Array(this.drawElementOffsets.length)
     this.drawOrderToIndex.forEach((itemIndex, drawIndex) => {
       const glGeomItem = this.glGeomItems[itemIndex]
       if (glGeomItem) {
-        drawElementCounts[drawIndex] = this.drawElementCounts[itemIndex]
-        drawElementOffsets[drawIndex] = this.drawElementOffsets[itemIndex]
         this.drawIdsArray[drawIndex] = glGeomItem.geomItemId
         this.indexToDrawIndex[itemIndex] = drawIndex
       }
     })
-    this.drawElementCounts = drawElementCounts
-    this.drawElementOffsets = drawElementOffsets
+    // Force the re-generation of the draw ids texture using the new ordering.
     this.drawIdsBufferDirty = true
+    this.viewPos = viewPos
   }
 
   /**
