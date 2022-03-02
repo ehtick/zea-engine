@@ -6,6 +6,7 @@ import { AssetLoadContext } from '../AssetLoadContext'
 import { Registry } from '../../Registry'
 import { CloneContext } from '../CloneContext'
 import { PMIItem } from './PMIItem'
+import { GeomItem } from '../GeomItem'
 
 /**
  * Represents a view of PMI data. within a CAD assembly.
@@ -70,7 +71,7 @@ class PMIView extends PMIItem {
 
     if (this.camera) {
       const cameraXfo = this.localXfoParam.value.clone()
-      const TargetPoint = this.getParameter('TargetPoint').getValue()
+      const TargetPoint = this.getParameter('TargetPoint').getValue().clone()
       const CameraType = this.getParameter('CameraType').getValue()
 
       cameraXfo.tr.scaleInPlace(assetItem.unitsScale)
@@ -94,6 +95,28 @@ class PMIView extends PMIItem {
           this.camera.setFrustumHeight(FrustHeight)
         }
       }
+    }
+
+    if (this.hasParameter('ClippingPlaneOrigin')) {
+      const clippingPlaneOrigin = this.getParameter('ClippingPlaneOrigin').getValue()
+      const clippingPlaneNormal = this.getParameter('ClippingPlaneNormal').getValue()
+      const cutEnabled = true
+      const cutAwayDist = -clippingPlaneOrigin.dot(clippingPlaneNormal) * assetItem.unitsScale
+      pmiOwner.traverse((item: TreeItem) => {
+        if (item instanceof PMIItem) return false
+        if (item instanceof GeomItem) {
+          item.setCutawayEnabled(cutEnabled)
+          item.setCutVector(clippingPlaneNormal)
+          item.setCutDist(cutAwayDist)
+        }
+      })
+    } else {
+      pmiOwner.traverse((item: TreeItem) => {
+        if (item instanceof PMIItem) return false
+        if (item instanceof GeomItem) {
+          item.setCutawayEnabled(false)
+        }
+      })
     }
   }
 

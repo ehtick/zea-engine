@@ -299,7 +299,7 @@ function init() {
   
   renderer.setScene(scene)
   renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 10), new Vec3(0, 0, 1.5))
-  // renderer.getViewport().backgroundColorParam.value = new Color(1, 0, 0)
+  renderer.getViewport().backgroundColorParam.value = new Color(0.25, 0.25, 0.25)
   renderer.getViewport().getManipulator().setDefaultManipulationMode('tumbler')
 
   const envMap = new EnvMap()
@@ -529,6 +529,7 @@ function init() {
   const zcad = urlParams.has('zcad') ? urlParams.get('zcad') : '../data/HC_SRO4.zcad'
   if (zcad) {
     const context = new AssetLoadContext()
+    // context.units = "Millimeters"
     context.camera = renderer.getViewport().getCamera()
     asset.load(zcad, context).then(() => {
       renderer.frameAll()

@@ -45,10 +45,15 @@ class StandardSurfaceShader extends GLShader {
       colorRenderState.envMap.bind(colorRenderState)
     }
 
-    const { exposure } = colorRenderState.unifs
+    const { exposure, cutColor } = colorRenderState.unifs
     if (exposure) {
       gl.uniform1f(exposure.location, colorRenderState.exposure)
     }
+
+    if (cutColor) {
+      gl.uniform4f(cutColor.location, 1, 0, 0, 1)
+    }
+
     return true
   }
 
