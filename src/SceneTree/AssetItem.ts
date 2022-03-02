@@ -8,7 +8,7 @@ import { GeomItem } from './GeomItem'
 import { BinReader } from './BinReader'
 import { AssetLoadContext } from './AssetLoadContext'
 import { CloneContext } from './CloneContext'
-import { BaseGeomItem, BaseItem, Parameter } from '.'
+import { BaseGeomItem, BaseItem, Parameter, StringParameter } from '.'
 
 /**
  * Given a units string, load returns a factor relative to meters
@@ -136,6 +136,10 @@ class AssetItem extends TreeItem {
 
     const loadUnits = () => {
       this.units = reader.loadStr()
+
+      // Add this param so it is displayed in the CADViewer.
+      this.addParameter(new StringParameter('FileUnits', this.units))
+
       // Calculate a scale factor to convert
       // the asset units to meters(the scene units)
       const unitsFactor = getUnitsFactor(this.units)
