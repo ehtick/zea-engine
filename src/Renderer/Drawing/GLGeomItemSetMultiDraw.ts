@@ -217,7 +217,8 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       }
 
       this.drawOrderToIndex.forEach((itemIndex, drawIndex) => {
-        const glGeomItem = this.glGeomItems[itemIndex]!
+        const glGeomItem = this.glGeomItems[itemIndex]
+        if (!glGeomItem) return
         const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
         this.drawElementOffsets[drawIndex] = offsetAndCount[0]
         this.drawElementCounts[drawIndex] = glGeomItem.isVisible() ? offsetAndCount[1] : 0
