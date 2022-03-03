@@ -93,7 +93,8 @@ class GLShaderGeomSets extends EventEmitter {
       this.pass.removeGeomItem(geomItem)
       this.pass.renderer!.assignTreeItemToGLPass(geomItem)
     }
-    material.on('transparencyChanged', geomItemParamChanged)
+    material.on('opacityChanged', geomItemParamChanged)
+    geomItem.on('opacityChanged', geomItemParamChanged)
     geomItem.materialParam.on('valueChanged', geomItemParamChanged)
     geomItem.geomParam.on('valueChanged', geomItemParamChanged)
 
@@ -112,7 +113,8 @@ class GLShaderGeomSets extends EventEmitter {
     const geomItem = glGeomItem.geomItem
     const material = glGeomItem.material
     const geomItemParamChanged = glGeomItem.geomItemParamChanged
-    material.off('transparencyChanged', geomItemParamChanged)
+    material.off('opacityChanged', geomItemParamChanged)
+    geomItem.off('opacityChanged', geomItemParamChanged)
     geomItem.materialParam.off('valueChanged', geomItemParamChanged)
     geomItem.geomParam.off('valueChanged', geomItemParamChanged)
     glGeomItem.material = null

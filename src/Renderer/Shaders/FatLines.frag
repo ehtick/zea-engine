@@ -37,6 +37,7 @@ void main(void) {
 #ifndef ENABLE_ES3
   vec4 fragColor;
 #endif
+  float treeItemOpacity = v_geomItemData.y;
 
 #if defined(DRAW_COLOR)
   int debugLevel = 0;
@@ -50,14 +51,15 @@ void main(void) {
     NdotV *= cos((v_texCoord.x - 0.5) * 2.0);
 
     vec4 color = BaseColor * NdotV;
-    fragColor = vec4(color.rgb, BaseColor.a);
+    fragColor = vec4(color.rgb, BaseColor.a * treeItemOpacity);
   }
   else {
     fragColor = vec4(v_texCoord.x, 0.0, 0.0, 1.0);
   }
 #elif defined(DRAW_GEOMDATA)
   int geomItemId = int(v_geomItemId + 0.5);
-  int flags = int(v_geomItemData.r + 0.5);
+  int flags = int(v_geomItemData.x + 0.5);
+
  // Cutaways
   if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
     vec4 cutAwayData  = getCutaway(geomItemId);

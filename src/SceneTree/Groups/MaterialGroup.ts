@@ -36,7 +36,7 @@ class MaterialGroup extends BaseGroup {
 
     this.addParameter(this.materialParam)
     this.materialParam.on('valueChanged', () => {
-      this.__updateMaterial()
+      this.updateMaterial()
     })
   }
 
@@ -90,24 +90,37 @@ class MaterialGroup extends BaseGroup {
   // Materials
 
   /**
-   * The __updateMaterial method.
+   * The updateOpacity method.
+   */
+  protected updateOpacity() {
+    super.updateOpacity()
+
+    Array.from(this.itemsParam.value).forEach((item) => {
+      if (item instanceof TreeItem) {
+        item.opacityParam.value = this.opacity
+      }
+    })
+  }
+
+  /**
+   * The updateMaterial method.
    * @private
    */
-  __updateMaterial() {
+  private updateMaterial() {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
 
     // setTimeout(() => {}, 0)
     // TODO: make async
-    this.__updateMaterialHelper()
+    this.updateMaterialHelper()
   }
 
   /**
-   * The __updateMaterial method.
+   * The updateMaterial method.
    * @private
    */
-  __updateMaterialHelper(): void {
+  private updateMaterialHelper(): void {
     const material = this.materialParam.value
 
     // TODO: Bind an operator
@@ -175,15 +188,17 @@ class MaterialGroup extends BaseGroup {
         }
       }, true)
     }
+
+    item.opacityParam.value = this.opacity
   }
 
   /**
-   * The __unbindItem method.
+   * The unbindItem method.
    * @param item - The item value.
    * @param index - The index value.
    * @private
    */
-  __unbindItem(item: BaseItem, index: number): void {
+  unbindItem(item: BaseItem, index: number): void {
     super.unbindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 

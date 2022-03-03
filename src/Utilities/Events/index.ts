@@ -14,7 +14,7 @@ export * from './ShaderNameChangedEvent'
 export * from './StateChangedEvent'
 export * from './StreamFileParsedEvent'
 export * from './TexturedChangedEvent'
-export * from './TransparencyChangedEvent'
+export * from './OpacityStateChangedEvent'
 export * from './ViewChangedEvent'
 export * from './VisibilityChangedEvent'
 

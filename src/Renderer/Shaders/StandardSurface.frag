@@ -132,7 +132,8 @@ void main(void) {
   int geomItemId = int(v_drawItemIds.x + 0.5);
   int elemId = int(v_drawItemIds.y + 0.5);
   int perFaceMaterialId = int(v_drawItemIds.z);
-  int flags = int(v_geomItemData.r + 0.5);
+  int flags = int(v_geomItemData.x + 0.5);
+  float treeItemOpacity = v_geomItemData.y;
 
   if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
     vec4 cutAwayData   = getCutaway(geomItemId);
@@ -205,7 +206,7 @@ void main(void) {
   material.reflectance   = matValue1.a;
 
   material.emission         = matValue2.r;
-  material.opacity          = matValue2.g * matValue0.a;
+  material.opacity          = matValue2.g * matValue0.a * treeItemOpacity;
   if (material.opacity < 0.001) discard;
 
 #else // ENABLE_MULTI_DRAW
@@ -279,7 +280,7 @@ void main(void) {
     vec4 edgeColor      = EdgeColor;
     vec4 opacity        = Opacity;
 #endif // ENABLE_MULTI_DRAW
-    edgeColor.a = opacity;
+    edgeColor.a = opacity * treeItemOpacity;
     if (edgeColor.a < 0.001) discard;
     fragColor = edgeColor;
   } // end 'LINES'
@@ -292,7 +293,7 @@ void main(void) {
     vec4 pointColor      = PointColor;
     vec4 opacity        = Opacity;
 #endif // ENABLE_MULTI_DRAW
-    pointColor.a = opacity;
+    pointColor.a = opacity * treeItemOpacity;
     if (pointColor.a < 0.001) discard;
     fragColor = pointColor;
   }  // end 'POINTS'
@@ -325,11 +326,11 @@ void main(void) {
 
 
   // We can make geoms invisible to hide them. 
-  // Avoid drawig GeomData for geoms that are completely transparent.
+  // Avoid drawing GeomData for geoms that are completely transparent.
   if (geomType == TRIANGLES) { // start 'TRIANGLES'
     vec4 matValue0      = getMaterialValue(materialCoords, 0);
     vec4 matValue2      = getMaterialValue(materialCoords, 2);
-    float opacity          = matValue2.g * matValue0.a;
+    float opacity          = matValue2.g * matValue0.a * treeItemOpacity;
     if (opacity < 0.001) {
       discard;
       return;
@@ -341,7 +342,8 @@ void main(void) {
 #else 
     vec4 edgeColor      = EdgeColor;
 #endif // ENABLE_MULTI_DRAW
-    if (edgeColor.a < 0.001) {
+    float opacity          = edgeColor.a * treeItemOpacity;
+    if (opacity < 0.001) {
       discard;
       return;
     }
@@ -352,7 +354,8 @@ void main(void) {
 #else 
     vec4 pointColor      = PointColor;
 #endif // ENABLE_MULTI_DRAW
-    if (pointColor.a < 0.001) {
+    float opacity          = pointColor.a * treeItemOpacity;
+    if (opacity < 0.001) {
       discard;
       return;
     }

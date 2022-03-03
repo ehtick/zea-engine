@@ -94,11 +94,11 @@ class GLShader extends BaseItem {
   }
 
   /**
-   * The isTransparent method.
+   * The isOpaque method.
    * @return - The return value.
    */
-  static isTransparent(): boolean {
-    return false
+  static isOpaque(): boolean {
+    return true
   }
 
   /**

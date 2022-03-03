@@ -740,10 +740,10 @@ class GLGeomItemLibrary extends EventEmitter {
     const materialChanged = () => {
       // Ref count the materials in the material library.
       this.renderer.glMaterialLibrary.removeMaterial(material)
-      material.off('transparencyChanged', geomItemChanged)
+      material.off('opacityChanged', geomItemChanged)
       material = materialParam.value!
       glGeomItem.materialId = this.renderer.glMaterialLibrary.addMaterial(material)
-      material.on('transparencyChanged', geomItemChanged)
+      material.on('opacityChanged', geomItemChanged)
 
       workerItemDataChanged()
       geomItemChanged()
@@ -796,7 +796,8 @@ class GLGeomItemLibrary extends EventEmitter {
     geomItem.on('cutAwayChanged', geomItemChanged)
     geomItem.on('highlightChanged', geomItemChanged)
     geomItem.on('selectabilityChanged', geomItemChanged)
-    material.on('transparencyChanged', geomItemChanged)
+    material.on('opacityChanged', geomItemChanged)
+    geomItem.on('opacityChanged', geomItemChanged)
 
     const workerItemDataChanged = () => {
       if (this.enableFrustumCulling) {
@@ -811,6 +812,7 @@ class GLGeomItemLibrary extends EventEmitter {
     }
 
     geomItem.on('visibilityChanged', workerItemDataChanged)
+    geomItem.on('opacityChanged', workerItemDataChanged)
     geomItem.geomMatParam.on('valueChanged', workerItemDataChanged)
     geomParam.on('boundingBoxChanged', workerItemDataChanged)
 
@@ -861,11 +863,13 @@ class GLGeomItemLibrary extends EventEmitter {
     geomItem.off('cutAwayChanged', handlers.geomItemChanged)
     geomItem.off('highlightChanged', handlers.geomItemChanged)
     geomItem.off('selectabilityChanged', handlers.geomItemChanged)
-    material.off('transparencyChanged', handlers.geomItemChanged)
+    material.off('opacityChanged', handlers.geomItemChanged)
+    geomItem.off('opacityChanged', handlers.geomItemChanged)
 
     geomItem.off('visibilityChanged', handlers.workerItemDataChanged)
     geomItem.geomMatParam.off('valueChanged', handlers.workerItemDataChanged)
     geomParam.off('boundingBoxChanged', handlers.workerItemDataChanged)
+    geomItem.off('opacityChanged', handlers.workerItemDataChanged)
 
     this.glGeomItems[index] = null
     this.glGeomItemEventHandlers[index] = null
@@ -939,12 +943,12 @@ class GLGeomItemLibrary extends EventEmitter {
     if (!geomItem.isSelectable()) {
       flags |= GLGeomItemFlags.GEOMITEM_INVISIBLE_IN_GEOMDATA
     }
-    if (material.isTransparent()) {
+    if (!material.isOpaque() || !geomItem.isOpaque()) {
       flags |= GLGeomItemFlags.GEOMITEM_TRANSPARENT
     }
 
     const pix0 = new Vec4(new Float32Array(dataArray.buffer, (offset + 0) * 4, 4))
-    pix0.set(flags, 0, 0, 0)
+    pix0.set(flags, geomItem.opacity, 0, 0)
 
     const allocation = this.renderer.glMaterialLibrary.getMaterialAllocation(material)
     if (allocation) {
@@ -1027,7 +1031,7 @@ class GLGeomItemLibrary extends EventEmitter {
       cullable = false
     }
 
-    const transparent = geomItem.materialParam.value.isTransparent()
+    const transparent = !geomItem.isOpaque() || !material.isOpaque()
 
     const geomStats = {
       triangles: 0,

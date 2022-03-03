@@ -457,13 +457,13 @@ const handleMessage = (data, postMessage) => {
           const becomingOpaque = geomItemsData[index].transparent && !geomItemData.transparent
           if (becomingTransparent) {
             if (enableOcclusionCulling && !outOfFrustum[index] && occluded[index]) {
-              // Items becoming transparent must be unculled immedietly.
+              // Items becoming transparent must be unculled immediately.
               newlyUnCulled.push(index)
               geomStats_add(geomItemData.geomStats)
             }
           } else if (becomingOpaque) {
-            console.log('Becoming opaque:', index)
-            // Items becoming transparent must be unculled immedietly.
+            // console.log('Becoming opaque:', index)
+            // Items becoming transparent must be unculled immediately.
             // Occlusion culling can only determine if something is visible
             // meaning that we assume it is not, until it shows up in the occlusion buffer.
             // Once it appears in the occlusion buffer, we start rendering it again.

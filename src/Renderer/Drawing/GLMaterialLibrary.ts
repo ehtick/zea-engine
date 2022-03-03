@@ -76,13 +76,6 @@ class GLMaterialLibrary extends EventEmitter {
     }
     material.on('parameterValueChanged', parameterValueChanged)
 
-    // const transparencyChanged = () => {
-    //   material.off('parameterValueChanged', parameterValueChanged)
-    //   material.off('transparencyChanged', transparencyChanged)
-    //   this.removeMaterial(material)
-    // }
-    // material.on('transparencyChanged', transparencyChanged)
-
     this.dirtyIndices.add(index)
 
     return index

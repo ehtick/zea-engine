@@ -12,7 +12,7 @@ import { MaterialColorParam } from './Parameters/MaterialColorParam'
 import { BinReader } from './BinReader'
 import { shaderLibrary } from '../Renderer/ShaderLibrary'
 import { ShaderNameChangedEvent } from '../Utilities/Events/ShaderNameChangedEvent'
-import { TransparencyChangedEvent } from '../Utilities/Events/TransparencyChangedEvent'
+import { OpacityStateChangedEvent } from '../Utilities/Events/OpacityStateChangedEvent'
 import { TexturedChangedEvent } from '../Utilities/Events/TexturedChangedEvent'
 import { GLShader } from '../Renderer'
 import { CloneContext } from './CloneContext'
@@ -29,7 +29,7 @@ import { AssetLoadContext, ColorParameter, NumberParameter } from '..'
  */
 // TODO: make abstract after subclasses checked
 class Material extends BaseItem {
-  protected __isTransparent: boolean = false
+  protected __isOpaque: boolean = true
   protected __isTextured: boolean = false
   protected __shaderName: string = ''
   /**
@@ -85,7 +85,7 @@ class Material extends BaseItem {
     }
 
     this.__shaderName = shaderName
-    this.__checkTransparency({})
+    this.__checkOpacity({})
     const event = new ShaderNameChangedEvent(shaderName)
     this.emit('shaderNameChanged', event)
   }
@@ -93,7 +93,7 @@ class Material extends BaseItem {
   /**
    * Remove all textures from Material's parameters.
    */
-  removeAllTextures(): void{
+  removeAllTextures(): void {
     for (const param of this.params) {
       if (param instanceof MaterialColorParam) {
         if ((<MaterialColorParam>param).getImage()) (<MaterialColorParam>param).setImage(null)
@@ -128,44 +128,45 @@ class Material extends BaseItem {
    *
    * @return - Returns true if the material is transparent.
    */
-  isTransparent(): boolean {
-    return this.__isTransparent
+  isOpaque(): boolean {
+    return this.__isOpaque
   }
 
-  __checkTransparency(event?: Record<string, any>): void {
-    let isTransparent = false
+  private __checkOpacity(event?: Record<string, any>): void {
+    let isOpaque = true
     try {
       const shaderClass = this.getShaderClass()
-      if (shaderClass.isTransparent()) {
-        isTransparent = true
+      if (!shaderClass.isOpaque()) {
+        isOpaque = false
       }
     } catch (e) {}
 
-    if (!isTransparent) {
+    if (isOpaque) {
       const opacity = <NumberParameter>this.getParameter('Opacity')
       if (opacity && (opacity.value < 0.99 || (opacity instanceof MaterialFloatParam && opacity.getImage()))) {
-        isTransparent = true
+        isOpaque = false
       } else {
         const baseColorParam = <ColorParameter>this.getParameter('BaseColor')
         if (baseColorParam) {
           if (baseColorParam instanceof MaterialColorParam) {
             const image = baseColorParam.getImage()
             if (image && image.format == 'RGBA') {
-              isTransparent = true
+              isOpaque = false
             }
           }
-          if (!isTransparent && baseColorParam.value) {
+          if (isOpaque && baseColorParam.value) {
             const color_val = baseColorParam.value
-            if (color_val.a < 1) isTransparent = true
+            if (color_val.a < 1) isOpaque = false
           }
         }
       }
     }
 
-    if (isTransparent != this.__isTransparent) {
-      this.__isTransparent = isTransparent
-      const event = new TransparencyChangedEvent(isTransparent)
-      this.emit('transparencyChanged', event)
+    if (isOpaque != this.__isOpaque) {
+      this.__isOpaque = isOpaque
+      const event = new OpacityStateChangedEvent(isOpaque)
+      this.emit('opacityChanged', event)
+      this.emit('transparencyChanged', event) // For legacy listeners
     }
   }
 
@@ -210,7 +211,7 @@ class Material extends BaseItem {
    * @private
    */
   parameterValueChanged(event: Record<string, any>): void {
-    this.__checkTransparency(event)
+    this.__checkOpacity(event)
     this.__checkTextures(event)
     super.parameterValueChanged(event)
   }
@@ -327,7 +328,7 @@ class Material extends BaseItem {
     } else {
       super.readBinary(reader, context)
     }
-    this.__checkTransparency()
+    this.__checkOpacity()
     this.__checkTextures()
   }
 
@@ -353,7 +354,7 @@ class Material extends BaseItem {
    * @param src - The material to copy from.
    * @param context - The context value.
    */
-  copyFrom(src: Material, context?: CloneContext): void{
+  copyFrom(src: Material, context?: CloneContext): void {
     this.setShaderName(src.getShaderName())
     super.copyFrom(src, context)
   }

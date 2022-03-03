@@ -48,16 +48,16 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    */
   filterGeomItem(geomItem: GeomItem): boolean {
     const material = geomItem.materialParam.value
-    return this.checkMaterial(material)
+    return geomItem.isOpaque() && material.isOpaque()
   }
 
   /**
-   * Checks the material to see if it is not transparent.
+   * Checks the material to see if it is opaque.
    * @param material - The geomItem value.
    * @return - The return value.
    */
   checkMaterial(material: Material): boolean {
-    return !material.isTransparent()
+    return material.isOpaque()
   }
 
   /**

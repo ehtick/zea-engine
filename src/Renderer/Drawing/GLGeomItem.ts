@@ -2,7 +2,7 @@ import { EventEmitter } from '../../Utilities/index'
 import { GeomItem, CADBody } from '../../SceneTree'
 import { RenderState } from '../types/renderer'
 import { WebGL12RenderingContext } from '../types/webgl'
-import { VisibilityChangedEvent, TransparencyChangedEvent, StateChangedEvent } from '../../Utilities/Events'
+import { VisibilityChangedEvent, OpacityStateChangedEvent, StateChangedEvent } from '../../Utilities/Events'
 
 const GLGeomItemChangeType = {
   GEOMITEM_CHANGED: 0,
@@ -103,7 +103,7 @@ class GLGeomItem extends EventEmitter {
       if (!geomItem.isSelectable()) {
         flags |= GLGeomItemFlags.GEOMITEM_INVISIBLE_IN_GEOMDATA
       }
-      if (geomItem.materialParam.value.isTransparent()) {
+      if (!geomItem.materialParam.value.isOpaque()) {
         flags |= GLGeomItemFlags.GEOMITEM_TRANSPARENT
       }
 
@@ -118,16 +118,16 @@ class GLGeomItem extends EventEmitter {
         this.cutDataChanged = true
         this.emit('updated')
       })
-      this.listenerIDs['transparencyChanged'] = this.geomItem.materialParam.on(
-        'transparencyChanged',
-        (event: TransparencyChangedEvent) => {
-          let flags = this.geomData[0]
-          if (event.isTransparent) flags |= GLGeomItemFlags.GEOMITEM_TRANSPARENT
-          else flags &= ~GLGeomItemFlags.GEOMITEM_TRANSPARENT
-          this.geomData[0]
-          this.emit('updated')
-        }
-      )
+
+      const opacityChanged = (event: OpacityStateChangedEvent) => {
+        let flags = this.geomData[0]
+        if (event.isOpaque) flags &= ~GLGeomItemFlags.GEOMITEM_TRANSPARENT
+        else flags |= GLGeomItemFlags.GEOMITEM_TRANSPARENT
+        this.geomData[0]
+        this.emit('updated')
+      }
+      this.listenerIDs['opacityChanged'] = this.geomItem.on('opacityChanged', opacityChanged)
+      this.listenerIDs['material:opacityChanged'] = this.geomItem.materialParam.on('opacityChanged', opacityChanged)
     }
   }
 

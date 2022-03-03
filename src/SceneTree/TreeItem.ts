@@ -2,10 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Xfo, Box3, Color } from '../Math/index'
 import { Registry } from '../Registry'
-// import { BooleanParameter, Parameter, XfoParameter } from './Parameters/index'
 import { BooleanParameter } from './Parameters/BooleanParameter'
-
+import { NumberParameter } from './Parameters/NumberParameter'
 import { XfoParameter } from './Parameters/XfoParameter'
+
 import { BaseItem } from './BaseItem'
 import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator'
 import { BoundingBoxParameter } from './Parameters/BoundingBoxParameter'
@@ -20,6 +20,7 @@ import { CloneContext } from './CloneContext'
 import { AssetLoadContext } from './AssetLoadContext'
 import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
 import { VisibilityChangedEvent } from '../Utilities/Events/VisibilityChangedEvent'
+import { OpacityStateChangedEvent } from '../Utilities/Events/OpacityStateChangedEvent'
 
 /**
  * Class representing an Item in the scene tree with hierarchy capabilities (has children).
@@ -75,11 +76,18 @@ class TreeItem extends BaseItem {
    */
   visibleParam: BooleanParameter = new BooleanParameter('Visible', true)
 
+  /**
+   * @member opacityParam - Controls, in combination with Material transparency,
+   * the opacity of this item and its children.
+   */
+  opacityParam: NumberParameter = new NumberParameter('Opacity', 1)
+
   protected __highlightMapping: Record<string, Color> = {}
   protected __highlights: Array<string> = []
 
   protected __visible: boolean = true
   protected __visibleCounter: number = 1 // Visible by Default.
+  protected __opacity: number = 1 // Opaque by Default.
 
   protected globalXfoOp: Operator
 
@@ -98,6 +106,7 @@ class TreeItem extends BaseItem {
     // Add parameters.
 
     this.addParameter(this.visibleParam)
+    this.addParameter(this.opacityParam)
     this.addParameter(this.localXfoParam)
     this.addParameter(this.globalXfoParam)
     this.addParameter(this.boundingBoxParam)
@@ -112,6 +121,9 @@ class TreeItem extends BaseItem {
     this.visibleParam.on('valueChanged', () => {
       this.__visibleCounter += this.visibleParam.value ? 1 : -1
       this.updateVisibility()
+    })
+    this.opacityParam.on('valueChanged', () => {
+      this.updateOpacity()
     })
   }
 
@@ -210,7 +222,6 @@ class TreeItem extends BaseItem {
   /**
    * The updateVisibility method.
    * @return - Returns a boolean.
-   * @private
    */
   protected updateVisibility(): boolean {
     const visible = this.__visibleCounter > 0
@@ -230,6 +241,38 @@ class TreeItem extends BaseItem {
       return true
     }
     return false
+  }
+
+  // ////////////////////////////////////////
+  // Opacity
+
+  get opacity() {
+    return this.__opacity
+  }
+
+  /**
+   * Returns the current status of the opacity value.
+   *
+   * @return - Returns true if the opacity value is less than 1.
+   */
+  isOpaque() {
+    return this.__opacity > 0.999
+  }
+
+  /**
+   * The updateOpacity method.
+   */
+  protected updateOpacity() {
+    const wasOpaque = this.__opacity > 0.999
+    const parent = this.getParentItem()
+    if (parent) this.__opacity = this.opacityParam.value * parent.__opacity
+    else this.__opacity = this.opacityParam.value
+
+    for (const childItem of this.__childItems) {
+      childItem.updateOpacity()
+    }
+    const isOpaque = this.__opacity > 0.999
+    if (wasOpaque != isOpaque) this.emit('opacityChanged', new OpacityStateChangedEvent(isOpaque))
   }
 
   // ////////////////////////////////////////

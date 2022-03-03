@@ -160,6 +160,9 @@ Object {
         "type": "Material",
       },
     },
+    "Opacity": Object {
+      "value": 1,
+    },
     "Visible": Object {
       "value": true,
     },

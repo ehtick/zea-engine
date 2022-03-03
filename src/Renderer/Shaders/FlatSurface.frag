@@ -45,7 +45,9 @@ void main(void) {
 #endif
 
   int geomItemId = int(v_drawItemIds.x + 0.5);
-  int flags = int(v_geomItemData.r + 0.5);
+  int flags = int(v_geomItemData.x + 0.5);
+  float treeItemOpacity = v_geomItemData.y;
+
   // Cutaways
   if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) 
   {
@@ -78,6 +80,7 @@ void main(void) {
 
 #endif // ENABLE_MULTI_DRAW
 
+  baseColor.a *= treeItemOpacity;
   if (baseColor.a < 0.001) discard;
 
 #if defined(DRAW_COLOR)

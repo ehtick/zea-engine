@@ -68,7 +68,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     if (geom instanceof Lines || geom instanceof Points || geom instanceof PointsProxy || geom instanceof LinesProxy)
       return false
     const material = geomItem.materialParam.value
-    return material.isTransparent()
+    return !geomItem.isOpaque() || !material.isOpaque()
   }
 
   /**
@@ -136,13 +136,13 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     // then the object moves to the OpaqueGeomsPass
     const materialChanged = () => {
       material.removeListenerById('valueChanged', listenerIDs['material.valueChanged'])
-      material.removeListenerById('transparencyChanged', listenerIDs['material.transparencyChanged'])
+      material.removeListenerById('opacityChanged', listenerIDs['material.opacityChanged'])
       materialParam.removeListenerById('valueChanged', listenerIDs['materialParam.valueChanged'])
       this.removeGeomItem(geomItem)
       this.renderer!.assignTreeItemToGLPass(geomItem)
     }
     listenerIDs['material.valueChanged'] = material.on('valueChanged', materialChanged)
-    listenerIDs['material.transparencyChanged'] = material.on('transparencyChanged', materialChanged)
+    listenerIDs['material.opacityChanged'] = material.on('opacityChanged', materialChanged)
     listenerIDs['materialParam.valueChanged'] = materialParam.on('valueChanged', materialChanged)
 
     // ////////////////////////////////////
@@ -215,7 +215,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       delete this.transparentItemIndices[geomItem.getId()]
 
       material.removeListenerById('valueChanged', listenerIDs['material.valueChanged'])
-      material.removeListenerById('transparencyChanged', listenerIDs['material.transparencyChanged'])
+      material.removeListenerById('opacityChanged', listenerIDs['material.opacityChanged'])
       materialParam.removeListenerById('valueChanged', listenerIDs['materialParam.valueChanged'])
       geomItem.getParameter('GeomMat')!.removeListenerById('valueChanged', listenerIDs['GeomMat.valueChanged'])
 

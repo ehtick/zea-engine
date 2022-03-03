@@ -67,7 +67,9 @@ void main(void) {
   int geomItemId = int(v_drawItemIds.x + 0.5);
   int elemId = int(v_drawItemIds.y + 0.5);
   int perFaceMaterialId = int(v_drawItemIds.z);
-  int flags = int(v_geomItemData.r + 0.5);
+  int flags = int(v_geomItemData.x + 0.5);
+  float treeItemOpacity = v_geomItemData.y;
+
   // Cutaways
   if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) 
   {
@@ -130,10 +132,10 @@ void main(void) {
 #ifndef ENABLE_TEXTURES
   vec4 baseColor      = BaseColor;
   float emission      = EmissiveStrength;
-  float opacity       = baseColor.a * Opacity;
+  float opacity       = baseColor.a * Opacity * treeItemOpacity;
 #else
   vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
-  float opacity       = baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexType, v_textureCoord);
+  float opacity       = baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexType, v_textureCoord) * treeItemOpacity;
   float emission      = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexType, v_textureCoord);
 #endif
 

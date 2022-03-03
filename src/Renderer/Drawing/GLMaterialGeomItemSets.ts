@@ -32,7 +32,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
 
     const material = glMaterial.getMaterial()
     const materialChanged = (event: Record<string, any>) => {
-      material.off('transparencyChanged', materialChanged)
+      material.off('opacityChanged', materialChanged)
       for (const key in this.glGeomItemSets) {
         const glGeomItemSet = this.glGeomItemSets[key]
         for (const glGeomItem of glGeomItemSet.glGeomItems) {
@@ -42,7 +42,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
         }
       }
     }
-    material.on('transparencyChanged', materialChanged)
+    material.on('opacityChanged', materialChanged)
   }
 
   /**
