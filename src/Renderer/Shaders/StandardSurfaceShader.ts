@@ -51,7 +51,7 @@ class StandardSurfaceShader extends GLShader {
     }
 
     if (cutColor) {
-      gl.uniform4f(cutColor.location, 1, 0, 0, 1)
+      gl.uniform4f(cutColor.location, 0.3, 0, 0, 1)
     }
 
     return true
