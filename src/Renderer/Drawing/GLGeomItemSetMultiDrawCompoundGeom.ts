@@ -1056,6 +1056,14 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
 
     gl.depthFunc(gl.LEQUAL)
 
+    // Compound Geoms should always be rendered double sided
+    // so we can correctly render cutting planes.
+    // Note: We needed this because the FlatSurfaceShader turns on culling
+    // when it unbinds which then affects the rendering of other items like this.
+    // An issue is logged to clean this up.
+    // https://github.com/ZeaInc/zea-engine/issues/699
+    gl.disable(gl.CULL_FACE)
+
     const { drawIdsTexture, geomType } = renderstate.unifs
 
     renderstate.bindViewports(unifs, () => {

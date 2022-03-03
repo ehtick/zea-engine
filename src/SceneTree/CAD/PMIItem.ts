@@ -117,7 +117,7 @@ class PMIItem extends TreeItem {
             // This would assume that the overlay pass does not clear the depth buffer, which
             // it does right now.
             // @ts-ignore
-            highlightMaterial.__isOpaque = true
+            highlightMaterial.__isOpaque = false
 
             treeItem.materialParam.value = highlightMaterial
             // We can reuse this material on other PMI items with the same
@@ -259,7 +259,7 @@ class PMIItem extends TreeItem {
         // This would assume that the overlay pass does not clear the depth buffer, which
         // it does right now.
         // @ts-ignore
-        material.__isOpaque = true
+        item.__opacity = 0.99
       }
     })
 
