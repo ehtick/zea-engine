@@ -294,8 +294,10 @@ function init() {
     enableOcclusionCulling: false,
   })
 
-  renderer.outlineThickness = 0.5
-  renderer.outlineSensitivity = 5
+  // Outline rendering causes black images in the e2e-testing server.
+  // We cannot leave this on during testing.
+  // renderer.outlineThickness = 0.5
+  // renderer.outlineSensitivity = 5
   
   renderer.setScene(scene)
   renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 10), new Vec3(0, 0, 1.5))
