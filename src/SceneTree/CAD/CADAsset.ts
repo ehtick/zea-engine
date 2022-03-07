@@ -66,7 +66,6 @@ class CADAsset extends AssetItem {
     // Reset the versions dictionary. We don't want a shared context to provide from other asset loads.
     context.versions = {}
     context.versions['zea-cad'] = new Version(reader.loadStr())
-    // @ts-ignore
     context.sdk = reader.loadStr()
     this.cadfileVersion = context.versions['zea-cad']
     // console.log('Loading CAD File version:', this.cadfileVersion, ' exported using SDK:', context.cadSDK)

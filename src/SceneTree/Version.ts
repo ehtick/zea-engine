@@ -43,6 +43,10 @@ class Version {
     }
     return 0
   }
+
+  toString(): string {
+    return `v${this.major}.${this.minor}.${this.patch}` + (this.branch != '' ? `-${this.branch}` : '')
+  }
 }
 
 export { Version }

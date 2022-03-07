@@ -134,8 +134,11 @@ class AssetItem extends TreeItem {
     }
     this.engineDataVersion = context.versions['zea-engine']
 
+    console.log('Loading file version:', this.engineDataVersion.toString(), ' generated using :', context.sdk)
+
     const loadUnits = () => {
       this.units = reader.loadStr()
+      console.log('File units:', this.units)
 
       // Add this param so it is displayed in the CADViewer.
       this.addParameter(new StringParameter('FileUnits', this.units))

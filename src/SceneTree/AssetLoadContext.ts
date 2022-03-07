@@ -17,6 +17,7 @@ export class AssetLoadContext extends EventEmitter {
   protected assets: Record<string, any> = {}
   protected resources: Record<string, any> = {}
   versions: Record<string, Version> = {}
+  sdk: string = ''
   url: string = ''
   folder: string = ''
   camera: Camera = null
