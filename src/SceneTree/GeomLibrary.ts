@@ -147,12 +147,12 @@ class GeomLibrary extends EventEmitter {
     return new Promise((resolve) => {
       const geomFileUrl = this.basePath + geomFileID + '.zgeoms'
 
-      resourceLoader.loadFile('archive', geomFileUrl).then((entries: any) => {
+      resourceLoader.loadFile('archive', geomFileUrl, false).then((entries: any) => {
         const geomsData = entries[Object.keys(entries)[0]]
 
         const streamFileParsedListenerID = this.on('streamFileParsed', (event: StreamFileParsedEvent) => {
-          if (event.geomFileID == geomFileID) {
-            resourceLoader.incrementWorkDone(1)
+          if (event.geomFileID == geomFileUrl) {
+            if (incrementProgress) resourceLoader.incrementWorkDone(1)
             this.removeListenerById('streamFileParsed', streamFileParsedListenerID)
             resolve()
           }
@@ -427,12 +427,15 @@ class GeomLibrary extends EventEmitter {
     for (let i = 0; i < toc.length; i++) {
       try {
         const geom = this.geoms[i]
+        if (!geom) {
+          console.warn('Error loading metadata for geom that was not yet loaded: ', i)
+        }
         if (geom instanceof CompoundGeom) {
           reader.seek(toc[i]) // Reset the pointer to the start of the item data.
           geom.loadMetadata(reader, context)
         }
       } catch (e) {
-        console.warn('Error loading tree item: ', e)
+        console.warn('Error loading geom metadata: ', i)
       }
     }
   }

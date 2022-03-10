@@ -100,7 +100,7 @@ class ResourceLoader extends EventEmitter {
    * @param url - The url of the data to load.
    * @return - The promise value.
    */
-  loadFile(type: string, url: string): Promise<any> {
+  loadFile(type: string, url: string, incrementWorkload = true): Promise<any> {
     const plugin = this.plugins[type]
 
     if (!plugin) {
@@ -109,7 +109,7 @@ class ResourceLoader extends EventEmitter {
       )
     }
 
-    this.incrementWorkload()
+    if (incrementWorkload) this.incrementWorkload()
 
     if (this.loadCount < MAX_LOAD_COUNT) {
       this.loadCount++
