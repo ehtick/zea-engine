@@ -182,9 +182,10 @@ class GLViewport extends GLBaseViewport {
     this.__width = canvasWidth * this.__tr.x - canvasWidth * this.__bl.x
     this.__height = canvasHeight * this.__tr.y - canvasHeight * this.__bl.y
     this.region = [this.__x, this.__y, this.__width, this.__height]
+    if (this.__camera) this.__updateProjectionMatrix()
 
     this.resizeRenderTargets(this.__width, this.__height)
-    if (this.__camera) this.__updateProjectionMatrix()
+
     const event = new ResizedEvent(this.__width, this.__height)
     this.emit('resized', event)
   }
