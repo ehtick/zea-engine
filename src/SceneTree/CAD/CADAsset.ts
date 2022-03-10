@@ -168,13 +168,17 @@ class CADAsset extends AssetItem {
   /**
    *
    */
-  loadMetadata(): Promise<void> {
+  loadMetadata(metaDataUrl: string = ''): Promise<void> {
+    if (this.metadataLoaded) return Promise.resolve()
     if (this.metadataLoadPromise) return this.metadataLoadPromise
     this.metadataLoadPromise = new Promise((resolve, reject) => {
       if (this.metadataLoaded) resolve()
-      const url = this.url
-      const base = url.substring(0, url.lastIndexOf('.'))
-      const metaDataUrl = base + '.zmetadata'
+
+      if (metaDataUrl == '') {
+        const url = this.url
+        const base = url.substring(0, url.lastIndexOf('.'))
+        metaDataUrl = base + '.zmetadata'
+      }
       console.log(metaDataUrl)
       resourceLoader.incrementWorkload()
       resourceLoader.loadFile('archive', metaDataUrl).then(
