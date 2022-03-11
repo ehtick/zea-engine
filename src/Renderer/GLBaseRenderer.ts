@@ -886,10 +886,6 @@ class GLBaseRenderer extends ParameterOwner {
     /** DOMMouseScroll is for mozilla. */
     window.addEventListener('wheel', onWheel, { passive: false })
 
-    window.oncontextmenu = function () {
-      return false
-    }
-
     document.addEventListener('keydown', (event: globalThis.KeyboardEvent) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       const keyboardEvent = new KeyboardEvent(event)
