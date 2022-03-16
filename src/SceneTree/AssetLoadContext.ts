@@ -21,7 +21,7 @@ export class AssetLoadContext extends EventEmitter {
   folder: string = ''
   camera: Camera = null
   assetItem: AssetItem = null
-  resources: Record<string, string> = {} // a mapping of the key to asset urls.
+  resources: Record<string, string> | null = null // a mapping of the key to asset urls.
   xrefs: Record<string, XRef> = {} // a mapping of the xrefs that have been loaded to their paths.
   numTreeItems: number = 0
   numGeomItems: number = 0
@@ -35,9 +35,11 @@ export class AssetLoadContext extends EventEmitter {
    */
   constructor(context?: AssetLoadContext) {
     super()
-    this.units = context ? context.units : 'meters'
-    this.xrefs = context ? context.xrefs : {}
-    this.resources = context ? context.resources : {}
+    if (context) {
+      this.units = context.units
+      this.xrefs = context.xrefs
+      this.resources = context.resources
+    }
   }
 
   /**
