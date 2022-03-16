@@ -65,8 +65,8 @@ class XRef extends CADAsset {
     this.setName(name)
     let relativePath = reader.loadStr()
 
+    const xfo = new Xfo()
     if (context.versions['zea-cad'].compare([3, 6, 2]) > 0) {
-      const xfo = new Xfo()
       xfo.tr = reader.loadFloat32Vec3()
       xfo.ori = reader.loadFloat32Quat()
       this.localXfoParam.loadValue(xfo)
@@ -95,30 +95,30 @@ class XRef extends CADAsset {
       }
     }
 
-    // @ts-ignore will be fixed in #579
     if (context.resources[relativePath]) {
-      // @ts-ignore will be fixed in #579
       // console.log('resolving XRef:', relativePath, ' > ', context.resources[relativePath])
-      // @ts-ignore will be fixed in #579
       const url = context.resources[relativePath]
       context.incrementAsync()
 
-      // @ts-ignore will be fixed in #579
-      if (context.assets[relativePath]) {
-        // @ts-ignore will be fixed in #579
-        const xref = context.assets[relativePath]
-        if (!xref.isLoaded()) {
-          xref.on('loaded', () => {
-            this.copyFrom(xref)
-            context.decrementAsync()
-          })
-        } else {
+      // If an XRef already exists to the same zcad file, we can just clone the existing XRef.
+      // This means the geometry will only be loaded once, and it will become re-used
+      // by the cloned XRefs.
+      if (context.xrefs[relativePath]) {
+        const xref = context.xrefs[relativePath]
+        const copyFromXRef = () => {
           this.copyFrom(xref)
+          // Make sure we keep our old name and Xfo.
+          this.setName(name)
+          this.localXfoParam.loadValue(xfo)
           context.decrementAsync()
         }
+        if (!xref.isLoaded()) {
+          xref.on('loaded', copyFromXRef)
+        } else {
+          copyFromXRef()
+        }
       } else {
-        // @ts-ignore will be fixed in #579
-        context.assets[relativePath] = this
+        context.xrefs[relativePath] = this
         this.load(url, new AssetLoadContext(context as AssetLoadContext)).then(
           () => {
             context.decrementAsync()

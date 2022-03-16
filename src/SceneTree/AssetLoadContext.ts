@@ -5,6 +5,7 @@ import { Parameter } from './Parameters/Parameter'
 import { AssetItem } from './AssetItem'
 import { BaseGeomItem } from './BaseGeomItem'
 import { Camera } from './Camera'
+import { XRef } from './CAD'
 
 /**
  * Provides a context for loading assets. This context can provide the units of the loading scene.
@@ -14,14 +15,14 @@ import { Camera } from './Camera'
  */
 export class AssetLoadContext extends EventEmitter {
   units: string = 'meters'
-  protected assets: Record<string, any> = {}
-  protected resources: Record<string, any> = {}
   versions: Record<string, Version> = {}
   sdk: string = ''
   url: string = ''
   folder: string = ''
   camera: Camera = null
   assetItem: AssetItem = null
+  resources: Record<string, string> = {} // a mapping of the key to asset urls.
+  xrefs: Record<string, XRef> = {} // a mapping of the xrefs that have been loaded to their paths.
   numTreeItems: number = 0
   numGeomItems: number = 0
   protected postLoadCallbacks: Array<() => void> = []
@@ -35,7 +36,7 @@ export class AssetLoadContext extends EventEmitter {
   constructor(context?: AssetLoadContext) {
     super()
     this.units = context ? context.units : 'meters'
-    this.assets = context ? context.assets : {}
+    this.xrefs = context ? context.xrefs : {}
     this.resources = context ? context.resources : {}
   }
 
