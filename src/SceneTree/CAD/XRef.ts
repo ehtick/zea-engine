@@ -76,28 +76,36 @@ class XRef extends CADAsset {
       if (name == '') this.setName(relativePath)
     }
 
-    // @ts-ignore will be fixed in #579
-    if (!context.resources[relativePath]) {
-      // CAD systems seem to have flexible path resolution strategies that we can't support.
-      // e.g. looking in multiple folders for a file.
-      // The relative paths often break.
-      // If the user provides a mapping table, we will use it, else
-      // we assume files will all be in the same folder.
-      if (relativePath.includes('/')) {
-        relativePath = relativePath.slice(relativePath.lastIndexOf('/') + 1)
-      } else if (relativePath.includes('\\')) {
-        relativePath = relativePath.slice(relativePath.lastIndexOf('\\') + 1)
+    // /////////////////////////////////////
+    // URL
+    // If a resources dict has been provided, look it up, else
+    // generate a url.
+    let url
+    if (context.resources) {
+      if (context.resources[relativePath]) {
+        url = context.resources[relativePath]
+      } else {
+        // CAD systems seem to have flexible path resolution strategies that we dont yet support.
+        // e.g. looking in multiple folders for a file.
+        // The relative paths often break.
+        // If the user provides a mapping table, we will use it, else
+        // we assume files will all be in the same folder.
+        if (relativePath.includes('/')) {
+          relativePath = relativePath.slice(relativePath.lastIndexOf('/') + 1)
+        } else if (relativePath.includes('\\')) {
+          relativePath = relativePath.slice(relativePath.lastIndexOf('\\') + 1)
+        }
+        if (context.resources[relativePath]) {
+          url = context.resources[relativePath]
+        }
       }
-      // @ts-ignore will be fixed in #579
-      if (!context.resources[relativePath]) {
-        // @ts-ignore will be fixed in #579
-        context.resources[relativePath] = context.folder + relativePath + '.zcad'
-      }
+    } else {
+      // Generate a url relative to the folder of the asset we are currently loading.
+      url = context.folder + relativePath + '.zcad'
     }
 
-    if (context.resources[relativePath]) {
-      // console.log('resolving XRef:', relativePath, ' > ', context.resources[relativePath])
-      const url = context.resources[relativePath]
+    if (url) {
+      // console.log('resolving XRef:', relativePath, ' > ', url)
       context.incrementAsync()
 
       // If an XRef already exists to the same zcad file, we can just clone the existing XRef.
