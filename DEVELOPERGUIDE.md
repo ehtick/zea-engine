@@ -2,13 +2,15 @@
 
 A high performance 3D rendering engine for the web.
 
-## Building the Engine 
+## Building the Engine
 
 1. Install Git.
-2. Install Node.js from here: https://nodejs.org/en/download/ using the default options. It should be straight forward.
+2. Install Node.js from here: [https://nodejs.org/en/download/](https://nodejs.org/en/download/)
+   using the default options. It should be straight forward.
 3. Install dependencies.
 
-- Install the [Yarn package manager](https://yarnpkg.com/) (it should be included in the latest Node.js version).
+- Install the [Yarn package manager](https://yarnpkg.com/)
+  (it should be included in the latest Node.js version).
 - Run `yarn install`
 
 4. Build:
@@ -17,10 +19,12 @@ A high performance 3D rendering engine for the web.
 
 ## Scripts
 
-Note: The Zea Engine documentation uses `yarn` commands, but `npm` will also work. You can compare `yarn` and `npm` commands in the [yarn docs, here](https://yarnpkg.com/en/docs/migrating-from-npm#toc-cli-commands-comparison).
+Note: The Zea Engine documentation uses `yarn` commands, but `npm` will also work.
+You can compare `yarn` and `npm` commands in the [yarn docs, here](https://yarnpkg.com/en/docs/migrating-from-npm#toc-cli-commands-comparison).
 
 - `yarn run build` - Produces the production version of ZeaEngine.
-- `yarn run build:watch` - Produces the development version of ZeaEngine and triggers a re-compilation on file changes.
+- `yarn run build:watch` - Produces the development version of ZeaEngine and
+  triggers a re-compilation on file changes.
 
 ## Running unit tests
 
@@ -56,7 +60,8 @@ yarn run test:debug
 
 3. From the list of targets, click the one that corresponds to the Zea Engine.
 
-4. Use the [debugger statement](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/debugger) to add breakpoints to your code.
+4. Use the [debugger statement](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/debugger)
+   to add breakpoints to your code.
 
 5. Your browser will reload and now you're ready to start debugging.
 
@@ -68,19 +73,24 @@ yarn run test:debug
 
 3. Build ZeaEngine in development mode:
 
-- Run `yarn run build:watch`. Produces the development version of ZeaEngine and triggers a re-compilation on file changes.
+- Run `yarn run build:watch`. Produces the development version of ZeaEngine and
+  triggers a re-compilation on file changes.
 
 ## About E2E testing
 
-The End-to-End (E2E) testing technique allows us to ensure that the rendering results are always the expected ones.
-We use the [Percy visual review platform](https://percy.io/) to capture and compare snapshots.
-It's also a very important part of our CI/CD workflow, so we can catch and fix bugs as soon as they happen.
+The End-to-End (E2E) testing technique allows us to ensure that the rendering
+results are always the expected ones.
+We use the [Percy visual review platform](https://percy.io/) to capture and
+compare snapshots. It's also a very important part of our CI/CD workflow, so we
+can catch and fix bugs as soon as they happen.
 
 ### How to run the E2E tests
 
-1. From the [Percy project settings](https://percy.io/36dba56e/zea-engine/settings), copy the _project token_.
+1. From the [Percy project settings](https://percy.io/36dba56e/zea-engine/settings),
+   copy the _project token_.
 
-2. In your terminal, assign the _project token_ to an environment variable. For convenience, you can use a tool such as [direnv](https://direnv.net/).
+2. In your terminal, assign the _project token_ to an environment variable.
+   For convenience, you can use a tool such as [direnv](https://direnv.net/).
 
 3. Run:
 
@@ -106,25 +116,32 @@ You'll be prompted for the test's name.
 
 ### Debugging E2E tests
 
-The testing framework launches chrome in headless mode, which uses an emulated software GPU called the Google Swiftshader. 
- > https://github.com/google/swiftshader
+The testing framework launches chrome in headless mode, which uses an emulated
+software GPU called the Google Swiftshader.
 
- While fast, the swiftshader is an order of magnitude slower than discrete GPUs. To run the e2e tests in non-headless mode, while also running the swiftshader, launch chrome with the following flags.
+> [https://github.com/google/swiftshader](https://github.com/google/swiftshader)
 
- ```
- "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --disable-gpu
- ```
+While fast, the swiftshader is an order of magnitude slower than discrete GPUs.
+To run the e2e tests in non-headless mode, while also running the swiftshader,
+launch chrome with the following flags.
 
- > Note: the SwiftShader GPU is detected as a 'low-end' GPU and so runs all code at the same quality settings as mobile devices. 
+```bash
+"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --disable-gpu
+```
+
+> Note: the SwiftShader GPU is detected as a 'low-end' GPU and so runs all code
+> at the same quality settings as mobile devices.
 
 ## Publishing a new release
 
 1. All unit and E2E tests must be passing.
 
 2. To generate the release notes and bump the version, run:
+
 ```bash
 yarn run release
 ```
+
 This will generate a tag in the repo. This tag will be the basis of the next release.
 
 3. Regenerate the API docs
@@ -134,22 +151,24 @@ Clean up te CHANGELOG.md, check for spelling issues and other inconsistencies.
 ```bash
 yarn docs
 ```
+
 Commit changes.
 
 4. Push the main branch and the tags in one action like this.
-This will cause a publish to NPM
+   This will cause a publish to NPM
+
 ```bash
 git push && git push --tags
 ```
 
 6. Check that the release process completes in GitHub.
 
-https://github.com/ZeaInc/zea-engine/actions
-
+[https://github.com/ZeaInc/zea-engine/actions](https://github.com/ZeaInc/zea-engine/actions)
 
 ### Publishing a pre-release
 
-Pre-releases are potentially unstable releases meant for tests of new features before they are published to an production release.
+Pre-releases are potentially unstable releases meant for tests of new features
+before they are published to an production release.
 
 <!-- This command automatically calculates the next stable version and a release candidate version. -->
 
@@ -163,11 +182,10 @@ yarn version --prerelease --preid rc
 yarn publish --tag preid
 ```  -->
 
-
 Navigate to the branch that you wish to use to make a pre-release.
 
-
-Adds an identifier specified by <pre-identifier> to be used to prefix premajor, preminor, prepatch or prerelease version increments.
+Adds an identifier specified by `<pre-identifier>` to be used to prefix premajor,
+preminor, prepatch or prerelease version increments.
 
 ```bash
 yarn version --prerelease --preid <pre-identifier>
@@ -176,4 +194,3 @@ yarn version --prerelease --preid <pre-identifier>
 ```bash
 yarn publish --public --tag <pre-identifier>
 ```
-
