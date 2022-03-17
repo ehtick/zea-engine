@@ -690,8 +690,9 @@ class GLBaseRenderer extends ParameterOwner {
     }
 
     {
+      webglOptions.disableMultiDraw = options.disableMultiDraw || SystemDesc.browserName == 'Safari'
       const ext = gl.name == 'webgl2' ? gl.getExtension('WEBGL_multi_draw') : null
-      if (ext && !options.disableMultiDraw) {
+      if (ext && !webglOptions.disableMultiDraw) {
         gl.multiDrawArrays = ext.multiDrawArraysWEBGL.bind(ext)
         gl.multiDrawElements = ext.multiDrawElementsWEBGL.bind(ext)
         gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
