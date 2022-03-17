@@ -21,6 +21,7 @@
 *.wasm binary
 *.zenv binary
 *.zcad binary
+*.zmetadata binary
 *.zmesh binary
 *.webp binary
 *.zgeoms binary
