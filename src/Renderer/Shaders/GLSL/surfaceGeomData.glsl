@@ -31,6 +31,7 @@
       fragColor.a = float16bits.y;
     }
 
+#ifdef ENABLE_ES3
     if (occlusionCulling != 0) {
       // Calculate a simple stochastic transparency to reduce the cost of the reduction shader.
       // We only need one pixel to be visible to consider the geometry visible, so here we 
@@ -41,10 +42,12 @@
       // still occlude other geometries, but during reduction count to nothing.
       int x = int(gl_FragCoord.x * 1000.0);
       int y = int(gl_FragCoord.y * 1000.0);
-      if (imod(x, 7) != 0 || imod(y, 7) != 0) {
+      if (x % 7 != 0 || y % 7 != 0) {
         fragColor = vec4(0.0, 0.0, 0.0, 1.0);
       };
     }
+#endif // ENABLE_ES3
+
     return fragColor;
   }
 
