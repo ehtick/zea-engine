@@ -29,7 +29,7 @@ class GLPointsItemSet extends GLGeomItemSetMultiDraw {
       const { geomItemId } = renderstate.unifs
       for (let i = 0; i < drawCount; i++) {
         gl.uniform1i(geomItemId.location, drawIds[i])
-        gl.drawArrays(gl.TRIANGLES, offsets[i], counts[i])
+        gl.drawArrays(gl.POINTS, offsets[i], counts[i])
       }
     }
   }

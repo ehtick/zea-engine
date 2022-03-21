@@ -868,7 +868,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
 
     renderstate.bindViewports(unifs, () => {
       if (drawIdsArray['TRIANGLES'] && allocators['TRIANGLES'].allocatedSpace > 0) {
-        drawIdsTextures['TRIANGLES'].bindToUniform(renderstate, drawIdsTexture)
+        if (gl.multiDrawElements) drawIdsTextures['TRIANGLES'].bindToUniform(renderstate, drawIdsTexture)
 
         if (geomType) gl.uniform1i(geomType.location, GeomType.TRIANGLES)
 
@@ -943,7 +943,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     // )
     renderstate.bindViewports(unifs, () => {
       if (drawIdsArray['LINES'] && allocators['LINES'].allocatedSpace > 0) {
-        drawIdsTextures['LINES'].bindToUniform(renderstate, drawIdsTexture)
+        if (gl.multiDrawElements) drawIdsTextures['LINES'].bindToUniform(renderstate, drawIdsTexture)
 
         if (geomType) gl.uniform1i(geomType.location, GeomType.LINES)
 
@@ -962,7 +962,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         )
       }
       if (drawIdsArray['POINTS'] && allocators['POINTS'].allocatedSpace > 0) {
-        drawIdsTextures['POINTS'].bindToUniform(renderstate, drawIdsTexture)
+        if (gl.multiDrawElements) drawIdsTextures['POINTS'].bindToUniform(renderstate, drawIdsTexture)
 
         if (geomType) gl.uniform1i(geomType.location, GeomType.POINTS)
 
@@ -1068,7 +1068,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
 
     renderstate.bindViewports(unifs, () => {
       if (drawIdsArray['POINTS'] && allocators['POINTS'].allocatedSpace > 0) {
-        drawIdsTextures['POINTS'].bindToUniform(renderstate, drawIdsTexture)
+        if (gl.multiDrawElements) drawIdsTextures['POINTS'].bindToUniform(renderstate, drawIdsTexture)
 
         if (geomType) gl.uniform1i(geomType.location, GeomType.POINTS)
 
@@ -1081,7 +1081,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         )
       }
       if (drawIdsArray['LINES'] && allocators['LINES'].allocatedSpace > 0) {
-        drawIdsTextures['LINES'].bindToUniform(renderstate, drawIdsTexture)
+        if (gl.multiDrawElements) drawIdsTextures['LINES'].bindToUniform(renderstate, drawIdsTexture)
 
         if (geomType) gl.uniform1i(geomType.location, GeomType.LINES)
 
@@ -1094,7 +1094,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         )
       }
       if (drawIdsArray['TRIANGLES'] && allocators['TRIANGLES'].allocatedSpace > 0) {
-        drawIdsTextures['TRIANGLES'].bindToUniform(renderstate, drawIdsTexture)
+        if (gl.multiDrawElements) drawIdsTextures['TRIANGLES'].bindToUniform(renderstate, drawIdsTexture)
 
         if (geomType) gl.uniform1i(geomType.location, GeomType.TRIANGLES)
 
