@@ -164,7 +164,7 @@ class Material extends BaseItem {
 
     if (isOpaque != this.__isOpaque) {
       this.__isOpaque = isOpaque
-      const event = new OpacityStateChangedEvent(isOpaque)
+      const event = new OpacityStateChangedEvent(isOpaque, true)
       this.emit('opacityChanged', event)
       this.emit('transparencyChanged', event) // For legacy listeners
     }

@@ -93,6 +93,13 @@ class BaseItem extends ParameterOwner implements Owner {
     }
   }
 
+  get name() {
+    return this.getName()
+  }
+  set name(value: string) {
+    this.setName(value)
+  }
+
   /**
    * When the name or the hierarchy changes, this method
    * recomputes and caches the path of this item.

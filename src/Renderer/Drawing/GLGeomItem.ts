@@ -24,11 +24,8 @@ const GLGeomItemFlags = {
 class GLGeomItem extends EventEmitter {
   protected listenerIDs: Record<string, number> = {}
   //referenced by other classes
-  material: any
   GLGeomItemSet: any
-  geomItemParamChanged: any
-
-  GLShaderGeomSets?: any = null
+  GLShaderGeomSets: any
 
   protected gl: WebGL12RenderingContext
   geomItem: GeomItem
@@ -120,11 +117,13 @@ class GLGeomItem extends EventEmitter {
       })
 
       const opacityChanged = (event: OpacityStateChangedEvent) => {
-        let flags = this.geomData[0]
-        if (event.isOpaque) flags &= ~GLGeomItemFlags.GEOMITEM_TRANSPARENT
-        else flags |= GLGeomItemFlags.GEOMITEM_TRANSPARENT
-        this.geomData[0]
-        this.emit('updated')
+        if (event.isOpaqueStateChanged) {
+          let flags = this.geomData[0]
+          if (event.isOpaque) flags &= ~GLGeomItemFlags.GEOMITEM_TRANSPARENT
+          else flags |= GLGeomItemFlags.GEOMITEM_TRANSPARENT
+          this.geomData[0]
+          this.emit('updated')
+        }
       }
       this.listenerIDs['opacityChanged'] = this.geomItem.on('opacityChanged', opacityChanged)
       this.listenerIDs['material:opacityChanged'] = this.geomItem.materialParam.on('opacityChanged', opacityChanged)

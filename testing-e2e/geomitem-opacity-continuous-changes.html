@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>geomitem-opacity-changes - Zea Engine</title>
+
+    <link href="data/zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
+
+    <script src="../dist/index.umd.js"></script>
+
+    <script type="module">
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Xfo,
+        Color,
+        Sphere,
+        SimpleSurfaceMaterial,
+        StandardSurfaceMaterial,
+        GeomItem,
+        EnvMap,
+      } = zeaEngine
+
+      const canvas = document.getElementById('viewport')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { antialias: false })
+      renderer.setScene(scene)
+
+      const envMap = new EnvMap()
+      envMap.load('data/pisa-webp.zenv')
+      scene.setEnvMap(envMap)
+      scene.displayEnvMapParam.value = false
+
+      scene.setupGrid(10.0, 10)
+
+      const material1 = new SimpleSurfaceMaterial('surfaces1')
+      material1.baseColorParam.value = new Color(1, 0, 1)
+
+      const geomItem = new GeomItem('Sphere1', new Sphere(1.5, 46), material1, new Xfo(new Vec3(-2, 0, 2)))
+      scene.getRoot().addChild(geomItem)
+
+      const material2 = new StandardSurfaceMaterial('surfaces2')
+      material2.baseColorParam.value = new Color(1, 0, 1)
+
+      const geomItem2 = new GeomItem('Sphere2', new Sphere(1.5, 46), material2, new Xfo(new Vec3(2, 0, 2)))
+      scene.getRoot().addChild(geomItem2)
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, 5, 5.7), new Vec3(0, 0, 2.4))
+
+      Promise.all([new Promise((resolve) => envMap.once('loaded', resolve))]).then(() => {
+        setStatusText('done-loading')
+      })
+
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        renderer.forceRender()
+        statusElement.textContent = text
+      }
+      let steps = 10
+      geomItem.opacityParam.value = 1 / steps
+      geomItem2.opacityParam.value = 1 / steps
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        let step = 1
+        const fn = () => {
+          geomItem.opacityParam.value = step / steps
+          geomItem2.opacityParam.value = step / steps
+
+          if (step < steps) {
+            step++
+            setTimeout(fn, 50)
+          } else {
+            setStatusText(`done-variant-01`)
+          }
+        }
+        fn()
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        let step = steps
+        const fn = () => {
+          geomItem.opacityParam.value = step / steps
+          geomItem2.opacityParam.value = step / steps
+          if (step > 0) {
+            step--
+            setTimeout(fn, 50)
+          } else {
+            setStatusText(`done-variant-02`)
+          }
+        }
+        fn()
+      })
+      // }}}
+    </script>
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="h-screen">
+      <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+      </div>
+    </div>
+  </body>
+</html>
