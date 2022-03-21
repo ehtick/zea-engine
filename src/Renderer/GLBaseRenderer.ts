@@ -834,6 +834,14 @@ class GLBaseRenderer extends ParameterOwner {
         pointerLeft = true
       }
     })
+    document.addEventListener('contextmenu', (event: globalThis.MouseEvent) => {
+      if (activeGLRenderer != this || !isValidCanvas()) return
+
+      // prevent context menu from being displayed when right clicking on the viewport.
+      // Note: we allow context menus for other items.
+      event.preventDefault()
+      event.stopPropagation()
+    })
 
     /** Mouse Events End */
 
