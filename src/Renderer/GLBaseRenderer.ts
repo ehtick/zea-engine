@@ -690,7 +690,9 @@ class GLBaseRenderer extends ParameterOwner {
     }
 
     {
-      webglOptions.disableMultiDraw = options.disableMultiDraw || SystemDesc.browserName == 'Safari'
+      // Note: disabling multi-draw on Safari 15.4 until we can figure out how to address this regression.
+      webglOptions.disableMultiDraw =
+        options.disableMultiDraw || (SystemDesc.browserName == 'Safari' && SystemDesc.fullVersion == '15.4')
       const ext = gl.name == 'webgl2' ? gl.getExtension('WEBGL_multi_draw') : null
       if (ext && !webglOptions.disableMultiDraw) {
         gl.multiDrawArrays = ext.multiDrawArraysWEBGL.bind(ext)

@@ -41,7 +41,7 @@
       // still occlude other geometries, but during reduction count to nothing.
       int x = int(gl_FragCoord.x * 1000.0);
       int y = int(gl_FragCoord.y * 1000.0);
-      if (x % 7 != 0 || y % 7 != 0) {
+      if (imod(x, 7) != 0 || imod(y, 7) != 0) {
         fragColor = vec4(0.0, 0.0, 0.0, 1.0);
       };
     }
