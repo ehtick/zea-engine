@@ -76,7 +76,7 @@
     "@types/jest": "^26.0.23",
     "@types/semver": "^7.3.8",
     "@zeainc/jsdocs2md": "^0.0.8",
-    "@zeainc/zea-tree-view": "^0.1.0",
+    "@zeainc/zea-tree-view": "^0.1.2",
     "@zeainc/zea-ux": "^4.0.3",
     "babel-jest": "^27.0.5",
     "caniuse-lite": "^1.0.30001312",

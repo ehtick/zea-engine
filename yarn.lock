@@ -2420,10 +2420,10 @@
     meow "^7.0.1"
     rimraf "^3.0.2"
 
-"@zeainc/zea-tree-view@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@zeainc/zea-tree-view/-/zea-tree-view-0.1.0.tgz#0271a338cf660de99339eaf6b7fc1b284147dd9d"
-  integrity sha512-CDaTQF5Lv0r5kPusNyRJ8mx91YTpxK8nLsUPXRWPfPtHD5wWMRFdlGbXva+cS2jNP1kGstti++d6/yhq5rC7hg==
+"@zeainc/zea-tree-view@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@zeainc/zea-tree-view/-/zea-tree-view-0.1.2.tgz#f61a3205aa2cc04fb9ed026ae76f5c01244498eb"
+  integrity sha512-tccahtJKTTaKBplKHhup2Rpyhw8i254l9hRrvr4TcwmAE3JZMY/2rCgn8oaxa1DbetwJuoO4Blu+OtGNhQuKBQ==
 
 "@zeainc/zea-ux@^4.0.3":
   version "4.0.5"
