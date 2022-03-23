@@ -27,7 +27,7 @@ vec4 getDrawItemIds() {
   ivec2 drawIdsTextureSize = textureSize(drawIdsTexture, 0);
   ivec2 drawIdsArrayCoords = ivec2(gl_DrawID % drawIdsTextureSize.x, gl_DrawID / drawIdsTextureSize.x);
   vec4 color = texelFetch(drawIdsTexture, drawIdsArrayCoords, 0);
-  // Note: a 0 value in the texture means no sub-geom index is being rendered. 
+  // Note: a 0 value in the texture means no sub-geom index is being rendered.
   // subtract off 1 to get the true sub-geom index.
   return vec4(color.r, color.g - 1.0, color.b, color.a);
 }
@@ -74,3 +74,8 @@ vec4 getDrawItemIds() {
 #endif // ENABLE_FLOAT_TEXTURES
 #endif // ENABLE_MULTI_DRAW
 
+
+// For backwards compatibility with older plugins (UX.HandleShader)
+int getDrawItemId() {
+  return getGeomItemId();
+}
