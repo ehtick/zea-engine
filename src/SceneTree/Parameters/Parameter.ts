@@ -7,6 +7,7 @@ import { ISerializable } from '../../Utilities/ISerializable'
 import { OperatorOutputMode } from './OperatorOutputMode'
 import { BinReader } from '../BinReader'
 import { AssetLoadContext, OperatorInput } from '..'
+import { CloneContext } from '../CloneContext'
 /**
  * Represents a reactive type of attribute that can be owned by a `ParameterOwner` class.
  *
@@ -426,7 +427,11 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
 
   abstract fromJSON(j: Record<string, any>, context?: Record<string, any>): void
 
-  abstract clone(): Parameter<unknown>
+  abstract clone(): Parameter<T>
+
+  copyFrom(src: Parameter<T>, context?: CloneContext): void {
+    this.__value = src.__value
+  }
 
   /**
    * The readBinary method.
