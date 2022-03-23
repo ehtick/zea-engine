@@ -35,21 +35,6 @@ class XRef extends CADAsset {
     return cloned
   }
 
-  /**
-   * Copies data from the source XRef onto this XRef.
-   *
-   * @param {XRef} src - The XRef to copy from.
-   * @param {object} context - The context value.
-   */
-  copyFrom(src?: XRef, context?: CloneContext): void {
-    // Note: the XRef has a localXfo that positions it relative
-    // to the parent assembly. We need to avoid losing that values
-    // when cloning all the others.
-    const localXfo = this.localXfoParam.value
-    super.copyFrom(src, context)
-    this.localXfoParam.loadValue(localXfo)
-  }
-
   // ///////////////////////////
   // Persistence
 
@@ -69,7 +54,7 @@ class XRef extends CADAsset {
     if (context.versions['zea-cad'].compare([3, 6, 2]) > 0) {
       xfo.tr = reader.loadFloat32Vec3()
       xfo.ori = reader.loadFloat32Quat()
-      this.localXfoParam.loadValue(xfo)
+      this.localXfoParam.value = xfo
     } else {
       // Note: the SpatialBridge now encodes the 'ReferenceName' into the
       // XRef, while CADEx didn't provide one. Use the name if it is provided.
@@ -115,19 +100,22 @@ class XRef extends CADAsset {
         const xref = context.xrefs[relativePath]
         const copyFromXRef = () => {
           this.copyFrom(xref)
-          // Make sure we keep our old name and Xfo.
+          // // Make sure we keep our name and Xfo.
           this.setName(name)
-          this.localXfoParam.loadValue(xfo)
+          this.localXfoParam.value = xfo
+
+          this.loaded = true
+          this.emit('loaded')
           context.decrementAsync()
         }
-        if (!xref.isLoaded()) {
+        if (!xref.loaded) {
           xref.on('loaded', copyFromXRef)
         } else {
           copyFromXRef()
         }
       } else {
         context.xrefs[relativePath] = this
-        this.load(url, new AssetLoadContext(context as AssetLoadContext)).then(
+        this.load(url, new AssetLoadContext(context)).then(
           () => {
             context.decrementAsync()
           },
