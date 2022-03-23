@@ -77,8 +77,6 @@ export abstract class WorkerPool<WorkerClass> {
 
   async addWorker(): Promise<void> {
     const worker = await this.constructWorker()
-    const workerId = this.workers.length
-    this.terminationTimeouts[workerId] = -1
     // @ts-ignore
     worker.onmessage = (event: Record<string, any>) => {
       if (event.data.taskId in this.taskPromiseResolves) {
@@ -87,16 +85,20 @@ export abstract class WorkerPool<WorkerClass> {
         this.taskPromiseResolves[taskId](event.data)
         delete this.taskPromiseResolves[taskId]
       }
-      this.availableWorkers.push(workerId)
       if (this.taskQueue.length > 0) {
+        this.availableWorkers.push(workerId)
         this.consumeTask()
       } else {
         if (this.terminateWorkersWhenFree) {
           this.scheduleWorkerTermination(workerId)
+        } else {
+          this.availableWorkers.push(workerId)
         }
       }
     }
+    const workerId = this.workers.length
     this.workers.push(worker)
+    this.terminationTimeouts[workerId] = -1
     this.availableWorkers.push(workerId)
   }
 
