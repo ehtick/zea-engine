@@ -780,12 +780,12 @@ class TreeItem extends BaseItem {
     const __c = (treeItem: TreeItem, depth: number) => {
       const children = treeItem.getChildren()
       for (const childItem of children) {
-        if (childItem && childItem instanceof TreeItem) __t(childItem, depth + 1)
+        if (childItem) __t(childItem, depth + 1)
       }
     }
     const __t = (treeItem: TreeItem, depth: number) => {
       if (callback(treeItem, depth) == false) return
-      if (treeItem instanceof TreeItem) __c(treeItem, depth)
+      __c(treeItem, depth)
     }
 
     if (includeThis) {
@@ -1130,7 +1130,7 @@ class TreeItem extends BaseItem {
     // have a unique LocalXfoParam, as it must be re-set.
     // (The root of the tree is a cloned and attached to an Instance node that provides the transform)
     src.getChildren().forEach((srcChildItem: TreeItem) => {
-      if (srcChildItem) this.addChild(srcChildItem.clone(), false, false)
+      if (srcChildItem) this.addChild(srcChildItem.clone(context), false, false)
     })
   }
 }
