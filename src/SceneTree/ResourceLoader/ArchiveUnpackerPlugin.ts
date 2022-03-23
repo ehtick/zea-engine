@@ -45,10 +45,6 @@ class ArchiveUnpackerWorkerPool extends WorkerPool<ArchiveUnpackerWorker> {
       })
     })
   }
-  terminateWorker(workerId: number): void {
-    this.workers[workerId].terminate()
-    this.workers[workerId] = null
-  }
 }
 
 function checkStatus(response: any): any {
