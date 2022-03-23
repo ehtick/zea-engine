@@ -450,7 +450,7 @@
           const pct = document.getElementById('progress')
           pct.value = event.percent
           if (event.percent >= 100) {
-            setTimeout(() => pct.classList.add('hidden'), 1000)
+            pct.classList.add('hidden')
           }
         })
 
