@@ -155,6 +155,7 @@ class CADAsset extends AssetItem {
           context.decrementAsync()
         },
         (error) => {
+          context.decrementAsync()
           resourceLoader.incrementWorkDone(1)
           this.emit('error', error)
           reject(error)
