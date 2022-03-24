@@ -92,11 +92,6 @@ class CADAsset extends AssetItem {
       context.assetItem = <AssetItem>this
       context.url = url
       context.folder = folder
-      // TODO: resources not accessible
-      // @ts-ignore
-      if (!context.resources) context.resources = {}
-      // TODO: xrefs doesn't exist on context
-      // @ts-ignore
       context.xrefs = {}
 
       context.on('done', () => {
