@@ -19,22 +19,22 @@ const parseGeomsBinary = (data: any, callback: any): void => {
     data.context.versions[key] = version
   }
   const geomDatas = []
-  const offset = data.toc[data.geomsRange[0]]
-  // console.log('offset:' + offset)
+  const byteOffset = data.byteOffset
+  // console.log('byteOffset:' + byteOffset)
   const transferables = []
   for (let i = data.geomsRange[0]; i < data.geomsRange[1]; i++) {
-    const reader = new BinReader(data.bufferSlice, data.toc[i] - offset, data.isMobileDevice)
+    const reader = new BinReader(data.bufferSlice, data.toc[i] - byteOffset, data.isMobileDevice)
     const className = reader.loadStr()
     const pos = reader.pos()
     // const name = reader.loadStr()
     // console.log(
     //   i +
     //     ':' +
-    //     offset +
+    //     byteOffset +
     //     ' className:' +
     //     className +
     //     ' name:' +
-    //     name /* + " pos:" + (data.toc[i] - offset) + " bufferSlice.byteLength:" +  bufferSlice.byteLength*/
+    //     name /* + " pos:" + (data.toc[i] - byteOffset) + " bufferSlice.byteLength:" +  bufferSlice.byteLength*/
     // )
     let geom
     switch (className) {

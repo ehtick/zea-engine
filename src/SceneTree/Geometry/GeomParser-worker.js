@@ -1,5 +1,12 @@
 import { parseGeomsBinary } from './parseGeomsBinary'
 
+const handleMessage = function (srcData, postMessage) {
+  parseGeomsBinary(srcData, (resultData, transferables) => {
+    resultData.taskId = srcData.taskId
+    postMessage(resultData, transferables)
+  })
+}
+
 self.onmessage = function (event) {
   if (!event.data) {
     // Note: we see this occur when loading one large asset many times.
@@ -8,7 +15,6 @@ self.onmessage = function (event) {
     console.warn('GeomLibrary worker.postMessage failed. data was lost on the way to the web worker.')
     return
   }
-  parseGeomsBinary(event.data, (data, transferables) => {
-    self.postMessage(data, transferables)
-  })
+  handleMessage(event.data, self.postMessage)
 }
+export { handleMessage }
