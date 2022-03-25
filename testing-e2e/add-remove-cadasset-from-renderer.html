@@ -42,7 +42,7 @@
         hideSplash: true,
         antialias: false,
         enableFrustumCulling: true,
-        enableOcclusionCulling: true,
+        enableOcclusionCulling: false,
         debugOcclusionBuffer: false,
       })
       renderer.setScene(scene)
@@ -131,25 +131,10 @@
         scene.getRoot().removeAllChildren()
         const asset = new CADAsset()
         scene.getRoot().addChild(asset)
-        asset.load('data/Dead_eye_bearing.zcad').then(() => {
+        asset.load('data/zcad/3.9.1/Dead_eye_bearing.stp.zcad').then(() => {
           renderer.frameAll()
         })
         asset.getGeometryLibrary().on('loaded', () => {
-          const removedItems = []
-          let total = 0
-          asset.traverse((item) => {
-            if (item instanceof GeomItem) {
-              total++
-              if (!(item.geomParam.value instanceof LinesProxy)) {
-                removedItems.push(item)
-              }
-            }
-          })
-          removedItems.forEach((item) => {
-            const owner = item.getOwner()
-            owner.removeChildByHandle(item)
-          })
-          console.log('total:', total, removedItems.length)
           setStatusText(`done-variant-04`)
         })
       })

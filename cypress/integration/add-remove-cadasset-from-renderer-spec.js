@@ -19,5 +19,19 @@ describe(test, () => {
       cy.get('#status').should('have.text', `done-${variant}`)
       cy.get('canvas').percySnapshot(`${test} - ${variant}`)
     }
+
+    {
+      const variant = 'variant-03'
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
+    }
+
+    {
+      const variant = 'variant-04'
+      cy.get(`#${variant}`).click()
+      cy.get('#status').should('have.text', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`${test} - ${variant}`)
+    }
   })
 })
