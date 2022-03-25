@@ -75,34 +75,43 @@ export abstract class WorkerPool<WorkerClass> {
     this.workers[workerId].postMessage(taskData, transferables)
   }
 
-  async addWorker(): Promise<void> {
-    const worker = await this.constructWorker()
-    // @ts-ignore
-    worker.onmessage = (event: Record<string, any>) => {
-      if (event.data.taskId in this.taskPromiseResolves) {
-        const taskId = <number>event.data.taskId
-        delete event.data.taskId
-        this.taskPromiseResolves[taskId](event.data)
-        delete this.taskPromiseResolves[taskId]
-      }
-      if (this.taskQueue.length > 0) {
-        this.availableWorkers.push(workerId)
-        this.consumeTask()
-      } else {
-        if (this.terminateWorkersWhenFree) {
-          this.scheduleWorkerTermination(workerId)
-        } else {
-          this.availableWorkers.push(workerId)
-        }
-      }
-    }
+  addWorker(): Promise<void> {
+    // Note: This function immediately adds the worker to the list
+    // and then asynchronously creates it.
     const workerId = this.workers.length
-    this.workers.push(worker)
-    this.terminationTimeouts[workerId] = -1
-    this.availableWorkers.push(workerId)
+    console.log('addWorker:', workerId, this.constructor.name)
+    this.workers.push(null)
+    return new Promise<void>((resolve) => {
+      this.constructWorker().then((worker: WorkerClass) => {
+        // @ts-ignore
+        worker.onmessage = (event: Record<string, any>) => {
+          if (event.data.taskId in this.taskPromiseResolves) {
+            const taskId = <number>event.data.taskId
+            delete event.data.taskId
+            this.taskPromiseResolves[taskId](event.data)
+            delete this.taskPromiseResolves[taskId]
+          }
+          if (this.taskQueue.length > 0) {
+            this.availableWorkers.push(workerId)
+            this.consumeTask()
+          } else {
+            if (this.terminateWorkersWhenFree) {
+              this.scheduleWorkerTermination(workerId)
+            } else {
+              this.availableWorkers.push(workerId)
+            }
+          }
+        }
+        this.workers[workerId] = worker
+        this.terminationTimeouts[workerId] = -1
+        this.availableWorkers.push(workerId)
+        resolve()
+      })
+    })
   }
 
   scheduleWorkerTermination(workerId: number): void {
+    console.log('scheduleWorkerTermination:', workerId, this.constructor.name)
     // @ts-ignore
     this.terminationTimeouts[workerId] = setTimeout(() => {
       this.terminateWorker(workerId)

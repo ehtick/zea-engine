@@ -96,6 +96,10 @@ class ArchiveUnpackerPlugin {
           }
         })
         .then((buffer) => {
+          if (!buffer) {
+            reject('Buffer is null')
+            return
+          }
           const resourceId = url
           this.threadPool
             .addTask(
