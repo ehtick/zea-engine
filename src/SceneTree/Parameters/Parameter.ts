@@ -430,7 +430,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   abstract clone(): Parameter<T>
 
   copyFrom(src: Parameter<T>, context?: CloneContext): void {
-    this.__value = src.__value
+    this.loadValue(src.__value)
   }
 
   /**
