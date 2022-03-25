@@ -1,14 +1,17 @@
 import { GLPass } from './GLPass'
 
-import { GeomItem, TreeItem } from '../../SceneTree/index'
+import { GeomItem, TreeItem, Material } from '../../SceneTree/index'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GeomItemAndDist } from '../../Utilities/IntersectionData'
+import { OpacityStateChangedEvent } from '../../Utilities'
 
 /** This class abstracts the rendering of a collection of geometries to screen.
  * @extends GLPass
  */
 class GLStandardGeomsPass extends GLPass {
+  protected materials: Record<number, Material> = {}
+  protected listenerIDs: Record<number, Record<string, number>> = {}
   /**
    * Create a GL pass.
    */
@@ -62,7 +65,8 @@ class GLStandardGeomsPass extends GLPass {
    */
   itemRemovedFromScene(treeItem: TreeItem, rargs: Record<string, any>): boolean {
     if (treeItem instanceof GeomItem) {
-      return this.removeGeomItem(treeItem)
+      this.removeGeomItem(treeItem)
+      return true
     }
     return false
   }
@@ -80,14 +84,49 @@ class GLStandardGeomsPass extends GLPass {
    * The addGeomItem method.
    * @param geomItem - The geomItem value.
    */
-  addGeomItem(geomItem: GeomItem): void {}
+  addGeomItem(geomItem: GeomItem): void {
+    const listenerIDs: Record<string, number> = {}
+    this.listenerIDs[geomItem.getId()] = listenerIDs
+
+    // ////////////////////////////////////
+    // Tracking Material Transparency changes...
+    // In the case that a geometry material changes, we may need to
+    // select a different pass. e.g. if the new material is transparent.
+
+    const reassignPass = () => {
+      this.removeGeomItem(geomItem)
+      this.renderer!.assignTreeItemToGLPass(geomItem)
+    }
+    listenerIDs['materialParam.valueChanged'] = geomItem.materialParam.on('valueChanged', reassignPass)
+    listenerIDs['geomParam.valueChanged'] = geomItem.geomParam.on('valueChanged', reassignPass)
+
+    const opacityChanged = (event: OpacityStateChangedEvent) => {
+      if (event.isOpaqueStateChanged) {
+        reassignPass()
+      }
+    }
+    const material = geomItem.materialParam.value
+    this.materials[geomItem.getId()] = material
+    listenerIDs['geomItem.opacityChanged'] = geomItem.on('opacityChanged', opacityChanged)
+    listenerIDs['material.opacityChanged'] = material.on('opacityChanged', opacityChanged)
+  }
 
   /**
    * The removeGeomItem method.
    * @param geomItem - The geomItem value.
    */
-  removeGeomItem(geomItem: GeomItem): boolean {
-    return false
+  removeGeomItem(geomItem: GeomItem): void {
+    const id = geomItem.getId()
+    const listenerIDs = this.listenerIDs[id]
+    delete this.listenerIDs[id]
+
+    geomItem.materialParam.removeListenerById('valueChanged', listenerIDs['materialParam.valueChanged'])
+    geomItem.geomParam.removeListenerById('valueChanged', listenerIDs['geomParam.valueChanged'])
+
+    const material = this.materials[geomItem.getId()]
+    delete this.materials[id]
+    geomItem.removeListenerById('opacityChanged', listenerIDs['geomItem.opacityChanged'])
+    material.removeListenerById('opacityChanged', listenerIDs['material.opacityChanged'])
   }
 
   /**

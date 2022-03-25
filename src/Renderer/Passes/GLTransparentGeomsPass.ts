@@ -7,13 +7,13 @@ import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { RenderState, GeomDataRenderState } from '../types/renderer'
 import { GLViewport } from '..'
+import { BaseEvent, OpacityStateChangedEvent } from '../../Utilities'
 
 /** Class representing a GL transparent geoms pass.
  * @extends GLStandardGeomsPass
  * @private
  */
 class GLTransparentGeomsPass extends GLStandardGeomsPass {
-  protected listenerIDs: Record<number, Record<string, number>> = {}
   protected itemCount: number = 0
   protected __glShaderGeomSets: Record<string, any> = {} // GLShaderGeomSets
   protected transparentItems: any[] = []
@@ -83,13 +83,12 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param geomItem - The geomItem value.
    */
   addGeomItem(geomItem: GeomItem): void {
+    super.addGeomItem(geomItem)
     this.itemCount++
 
-    const listenerIDs: Record<string, number> = {}
-    this.listenerIDs[geomItem.getId()] = listenerIDs
+    const listenerIDs: Record<string, number> = this.listenerIDs[geomItem.getId()]
 
-    const materialParam = geomItem.materialParam
-    const material = materialParam.value
+    const material = geomItem.materialParam.value
     const shaderName = material.getShaderName()
     const shaders = this.constructShaders(shaderName)
 
@@ -128,22 +127,6 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     // @todo - make sure we remove materials and GeomItems from the base pass.
     // This code will leak memory for these classes as we are not cleaning them up.
     const glMaterial = this.renderer!.glMaterialLibrary.getGLMaterial(material)
-
-    // ////////////////////////////////////
-    // Tracking Material Transparency changes...
-    // In the case that a geometry material changes, we may need to
-    // select a different pass. e.g. if the new material is not transparent
-    // then the object moves to the OpaqueGeomsPass
-    const materialChanged = () => {
-      material.removeListenerById('valueChanged', listenerIDs['material.valueChanged'])
-      material.removeListenerById('opacityChanged', listenerIDs['material.opacityChanged'])
-      materialParam.removeListenerById('valueChanged', listenerIDs['materialParam.valueChanged'])
-      this.removeGeomItem(geomItem)
-      this.renderer!.assignTreeItemToGLPass(geomItem)
-    }
-    listenerIDs['material.valueChanged'] = material.on('valueChanged', materialChanged)
-    listenerIDs['material.opacityChanged'] = material.on('opacityChanged', materialChanged)
-    listenerIDs['materialParam.valueChanged'] = materialParam.on('valueChanged', materialChanged)
 
     // ////////////////////////////////////
     // Tracking visibility changes.
@@ -189,35 +172,25 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * The removeGeomItem method.
    * @param geomItem - The geomItem value.
    */
-  // TODO: needs to return boolean
   removeGeomItem(geomItem: GeomItem): boolean {
     this.itemCount--
+
+    const listenerIDs = this.listenerIDs[geomItem.getId()]
+    super.removeGeomItem(geomItem)
 
     const glGeomItem = this.renderer!.glGeomItemLibrary.getGLGeomItem(geomItem)
     if (!glGeomItem) throw new Error('glGeomItem not found for geomItem:' + geomItem.getName())
 
-    const listenerIDs = this.listenerIDs[geomItem.getId()]
-    delete this.listenerIDs[geomItem.getId()]
-
-    const materialParam = geomItem.getParameter('Material')!
-    const material = materialParam.value!
     glGeomItem.removeListenerById('visibilityChanged', listenerIDs['glGeomItem.visibilityChanged'])
 
     if (glGeomItem.GLShaderGeomSets) {
       const glShaderGeomSets = <GLShaderGeomSets>glGeomItem.GLShaderGeomSets
       glShaderGeomSets.removeGLGeomItem(glGeomItem)
       glGeomItem.GLShaderGeomSets = null
-      return true // TODO: is returning true here correct?
-    }
-    {
+    } else {
       const itemindex = this.transparentItemIndices[geomItem.getId()]
       const item = this.transparentItems[itemindex]
       delete this.transparentItemIndices[geomItem.getId()]
-
-      material.removeListenerById('valueChanged', listenerIDs['material.valueChanged'])
-      material.removeListenerById('opacityChanged', listenerIDs['material.opacityChanged'])
-      materialParam.removeListenerById('valueChanged', listenerIDs['materialParam.valueChanged'])
-      geomItem.getParameter('GeomMat')!.removeListenerById('valueChanged', listenerIDs['GeomMat.valueChanged'])
 
       this.transparentItems[itemindex] = null
       this.freeList.push(itemindex)

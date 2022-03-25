@@ -28,6 +28,7 @@ import { GLBaseRenderer, RendererOptions } from '../GLBaseRenderer'
 import { Material } from '../../SceneTree/Material'
 import { GeomDataRenderState, RenderState } from '../types/renderer'
 import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
+import { OpacityStateChangedEvent } from '../../Utilities/Events/OpacityStateChangedEvent'
 
 import { pixelsPerItem } from '../GLSLConstants'
 import { readPixelsAsync } from './readPixelsAsync.js'
@@ -740,10 +741,8 @@ class GLGeomItemLibrary extends EventEmitter {
     const materialChanged = () => {
       // Ref count the materials in the material library.
       this.renderer.glMaterialLibrary.removeMaterial(material)
-      material.off('opacityChanged', geomItemChanged)
       material = materialParam.value!
       glGeomItem.materialId = this.renderer.glMaterialLibrary.addMaterial(material)
-      material.on('opacityChanged', geomItemChanged)
 
       workerItemDataChanged()
       geomItemChanged()
@@ -796,7 +795,6 @@ class GLGeomItemLibrary extends EventEmitter {
     geomItem.on('cutAwayChanged', geomItemChanged)
     geomItem.on('highlightChanged', geomItemChanged)
     geomItem.on('selectabilityChanged', geomItemChanged)
-    material.on('opacityChanged', geomItemChanged)
     geomItem.on('opacityChanged', geomItemChanged)
 
     const workerItemDataChanged = () => {
@@ -863,7 +861,7 @@ class GLGeomItemLibrary extends EventEmitter {
     geomItem.off('cutAwayChanged', handlers.geomItemChanged)
     geomItem.off('highlightChanged', handlers.geomItemChanged)
     geomItem.off('selectabilityChanged', handlers.geomItemChanged)
-    material.off('opacityChanged', handlers.geomItemChanged)
+    // material.off('opacityChanged', handlers.geomItemChanged)
     geomItem.off('opacityChanged', handlers.geomItemChanged)
 
     geomItem.off('visibilityChanged', handlers.workerItemDataChanged)

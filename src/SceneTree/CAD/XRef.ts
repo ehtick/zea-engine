@@ -85,6 +85,11 @@ class XRef extends CADAsset {
         }
       }
     } else {
+      if (relativePath.includes('/')) {
+        relativePath = relativePath.slice(relativePath.lastIndexOf('/') + 1)
+      } else if (relativePath.includes('\\')) {
+        relativePath = relativePath.slice(relativePath.lastIndexOf('\\') + 1)
+      }
       // Generate a url relative to the folder of the asset we are currently loading.
       url = context.folder + relativePath + '.zcad'
     }
@@ -120,12 +125,12 @@ class XRef extends CADAsset {
             context.decrementAsync()
           },
           () => {
-            console.log(`While Loading ${this.getPath()} unable to resolve ${relativePath}`)
             context.decrementAsync()
           }
         )
       }
-      // }
+    } else {
+      console.warn(`While Loading ${this.getPath()} unable to resolve ${relativePath}`)
     }
   }
 }

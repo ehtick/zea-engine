@@ -9,6 +9,7 @@ import { GLMaterialGeomItemSets } from '../Drawing/GLMaterialGeomItemSets'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLGeomItem } from '../Drawing'
 import { RenderState, GeomDataRenderState, ColorRenderState } from '../types/renderer'
+import { OpacityStateChangedEvent } from '../../Utilities'
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLStandardGeomsPass
@@ -75,6 +76,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return - The return value.
    */
   addGeomItem(geomItem: GeomItem): boolean {
+    super.addGeomItem(geomItem)
+
     const materialParam = geomItem.materialParam
     const material = materialParam.value
     const glGeomLibrary = this.renderer!.glGeomLibrary
@@ -107,18 +110,6 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     const glGeomItem = glGeomItemLibrary.getGLGeomItem(geomItem)!
 
     // ////////////////////////////////////
-    // Tracking Material Transparency changes...
-    // In the case that a geometry material changes, we may need to
-    // select a different pass. e.g. if the new material is transparent.
-
-    const materialChanged = () => {
-      this.removeGeomItem(geomItem)
-      this.__renderer!.assignTreeItemToGLPass(geomItem)
-    }
-    materialParam.on('valueChanged', materialChanged)
-    ;(<Record<string, any>>glGeomItem).materialChanged = materialChanged
-
-    // ////////////////////////////////////
     // Shaders
     const shaderName = material.getShaderName()
     const glMaterial = this.renderer!.glMaterialLibrary.getGLMaterial(material)
@@ -145,6 +136,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return - The return value.
    */
   removeGeomItem(geomItem: GeomItem): boolean {
+    super.removeGeomItem(geomItem)
+
     const glGeomItem = (<Record<string, any>>this).renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
 
     if (glGeomItem.GLShaderGeomSets) {
@@ -152,13 +145,6 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       glShaderGeomSets.removeGLGeomItem(glGeomItem)
       glGeomItem.GLShaderGeomSets = null
       return true
-    }
-
-    const materialParam = geomItem.materialParam
-    const materialChanged = glGeomItem.materialChanged
-    if (materialParam && materialChanged) {
-      materialParam.off('valueChanged', materialChanged)
-      glGeomItem.materialChanged = null
     }
 
     if (glGeomItem.GLGeomItemSet) {

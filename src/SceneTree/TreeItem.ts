@@ -80,7 +80,7 @@ class TreeItem extends BaseItem {
    * @member opacityParam - Controls, in combination with Material transparency,
    * the opacity of this item and its children.
    */
-  opacityParam: NumberParameter = new NumberParameter('Opacity', 1)
+  opacityParam: NumberParameter = new NumberParameter('Opacity', 1, [0, 1])
 
   protected __highlightMapping: Record<string, Color> = {}
   protected __highlights: Array<string> = []
@@ -272,7 +272,7 @@ class TreeItem extends BaseItem {
       childItem.updateOpacity()
     }
     const isOpaque = this.__opacity > 0.999
-    if (wasOpaque != isOpaque) this.emit('opacityChanged', new OpacityStateChangedEvent(isOpaque))
+    this.emit('opacityChanged', new OpacityStateChangedEvent(isOpaque, wasOpaque != isOpaque))
   }
 
   // ////////////////////////////////////////

@@ -205,9 +205,11 @@ void main(void) {
   material.roughness     = matValue1.b;
   material.reflectance   = matValue1.a;
 
-  material.emission         = matValue2.r;
-  material.opacity          = matValue2.g * matValue0.a * treeItemOpacity;
+  material.emission      = matValue2.r;
+  material.opacity       = matValue2.g * matValue0.a;
   if (material.opacity < 0.001) discard;
+
+
 
 #else // ENABLE_MULTI_DRAW
 
@@ -263,6 +265,13 @@ void main(void) {
 #endif // ENABLE_MULTI_DRAW
 
   fragColor = pbrSurfaceRadiance(material, normal, viewVector);
+  
+  // Note: the 'treeItemOpacity' is not an input to the PBR lighting, 
+  // as we want to also blend off the specular reflections to make an object
+  // fade away to nothing. (not become a transparent glass object).
+  fragColor.a *= treeItemOpacity;
+
+  // Debugging code to help understand what might be happening in the shader.
   // fragColor = vec4(texture2D(NormalTex, texCoord).rgb, 1.0);
   // fragColor = metallicRoughness;
   // fragColor = vec4(material.baseColor, 1.0);;

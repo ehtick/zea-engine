@@ -79,7 +79,7 @@ class EventEmitter extends BaseClass {
    * @param listener - The listener value
    * @return - the id that can be used to remove the listener.
    */
-  once(eventName: string, listener: (event: BaseEvent) => void): number {
+  once(eventName: string, listener: (event: BaseEvent | any) => void): number {
     const cb = (event: any) => {
       listener(event)
       this.off(eventName, cb)

@@ -132,7 +132,7 @@ void main(void) {
 #ifndef ENABLE_TEXTURES
   vec4 baseColor      = BaseColor;
   float emission      = EmissiveStrength;
-  float opacity       = baseColor.a * Opacity * treeItemOpacity;
+  float opacity       = baseColor.a * Opacity;
 #else
   vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
   float opacity       = baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexType, v_textureCoord) * treeItemOpacity;
@@ -153,6 +153,11 @@ void main(void) {
   }
 
   fragColor = vec4((ndotv * baseColor.rgb) + (emission * baseColor.rgb), opacity);
+
+  // Note: the 'treeItemOpacity' is not an input to the lighting, 
+  // as we want to also blend off the specular reflections to make an object
+  // fade away to nothing. (not become a transparent glass object).
+  fragColor.a *= treeItemOpacity;
 
 #ifdef DEBUG_GEOM_ID
   if (testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {

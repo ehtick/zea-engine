@@ -1,6 +1,7 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
 import { Points, Lines, Mesh, CompoundGeom, PointsProxy, LinesProxy, MeshProxy, BaseGeom } from '../../SceneTree/index'
+import { OpacityStateChangedEvent } from '../../Utilities/Events/OpacityStateChangedEvent'
 import { GLGeomItemSetMultiDrawCompoundGeom } from './GLGeomItemSetMultiDrawCompoundGeom'
 import { GLGeomItemSetMultiDraw } from './GLGeomItemSetMultiDraw'
 import { GLLinesItemSet } from './GLLinesItemSet'
@@ -11,6 +12,7 @@ import { GLGeomItem } from './GLGeomItem'
 import { Vec3 } from '../../Math/Vec3'
 import { RenderState, GeomDataRenderState, ColorRenderState } from '../types/renderer'
 import { WebGL12RenderingContext } from '../types/webgl'
+import { GLGeomItemSet } from './GLGeomItemSet'
 
 /** Class representing GL shader materials.
  * @private
@@ -52,7 +54,7 @@ class GLShaderGeomSets extends EventEmitter {
    * @param geom - The geomitem value.
    * @return - The return value.
    * */
-  getOrCreateGLGeomItemSet(geom: BaseGeom) {
+  private getOrCreateGLGeomItemSet(geom: BaseGeom): GLGeomItemSetMultiDraw | GLGeomItemSetMultiDrawCompoundGeom {
     let glGeomItemSet
     if (geom instanceof CompoundGeom) {
       if (this.glGeomItemSets['CompoundGeom']) return this.glGeomItemSets['CompoundGeom']
@@ -85,23 +87,9 @@ class GLShaderGeomSets extends EventEmitter {
    * @param glGeomItem - The glGeomItem value.
    */
   addGLGeomItem(glGeomItem: GLGeomItem) {
-    const geomItem = glGeomItem.geomItem
-    const geom = geomItem.geomParam.value
-    const material = glGeomItem.geomItem.materialParam.value
-
-    const geomItemParamChanged = () => {
-      this.pass.removeGeomItem(geomItem)
-      this.pass.renderer!.assignTreeItemToGLPass(geomItem)
-    }
-    material.on('opacityChanged', geomItemParamChanged)
-    geomItem.on('opacityChanged', geomItemParamChanged)
-    geomItem.materialParam.on('valueChanged', geomItemParamChanged)
-    geomItem.geomParam.on('valueChanged', geomItemParamChanged)
-
+    const geom = glGeomItem.geomItem.geomParam.value
     const glGeomItemSet = this.getOrCreateGLGeomItemSet(geom)
-    glGeomItem.material = material
     glGeomItem.GLGeomItemSet = glGeomItemSet
-    glGeomItem.geomItemParamChanged = geomItemParamChanged
     glGeomItemSet.addGLGeomItem(glGeomItem)
   }
 
@@ -110,16 +98,6 @@ class GLShaderGeomSets extends EventEmitter {
    * @param glGeomItem - The glGeomItem value.
    */
   removeGLGeomItem(glGeomItem: GLGeomItem) {
-    const geomItem = glGeomItem.geomItem
-    const material = glGeomItem.material
-    const geomItemParamChanged = glGeomItem.geomItemParamChanged
-    material.off('opacityChanged', geomItemParamChanged)
-    geomItem.off('opacityChanged', geomItemParamChanged)
-    geomItem.materialParam.off('valueChanged', geomItemParamChanged)
-    geomItem.geomParam.off('valueChanged', geomItemParamChanged)
-    glGeomItem.material = null
-    glGeomItem.geomItemParamChanged = null
-
     const glGeomItemSet = glGeomItem.GLGeomItemSet
     glGeomItemSet.removeGLGeomItem(glGeomItem)
     glGeomItem.GLGeomItemSet = null

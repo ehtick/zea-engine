@@ -161,6 +161,10 @@ Object {
       },
     },
     "Opacity": Object {
+      "range": Array [
+        0,
+        1,
+      ],
       "value": 1,
     },
     "Visible": Object {
