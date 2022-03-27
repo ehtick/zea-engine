@@ -12,19 +12,20 @@ interface Task {
 let taskCounter = 0
 export abstract class WorkerPool<WorkerClass> {
   workers: WorkerClass[] = []
+  workerTaskCount: number[] = []
   taskPromiseResolves: Record<number, (value: object | PromiseLike<object>) => void> = {}
 
   taskQueue: Array<Task> = []
   availableWorkers: number[] = []
   terminationTimeouts: number[] = []
   terminateWorkersWhenFree: boolean = true
-  terminationLatency: number = 1000
+  terminationLatency: number = 2000
 
   constructor(terminateWorkersWhenFree: boolean) {
     this.terminateWorkersWhenFree = terminateWorkersWhenFree
   }
 
-  addTask(taskData: object, transferables: Array<Transferable>): Promise<object> {
+  public addTask(taskData: object, transferables: Array<Transferable>): Promise<object> {
     return this.addTaskCallback(() => {
       return {
         taskData,
@@ -33,7 +34,7 @@ export abstract class WorkerPool<WorkerClass> {
     })
   }
 
-  addTaskCallback(dataFactory: (workerId: number) => TaskData): Promise<object> {
+  public addTaskCallback(dataFactory: (workerId: number) => TaskData): Promise<object> {
     taskCounter++
     const taskId = taskCounter
     return new Promise<object>(async (resolve) => {
@@ -54,33 +55,40 @@ export abstract class WorkerPool<WorkerClass> {
     })
   }
 
-  consumeTask() {
+  private async consumeTask() {
     const workerId = this.availableWorkers.pop()
+    if (this.workerTaskCount[workerId] > 0) {
+      return
+    }
     if (this.terminationTimeouts[workerId] != -1) {
       clearTimeout(this.terminationTimeouts[workerId])
       this.terminationTimeouts[workerId] = -1
+    } else if (!this.workers[workerId]) {
+      // Workers get terminated, and we need to restart them.
+      await this.allocWorker(workerId)
     }
-    // Note: a new worker can be allocated, but another worker
-    // consumes the task before the new worker picks up the task.
     if (this.taskQueue.length == 0) {
-      if (this.terminateWorkersWhenFree) this.scheduleWorkerTermination(workerId)
-      else this.availableWorkers.push(workerId)
+      // Multiple consumeTask were issued, and all tasks have been consumed.
       return
     }
     const task = this.taskQueue.pop()
     const { taskData, transferables } = task.dataFactory(workerId)
     // @ts-ignore
     taskData.taskId = task.taskId
+    this.workerTaskCount[workerId]++
     // @ts-ignore
     this.workers[workerId].postMessage(taskData, transferables)
   }
 
-  addWorker(): Promise<void> {
+  private addWorker(): Promise<void> {
+    const workerId = this.workers.length
+    this.workers.push(null)
+    return this.allocWorker(workerId)
+  }
+
+  private allocWorker(workerId: number): Promise<void> {
     // Note: This function immediately adds the worker to the list
     // and then asynchronously creates it.
-    const workerId = this.workers.length
-    console.log('addWorker:', workerId, this.constructor.name)
-    this.workers.push(null)
     return new Promise<void>((resolve) => {
       this.constructWorker().then((worker: WorkerClass) => {
         // @ts-ignore
@@ -91,42 +99,51 @@ export abstract class WorkerPool<WorkerClass> {
             this.taskPromiseResolves[taskId](event.data)
             delete this.taskPromiseResolves[taskId]
           }
-          if (this.taskQueue.length > 0) {
+          this.workerTaskCount[workerId]--
+          if (this.workerTaskCount[workerId] > 0) {
+            // Another task is already sent to this worker.
+            // Let it complete.
+            return
+          }
+          // Check that we are not already on the available list.
+          // This happens if multiple tasks get issued to the same worker.
+          if (this.availableWorkers.indexOf(workerId) == -1) {
             this.availableWorkers.push(workerId)
+          }
+          if (this.taskQueue.length > 0) {
             this.consumeTask()
           } else {
             if (this.terminateWorkersWhenFree) {
               this.scheduleWorkerTermination(workerId)
-            } else {
-              this.availableWorkers.push(workerId)
             }
           }
         }
         this.workers[workerId] = worker
         this.terminationTimeouts[workerId] = -1
+        this.workerTaskCount[workerId] = 0
         this.availableWorkers.push(workerId)
         resolve()
       })
     })
   }
 
-  scheduleWorkerTermination(workerId: number): void {
-    console.log('scheduleWorkerTermination:', workerId, this.constructor.name)
+  private scheduleWorkerTermination(workerId: number): void {
     // @ts-ignore
     this.terminationTimeouts[workerId] = setTimeout(() => {
       this.terminateWorker(workerId)
+      this.terminationTimeouts[workerId] = -1
     }, this.terminationLatency)
   }
 
   abstract constructWorker(): Promise<WorkerClass>
 
-  terminateWorker(workerId: number): void {
+  protected terminateWorker(workerId: number): void {
     // @ts-ignore
     this.workers[workerId].terminate()
     this.workers[workerId] = null
   }
 
-  messageWorker(workerId: number, message: object): Promise<object> {
+  public messageWorker(workerId: number, message: object): Promise<object> {
     taskCounter++
     const taskId = taskCounter
     // console.log('addTask:', taskId)
