@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>zcad-multiple-assets - Zea Engine</title>
+
+    <link href="data/zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <script src="../dist/index.umd.js"></script>
+    <link rel="stylesheet" href="./src/styles.css" />
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Xfo, CADAsset, AssetLoadContext, resourceLoader } = zeaEngine
+
+      const canvas = document.getElementById('viewport')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { antialias: false })
+      renderer.setScene(scene)
+
+      scene.setupGrid(1.0, 10)
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0.3, -0.3, 0.1), new Vec3(0, 0, -0.1))
+
+      const promises = []
+
+      let index = 0
+      const loadAsset = (name, pos) => {
+        const context = new AssetLoadContext()
+        context.units = 'Meters'
+        const asset1 = new CADAsset()
+
+        if (index % 7 == 0) {
+          // Event 7th asset loads a faulty url.
+          asset1.load('data/zcad/3.9.1/does-not-exist.zcad', context)
+        } else {
+          asset1.load('data/zcad/3.9.1/HC_SRO4.step.zcad', context)
+        }
+        promises.push(
+          new Promise((resolve) =>
+            asset1.getGeometryLibrary().once('loaded', () => {
+              console.count('loaded')
+              resolve()
+            })
+          )
+        )
+        asset1.globalXfoParam.value = new Xfo(pos)
+        scene.getRoot().addChild(asset1)
+        index++
+      }
+
+      let count = 4
+      for (let i = 0; i < count; i++) {
+        for (let j = 0; j < count; j++) {
+          for (let k = 0; k < count; k++) {
+            loadAsset(
+              'Sphere' + i,
+              new Vec3((i / count - 0.5) * 0.25, (j / count - 0.5) * 0.25, (k / count - 0.5) * 0.25)
+            )
+          }
+        }
+      }
+      resourceLoader.on('progressIncremented', (event) => {
+        const pct = document.getElementById('progress')
+        pct.value = event.percent
+        if (event.percent >= 100) {
+          pct.classList.add('hidden')
+        }
+      })
+
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        renderer.forceRender()
+        statusElement.textContent = text
+      }
+      Promise.all(promises).then(() => {
+        setStatusText('done-loading')
+      })
+    </script>
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="h-screen">
+      <canvas id="viewport"></canvas>
+      <progress class="progress-display" id="progress" value="0" max="100">0%</progress>
+      <div id="status" class="hud"></div>
+    </div>
+  </body>
+</html>
