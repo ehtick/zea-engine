@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>frustum-culling-cadasset - Zea Engine</title>
+
+    <link href="data/zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
+
+    <script src="../dist/index.umd.js"></script>
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Xfo, CADAsset, AssetLoadContext } = zeaEngine
+
+      const canvas = document.getElementById('viewport')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { enableFrustumCulling: true, antialias: false })
+      renderer.setScene(scene)
+
+      scene.setupGrid(0.2, 10)
+
+      // Starts visible and culled, gets unculled.
+      const asset = new CADAsset()
+      asset.load('data/zcad/3.9.1/HC_SRO4.step.zcad').then(() => {})
+      asset.getGeometryLibrary().on('loaded', () => {
+        renderer.once('CullingUpdated', () => {
+          setStatusText('done-loading')
+        })
+      })
+      scene.getRoot().addChild(asset)
+
+      // Starts unculled and invisible, and becomes visible.
+      const asset2 = asset.clone()
+      const xfo = asset2.globalXfoParam.value.clone()
+      xfo.tr.set(-0.03, 0.03, 0)
+      asset2.globalXfoParam.value = xfo
+      asset2.visibleParam.value = false
+      scene.getRoot().addChild(asset2)
+
+      const asset3 = asset.clone()
+      const xfo3 = asset3.globalXfoParam.value.clone()
+      xfo3.tr.set(0.03, -0.03, 0)
+      asset3.globalXfoParam.value = xfo3
+      scene.getRoot().addChild(asset3)
+
+      const camera = renderer.getViewport().getCamera()
+      camera.setPositionAndTarget(new Vec3(0.1, 0.1, 0.01), new Vec3(-0.1, 0.1, 0))
+      renderer.getViewport().on('viewChanged', (event) => {
+        console.log(camera.globalXfoParam.getValue().toString(), camera.getTargetPosition().toString())
+      })
+
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        renderer.forceRender()
+        statusElement.textContent = text
+      }
+
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        camera.setPositionAndTarget(new Vec3(0.1, 0.1, 0.01), new Vec3(0, 0, 0))
+        asset2.visibleParam.value = true
+        asset3.visibleParam.value = false
+        renderer.once('CullingUpdated', () => {
+          setStatusText(`done-variant-01`)
+        })
+      })
+      // }}}
+      const cullElement = document.getElementById('cull-stats')
+      renderer.on('CullingUpdated', (event) => {
+        cullElement.textContent = `visible: ${event.visible} / ${event.total} triangles: ${event.visibleGeomStats.triangles} / ${event.totalGeomStats.triangles}`
+      })
+    </script>
+  </head>
+  <body class="bg-blue-100">
+    <div class="h-screen">
+      <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div id="cull-stats" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+      </div>
+    </div>
+  </body>
+</html>

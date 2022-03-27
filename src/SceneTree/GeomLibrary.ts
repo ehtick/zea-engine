@@ -352,7 +352,7 @@ class GeomLibrary extends EventEmitter {
     this.loadedCount += loaded
     // console.log("this.loadedCount:" + this.loadedCount +" this.numGeoms:" + this.numGeoms);
     if (this.loadedCount == this.numGeoms) {
-      // console.log("GeomLibrary Loaded:" + this.__name + " count:" + geomDatas.length + " loaded:" + this.loadedCount);
+      // console.log('GeomLibrary Loaded:' + this.assetItem.getName() + ' loaded:' + this.loadedCount)
       this.emit('loaded')
     }
 
