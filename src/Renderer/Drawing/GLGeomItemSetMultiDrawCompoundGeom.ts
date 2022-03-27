@@ -124,17 +124,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     eventHandlers.visibilityChanged = (event: VisibilityChangedEvent) => {
       // const drawIndex = this.indexToDrawIndex[index]
       if (event.visible) {
-        // const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
-        // this.drawElementCounts[drawIndex] = offsetAndCount[1]
         const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
-        if (Object.keys(this.drawIdsArraysAllocators).length == 0) {
-          // This item was never visible before and is now being un-culled.
-          // No allocations have yet been made for it so we can't simply re-set the count value
-          this.dirtyGeomItems.add(index)
-          this.drawIdsBufferDirty = true
-          this.emit('updated')
-          return
-        }
         for (let key in geomBuffers.counts) {
           if (geomBuffers.counts[key] == 0) continue
           const allocator = this.drawIdsArraysAllocators[key]
@@ -154,25 +144,10 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
                   this.drawElementCounts[key][start + i] = subGeom.count
                 }
               }
-            } else {
-              // This item was never visible before and is now being un-culled.
-              // No allocations have yet been made for it so we can't simply re-set the count value
-              this.dirtyGeomItems.add(index)
-              this.drawIdsBufferDirty = true
-              this.emit('updated')
-              return
             }
-          } else {
-            // This item was never visible before and is now being un-culled.
-            // No allocations have yet been made for it so we can't simply re-set the count value
-            this.dirtyGeomItems.add(index)
-            this.drawIdsBufferDirty = true
-            this.emit('updated')
-            return
           }
         }
       } else {
-        // this.drawElementCounts[drawIndex] = 0
         for (let key in this.drawIdsArraysAllocators) {
           const allocator = this.drawIdsArraysAllocators[key]
           if (allocator) {
@@ -326,7 +301,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     this.dirtyGeomItems.forEach((index) => {
       const glGeomItem = this.glGeomItems[index]
       if (!glGeomItem) return
-      if (glGeomItem.isVisible()) {
+      // Note: culled geoms should still be allocated.
+      // unculling/changing visiblity only changes the count value from zero to the actual value.
+      {
         const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
 
         // Here we calculate how many draws for each type of geometry, each
@@ -345,7 +322,6 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         }
         for (let key in drawCounts) {
           const drawCount = drawCounts[key]
-          // if (drawCount == 0) continue
 
           if (!this.drawIdsArraysAllocators[key]) {
             this.drawIdsArraysAllocators[key] = new Allocator1D()
@@ -359,18 +335,6 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
             }
           }
           this.drawIdsArraysAllocators[key].allocate(index, drawCount)
-        }
-      } else {
-        for (let key in this.drawIdsArraysAllocators) {
-          if (this.drawIdsArraysAllocators[key]) {
-            const prevAllocation = this.drawIdsArraysAllocators[key].getAllocation(index)
-            if (prevAllocation) {
-              // Clear the previous allocation to remove any rendering.
-              for (let i = 0; i < prevAllocation.size; i++) {
-                this.drawElementCounts[key][prevAllocation.start + i] = 0
-              }
-            }
-          }
         }
       }
     })
@@ -394,9 +358,12 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     const elementSize = 4 //  Uint32Array for UNSIGNED_INT
     this.dirtyGeomItems.forEach((itemIndex) => {
       const glGeomItem = this.glGeomItems[itemIndex]!
-      if (!glGeomItem || !glGeomItem.isVisible()) return
+      if (!glGeomItem) return
       const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
       const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
+
+      // If an item is invisible, we allocate values, but set all count values to zero
+      const visible = glGeomItem.isVisible()
 
       if (glGeomItem.shattered) {
         let subIndex = 0
@@ -418,7 +385,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
             const drawId = allocation.start + i
 
             drawElementOffsets[drawId] = offsetAndCount[0] + offsets[i] * elementSize
-            drawElementCounts[drawId] = counts[i]
+            drawElementCounts[drawId] = visible ? counts[i] : 0
             drawIdsArray[drawId * 4 + 0] = glGeomItem.geomItemId
             // Note: a zero value means no sub-geom was being drawn.
             drawIdsArray[drawId * 4 + 1] = subIndex + 1
@@ -465,7 +432,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
             const drawId = allocation.start + i
 
             drawElementOffsets[drawId] = offsetAndCount[0] + subGeom.offset * elementSize
-            drawElementCounts[drawId] = subGeom.count
+            drawElementCounts[drawId] = visible ? subGeom.count : 0
             drawIdsArray[drawId * 4 + 0] = glGeomItem.geomItemId
             // Note: a zero value means no sub-geom was being drawn.
             drawIdsArray[drawId * 4 + 1] = 0
@@ -563,8 +530,10 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           }
         } else {
           const allocator = this.drawIdsArraysAllocators[key]
-          this.dirtyGeomItems.forEach((index) => {
-            const allocation = allocator.getAllocation(index)
+          this.dirtyGeomItems.forEach((itemIndex) => {
+            // const glGeomItem = this.glGeomItems[itemIndex]!
+            // if (!glGeomItem /* || !glGeomItem.isVisible()*/) return
+            const allocation = allocator.getAllocation(itemIndex)
             if (!allocation) return
             const start = allocation.start
             const drawCount = allocation.size
