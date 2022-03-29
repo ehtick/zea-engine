@@ -322,6 +322,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         }
         for (let key in drawCounts) {
           const drawCount = drawCounts[key]
+          // if (drawCount == 0) continue
 
           if (!this.drawIdsArraysAllocators[key]) {
             this.drawIdsArraysAllocators[key] = new Allocator1D()
@@ -812,7 +813,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       this.drawElementCounts,
       this.drawElementOffsets,
       this.drawIdsTextures,
-      this.drawIdsArraysAllocators
+      this.drawIdsArraysAllocators,
+      true
     )
   }
 
@@ -902,14 +904,6 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       gl.clear(gl.COLOR_BUFFER_BIT) // do not clear depth
     }
 
-    // this.bindAndRender(
-    //   renderstate,
-    //   this.drawIdsArrays,
-    //   this.drawElementCounts,
-    //   this.drawElementOffsets,
-    //   this.drawIdsTextures,
-    //   this.drawIdsArraysAllocators
-    // )
     renderstate.bindViewports(unifs, () => {
       if (drawIdsArray['LINES'] && allocators['LINES'].allocatedSpace > 0) {
         if (gl.multiDrawElements) drawIdsTextures['LINES'].bindToUniform(renderstate, drawIdsTexture)
@@ -995,7 +989,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       this.highlightElementCounts,
       this.highlightElementOffsets,
       this.highlightedIdsTextures,
-      this.highlightedIdsArraysAllocators
+      this.highlightedIdsArraysAllocators,
+      false
     )
   }
 
@@ -1012,7 +1007,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     counts: Record<string, Int32Array>,
     offsets: Record<string, Int32Array>,
     drawIdsTextures: Record<string, GLTexture2D>,
-    allocators: Record<string, Allocator1D>
+    allocators: Record<string, Allocator1D>,
+    blendPointsAndLines: boolean = false
   ) {
     const gl = this.gl
     const unifs = renderstate.unifs
@@ -1036,19 +1032,26 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     const { drawIdsTexture, geomType } = renderstate.unifs
 
     renderstate.bindViewports(unifs, () => {
-      if (drawIdsArray['POINTS'] && allocators['POINTS'].allocatedSpace > 0) {
-        if (gl.multiDrawElements) drawIdsTextures['POINTS'].bindToUniform(renderstate, drawIdsTexture)
+      if (drawIdsArray['TRIANGLES'] && allocators['TRIANGLES'].allocatedSpace > 0) {
+        if (gl.multiDrawElements) drawIdsTextures['TRIANGLES'].bindToUniform(renderstate, drawIdsTexture)
 
-        if (geomType) gl.uniform1i(geomType.location, GeomType.POINTS)
+        if (geomType) gl.uniform1i(geomType.location, GeomType.TRIANGLES)
 
-        this.multiDrawPoints(
+        this.multiDrawMeshes(
           renderstate,
-          drawIdsArray['POINTS'],
-          counts['POINTS'],
-          offsets['POINTS'],
-          allocators['POINTS'].allocatedSpace
+          drawIdsArray['TRIANGLES'],
+          counts['TRIANGLES'],
+          offsets['TRIANGLES'],
+          allocators['TRIANGLES'].allocatedSpace
         )
       }
+
+      if (blendPointsAndLines) {
+        gl.enable(gl.BLEND)
+        gl.blendEquation(gl.FUNC_ADD)
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+      }
+
       if (drawIdsArray['LINES'] && allocators['LINES'].allocatedSpace > 0) {
         if (gl.multiDrawElements) drawIdsTextures['LINES'].bindToUniform(renderstate, drawIdsTexture)
 
@@ -1062,18 +1065,22 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           allocators['LINES'].allocatedSpace
         )
       }
-      if (drawIdsArray['TRIANGLES'] && allocators['TRIANGLES'].allocatedSpace > 0) {
-        if (gl.multiDrawElements) drawIdsTextures['TRIANGLES'].bindToUniform(renderstate, drawIdsTexture)
 
-        if (geomType) gl.uniform1i(geomType.location, GeomType.TRIANGLES)
+      if (drawIdsArray['POINTS'] && allocators['POINTS'].allocatedSpace > 0) {
+        if (gl.multiDrawElements) drawIdsTextures['POINTS'].bindToUniform(renderstate, drawIdsTexture)
 
-        this.multiDrawMeshes(
+        if (geomType) gl.uniform1i(geomType.location, GeomType.POINTS)
+
+        this.multiDrawPoints(
           renderstate,
-          drawIdsArray['TRIANGLES'],
-          counts['TRIANGLES'],
-          offsets['TRIANGLES'],
-          allocators['TRIANGLES'].allocatedSpace
+          drawIdsArray['POINTS'],
+          counts['POINTS'],
+          offsets['POINTS'],
+          allocators['POINTS'].allocatedSpace
         )
+      }
+      if (blendPointsAndLines) {
+        gl.disable(gl.BLEND)
       }
     })
 
