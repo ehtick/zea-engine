@@ -302,7 +302,7 @@ void main(void) {
     vec4 pointColor      = PointColor;
     float opacity        = Opacity;
 #endif // ENABLE_MULTI_DRAW
-    pointColor.a = edgeColor.a * opacity * treeItemOpacity;
+    pointColor.a = pointColor.a * opacity * treeItemOpacity;
     if (pointColor.a < 0.001) discard;
     fragColor = pointColor;
   }  // end 'POINTS'
