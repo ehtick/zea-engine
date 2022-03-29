@@ -287,22 +287,22 @@ void main(void) {
     float opacity       = matValue2.g;
 #else 
     vec4 edgeColor      = EdgeColor;
-    vec4 opacity        = Opacity;
+    float opacity        = Opacity;
 #endif // ENABLE_MULTI_DRAW
-    edgeColor.a = opacity * treeItemOpacity;
+    edgeColor.a = edgeColor.a * opacity * treeItemOpacity;
     if (edgeColor.a < 0.001) discard;
     fragColor = edgeColor;
   } // end 'LINES'
   else if (geomType == POINTS) { // start 'POINTS'
 #ifdef ENABLE_MULTI_DRAW
-    vec4 pointColor      = getMaterialValue(materialCoords, 4);
+    vec4 pointColor     = getMaterialValue(materialCoords, 4);
     vec4 matValue2      = getMaterialValue(materialCoords, 2);
     float opacity       = matValue2.g;
 #else 
     vec4 pointColor      = PointColor;
-    vec4 opacity        = Opacity;
+    float opacity        = Opacity;
 #endif // ENABLE_MULTI_DRAW
-    pointColor.a = opacity * treeItemOpacity;
+    pointColor.a = edgeColor.a * opacity * treeItemOpacity;
     if (pointColor.a < 0.001) discard;
     fragColor = pointColor;
   }  // end 'POINTS'
