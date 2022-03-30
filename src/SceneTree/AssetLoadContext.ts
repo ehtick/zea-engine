@@ -117,4 +117,12 @@ export class AssetLoadContext extends EventEmitter {
   addPLCB(postLoadCallback: () => void): void {
     this.postLoadCallbacks.push(postLoadCallback)
   }
+
+  /**
+   * The clone method constructs a new AssetLoadContext, copies its values
+   * from this instance and returns it.
+   */
+  clone(): AssetLoadContext {
+    return new AssetLoadContext(this)
+  }
 }

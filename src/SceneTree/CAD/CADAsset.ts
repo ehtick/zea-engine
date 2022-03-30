@@ -32,7 +32,7 @@ class CADAsset extends AssetItem {
   }
 
   /**
-   * The clone method constructs a new XRef, copies its values
+   * The clone method constructs a new CADAsset, copies its values
    * from this item and returns it.
    *
    * @param context - The CloneContext param.
@@ -87,6 +87,10 @@ class CADAsset extends AssetItem {
       const stem = filename.substring(0, filename.lastIndexOf('.'))
 
       this.url = url
+
+      // Clone the context to avoid modifying the input context
+      // which could be shared between assets and supplying desired units values.
+      context = context.clone()
 
       // These values are used by XRef to generate URLS.
       context.assetItem = <AssetItem>this
