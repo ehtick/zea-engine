@@ -26,8 +26,8 @@ class XRef extends CADAsset {
    * The clone method constructs a new XRef, copies its values
    * from this item and returns it.
    *
-   * @param {number} flags - The flags param.
-   * @return {XRef} - The return value.
+   * @param context - The context value.
+   * @return - Returns a new cloned xref.
    */
   clone(context?: CloneContext): XRef {
     const cloned = new XRef()

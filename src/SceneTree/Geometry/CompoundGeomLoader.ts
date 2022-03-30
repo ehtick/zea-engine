@@ -130,7 +130,12 @@ class CompoundGeomLoader extends BaseGeom {
     this.subGeomOffsets['POINTS'] = subGeomOffsetsPoints
     this.subGeomCounts['POINTS'] = subGeomCountsPoints
 
-    this.numSubGeoms = subGeomCountsMesh.length + subGeomCountsLines.length + numPointsSubGeoms
+    if (context.versions['zea-engine'].compare([3, 11, 0]) > 0) {
+      // Points sub-geoms were not being exported before this release.
+      this.numSubGeoms = subGeomCountsMesh.length + subGeomCountsLines.length + numPointsSubGeoms
+    } else {
+      this.numSubGeoms = subGeomCountsMesh.length + subGeomCountsLines.length
+    }
     // /////////////////////////////////
     // Materials
     const numMaterials = reader.loadUInt32()
