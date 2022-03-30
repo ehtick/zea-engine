@@ -1,9 +1,9 @@
-describe('zcad-multiple-assets', () => {
+describe('zcad-xrefs', () => {
   it('Capture snapshots', () => {
-    cy.visit(`testing-e2e/zcad-multiple-assets.html`)
+    cy.visit(`testing-e2e/zcad-xrefs.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
-    const test = 'zcad-multiple-assets'
+    const test = 'zcad-xrefs'
     cy.get('canvas').percySnapshot(test)
 
     {
