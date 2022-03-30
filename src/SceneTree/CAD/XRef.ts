@@ -133,6 +133,7 @@ class XRef extends CADAsset {
           }
         )
       } else {
+        context.decrementAsync()
         console.warn(`While Loading ${this.getPath()} unable to resolve ${relativePath}`)
       }
     }
