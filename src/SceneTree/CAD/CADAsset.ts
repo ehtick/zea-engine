@@ -32,7 +32,7 @@ class CADAsset extends AssetItem {
   }
 
   /**
-   * The clone method constructs a new XRef, copies its values
+   * The clone method constructs a new CADAsset, copies its values
    * from this item and returns it.
    *
    * @param context - The CloneContext param.
@@ -88,6 +88,10 @@ class CADAsset extends AssetItem {
 
       this.url = url
 
+      // Clone the context to avoid modifying the input context
+      // which could be shared between assets and supplying desired units values.
+      context = context.clone()
+
       // These values are used by XRef to generate URLS.
       context.assetItem = <AssetItem>this
       context.url = url
@@ -114,9 +118,12 @@ class CADAsset extends AssetItem {
 
       resourceLoader.loadFile('archive', url).then(
         (entries) => {
-          // const desc = entries['desc.json']
-          //   ? JSON.parse(new TextDecoder('utf-8').decode(entries['desc.json']))
-          //   : { numGeomFiles: 0 }
+          if (!(entries.tree2 || entries.tree)) {
+            console.error("Corrupt zcad file. Missing 'tree':", url)
+            resourceLoader.incrementWorkDone(1)
+            context.decrementAsync()
+            return
+          }
 
           const treeReader = new BinReader((entries.tree2 || entries.tree).buffer, 0, SystemDesc.isMobileDevice)
 
@@ -138,10 +145,14 @@ class CADAsset extends AssetItem {
               this.metadataLoaded = true
             }
           } else if (entries['geomLibrary.json']) {
-            entries['desc.json']
             const geomLibraryJSON = JSON.parse(new TextDecoder('utf-8').decode(entries['geomLibrary.json']))
             const basePath = folder + stem
-            this.geomLibrary.loadGeomFilesStream(geomLibraryJSON, basePath, context)
+            if (geomLibraryJSON.numGeomFiles == 0) {
+              console.error("Corrupt zcad file. Missing 'geoms':", url)
+              resourceLoader.incrementWorkDone(1)
+            } else {
+              this.geomLibrary.loadGeomFilesStream(geomLibraryJSON, basePath, context)
+            }
           } else {
             // No geoms in this file, so we won't wait for the 'done' event in the GeomLibrary.
             resourceLoader.incrementWorkDone(1)

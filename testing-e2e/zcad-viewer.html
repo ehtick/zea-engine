@@ -285,7 +285,9 @@
 
         renderer.setScene(scene)
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 10), new Vec3(0, 0, 1.5))
-        // renderer.getViewport().backgroundColorParam.value = new Color(0.25, 0.25, 0.25)
+        if (urlParams.has('dark')) {
+          renderer.getViewport().backgroundColorParam.value = new Color(0.25, 0.25, 0.25)
+        }
         renderer.getViewport().getManipulator().setDefaultManipulationMode('tumbler')
 
         const envMap = new EnvMap()
@@ -524,6 +526,11 @@
           asset.getGeometryLibrary().on('loaded', () => {
             setStatusText('done-loading')
           })
+          if (urlParams.has('ytoz')) {
+            const xfo = new Xfo()
+            xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5)
+            asset.globalXfoParam.value = xfo
+          }
         }
 
         scene.getRoot().addChild(asset)

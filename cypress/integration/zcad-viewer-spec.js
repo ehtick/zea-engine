@@ -38,7 +38,7 @@ describe('zcad-viewer-HC_SRO4', () => {
 
 describe('zcad-viewer-PressRink', () => {
   it('Capture snapshots', () => {
-    cy.visit(`testing-e2e/zcad-viewer.html?zcad=data/zcad/3.9.1/PressRink.CATProduct.zcad`)
+    cy.visit(`testing-e2e/zcad-viewer.html?zcad=data/zcad/3.9.1/PressRink.CATProduct.zcad&dark`)
 
     cy.get('#status').should('have.text', `done-loading`)
     const test = 'zcad-viewer-PressRink'

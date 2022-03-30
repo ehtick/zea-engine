@@ -13,9 +13,9 @@ import { Cuboid } from '../Geometry/Shapes'
 import { FlatSurfaceMaterial } from '../Materials/FlatSurfaceMaterial'
 
 const plane = new Cuboid(1, 1, 1)
-const planeMaterial = new FlatSurfaceMaterial('plane')
-planeMaterial.baseColorParam.value = new Color(1, 1, 0, 0.001)
-planeMaterial.overlayParam.value = -0.001
+let planeMaterial: FlatSurfaceMaterial = null
+
+// Disable all highlighting so it never shows on screen.
 class PMIPickingPlane extends GeomItem {
   addHighlight(name?: string, color?: Color, propagateToChildren = false): void {}
   removeHighlight(name: string, propagateToChildren = false): void {}
@@ -276,6 +276,12 @@ class PMIItem extends TreeItem {
             if (item instanceof GeomItem) {
               const geom = item.geomParam.value
               const bbox = geom.getBoundingBox()
+
+              if (!planeMaterial) {
+                planeMaterial = new FlatSurfaceMaterial('plane')
+                planeMaterial.baseColorParam.value = new Color(1, 1, 0, 0.001)
+                planeMaterial.overlayParam.value = -0.001
+              }
 
               const planeGeomItem = new PMIPickingPlane('plane', plane, planeMaterial)
               const xfo = item.localXfoParam.value.multiply(item.geomOffsetXfoParam.value)
