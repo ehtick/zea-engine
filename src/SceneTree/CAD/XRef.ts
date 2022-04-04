@@ -17,7 +17,6 @@ class XRef extends CADAsset {
    *
    * @param {string} name - The name value.
    */
-  localXfoParam: XfoParameter
   constructor(name?: string) {
     super(name)
   }
