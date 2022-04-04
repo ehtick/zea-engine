@@ -14,8 +14,7 @@ import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
 import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent'
 import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent'
 import { ColorRenderState, GeomDataRenderState, RenderState } from '../types/renderer'
-import { GLViewport } from '../GLViewport'
-import { GLRenderer } from '..'
+import { GLRenderer } from '../GLRenderer'
 
 /** This Viewport class is used for rendering stereoscopic views to VR controllers using the WebXR api.
  *  When the GLRenderer class detects a valid WebXF capable device is plugged in, this class is automatically

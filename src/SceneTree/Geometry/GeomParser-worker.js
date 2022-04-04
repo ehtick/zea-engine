@@ -7,6 +7,9 @@ const handleMessage = function (srcData, postMessage) {
   })
 }
 
+/* NODE_START
+export { handleMessage }
+// NODE_ELSE */
 self.onmessage = function (event) {
   if (!event.data) {
     // Note: we see this occur when loading one large asset many times.
@@ -17,4 +20,4 @@ self.onmessage = function (event) {
   }
   handleMessage(event.data, self.postMessage)
 }
-export { handleMessage }
+// NODE_END

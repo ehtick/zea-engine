@@ -1,31 +1,39 @@
 import { ResourceLoader } from '../resourceLoader'
 
+// @ts-ignore
+import unpackBase64Str from './unpack.wasm'
+
+/* NODE_START
 // For synchronous loading, uncomment these lines.
 // @ts-ignore
-// import { handleMessage } from './ArchiveUnpacker-worker.js'
-// class ArchiveUnpackerWorkerPool {
-//   constructor() {
-//     handleMessage(
-//       {
-//         type: 'init',
-//       },
-//       (results: Record<string, any>) => {
-//         console.log(results)
-//       }
-//     )
-//   }
-//   addTask(taskData: object): Promise<object> {
-//     return new Promise<object>((resolve) => {
-//       setTimeout(() => {
-//         handleMessage(taskData, (results: Record<string, any>) => {
-//           resolve({ data: results })
-//         })
-//       }, Math.random() * 10)
-//     })
-//   }
+import { handleMessage } from './ArchiveUnpacker-worker.js'
+class ArchiveUnpackerWorkerPool {
+  constructor() {
+    const buffer = Buffer.from(unpackBase64Str, 'base64')
+    handleMessage(
+      {
+        type: 'init',
+        buffer
+      },
+      (results) => {
+        console.log(results)
+      }
+    )
+  }
+  addTask(taskData, transerable) {
+    return new Promise((resolve) => {
+      handleMessage(taskData, (results) => {
+        resolve(results)
+      })
+    })
+  }
 
-//   terminate() {}
-// }
+  terminate() {}
+}
+
+// NODE_ELSE */
+
+const buffer = Uint8Array.from(atob(unpackBase64Str), (c) => c.charCodeAt(0))
 
 import { WorkerPool } from '../../Utilities/WorkerPool'
 // @ts-ignore
@@ -42,10 +50,13 @@ class ArchiveUnpackerWorkerPool extends WorkerPool<ArchiveUnpackerWorker> {
       }
       worker.postMessage({
         type: 'init',
+        buffer: buffer.buffer,
       })
     })
   }
 }
+
+// NODE_END
 
 function checkStatus(response: any): any {
   if (!response.ok) {

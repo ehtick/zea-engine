@@ -8,7 +8,9 @@ import { GeomItem } from './GeomItem'
 import { BinReader } from './BinReader'
 import { AssetLoadContext } from './AssetLoadContext'
 import { CloneContext } from './CloneContext'
-import { BaseGeomItem, BaseItem, Parameter, StringParameter } from '.'
+import { BaseItem } from './BaseItem'
+import { BaseGeomItem } from './BaseGeomItem'
+import { Parameter, StringParameter } from './Parameters'
 
 /**
  * Given a units string, load returns a factor relative to meters

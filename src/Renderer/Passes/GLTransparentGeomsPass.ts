@@ -6,7 +6,7 @@ import { GLRenderer } from '../GLRenderer'
 import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { RenderState, GeomDataRenderState } from '../types/renderer'
-import { GLViewport } from '..'
+import { GLViewport } from '../GLViewport'
 import { BaseEvent, OpacityStateChangedEvent } from '../../Utilities'
 
 /** Class representing a GL transparent geoms pass.

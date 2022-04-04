@@ -1,6 +1,7 @@
 /* eslint-disable valid-jsdoc */
 /* eslint-disable guard-for-in */
-import { BaseItem, Material } from '../SceneTree'
+import { BaseItem } from '../SceneTree/BaseItem'
+import { Material } from '../SceneTree/Material'
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { shaderLibrary } from './ShaderLibrary'
 import { ShaderParseResult, Shaderopts, RenderState } from './types/renderer'

@@ -5,7 +5,7 @@ import { NumberParameter, BooleanParameter, Parameter } from '../Parameters/inde
 import { SystemDesc } from '../../SystemDesc'
 import { PassType } from '../../Renderer/Passes/GLPass'
 import { Camera } from '../Camera'
-import { GLViewport, ZeaUIEvent } from '../..'
+import { GLViewport } from '../../Renderer'
 import { ZeaPointerEvent, POINTER_TYPES } from '../../Utilities/Events/ZeaPointerEvent'
 import { ZeaMouseEvent } from '../../Utilities/Events/ZeaMouseEvent'
 import { ZeaWheelEvent } from '../../Utilities/Events/ZeaWheelEvent'
