@@ -23,7 +23,7 @@ class LibsRegistry {
     const libVersion = packageJson.version
 
     if (this.registry[libName]) {
-      console.warn("Library already registered:" + libName)
+      console.warn('Library already registered:' + libName)
     }
 
     this.registry[libName] = libVersion

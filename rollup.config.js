@@ -13,6 +13,8 @@ import glslify from 'rollup-plugin-glslify'
 
 import pkg from './package.json'
 
+const isProduction = !process.env.ROLLUP_WATCH
+
 const glslOptions = {
   // Default
   include: ['**/*.vs', '**/*.fs', '**/*.vert', '**/*.frag', '**/*.glsl'],
@@ -37,39 +39,49 @@ const plugins = [
   glslify(glslOptions),
 ]
 
-export default [
-  {
-    input: 'dist/index.js',
-    output: [
-      { file: pkg.main, format: 'cjs' },
-      {
-        file: pkg.browser,
-        format: 'es',
-      },
-    ],
-    plugins,
-  },
-  {
-    input: 'dist/index.js',
-    output: {
-      name: 'zeaEngine',
-      file: pkg.umd,
-      format: 'umd',
+const input = 'dist/index.js'
+
+const esConfig = {
+  input,
+  output: [
+    { file: pkg.main, format: 'cjs' },
+    {
+      file: pkg.browser,
+      format: 'es',
     },
-    plugins,
+  ],
+  plugins,
+}
+
+const umdConfig = {
+  input,
+  output: {
+    name: 'zeaEngine',
+    file: pkg.umd,
+    format: 'umd',
   },
-  {
-    input: 'dist/index.js',
-    output: {
-      name: 'zeaEngine',
-      file: pkg['umd.min'],
-      format: 'umd',
-    },
-    plugins: [...plugins, terser()],
+  plugins,
+}
+
+const umdMinConfig = {
+  input,
+  output: {
+    name: 'zeaEngine',
+    file: pkg['umd.min'],
+    format: 'umd',
   },
-  {
-    input: './dist/index.d.ts',
-    output: [{ file: './dist/zea-engine.d.ts', format: 'es' }],
-    plugins: [json(), dts()],
-  },
-]
+  plugins: [...plugins, terser()],
+}
+
+const typesConfig = {
+  input: './dist/index.d.ts',
+  output: [{ file: './dist/zea-engine.d.ts', format: 'es' }],
+  plugins: [json(), dts()],
+}
+
+const devConfig = [umdConfig, typesConfig]
+const prodConfig = [esConfig, umdMinConfig, ...devConfig]
+
+const finalConfig = isProduction ? prodConfig : devConfig
+
+export default finalConfig
