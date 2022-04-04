@@ -1,4 +1,4 @@
-import { Scene } from '../..'
+import { Scene } from '../../SceneTree'
 import { BaseEvent } from '../BaseEvent'
 
 class SceneSetEvent extends BaseEvent {

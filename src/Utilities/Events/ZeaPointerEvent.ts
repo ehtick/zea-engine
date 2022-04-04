@@ -1,4 +1,5 @@
-import { BaseItem, BaseTool, GLBaseViewport, GLViewport, Ray, TreeItem, Vec2, Vec3 } from '../..'
+import { Ray, Vec2 } from '../../Math'
+import { BaseItem, BaseTool, TreeItem } from '../../SceneTree'
 import { ZeaUIEvent } from './ZeaUIEvent'
 import { IntersectionData } from '../IntersectionData'
 

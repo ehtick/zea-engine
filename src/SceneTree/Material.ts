@@ -16,7 +16,7 @@ import { OpacityStateChangedEvent } from '../Utilities/Events/OpacityStateChange
 import { TexturedChangedEvent } from '../Utilities/Events/TexturedChangedEvent'
 import { GLShader } from '../Renderer'
 import { CloneContext } from './CloneContext'
-import { AssetLoadContext, ColorParameter, NumberParameter } from '..'
+import { AssetLoadContext, ColorParameter, NumberParameter } from '../SceneTree'
 
 /**
  * Represents a type of `BaseItem` class that holds material configuration.

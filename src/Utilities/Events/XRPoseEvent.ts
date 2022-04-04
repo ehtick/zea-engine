@@ -1,4 +1,7 @@
-import { GeomItem, XRViewport, Xfo } from '../..'
+import { Xfo } from '../../Math'
+import { GeomItem } from '../../SceneTree'
+import { XRViewport } from '../../Renderer'
+
 import { XRController } from '../../Renderer/VR/XRController'
 import { IntersectionData } from '../IntersectionData'
 import { ZeaPointerEvent, POINTER_TYPES } from './ZeaPointerEvent'

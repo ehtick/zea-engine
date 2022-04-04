@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Vec3Attribute } from '..'
-import { Vec3 } from '../../..'
-import { Box3 } from '../../../Math/Box3'
+import { Vec3Attribute } from '../Vec3Attribute'
+import { Vec3, Box3 } from '../../../Math'
 import { Mesh } from '../Mesh'
 
 /**

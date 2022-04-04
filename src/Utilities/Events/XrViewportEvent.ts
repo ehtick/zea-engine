@@ -1,4 +1,4 @@
-import { XRViewport } from '../..'
+import { XRViewport } from '../../Renderer'
 import { BaseEvent } from '../BaseEvent'
 
 class XrViewportEvent extends BaseEvent {

@@ -8,7 +8,7 @@ import { CloneContext } from './CloneContext'
 import { AssetLoadContext } from './AssetLoadContext'
 import { BaseItem } from './BaseItem'
 import { Parameter } from './Parameters/Parameter'
-import { ChildAddedEvent } from '..'
+import { ChildAddedEvent } from '../Utilities/Events'
 import { BaseEvent } from '../Utilities/BaseEvent'
 
 /**

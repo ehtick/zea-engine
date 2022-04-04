@@ -1,4 +1,4 @@
-import { CADAsset } from '.'
+import { CADAsset } from './CADAsset'
 import { TreeItem } from '../TreeItem'
 import { Camera } from '../Camera'
 import { BinReader } from '../BinReader'
