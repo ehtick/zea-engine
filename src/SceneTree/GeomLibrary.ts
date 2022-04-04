@@ -16,25 +16,23 @@ import { AssetItem } from './AssetItem'
 // This can be difficult to debug, so you can disable this
 // by setting the following boolean to false, and uncommenting
 // the import of parseGeomsBinary
-// import { parseGeomsBinary } from './Geometry/parseGeomsBinary'
 
+/* NODE_START
 // For synchronous loading, uncomment these lines.
 // @ts-ignore
-// import { handleMessage } from './Geometry/GeomParser-worker.js'
-// class GeomParserWorkerPool {
-//   constructor() {}
-//   addTask(taskData: object, transferables: Array<Transferable>): Promise<object> {
-//     // @ts-ignore
-//     console.log('Task:', taskData.geomsRange)
-//     return new Promise<object>((resolve) => {
-//       setTimeout(() => {
-//         handleMessage(taskData, (results: Record<string, any>) => {
-//           resolve(results)
-//         })
-//       }, Math.random() * 10)
-//     })
-//   }
-// }
+import { handleMessage } from './Geometry/GeomParser-worker.js'
+class GeomParserWorkerPool {
+  constructor() {}
+  addTask(taskData, transferables) {
+    return new Promise((resolve) => {
+      handleMessage(taskData, (results) => {
+        resolve(results)
+      })
+    })
+  }
+}
+
+// NODE_ELSE */
 
 // @ts-ignore
 import GeomParserWorker from 'web-worker:./Geometry/GeomParser-worker.js'
@@ -48,6 +46,8 @@ class GeomParserWorkerPool extends WorkerPool<GeomParserWorker> {
     return Promise.resolve(worker)
   }
 }
+
+// NODE_END
 
 const geomParserWorkerPool = new GeomParserWorkerPool()
 let numGeomLibraries = 0
