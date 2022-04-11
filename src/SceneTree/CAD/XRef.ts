@@ -6,6 +6,21 @@ import { CloneContext } from '../CloneContext'
 import { XfoParameter } from '../Parameters/XfoParameter'
 import { CADAsset } from './CADAsset'
 
+const joinPath = (base: string, relativePath: string) => {
+  if (relativePath.includes('..')) {
+    const partsBase = base.split('/')
+    const partsRelativePath = relativePath.split('/')
+
+    while (partsRelativePath[0] == '..') {
+      partsRelativePath.pop()
+      partsBase.pop()
+    }
+    return partsBase.join('/') + '/' + partsBase.join('/')
+  } else {
+    return base + '/' + relativePath
+  }
+}
+
 /**
  * Represents a view of PMI data. within a CAD assembly.
  *
@@ -90,21 +105,22 @@ class XRef extends CADAsset {
       // generate a url.
       let url
       if (context.resources) {
-        if (context.resources[relativePath]) {
-          url = context.resources[relativePath]
+        let fullPath = joinPath(context.folder, relativePath)
+        if (context.resources[fullPath]) {
+          url = context.resources[fullPath]
         } else {
           // CAD systems seem to have flexible path resolution strategies that we dont yet support.
           // e.g. looking in multiple folders for a file.
           // The relative paths often break.
           // If the user provides a mapping table, we will use it, else
           // we assume files will all be in the same folder.
-          if (relativePath.includes('/')) {
-            relativePath = relativePath.slice(relativePath.lastIndexOf('/') + 1)
-          } else if (relativePath.includes('\\')) {
-            relativePath = relativePath.slice(relativePath.lastIndexOf('\\') + 1)
+          if (fullPath.includes('/')) {
+            fullPath = fullPath.slice(fullPath.lastIndexOf('/') + 1)
+          } else if (fullPath.includes('\\')) {
+            fullPath = fullPath.slice(fullPath.lastIndexOf('\\') + 1)
           }
-          if (context.resources[relativePath]) {
-            url = context.resources[relativePath]
+          if (context.resources[fullPath]) {
+            url = context.resources[fullPath]
           } else if (context.xrefLoadCallback) {
             url = context.xrefLoadCallback.call(context, relativePath, this)
           }
