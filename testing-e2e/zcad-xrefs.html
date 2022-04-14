@@ -68,16 +68,15 @@
         // Generate a url relative to the folder of the asset we are currently loading.
         return this.folder + relativePath + '.zcad'
       }
-      const asset1 = new CADAsset()
 
+      const asset1 = new CADAsset()
       const xfo1 = new Xfo(new Vec3(-2, 0, 0))
       xfo1.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5)
       asset1.globalXfoParam.value = xfo1
       asset1.load('data/zcad/3.10.0/Solidworks trailer/2034.sldasm.zcad', context)
-
       promises.push(
         new Promise((resolve) =>
-          asset1.once('loaded', () => {
+          asset1.once('geomsLoaded', () => {
             resolve()
           })
         )
@@ -86,19 +85,19 @@
 
       // Simple Relative URLs
 
-      const asset2 = new CADAsset()
-      const xfo2 = new Xfo(new Vec3(2, 0, 0))
-      xfo2.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5)
-      asset2.globalXfoParam.value = xfo2
-      asset2.load('data/zcad/3.10.0/Solidworks trailer/2034.sldasm.zcad', context)
-      promises.push(
-        new Promise((resolve) =>
-          asset2.once('loaded', () => {
-            resolve()
-          })
-        )
-      )
-      scene.getRoot().addChild(asset2)
+      // const asset2 = new CADAsset()
+      // const xfo2 = new Xfo(new Vec3(2, 0, 0))
+      // xfo2.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5)
+      // asset2.globalXfoParam.value = xfo2
+      // asset2.load('data/zcad/3.10.0/Solidworks trailer/2034.sldasm.zcad', context)
+      // promises.push(
+      //   new Promise((resolve) =>
+      //     asset2.once('geomsLoaded', () => {
+      //       resolve()
+      //     })
+      //   )
+      // )
+      // scene.getRoot().addChild(asset2)
 
       resourceLoader.on('progressIncremented', (event) => {
         const pct = document.getElementById('progress')
@@ -123,7 +122,7 @@
     <div class="h-screen">
       <canvas id="viewport"></canvas>
       <progress class="progress-display" id="progress" value="0" max="100">0%</progress>
-      <div id="status" class="hud"></div>
+      <div id="status" class="fixed top-1 left-1 hud"></div>
     </div>
   </body>
 </html>

@@ -21,6 +21,7 @@
   },
   "scripts": {
     "build": "rollup -c --environment BUILD:production",
+    "build:dev": "rollup -c",
     "build:watch": "rollup -w -c",
     "clean:all": "rm -Rf dist/ node_modules/ buildcache yarn.lock",
     "clean:build": "rm -Rf dist/ buildcache",
@@ -36,6 +37,7 @@
     "test:debug": "node --inspect ./node_modules/jest/bin/jest.js --runInBand --watch",
     "test:watch": "jest --watch",
     "test:e2e": "percy exec -- cypress run --browser chrome --headless",
+    "test:e2e:only": "percy exec -- cypress run --browser chrome --headless --spec cypress/integration/shader-facenormals-spec.js",
     "test:e2e:watch": "percy exec -- cypress open",
     "lint": "tsdx lint",
     "size": "size-limit",
@@ -60,7 +62,7 @@
     }
   ],
   "devDependencies": {
-    "@percy/cli": "^1.0.0-beta.74",
+    "@percy/cli": "^1.0.7",
     "@percy/cypress": "^3.1.1",
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-json": "^4.1.0",
@@ -75,7 +77,7 @@
     "babel-jest": "^27.0.5",
     "caniuse-lite": "^1.0.30001312",
     "copyfiles": "latest",
-    "cypress": "9.3.1",
+    "cypress": "^9.5.4",
     "es-dev-server": "^2.1.0",
     "http-server": "^13.0.1",
     "husky": "^7.0.4",

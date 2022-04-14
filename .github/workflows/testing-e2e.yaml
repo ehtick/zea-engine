@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '16'
+      - uses: actions/checkout@v3
+
       - run: yarn install --frozen-lockfile
+
       - run: yarn run start &
+
       - run: yarn run test:e2e
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}

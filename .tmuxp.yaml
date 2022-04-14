@@ -1,8 +1,10 @@
 session_name: Zea Engine
 suppress_history: false
 windows:
-  - panes:
-      - yarn run dev
+  - layout: even-horizontal
+    panes:
+      - yarn run build:watch
+      - yarn run start:watch
   - panes:
       - ${EDITOR} -S
   - panes:

@@ -12,7 +12,7 @@
     <script src="../dist/index.umd.js"></script>
     <link rel="stylesheet" href="./src/styles.css" />
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Xfo, CADAsset, AssetLoadContext, resourceLoader } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Xfo, CADAsset, AssetLoadContext, resourceLoader, MathFunctions } = zeaEngine
 
       const canvas = document.getElementById('viewport')
 
@@ -22,12 +22,12 @@
 
       scene.setupGrid(1.0, 10)
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0.3, -0.3, 0.1), new Vec3(0, 0, -0.1))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0.3, -0.3, 0.1), new Vec3(0, 0, 0))
 
       const promises = []
 
       let index = 0
-      const loadAsset = (name, pos) => {
+      const loadAsset = (pos) => {
         const context = new AssetLoadContext()
         context.units = 'Meters'
         const asset1 = new CADAsset()
@@ -35,36 +35,37 @@
         if (index % 7 == 0) {
           // Event 7th asset loads a faulty url.
           asset1.load('data/zcad/3.9.1/does-not-exist.zcad', context)
-        } else if (index % 8 == 0) {
+        } else if (index % 5 == 0) {
           // Event 8th asset loads a faulty url.
           asset1.load('data/zcad/corrupt1.zcad', context)
-        } else if (index % 9 == 0) {
+        } else if (index % 7 == 0) {
           // Event 9th asset loads a faulty url.
           asset1.load('data/zcad/corrupt2.zcad', context)
         } else {
           asset1.load('data/zcad/3.9.1/HC_SRO4.step.zcad', context)
-        }
-        promises.push(
-          new Promise((resolve) =>
-            asset1.getGeometryLibrary().once('loaded', () => {
-              console.count('loaded')
-              resolve()
-            })
+
+          promises.push(
+            new Promise((resolve) =>
+              asset1.getGeometryLibrary().once('loaded', () => {
+                console.count('loaded')
+                resolve()
+              })
+            )
           )
-        )
+        }
         asset1.globalXfoParam.value = new Xfo(pos)
         scene.getRoot().addChild(asset1)
         index++
       }
 
-      let count = 6
+      let count = 2 // Note: increase this value to stress test the thread pool.
       for (let i = 0; i < count; i++) {
+        const x = MathFunctions.lerp(-0.5, 0.5, i / (count - 1))
         for (let j = 0; j < count; j++) {
+          const y = MathFunctions.lerp(-0.5, 0.5, j / (count - 1))
           for (let k = 0; k < count; k++) {
-            loadAsset(
-              'Sphere' + i,
-              new Vec3((i / count - 0.5) * 0.25, (j / count - 0.5) * 0.25, (k / count - 0.5) * 0.25)
-            )
+            const z = MathFunctions.lerp(-0.5, 0.5, k / (count - 1))
+            loadAsset(new Vec3(x * 0.1, y * 0.1, z * 0.1))
           }
         }
       }
@@ -81,6 +82,7 @@
         renderer.forceRender()
         statusElement.textContent = text
       }
+
       Promise.all(promises).then(() => {
         setStatusText('done-loading')
       })
@@ -90,7 +92,7 @@
     <div class="h-screen">
       <canvas id="viewport"></canvas>
       <progress class="progress-display" id="progress" value="0" max="100">0%</progress>
-      <div id="status" class="hud"></div>
+      <div id="status" class="fixed top-1 left-1 hud"></div>
     </div>
   </body>
 </html>

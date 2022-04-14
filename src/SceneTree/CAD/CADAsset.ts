@@ -1,10 +1,12 @@
 /* eslint-disable no-unused-vars */
+import { TreeItem } from '..'
 import { Registry } from '../../Registry'
 import { SystemDesc } from '../../SystemDesc'
 import { AssetItem } from '../AssetItem'
 import { AssetLoadContext } from '../AssetLoadContext'
 import { BinReader } from '../BinReader'
 import { CloneContext } from '../CloneContext'
+import { GeomLibrary } from '../GeomLibrary'
 import { resourceLoader } from '../resourceLoader'
 import { Version } from '../Version'
 
@@ -42,6 +44,21 @@ class CADAsset extends AssetItem {
     const cloned = new CADAsset()
     cloned.copyFrom(this, context)
     return cloned
+  }
+
+  /**
+   * Copies current TreeItem with all its children.
+   *
+   * @param src - The tree item to copy from.
+   * @param context - The context value.
+   */
+  copyFrom(src: AssetItem, context?: CloneContext): void {
+    super.copyFrom(src, context)
+    if (!src.loaded) {
+      src.once('geomsLoaded', (event) => {
+        this.emit('geomsLoaded', event)
+      })
+    }
   }
 
   // ////////////////////////////////////////
@@ -103,6 +120,21 @@ class CADAsset extends AssetItem {
         // @ts-ignore
         resolve()
         this.emit('loaded')
+
+        // Now check if we have GeomLibraries loading that we need to wait for.
+        // We want to emit an event when the entire sub-tree has loaded.
+        const promises: Promise<void>[] = []
+        if (!this.geomLibrary.isLoaded()) {
+          promises.push(new Promise((resolve) => this.geomLibrary.once('loaded', resolve)))
+        }
+        this.traverse((item: TreeItem) => {
+          if (item instanceof CADAsset && !item.geomLibrary.isLoaded()) {
+            new Promise((resolve) => item.once('geomsLoaded', resolve))
+          }
+        })
+        Promise.all(promises).then(() => {
+          this.emit('geomsLoaded')
+        })
       })
 
       context.incrementAsync()

@@ -11,6 +11,7 @@ interface Task {
 
 let taskCounter = 0
 export abstract class WorkerPool<WorkerClass> {
+  poolSize: number = Math.max(1, SystemDesc.hardwareConcurrency - 1) // always leave one main thread code spare.
   workers: WorkerClass[] = []
   workerTaskCount: number[] = []
   taskPromiseResolves: Record<number, (value: object | PromiseLike<object>) => void> = {}
@@ -45,10 +46,9 @@ export abstract class WorkerPool<WorkerClass> {
         dataFactory,
       })
 
-      const numCores = SystemDesc.hardwareConcurrency - 1 // always leave one main thread code spare.
       if (this.availableWorkers.length > 0) {
         this.consumeTask()
-      } else if (this.workers.length < numCores - 1) {
+      } else if (this.workers.length < this.poolSize) {
         await this.addWorker()
         this.consumeTask()
       }
@@ -98,30 +98,32 @@ export abstract class WorkerPool<WorkerClass> {
             delete event.data.taskId
             this.taskPromiseResolves[taskId](event.data)
             delete this.taskPromiseResolves[taskId]
-          }
-          this.workerTaskCount[workerId]--
-          if (this.workerTaskCount[workerId] > 0) {
-            // Another task is already sent to this worker.
-            // Let it complete.
-            return
-          }
-          // Check that we are not already on the available list.
-          // This happens if multiple tasks get issued to the same worker.
-          if (this.availableWorkers.indexOf(workerId) == -1) {
-            this.availableWorkers.push(workerId)
-          }
-          if (this.taskQueue.length > 0) {
-            this.consumeTask()
-          } else {
-            if (this.terminateWorkersWhenFree) {
-              this.scheduleWorkerTermination(workerId)
+            this.workerTaskCount[workerId]--
+            if (this.workerTaskCount[workerId] > 0) {
+              // Another task is already sent to this worker.
+              // Let it complete.
+              return
+            }
+            // Check that we are not already on the available list.
+            // This happens if multiple tasks get issued to the same worker.
+            if (this.availableWorkers.indexOf(workerId) == -1) {
+              this.availableWorkers.push(workerId)
+            }
+            if (this.taskQueue.length > 0) {
+              this.consumeTask()
+            } else {
+              if (this.terminateWorkersWhenFree) {
+                this.scheduleWorkerTermination(workerId)
+              }
             }
           }
         }
+
         this.workers[workerId] = worker
         this.terminationTimeouts[workerId] = -1
         this.workerTaskCount[workerId] = 0
         this.availableWorkers.push(workerId)
+
         resolve()
       })
     })

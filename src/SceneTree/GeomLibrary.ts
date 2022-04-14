@@ -82,7 +82,7 @@ class GeomLibrary extends EventEmitter {
    * @return - True if all geometries are already loaded, else false.
    */
   isLoaded(): boolean {
-    return this.loadedCount == this.numGeoms
+    return this.numGeoms == -1 || this.loadedCount == this.numGeoms
   }
 
   /**
