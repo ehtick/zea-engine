@@ -4,10 +4,8 @@ import { Points, Lines, PointsProxy, LinesProxy, GeomItem } from '../../SceneTre
 import { GLStandardGeomsPass } from './GLStandardGeomsPass'
 import { GLRenderer } from '../GLRenderer'
 import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
-import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLViewport } from '../GLViewport'
-import { BaseEvent, OpacityStateChangedEvent } from '../../Utilities'
-import { RenderState, GeomDataRenderState, HighlightRenderState } from '../RenderStates'
+import { GeomDataRenderState, HighlightRenderState, RenderState } from '../RenderStates'
 
 /** Class representing a GL transparent geoms pass.
  * @extends GLStandardGeomsPass
@@ -36,7 +34,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param renderer - The renderer value.
    * @param passIndex - The index of the pass in the GLBAseRenderer
    */
-  init(renderer: GLBaseRenderer, passIndex: number): void {
+  init(renderer: GLRenderer, passIndex: number): void {
     super.init(renderer, passIndex)
 
     this.itemCount = 0

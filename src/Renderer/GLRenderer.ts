@@ -14,7 +14,7 @@ import { HDRImage } from '../SceneTree/Images/HDRImage'
 import { EnvMapAssignedEvent } from '../Utilities/Events/EnvMapAssignedEvent'
 import { GLViewport } from './GLViewport'
 import { IntersectionData } from '../Utilities/IntersectionData'
-import { GeomDataRenderState, ColorRenderState } from './RenderStates'
+import { GeomDataRenderState, ColorRenderState } from './RenderStates/index'
 import { WebGL12RenderingContext } from './types/webgl'
 
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
@@ -25,24 +25,24 @@ const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
  */
 class GLRenderer extends GLBaseRenderer {
   // __gl: Record<string, any> // can't use WebGL12RenderingContext, ds may be augmented.
-  protected __exposure: number
-  protected __tonemap: boolean
-  protected __gamma: number
+  protected __exposure: number = 1.0
+  protected __gamma: number = 2.2
   protected __glEnvMap: GLEnvMap | null = null
   protected __glBackgroundMap: any
   protected __displayEnvironment: boolean
   protected __debugMode: number
-  protected _planeDist: number
-  protected __cutPlaneNormal: Vec3
   protected rayCastDist: number
   protected rayCastArea: number
   highlightsShader: HighlightsShader
   silhouetteShader: SilhouetteShader
-  highlightOutlineThickness: number
-  outlineThickness: number
-  outlineColor: Color
-  outlineSensitivity: number
-  outlineDepthBias: number
+  highlightOutlineThickness: number = 1
+  renderMode: 'wireframe' | 'hiddenline' | 'flat' | 'pbr' = 'pbr'
+  outlineMethod: 'geometry' | 'image' = 'geometry'
+  outlineThickness: number = 0
+  outlineColor: Color = new Color(0.15, 0.15, 0.15, 1)
+  hiddenLineColor: Color = new Color(0.15, 0.15, 0.15, 0.0)
+  outlineSensitivity: number = 2
+  outlineDepthBias: number = 0.7
   protected __debugTextures: any[]
 
   protected __rayCastRenderTarget: GLRenderTarget | null = null
@@ -61,24 +61,16 @@ class GLRenderer extends GLBaseRenderer {
     // ///////////////////////
     // Renderer Setup
     this.__exposure = 1.0
-    this.__tonemap = true
     this.__gamma = 2.2
 
     this.__displayEnvironment = true
     this.__debugMode = 0
-    this._planeDist = 0.0
-    this.__cutPlaneNormal = new Vec3(1, 0, 0)
     this.rayCastDist = 0
     this.rayCastArea = 0
 
     const gl = <WebGL12RenderingContext>this.__gl
     this.highlightsShader = new HighlightsShader(gl)
     this.silhouetteShader = new SilhouetteShader(gl)
-    this.highlightOutlineThickness = 1
-    this.outlineThickness = 0
-    this.outlineColor = new Color(0.15, 0.15, 0.15, 1)
-    this.outlineSensitivity = 2
-    this.outlineDepthBias = 0.7
 
     this.__debugTextures = [undefined]
 
@@ -542,7 +534,12 @@ class GLRenderer extends GLBaseRenderer {
 
     renderstate.envMap = this.__glEnvMap
     renderstate.exposure = this.__exposure
-    renderstate.gamma = this.__gamma
+    renderstate.renderMode = this.renderMode
+    renderstate.outlineThickness = this.outlineThickness
+    renderstate.outlineColor = this.outlineColor
+    renderstate.hiddenLineColor = this.hiddenLineColor
+    renderstate.outlineMethod = this.outlineMethod
+    renderstate.screenQuad = this.screenQuad
   }
 
   /**

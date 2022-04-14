@@ -6,8 +6,7 @@ import { GeomItem, Lines, LinesProxy, Points, PointsProxy } from '../../SceneTre
 import { FattenLinesShader } from '../Shaders/FattenLinesShader'
 import { Plane } from '../../SceneTree/index'
 import { GLMesh } from '../Drawing/GLMesh'
-import { GLBaseRenderer } from '../GLBaseRenderer'
-import { RenderState, GeomDataRenderState, ColorRenderState } from '../RenderStates'
+import {  GeomDataRenderState, ColorRenderState } from '../RenderStates'
 import { checkFramebuffer } from '../GLFbo'
 
 /** Class representing a GL opaque geoms pass.
@@ -31,7 +30,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * @param renderer - The renderer value.
    * @param passIndex - The index of the pass in the GLBAseRenderer
    */
-  init(renderer: GLBaseRenderer, passIndex: number): void {
+  init(renderer: GLRenderer, passIndex: number): void {
     super.init(renderer, passIndex)
   }
   /**

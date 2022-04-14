@@ -16,7 +16,7 @@ import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent'
 import { ZeaMouseEvent } from '../Utilities/Events/ZeaMouseEvent'
 import { ZeaUIEvent } from '../Utilities/Events/ZeaUIEvent'
 import { Uniform } from './types/renderer'
-import { GeomDataRenderState, RenderState, ColorRenderState } from './RenderStates'
+import { GeomDataRenderState, RenderState, ColorRenderState } from './RenderStates/index'
 
 let activeViewport: GLViewport = null
 /**
@@ -920,12 +920,7 @@ class GLViewport extends GLBaseViewport {
       const renderstate = new ColorRenderState(this.__renderer.gl)
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
-
-      gl.enable(gl.BLEND)
-      gl.blendEquation(gl.FUNC_ADD)
-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
       screenQuad.draw(renderstate, this.highlightedGeomsBuffer, new Vec2(0, 0), new Vec2(1, 1))
-      gl.disable(gl.BLEND)
     }
     if (this.debugOcclusionBuffer) {
       // @ts-ignore

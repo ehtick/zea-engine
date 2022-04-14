@@ -27,9 +27,10 @@ class RenderState {
   glShader?: GLShader
   shaderkey?: string
   shaderopts: Shaderopts
+  directives?: string[]
+  
   attrs: Record<string, Record<string, any>> // not Attribute
   unifs: Uniforms
-  directives?: string[]
 
   drawItemsTexture?: any
 

@@ -1,4 +1,4 @@
-import { Vec2 } from '../Math/index'
+import { Vec2, Color } from '../Math/index'
 import { ScreenQuadShader } from './Shaders/ScreenQuadShader'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
 import { GLTexture2D } from './GLTexture2D'
@@ -44,17 +44,21 @@ class GLScreenQuad {
   /**
    * The bind method.
    * @param renderstate - The object tracking the current state of the renderer
-   * @param texture - The texture param.
+   * @param textureOrColor - The texture or color value.
    * @param pos - The pos value.
    * @param size - The size value.
    */
-  bind(renderstate: RenderState, texture?: GLTexture2D, pos?: Vec2, size?: Vec2): void {
+  bind(renderstate: RenderState, textureOrColor?: GLTexture2D | Color, pos?: Vec2, size?: Vec2): void {
     const unifs = renderstate.unifs
-    if (texture) {
-      texture.bindToUniform(renderstate, renderstate.unifs.image)
+    const gl = this.__gl
+    if (textureOrColor && textureOrColor instanceof GLTexture2D) {
+      gl.uniform1i(unifs.isTextured.location, 1)
+      textureOrColor.bindToUniform(renderstate, renderstate.unifs.image)
+    } else if (textureOrColor && textureOrColor instanceof Color) {
+      gl.uniform1i(unifs.isTextured.location, 0)
+      gl.uniform4fv(unifs.color.location, textureOrColor.asArray())
     }
 
-    const gl = this.__gl
     {
       const unif = unifs.pos
       if (unif) {
@@ -69,11 +73,6 @@ class GLScreenQuad {
         gl.uniform2fv(unif.location, <Float32List>list)
       }
     }
-    // if ('flipY' in unifs)
-    //     gl.uniform1i(unifs.flipY.location, this.flipY ? 1 : 0);
-
-    // if ('textureDim' in unifs)
-    //     gl.uniform2fv(unifs.textureDim.location, [texture.width, texture.height]);
 
     this.__quadBinding.bind(renderstate)
   }
@@ -90,12 +89,12 @@ class GLScreenQuad {
   /**
    * The draw method.
    * @param renderstate - The object tracking the current state of the renderer
-   * @param texture - The texture value.
+   * @param textureOrColor - The texture or color value.
    * @param pos - The pos value.
    * @param size - The size value.
    */
-  draw(renderstate: RenderState, texture?: GLTexture2D, pos?: Vec2, size?: Vec2) {
-    this.bind(renderstate, texture, pos, size)
+  draw(renderstate: RenderState, textureOrColor?: GLTexture2D | Color, pos?: Vec2, size?: Vec2) {
+    this.bind(renderstate, textureOrColor, pos, size)
     const gl = this.__gl
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0)
   }

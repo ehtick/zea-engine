@@ -6,13 +6,15 @@ import { VisibilityChangedEvent } from '../../Utilities/Events/VisibilityChanged
 
 import { EventEmitter, MathFunctions, Allocator1D } from '../../Utilities/index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
+import { GLRenderer } from '../GLRenderer'
 import { checkFramebuffer } from '../GLFbo'
 import { GLTexture2D } from '../GLTexture2D'
 import { FattenLinesShader } from '../Shaders/FattenLinesShader'
-import { GeomDataRenderState, HighlightRenderState, RenderState } from '../RenderStates'
+import { GeomDataRenderState, HighlightRenderState, RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeomItem } from './GLGeomItem'
 import { GLMesh } from './GLMesh'
+import { Color } from '../../Math'
 
 const deepEquals = (arr0: Array<number>, arr1: Array<number>) => {
   return arr0.length == arr1.length && !arr0.some((v, index) => v != arr1[index])
@@ -35,7 +37,7 @@ interface SubGeom {
  * @private
  */
 class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
-  protected renderer: GLBaseRenderer
+  protected renderer: GLRenderer
   protected gl: WebGL12RenderingContext
   protected glGeomItems: Array<GLGeomItem | null> = []
   protected glGeomIdsMapping: Record<string, any> = {}
@@ -80,7 +82,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
    */
   constructor(renderer: GLBaseRenderer) {
     super()
-    this.renderer = renderer
+    this.renderer = <GLRenderer>renderer
     this.gl = <WebGL12RenderingContext>renderer.gl
 
     this.renderer.glGeomLibrary.on('geomDataChanged', (event: any) => {
@@ -807,15 +809,228 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       this.updateDrawIDsBuffer(renderstate)
     }
 
-    this.bindAndRender(
-      renderstate,
-      this.drawIdsArrays,
-      this.drawElementCounts,
-      this.drawElementOffsets,
-      this.drawIdsTextures,
-      this.drawIdsArraysAllocators,
-      true
-    )
+    renderstate.pushGLStack()
+
+    const drawIdsArray = this.drawIdsArrays
+    const counts = this.drawElementCounts
+    const offsets = this.drawElementOffsets
+    const drawIdsTextures = this.drawIdsTextures
+    const allocators = this.drawIdsArraysAllocators
+    const blendPointsAndLines = true
+
+    const gl = this.gl
+    const unifs = renderstate.unifs
+
+    gl.depthFunc(gl.LEQUAL)
+
+    const { drawIdsTexture, geomType, outlineThickness, viewportWidth, occluded, renderMode } = renderstate.unifs
+    if (this.renderer.renderMode == 'flat') {
+      gl.uniform1i(renderMode.location, 2)
+    } else if (this.renderer.renderMode == 'pbr') {
+      gl.uniform1i(renderMode.location, 3)
+    }
+
+    const drawingOutlines =
+      outlineThickness && this.renderer.outlineMethod == 'geometry' && this.renderer.outlineThickness > 0
+    const drawingWireframeOutlines = drawingOutlines && this.renderer.renderMode == 'wireframe'
+
+    // @ts-ignore
+    const drawingHiddenLines =
+      // @ts-ignore
+      renderstate.hiddenLineColor &&
+      // @ts-ignore
+      renderstate.hiddenLineColor.a > 0 &&
+      occluded
+
+    if (drawingWireframeOutlines) {
+      gl.enable(gl.STENCIL_TEST)
+      gl.clearStencil(0)
+      gl.clear(gl.STENCIL_BUFFER_BIT)
+      gl.stencilOpSeparate(gl.FRONT, gl.DECR_WRAP, gl.DECR_WRAP, gl.DECR_WRAP)
+      gl.stencilOpSeparate(gl.BACK, gl.INCR_WRAP, gl.INCR_WRAP, gl.INCR_WRAP)
+      gl.stencilFunc(gl.ALWAYS, 0, 0xff)
+
+      gl.enable(gl.CULL_FACE)
+      gl.cullFace(gl.BACK)
+      gl.disable(gl.DEPTH_TEST)
+      gl.depthMask(false)
+      gl.colorMask(false, false, false, false)
+    } else if (this.renderer.renderMode == 'hiddenline') {
+      // don't render surfaces
+      gl.colorMask(false, false, false, false)
+    } else {
+      // Compound Geoms should always be rendered double sided
+      // so we can correctly render cutting planes.
+      // Note: We needed this because the FlatSurfaceShader turns on culling
+      // when it unbinds which then affects the rendering of other items like this.
+      // An issue is logged to clean this up.
+      // https://github.com/ZeaInc/zea-engine/issues/699
+      gl.disable(gl.CULL_FACE)
+    }
+
+    if (drawIdsArray['TRIANGLES'] && allocators['TRIANGLES'].allocatedSpace > 0) {
+      if (gl.multiDrawElements) drawIdsTextures['TRIANGLES'].bindToUniform(renderstate, drawIdsTexture)
+
+      if (geomType) gl.uniform1i(geomType.location, GeomType.TRIANGLES)
+      if (drawingOutlines) {
+        gl.uniform1f(outlineThickness.location, 0)
+      }
+
+      renderstate.bindViewports(unifs, () => {
+        this.multiDrawMeshes(
+          renderstate,
+          drawIdsArray['TRIANGLES'],
+          counts['TRIANGLES'],
+          offsets['TRIANGLES'],
+          allocators['TRIANGLES'].allocatedSpace
+        )
+      })
+
+      if (drawingOutlines) {
+        // Only draw font faces. BEcause all faces are drawn, it can make a mess to see the back faces through the front faces.
+        // e.g. we might see the triangles on the other side of a sphere rendered over the top of triangles on the near side.
+        gl.enable(gl.CULL_FACE)
+        gl.cullFace(gl.FRONT)
+        gl.uniform1f(outlineThickness.location, this.renderer.outlineThickness)
+        gl.uniform1f(viewportWidth.location, renderstate.region[2] - renderstate.region[0])
+        if (this.renderer.renderMode == 'hiddenline') {
+          // start rendering surfaces again
+          gl.colorMask(true, true, true, false)
+        }
+        if (!drawingWireframeOutlines) {
+          renderstate.glEnable(gl.BLEND)
+          gl.blendEquation(gl.FUNC_ADD)
+          gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+        }
+
+        renderstate.bindViewports(unifs, () => {
+          this.multiDrawMeshes(
+            renderstate,
+            drawIdsArray['TRIANGLES'],
+            counts['TRIANGLES'],
+            offsets['TRIANGLES'],
+            allocators['TRIANGLES'].allocatedSpace
+          )
+        })
+
+        gl.disable(gl.CULL_FACE)
+        gl.cullFace(gl.BACK)
+
+        if (drawingWireframeOutlines) {
+          gl.enable(gl.DEPTH_TEST)
+          gl.depthMask(true)
+          gl.colorMask(true, true, true, true)
+
+          gl.stencilFunc(gl.NOTEQUAL, 0x0, 0xff)
+          gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP)
+
+          if (blendPointsAndLines) {
+            renderstate.glEnable(gl.BLEND)
+            gl.blendEquation(gl.FUNC_ADD)
+            gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+          }
+
+          // cache the previously bound shader.
+          const shader = renderstate.glShader
+          const shaderKey = renderstate.shaderkey
+          const screenQuad = this.renderer.screenQuad!
+          screenQuad.bindShader(renderstate)
+          screenQuad.draw(renderstate, this.renderer.outlineColor)
+
+          // Re-bind the previously bound geomdata shader.
+          shader.bind(renderstate, shaderKey)
+          this.renderer.glGeomItemLibrary.bind(renderstate)
+          this.renderer.glGeomLibrary.bind(renderstate)
+          this.renderer.glMaterialLibrary.bind(renderstate)
+
+          gl.disable(gl.STENCIL_TEST)
+        }
+      } else if (blendPointsAndLines) {
+        renderstate.glEnable(gl.BLEND)
+        gl.blendEquation(gl.FUNC_ADD)
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+      }
+    }
+
+    if (drawIdsArray['LINES'] && allocators['LINES'].allocatedSpace > 0) {
+      if (gl.multiDrawElements) drawIdsTextures['LINES'].bindToUniform(renderstate, drawIdsTexture)
+
+      if (geomType) gl.uniform1i(geomType.location, GeomType.LINES)
+
+      renderstate.bindViewports(unifs, () => {
+        this.multiDrawLines(
+          renderstate,
+          drawIdsArray['LINES'],
+          counts['LINES'],
+          offsets['LINES'],
+          allocators['LINES'].allocatedSpace
+        )
+      })
+
+      if (drawingHiddenLines) {
+        const { hiddenLineColor } = renderstate.unifs
+        gl.uniform1i(occluded.location, 1)
+        // @ts-ignore
+        gl.uniform4fv(hiddenLineColor.location, renderstate.hiddenLineColor.asArray())
+        gl.depthFunc(gl.GREATER)
+        gl.depthMask(false)
+        renderstate.bindViewports(unifs, () => {
+          this.multiDrawLines(
+            renderstate,
+            drawIdsArray['LINES'],
+            counts['LINES'],
+            offsets['LINES'],
+            allocators['LINES'].allocatedSpace
+          )
+        })
+        // Restore defaults.
+        gl.depthFunc(gl.LEQUAL)
+        gl.depthMask(true)
+        gl.uniform1i(occluded.location, 0)
+      }
+    }
+
+    if (drawIdsArray['POINTS'] && allocators['POINTS'].allocatedSpace > 0) {
+      if (gl.multiDrawElements) drawIdsTextures['POINTS'].bindToUniform(renderstate, drawIdsTexture)
+
+      if (geomType) gl.uniform1i(geomType.location, GeomType.POINTS)
+
+      renderstate.bindViewports(unifs, () => {
+        this.multiDrawPoints(
+          renderstate,
+          drawIdsArray['POINTS'],
+          counts['POINTS'],
+          offsets['POINTS'],
+          allocators['POINTS'].allocatedSpace
+        )
+      })
+
+      if (drawingHiddenLines) {
+        const { hiddenLineColor } = renderstate.unifs
+        gl.uniform1i(occluded.location, 1)
+        // @ts-ignore
+        gl.uniform4fv(hiddenLineColor.location, renderstate.hiddenLineColor.asArray())
+        gl.depthFunc(gl.GREATER)
+        gl.depthMask(false)
+        renderstate.bindViewports(unifs, () => {
+          this.multiDrawPoints(
+            renderstate,
+            drawIdsArray['POINTS'],
+            counts['POINTS'],
+            offsets['POINTS'],
+            allocators['POINTS'].allocatedSpace
+          )
+        })
+        gl.depthFunc(gl.LEQUAL)
+        gl.depthMask(true)
+        gl.uniform1i(occluded.location, 0)
+      }
+    }
+    // Reset to drawing triangles in case the shader is used
+    // to draw a regular mesh next.
+    if (geomType) gl.uniform1i(geomType.location, 0)
+
+    renderstate.popGLStack()
   }
 
   /**
@@ -838,21 +1053,23 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     const allocators: Record<string, Allocator1D> = this.drawIdsArraysAllocators
     const drawIdsArray: Record<string, Float32Array> = this.drawIdsArrays
 
-    renderstate.bindViewports(unifs, () => {
-      if (drawIdsArray['TRIANGLES'] && allocators['TRIANGLES'].allocatedSpace > 0) {
-        if (gl.multiDrawElements) drawIdsTextures['TRIANGLES'].bindToUniform(renderstate, drawIdsTexture)
+    if (this.renderer.renderMode != 'wireframe') {
+      renderstate.bindViewports(unifs, () => {
+        if (drawIdsArray['TRIANGLES'] && allocators['TRIANGLES'].allocatedSpace > 0) {
+          if (gl.multiDrawElements) drawIdsTextures['TRIANGLES'].bindToUniform(renderstate, drawIdsTexture)
 
-        if (geomType) gl.uniform1i(geomType.location, GeomType.TRIANGLES)
+          if (geomType) gl.uniform1i(geomType.location, GeomType.TRIANGLES)
 
-        this.multiDrawMeshes(
-          renderstate,
-          drawIdsArray['TRIANGLES'],
-          counts['TRIANGLES'],
-          offsets['TRIANGLES'],
-          allocators['TRIANGLES'].allocatedSpace
-        )
-      }
-    })
+          this.multiDrawMeshes(
+            renderstate,
+            drawIdsArray['TRIANGLES'],
+            counts['TRIANGLES'],
+            offsets['TRIANGLES'],
+            allocators['TRIANGLES'].allocatedSpace
+          )
+        }
+      })
+    }
 
     //  Note: lines in VR are not fattened...
     const enableLineFattening = true
@@ -979,53 +1196,17 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     if (this.highlightedIdsBufferDirty) {
       this.updateHighlightedIDsBuffer(renderstate)
     }
-    // console.log(this.highlightedIdsArray)
-    // console.log(this.highlightElementCounts)
-    // console.log(this.highlightElementOffsets)
-
     renderstate.pushGLStack()
-    const gl = this.renderer.gl
-    renderstate.glDisable(gl.CULL_FACE) // 2-sided rendering of highlight geoms.
 
-    this.bindAndRender(
-      renderstate,
-      this.highlightedIdsArray,
-      this.highlightElementCounts,
-      this.highlightElementOffsets,
-      this.highlightedIdsTextures,
-      this.highlightedIdsArraysAllocators,
-      false
-    )
-    renderstate.popGLStack()
-  }
+    const drawIdsArray = this.highlightedIdsArray
+    const counts = this.highlightElementCounts
+    const offsets = this.highlightElementOffsets
+    const drawIdsTextures = this.highlightedIdsTextures
+    const allocators = this.highlightedIdsArraysAllocators
 
-  /**
-   * The bindAndRender method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {Array} counts - the counts for each element drawn in by this draw call.
-   * @param {Array} offsets - the offsets for each element drawn in by this draw call.
-   * @private
-   */
-  bindAndRender(
-    renderstate: RenderState,
-    drawIdsArray: Record<string, Float32Array>,
-    counts: Record<string, Int32Array>,
-    offsets: Record<string, Int32Array>,
-    drawIdsTextures: Record<string, GLTexture2D>,
-    allocators: Record<string, Allocator1D>,
-    blendPointsAndLines: boolean = false
-  ) {
-    const gl = this.gl
     const unifs = renderstate.unifs
 
-    renderstate.pushGLStack()
-
-    // Specify an instanced draw to the shader so it knows how
-    // to retrieve the geomItemId.
-    // if (unifs.instancedDraw) {
-    //   gl.uniform1i(renderstate.unifs.instancedDraw.location, 1)
-    // }
-
+    const gl = this.renderer.gl
     gl.depthFunc(gl.LEQUAL)
 
     // Compound Geoms should always be rendered double sided
@@ -1035,7 +1216,6 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     // An issue is logged to clean this up.
     // https://github.com/ZeaInc/zea-engine/issues/699
     renderstate.glDisable(gl.CULL_FACE)
-
     const { drawIdsTexture, geomType } = renderstate.unifs
 
     renderstate.bindViewports(unifs, () => {
@@ -1051,12 +1231,6 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           offsets['TRIANGLES'],
           allocators['TRIANGLES'].allocatedSpace
         )
-      }
-      if (blendPointsAndLines) {
-        renderstate.glEnable(gl.BLEND)
-        // gl.enable(gl.BLEND)
-        gl.blendEquation(gl.FUNC_ADD)
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
       }
 
       if (drawIdsArray['LINES'] && allocators['LINES'].allocatedSpace > 0) {
@@ -1121,57 +1295,15 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     drawCount: number
   ) {
     const gl = this.gl
-
-    // // don't rely on z-Buffer for line, disable depth check
-    // gl.disable(gl.DEPTH_TEST)
-
-    // // enable stencil buffer check instead
-    // gl.enable(gl.STENCIL_TEST)
-
-    // gl.stencilMask(0x00)
-
-    // // render line only where stencil buffer was incremented exactly twice
-    // gl.stencilFunc(gl.EQUAL, 2, 0xff)
-
     if (gl.multiDrawElements) {
-      const { occluded } = renderstate.unifs
-      if (occluded) {
-        gl.uniform1i(occluded.location, 0)
-      }
-
       gl.multiDrawElements(gl.LINES, counts, 0, gl.UNSIGNED_INT, offsets, 0, drawCount)
-
-      if (occluded) {
-        gl.uniform1i(occluded.location, 1)
-        gl.depthFunc(gl.GREATER)
-        gl.multiDrawElements(gl.LINES, counts, 0, gl.UNSIGNED_INT, offsets, 0, drawCount)
-        gl.depthFunc(gl.LEQUAL)
-      }
     } else {
-      const { geomItemId, occluded } = renderstate.unifs
-      if (occluded) {
-        gl.uniform1i(occluded.location, 0)
-      }
-
+      const { geomItemId } = renderstate.unifs
       for (let i = 0; i < drawCount; i++) {
         gl.uniform1i(geomItemId.location, drawIds[i * 4])
         gl.drawElements(gl.LINES, counts[i], gl.UNSIGNED_INT, offsets[i])
       }
-
-      if (occluded) {
-        gl.uniform1i(occluded.location, 1)
-        gl.depthFunc(gl.GREATER)
-        for (let i = 0; i < drawCount; i++) {
-          gl.uniform1i(geomItemId.location, drawIds[i * 4])
-          gl.drawElements(gl.LINES, counts[i], gl.UNSIGNED_INT, offsets[i])
-        }
-        gl.depthFunc(gl.LEQUAL)
-      }
     }
-
-    // restore flags to initial order
-    // gl.disable(gl.STENCIL_TEST)
-    // gl.enable(gl.DEPTH_TEST)
   }
 
   multiDrawPoints(
@@ -1184,7 +1316,6 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     const gl = this.gl
     if (gl.multiDrawElements) {
       gl.multiDrawElements(gl.POINTS, counts, 0, gl.UNSIGNED_INT, offsets, 0, drawCount)
-      // gl.multiDrawArrays(gl.POINTS, offsets, 0, counts, 0, drawCount)
     } else {
       const { geomItemId } = renderstate.unifs
       for (let i = 0; i < drawCount; i++) {

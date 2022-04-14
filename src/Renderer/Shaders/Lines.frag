@@ -8,15 +8,14 @@ import 'materialparams.glsl'
 
 
 uniform int occluded;
+uniform vec4 hiddenLineColor;
 
 #ifndef ENABLE_MULTI_DRAW
 
 uniform color BaseColor;
 uniform float Opacity;
 
-uniform float StippleScale;
-uniform float StippleValue;
-uniform float OccludedStippleValue;
+uniform color OccludedColor;
 
 #endif // ENABLE_MULTI_DRAW
 
@@ -87,38 +86,21 @@ void main(void) {
   vec4 matValue1 = getMaterialValue(materialCoords, 1);
   vec4 matValue2 = getMaterialValue(materialCoords, 2);
   float Opacity  = matValue1.r;
-
-  float StippleScale = matValue1.b;
-  float StippleValue = matValue1.a;
-  float OccludedStippleValue = matValue2.r;
 #endif // ENABLE_MULTI_DRAW
 
-  ///////////////////
-  // Stippling
-  float stippleValue = occluded == 0 ? StippleValue : OccludedStippleValue;
-#ifdef ENABLE_ES3 // No stippling < es3 
-  if (stippleValue > 0.0) {
-    // Note: a value of 0.0, means no stippling (solid). A value of 1.0 means invisible
-    float dist = -v_viewPos.z * StippleScale;
-    float nextVertexDist = imod(int(floor(v_nextVertexDist.z)), 2) == 0 ? v_nextVertexDist.x : v_nextVertexDist.y;
-    if (mod(nextVertexDist / dist, 1.0) < stippleValue) {
-      discard;
-      return;
-    }
-  }
-#endif
 
   //////////////////////////////////////////////
   // Color
 #if defined(DRAW_COLOR)
 
   fragColor = BaseColor;
+  
+  if (occluded == 1) {
+    fragColor = hiddenLineColor;
+  }
+
   fragColor.a *= Opacity * treeItemOpacity;
 
-  
-#ifndef ENABLE_ES3
-  if (occluded == 1) fragColor.a *= 1.0 - stippleValue;
-#endif
 
   //////////////////////////////////////////////
   // GeomData

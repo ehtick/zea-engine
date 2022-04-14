@@ -44,7 +44,7 @@
 
       .rendermode-buttons {
         left: 150px;
-        top: 2px;
+        top: 8px;
         display: block;
         position: fixed;
       }
@@ -74,10 +74,15 @@
       <header class="p-2">
         <img src="./data/logo-zea.svg" id="logo" />
         <div class="rendermode-buttons">
-          <button class="rendermode-button" id="rendermode-Wireframe">Wireframe</button>
-          <button class="rendermode-button" id="rendermode-Flat">Flat</button>
-          <button class="rendermode-button" id="rendermode-HiddenLine">HiddenLine</button>
-          <button class="rendermode-button" id="rendermode-PBR">PBR</button>
+          <label>
+            <span class="text-white">RenderMode:</span>
+            <select id="selectRenderMode">
+              <option value="wireframe">Wireframe</option>
+              <option value="hiddenline">hidden Line</option>
+              <option value="flat">Flat</option>
+              <option value="pbr" selected="selected">PBR</option>
+            </select>
+          </label>
         </div>
       </header>
       <main class="flex flex-col flex-1">
@@ -125,126 +130,6 @@
 
     <script type="module">
       const { CADBody, CADAsset } = zeaEngine
-      const materialCache = {}
-
-      const resetMaterial = (material) => {
-        if (!materialCache[material.getId()]) {
-          materialCache[material.getId()] = {
-            BaseColor: material.getParameter('BaseColor').value.clone(),
-            Reflectance: material.getParameter('Reflectance').value,
-            EmissiveStrength: material.getParameter('EmissiveStrength').value,
-          }
-        } else {
-          const values = materialCache[material.getId()]
-          material.getParameter('BaseColor').value = values.BaseColor.clone()
-          material.getParameter('Reflectance').value = values.Reflectance
-          material.getParameter('EmissiveStrength').value = values.EmissiveStrength
-        }
-      }
-
-      function setRendermodeWireframe(treeItem) {
-        const processed = {}
-        const modifyMaterial = (material) => {
-          if (processed[material.getId()]) return
-          processed[material.getId()] = true
-          resetMaterial(material)
-
-          material.getParameter('BaseColor').value.a = 0
-          material.getParameter('Reflectance').value = 0
-          material.getParameter('EmissiveStrength').value = 1
-        }
-        treeItem.traverse((item) => {
-          if (item instanceof CADAsset) {
-            const materialLibrary = item.materialLibrary
-            const materials = materialLibrary.getMaterials()
-            materials.forEach((material) => {
-              if (material.getShaderName() == 'StandardSurfaceShader') {
-                modifyMaterial(material)
-              }
-            })
-          }
-          if (item instanceof CADBody) {
-            const material = item.materialParam.value
-            modifyMaterial(material)
-          }
-        })
-      }
-
-      function setRendermodeFlat(treeItem) {
-        const processed = {}
-        const modifyMaterial = (material) => {
-          if (processed[material.getId()]) return
-          processed[material.getId()] = true
-          resetMaterial(material)
-          material.getParameter('Reflectance').value = 0
-          material.getParameter('EmissiveStrength').value = 1
-        }
-        treeItem.traverse((item) => {
-          if (item instanceof CADAsset) {
-            const materialLibrary = item.materialLibrary
-            const materials = materialLibrary.getMaterials()
-            materials.forEach((material) => {
-              if (material.getShaderName() == 'StandardSurfaceShader') {
-                modifyMaterial(material)
-              }
-            })
-          }
-          if (item instanceof CADBody) {
-            const material = item.materialParam.value
-            modifyMaterial(material)
-          }
-        })
-      }
-
-      function setRendermodeHiddenLine(treeItem, backgroundColor) {
-        const processed = {}
-        const modifyMaterial = (material) => {
-          if (processed[material.getId()]) return
-          processed[material.getId()] = true
-          resetMaterial(material)
-          material.getParameter('BaseColor').value = backgroundColor
-          material.getParameter('Reflectance').value = 0
-          material.getParameter('EmissiveStrength').value = 1
-        }
-        treeItem.traverse((item) => {
-          if (item instanceof CADAsset) {
-            const materialLibrary = item.materialLibrary
-            const materials = materialLibrary.getMaterials()
-            materials.forEach((material) => {
-              if (material.getShaderName() == 'StandardSurfaceShader') {
-                modifyMaterial(material)
-              }
-            })
-          }
-          if (item instanceof CADBody) {
-            const material = item.materialParam.value
-            modifyMaterial(material)
-          }
-        })
-      }
-      function setRendermodePBR(treeItem, backgroundColor) {
-        const processed = {}
-        const modifyMaterial = (material) => {
-          if (processed[material.getId()]) return
-          processed[material.getId()] = true
-          resetMaterial(material)
-        }
-        treeItem.traverse((item) => {
-          if (item instanceof CADAsset) {
-            const materialLibrary = item.materialLibrary
-            const materials = materialLibrary.getMaterials()
-            materials.forEach((material) => {
-              if (material.getShaderName() == 'StandardSurfaceShader') {
-                modifyMaterial(material)
-              }
-            })
-          }
-          if (item instanceof CADBody) {
-            const material = item.materialParam.value
-            modifyMaterial(material)
-          }
-        })
-      }
 
       /* eslint-disable require-jsdoc */
       function init() {
@@ -272,16 +157,18 @@
 
         const renderer = new GLRenderer(document.getElementById('canvas'), {
           antialias: false,
+          debugGeomIds: false,
           debugGeomDataBuffer: false,
           enableFrustumCulling: false,
           enableOcclusionCulling: false,
           disableMultiDraw: urlParams.has('disableMultiDraw'),
         })
 
-        // Outline rendering causes black images in the e2e-testing server.
-        // We cannot leave this on during testing.
-        // renderer.outlineThickness = 0.5
-        // renderer.outlineSensitivity = 5
+        renderer.outlineMethod = 'geometry'
+        renderer.outlineThickness = 1
+        renderer.highlightOutlineThickness = 0.75
+        renderer.hiddenLineColor = new Color(0.15, 0.15, 0.15, 0.1)
+        // renderer.getViewport().debugHighlightedGeomsBuffer = true
 
         renderer.setScene(scene)
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 10), new Vec3(0, 0, 1.5))
@@ -491,17 +378,10 @@
 
         // ////////////////////////////////////////////
         // Render Modes
-        document.getElementById('rendermode-Wireframe').addEventListener('click', () => {
-          setRendermodeWireframe(asset)
-        })
-        document.getElementById('rendermode-Flat').addEventListener('click', () => {
-          setRendermodeFlat(asset)
-        })
-        document.getElementById('rendermode-HiddenLine').addEventListener('click', () => {
-          setRendermodeHiddenLine(asset, renderer.getViewport().backgroundColorParam.value.toLinear())
-        })
-        document.getElementById('rendermode-PBR').addEventListener('click', () => {
-          setRendermodePBR(asset)
+        const renderModelSelect = document.getElementById('selectRenderMode')
+        renderModelSelect.addEventListener('change', () => {
+          renderer.renderMode = renderModelSelect.value
+          renderer.requestRedraw()
         })
         //
 
@@ -516,10 +396,14 @@
           context.camera = renderer.getViewport().getCamera()
           asset.load(zcad, context).then(() => {
             asset.materialLibrary.getMaterials().forEach((material) => {
-              const edgeColorParam = material.getParameter('EdgeColor')
-              if (edgeColorParam) {
-                edgeColorParam.value = new Color(0, 0, 0, 0.4)
-              }
+              // const edgeColorParam = material.getParameter('EdgeColor')
+              // if (edgeColorParam) {
+              //   edgeColorParam.value = new Color(1, 0, 0, 0.4)
+              // }
+              // const hiddenEdgeColor = material.getParameter('HiddenEdgeColor')
+              // if (hiddenEdgeColor) {
+              //   hiddenEdgeColor.value = new Color(1, 0, 0, 0.4)
+              // }
             })
             renderer.frameAll()
           })

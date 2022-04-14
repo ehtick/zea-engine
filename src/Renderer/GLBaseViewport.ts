@@ -10,7 +10,7 @@ import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { SceneSetEvent } from '../Utilities/Events/SceneSetEvent'
 import { ZeaPointerEvent } from '../Utilities/Events/ZeaPointerEvent'
 import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
-import { ColorRenderState, RenderState, HighlightRenderState } from './RenderStates'
+import { ColorRenderState, RenderState, HighlightRenderState } from './RenderStates/index'
 import { WebGL12RenderingContext } from './types/webgl'
 import { GLBaseRenderer } from './GLBaseRenderer'
 
@@ -189,7 +189,7 @@ class GLBaseViewport extends ParameterOwner {
     // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
     // and so we are simply disabling silhouettes on all low end devices now.
     const gl = this.__renderer.gl
-    if (this.renderer.outlineThickness > 0 && gl.name == 'webgl2') {
+    if (this.renderer.outlineThickness > 0 && this.renderer.outlineMethod == 'image') {
       if (this.fb) {
         gl.deleteFramebuffer(this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
         gl.deleteFramebuffer(this.fb[FRAMEBUFFER.COLORBUFFER])
@@ -271,7 +271,7 @@ class GLBaseViewport extends ParameterOwner {
 
     const prevRendertarget = renderstate.boundRendertarget
 
-    if (this.renderer.outlineThickness > 0 && gl.name == 'webgl2') {
+    if (this.renderer.outlineThickness > 0 && this.renderer.outlineMethod == 'image') {
       if (!this.fb) this.resizeRenderTargets(this.__width, this.__height)
       const frameBuffer = this.fb![FRAMEBUFFER.MSAA_RENDERBUFFER]!
       gl.bindFramebuffer(
@@ -303,11 +303,15 @@ class GLBaseViewport extends ParameterOwner {
 
     this.__renderer.drawScene(renderstate)
 
-    this.drawHighlights(<HighlightRenderState>renderstate)
+    const highlightRenderState = renderstate.toHighlightRenderState()
+    this.drawHighlights(highlightRenderState)
+    if (highlightRenderState.stack.length != 1) {
+      console.warn(" corrupt highlightRenderState.stack.length:", highlightRenderState.stack.length)
+    }
 
     // //////////////////////////////////
     // Post processing.
-    if (this.fb && gl.name == 'webgl2') {
+    if (this.fb) {
       // "blit" the scene into the color buffer
       const gl2 = <WebGL2RenderingContext>gl
       gl2.bindFramebuffer(gl2.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
@@ -353,8 +357,6 @@ class GLBaseViewport extends ParameterOwner {
     // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
     // and so we are simply disabling silhouettes on all low end devices now.
     const gl = this.__renderer.gl
-    if (this.renderer.outlineThickness == 0 || gl.name != 'webgl2' || !this.fb) return
-
     const gl2 = <WebGL2RenderingContext>gl
     gl2.bindFramebuffer(gl2.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
     gl2.bindFramebuffer(gl2.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
@@ -376,8 +378,6 @@ class GLBaseViewport extends ParameterOwner {
     gl2.bindFramebuffer(gl2.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
     renderstate.boundRendertarget = this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER]
     gl2.viewport(0, 0, this.__width, this.__height)
-
-    if (this.renderer.outlineThickness == 0) return
 
     // ////////////////////////////////////
     //

@@ -26,14 +26,14 @@ import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
 import { GLShader } from './GLShader'
 import { WebGL12RenderingContext } from './types/webgl'
 import { Uniforms } from './types/renderer'
-import { RenderState, GeomDataRenderState, HighlightRenderState, ColorRenderState } from './RenderStates'
 import { StateChangedEvent } from '../Utilities/Events/StateChangedEvent'
 import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
+import { ColorRenderState, GeomDataRenderState, HighlightRenderState, RenderState } from './RenderStates'
 
 let activeGLRenderer: GLBaseRenderer | undefined
 let pointerIsDown = false
 let pointerLeft = false
-const registeredPasses: Record<string, any> = {}
+const registeredPasses: Record<string, Array<typeof GLPass>> = {}
 
 /*
  * WebGL context attributes:
@@ -177,7 +177,8 @@ class GLBaseRenderer extends ParameterOwner {
     for (const passType in registeredPasses) {
       for (const cls of registeredPasses[passType]) {
         // eslint-disable-next-line new-cap
-        this.addPass(new cls(), parseInt(passType), false) // TODO: is parseInt ok?
+        // @ts-ignore
+        this.addPass(new cls(), parseInt(passType), false)
       }
     }
 
@@ -671,7 +672,7 @@ class GLBaseRenderer extends ParameterOwner {
     webglOptions.preserveDrawingBuffer = true
     webglOptions.antialias = options.antialias ?? true
     webglOptions.depth = true
-    webglOptions.stencil = false
+    webglOptions.stencil = true
     webglOptions.alpha = options.alpha ?? false
     // Note: Due to a change in Chrome (version 88-89), providing true here caused a pause when creating
     // an WebGL context, if the XR device was unplugged. We also call 'makeXRCompatible' when setting
@@ -984,6 +985,7 @@ class GLBaseRenderer extends ParameterOwner {
       // of date.
       this.renderGeomDataFbos()
     })
+    // @ts-ignore TODO: Merge GLRenderer and GLBaseRenderer.
     pass.init(this, index)
     this.__passes[passType].push(pass)
 
@@ -1181,6 +1183,9 @@ class GLBaseRenderer extends ParameterOwner {
       for (const vp of this.__viewports) {
         vp.draw(renderstate)
       }
+      if (renderstate.stack.length != 1) {
+        console.warn(" corrupt renderstate.stack.length:", renderstate.stack.length)
+      }
     }
     window.requestAnimationFrame(onAnimationFrame)
     this.__redrawRequested = true
@@ -1352,7 +1357,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param cls - The cls value.
    * @param passType - The passType value.
    */
-  static registerPass(cls: any, passType: any): void {
+  static registerPass(cls: typeof GLPass, passType: number): void {
     if (!registeredPasses[passType]) registeredPasses[passType] = []
     registeredPasses[passType].push(cls)
   }

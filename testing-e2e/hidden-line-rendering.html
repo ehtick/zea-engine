@@ -18,42 +18,47 @@
         GLRenderer,
         Scene,
         Vec3,
+        Quat,
         Xfo,
         Color,
         Cylinder,
-        FlatSurfaceMaterial,
+        StandardSurfaceMaterial,
         LinesMaterial,
         GeomItem,
         Lines,
         Cuboid,
         Cone,
+        AssetLoadContext,
+        CADAsset,
       } = zeaEngine
 
       const urlParams = new URLSearchParams(window.location.search)
       const scene = new Scene()
       const domElement = document.getElementById('viewport')
       const renderer = new GLRenderer(domElement, {
+        antialias: true,
         webglContextType: urlParams.has('webgl') ? urlParams.get('webgl') : undefined,
       })
       renderer.setScene(scene)
       renderer.getViewport().debugGeomDataBuffer = urlParams.has('debugGeomDataBuffer')
 
-      scene.setupGrid(10.0, 10)
-
       renderer.getViewport().backgroundColorParam.value = new Color(0.85, 0.85, 0.85, 1)
+      renderer.outlineThickness = 1
+      renderer.highlightOutlineThickness = 0.75
+      renderer.hiddenLineColor = new Color(1, 0, 0, 0.2)
+      renderer.renderMode = 'hiddenline'
 
-      const material = new FlatSurfaceMaterial('surfaces')
+      const promises = []
+
+      // ///////////////////////////////////
+      //
+      const material = new StandardSurfaceMaterial('surfaces')
       material.baseColorParam.value = new Color(0.75, 0.75, 0.75)
-
+      material.edgeColorParam.value = new Color(0, 0, 0, 1)
       const hardEdgesMaterial = new LinesMaterial('hardEdgesMaterial')
       hardEdgesMaterial.baseColorParam.value = new Color(0.1, 0.1, 0.1)
       hardEdgesMaterial.opacityParam.value = 1
       hardEdgesMaterial.overlayParam.value = 0.00001
-
-      hardEdgesMaterial.stippleScaleParam.value = 0.02
-      hardEdgesMaterial.stippleValueParam.value = 0
-      hardEdgesMaterial.occludedStippleValueParam.value = 0.6
-
       const createHardEdgesGeom = (mesh) => {
         // Display all the hard edges as darker lines.
         const hardEdges = new Lines()
@@ -62,11 +67,9 @@
         hardEdges.__indices = mesh.computeHardEdgesIndices(0.5)
         return new GeomItem('hardEdges', hardEdges, hardEdgesMaterial)
       }
-
       // Note: this value was used to test the outline shader
       // at various scene scales.
       const sceneScale = 1.0
-
       const cylinder = new Cylinder(1.5 * sceneScale, 2.0 * sceneScale, 6)
       const geomItem1 = new GeomItem(
         'Cylinder',
@@ -76,29 +79,34 @@
       )
       geomItem1.addChild(createHardEdgesGeom(cylinder), false)
       scene.getRoot().addChild(geomItem1)
-
       const cuboid = new Cuboid(1.5 * sceneScale, 2.0 * sceneScale, 3 * sceneScale)
       const geomItem2 = new GeomItem('Cuboid', cuboid, material, new Xfo(new Vec3(0.0, 0, 1 * sceneScale)))
       geomItem2.addChild(createHardEdgesGeom(cuboid), false)
       scene.getRoot().addChild(geomItem2)
-
       const cone = new Cone(1.4 * sceneScale, 2.0 * sceneScale, 30)
       const geomItem3 = new GeomItem('Cone', cone, material, new Xfo(new Vec3(2.2 * sceneScale, 0, 0)))
       geomItem3.addChild(createHardEdgesGeom(cone), false)
       scene.getRoot().addChild(geomItem3)
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(
-          new Vec3(2 * sceneScale, 2 * sceneScale, 2.7 * sceneScale),
-          new Vec3(0, 0, 0.4 * sceneScale)
-        )
-      renderer.frameAll()
+      // ///////////////////////////////////
+      //  CADAsset
+      const context = new AssetLoadContext()
+      const asset = new CADAsset()
+      asset.load('data/zcad/3.9.1/Dead_eye_bearing.stp.zcad', context).then(() => {
+        asset.materialLibrary.getMaterials().forEach((material) => {
+          const edgeColorParam = material.getParameter('EdgeColor')
+          if (edgeColorParam) {
+            edgeColorParam.value = new Color(0, 0, 0, 1)
+          }
+        })
+        renderer.frameAll()
+      })
+      promises.push(new Promise((resolve) => asset.getGeometryLibrary().on('loaded', resolve)))
+      asset.globalXfoParam.value = new Xfo(new Vec3(-6, 0, 1), new Quat(), new Vec3(20, 20, 20))
+      scene.getRoot().addChild(asset)
 
-      const pointerOverColor = new Color(1, 1, 1, 0.2)
-      let prevMaterial
-      let prevColor
+      // ///////////////////////////////////
+      //  Highlighting
       renderer.getViewport().on('pointerOverGeom', (event) => {
         const pointerOverItem = event.intersectionData.geomItem
         pointerOverItem.addHighlight('pointerOverGeom', new Color(1, 0, 0, 0.1), true)
@@ -106,22 +114,16 @@
       renderer.getViewport().on('pointerLeaveGeom', (event) => {
         event.leftGeometry.removeHighlight('pointerOverGeom', true)
       })
-      renderer.getXRViewport().then((xrvp) => {
-        console.log('XR Device Detected')
-        document.addEventListener('keydown', (event) => {
-          if (event.key.toLowerCase() == 'v' && event.shiftKey) {
-            xrvp.togglePresenting()
-          }
-        })
-      })
-
       // {{{ Variants
       const statusElement = document.getElementById('status')
       const setStatusText = (text) => {
         renderer.forceRender()
         statusElement.textContent = text
       }
-      setStatusText('done-loading')
+      Promise.all(promises).then(() => {
+        renderer.frameAll()
+        setStatusText('done-loading')
+      })
       // }}}
 
       renderer.getXRViewport().then((xrvp) => {

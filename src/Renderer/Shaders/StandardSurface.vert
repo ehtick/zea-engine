@@ -15,6 +15,9 @@ uniform mat4 projectionMatrix;
 // we need to know what kind of geometry it is...
 uniform int geomType;
 
+uniform float outlineThickness;
+uniform float viewportWidth;
+
 // should be imported by bottom 3
 import 'GLSLUtils.glsl'
 import 'transpose.glsl'
@@ -64,7 +67,14 @@ void main(void) {
   // offset slightly the lines and points to make them clearly defined.
   // This ensures that lines drawn over surfaces are solid and not clipped
   // at all by the surface.
-  if (geomType == LINES) { // start 'LINES'
+  if (geomType == TRIANGLES) {
+    if (outlineThickness > 0.00001) {
+      vec3 screenNormal = v_viewNormal;
+      screenNormal.z = 0.0;
+      gl_Position.xyz += normalize(screenNormal) * ((2.0 / viewportWidth) * outlineThickness) * gl_Position.w;
+    }
+  }
+  else if (geomType == LINES) { // start 'LINES'
     float overlay = 0.00001;
     gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
   } // end 'LINES'

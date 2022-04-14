@@ -29,7 +29,7 @@ class LinesShader extends GLShader {
    * @return - The return value.
    */
   static getPackedMaterialData(material: Material): Float32Array {
-    const matData = new Float32Array(12)
+    const matData = new Float32Array(8)
     const baseColorParam = material.getParameter('BaseColor')
     let baseColor
     if (baseColorParam instanceof MaterialColorParam && baseColorParam.colorSpace == ColorSpace.Gamma) {
@@ -45,10 +45,7 @@ class LinesShader extends GLShader {
     // Lines do not need to be depth sorted....
     matData[4] = material.getParameter('Opacity')!.value
     matData[5] = material.getParameter('Overlay')!.value
-    matData[6] = material.getParameter('StippleScale')!.value
-    matData[7] = material.getParameter('StippleValue')!.value
 
-    matData[8] = material.getParameter('OccludedStippleValue')!.value
     return matData
   }
 

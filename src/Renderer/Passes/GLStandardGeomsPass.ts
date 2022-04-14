@@ -2,7 +2,7 @@ import { GLPass } from './GLPass'
 
 import { GeomItem, TreeItem, Material } from '../../SceneTree/index'
 import { MathFunctions } from '../../Utilities/MathFunctions'
-import { GLBaseRenderer } from '../GLBaseRenderer'
+import { GLRenderer } from '../GLRenderer'
 import { GeomItemAndDist } from '../../Utilities/IntersectionData'
 import { OpacityStateChangedEvent } from '../../Utilities'
 
@@ -24,7 +24,7 @@ class GLStandardGeomsPass extends GLPass {
    * @param renderer - The renderer value.
    * @param passIndex - The index of the pass in the GLBAseRenderer
    */
-  init(renderer: GLBaseRenderer, passIndex: number): void {
+  init(renderer: GLRenderer, passIndex: number): void {
     super.init(renderer, passIndex)
   }
 

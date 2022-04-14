@@ -2,6 +2,8 @@
 precision highp float;
 
 uniform sampler2D image;
+uniform vec4 color;
+uniform int isTextured;
 
 varying vec2 v_texCoord;
 
@@ -12,7 +14,11 @@ void main(void) {
 #ifndef ENABLE_ES3
   vec4 fragColor;
 #endif
-  fragColor = texture2D(image, v_texCoord);
+
+  if (isTextured != 0)
+    fragColor = texture2D(image, v_texCoord);
+  else 
+    fragColor = color;
 
 #ifndef ENABLE_ES3
   gl_FragColor = fragColor;

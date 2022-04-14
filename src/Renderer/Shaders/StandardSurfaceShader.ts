@@ -46,11 +46,19 @@ class StandardSurfaceShader extends GLShader {
         colorRenderState.envMap.bind(colorRenderState)
       }
 
-      const { exposure, cutColor } = colorRenderState.unifs
+      const { exposure, cutColor, renderMode } = colorRenderState.unifs
       if (exposure) {
         gl.uniform1f(exposure.location, colorRenderState.exposure)
       }
 
+      if (colorRenderState.renderMode && renderMode) {
+        if (colorRenderState.renderMode == 'flat') {
+          gl.uniform1i(renderMode.location, 2)
+        } else if (colorRenderState.renderMode == 'pbr') {
+          gl.uniform1i(renderMode.location, 3)
+        }
+      }
+      
       if (cutColor) {
         gl.uniform4f(cutColor.location, 0.3, 0, 0, 1)
       }
@@ -65,7 +73,7 @@ class StandardSurfaceShader extends GLShader {
    * @return - The return value.
    */
   static getPackedMaterialData(material: Material): Float32Array {
-    const matData = new Float32Array(20) // TODO: no extra space needed right?
+    const matData = new Float32Array(20)
 
     const baseColorParam = material.getParameter('BaseColor')
     let baseColor
@@ -98,7 +106,6 @@ class StandardSurfaceShader extends GLShader {
     matData[17] = pointColor.g
     matData[18] = pointColor.b
     matData[19] = pointColor.a
-
     return matData
   }
 

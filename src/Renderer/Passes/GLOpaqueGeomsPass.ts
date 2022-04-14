@@ -6,10 +6,10 @@ import { GeomItem, Material } from '../../SceneTree/index'
 import { GLShaderMaterials } from '../Drawing/GLShaderMaterials'
 import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
 import { GLMaterialGeomItemSets } from '../Drawing/GLMaterialGeomItemSets'
-import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLGeomItem } from '../Drawing'
-import { OpacityStateChangedEvent } from '../../Utilities'
-import { GeomDataRenderState, ColorRenderState, HighlightRenderState } from '../RenderStates'
+import { ColorRenderState, GeomDataRenderState, HighlightRenderState } from '../RenderStates'
+
+
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLStandardGeomsPass
@@ -225,7 +225,10 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
     this.__traverseTreeAndDraw(renderstate)
 
-    renderstate.viewport.drawSilhouettes(renderstate)
+    const renderer = <GLRenderer>this.renderer
+    if (renderer.outlineThickness > 0 && renderer.outlineMethod == 'image') {
+      renderstate.viewport.drawSilhouettes(renderstate)
+    }
 
     renderstate.popGLStack()
   }

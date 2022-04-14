@@ -1,15 +1,10 @@
 precision highp float;
-#ifdef ENABLE_MULTI_DRAW
-// #define DEBUG_GEOM_ID
-#endif
-
 
 import 'GLSLUtils.glsl'
 import 'drawItemTexture.glsl'
 import 'cutaways.glsl'
 import 'gamma.glsl'
 import 'materialparams.glsl'
-
 
 #ifdef DEBUG_GEOM_ID
 import 'debugColors.glsl'
@@ -28,6 +23,13 @@ varying vec3 v_worldPos;
 
 uniform mat4 cameraMatrix;
 uniform int isOrthographic;
+
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
+
+
+#if defined(DRAW_COLOR)
 
 #ifndef ENABLE_MULTI_DRAW
 
@@ -48,12 +50,8 @@ uniform int EmissiveStrengthTexType;
 
 import 'computeViewNormal.glsl'
   
-
-#ifdef ENABLE_ES3
-    out vec4 fragColor;
-#endif
-
-#if defined(DRAW_GEOMDATA)
+// end DRAW_COLOR
+#elif defined(DRAW_GEOMDATA)
   import 'surfaceGeomData.glsl'
 #elif defined(DRAW_HIGHLIGHT)
   import 'surfaceHighlight.glsl'
