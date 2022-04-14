@@ -13,7 +13,7 @@ import { ControllerAddedEvent } from '../../Utilities/Events/ControllerAddedEven
 import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
 import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent'
 import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent'
-import { ColorRenderState, GeomDataRenderState, RenderState } from '../types/renderer'
+import { ColorRenderState, GeomDataRenderState, RenderState } from '../RenderStates'
 import { GLRenderer } from '../GLRenderer'
 
 /** This Viewport class is used for rendering stereoscopic views to VR controllers using the WebXR api.
@@ -472,7 +472,7 @@ class XRViewport extends GLBaseViewport {
       {
         region: this.region,
         viewMatrix: renderstate.cameraMatrix.inverse(),
-        isOrthographic: false,
+        isOrthographic: 0,
       },
     ]
   }
@@ -522,7 +522,7 @@ class XRViewport extends GLBaseViewport {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
     this.depthRange = [session.renderState.depthNear, session.renderState.depthFar] // TODO: check if this changes during session
 
-    const renderstate: ColorRenderState = <ColorRenderState>{}
+    const renderstate = new ColorRenderState(this.__renderer.gl)
 
     renderstate.boundRendertarget = layer.framebuffer
     renderstate.region = this.region
@@ -543,7 +543,7 @@ class XRViewport extends GLBaseViewport {
         viewMatrix: this.viewMatrices[i],
         projectionMatrix: this.projectionMatrices[i],
         region: [vp.x, vp.y, vp.width, vp.height],
-        isOrthographic: false,
+        isOrthographic: 0,
       })
     }
 
@@ -588,7 +588,8 @@ class XRViewport extends GLBaseViewport {
       if (viewport) {
         // display the head in spectator mode.
         this.__xrhead.setVisible(true)
-        viewport.draw()
+        const renderstate = new ColorRenderState(this.renderer.__gl)
+        viewport.draw(renderstate)
         this.__xrhead.setVisible(false)
       }
     }

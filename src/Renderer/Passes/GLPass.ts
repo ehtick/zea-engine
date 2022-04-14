@@ -3,7 +3,7 @@ import { BooleanParameter } from '../../SceneTree/Parameters/index'
 import { TreeItem } from '../../SceneTree/TreeItem'
 import { GeomItemAndDist } from '../../Utilities/IntersectionData'
 import { GLBaseRenderer } from '../GLBaseRenderer'
-import { RenderState, GeomDataRenderState } from '../types/renderer'
+import { RenderState, GeomDataRenderState, HighlightRenderState } from '../RenderStates'
 import { WebGL12RenderingContext } from '../types/webgl'
 
 const PassType = {
@@ -128,7 +128,7 @@ abstract class GLPass extends ParameterOwner {
    * The drawHighlightedGeoms method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  drawHighlightedGeoms(renderstate: RenderState): void {}
+  drawHighlightedGeoms(renderstate: HighlightRenderState): void {}
 
   /**
    * The drawGeomData method.

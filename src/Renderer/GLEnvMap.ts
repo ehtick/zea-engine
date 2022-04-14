@@ -4,7 +4,7 @@ import { EnvMapShader } from './Shaders/EnvMapShader'
 import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomShaderBinding'
 import { EnvMap } from '../SceneTree/Images/EnvMap'
 import { GLRenderer } from './GLRenderer'
-import { ColorRenderState } from './types/renderer'
+import { ColorRenderState } from './RenderStates'
 
 /** Class representing a GL environment map.
  * @extends GLProbe

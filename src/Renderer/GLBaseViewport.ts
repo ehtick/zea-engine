@@ -10,7 +10,7 @@ import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { SceneSetEvent } from '../Utilities/Events/SceneSetEvent'
 import { ZeaPointerEvent } from '../Utilities/Events/ZeaPointerEvent'
 import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
-import { ColorRenderState, RenderState } from './types/renderer'
+import { ColorRenderState, RenderState, HighlightRenderState } from './RenderStates'
 import { WebGL12RenderingContext } from './types/webgl'
 import { GLBaseRenderer } from './GLBaseRenderer'
 
@@ -267,6 +267,8 @@ class GLBaseViewport extends ParameterOwner {
   draw(renderstate: ColorRenderState): void {
     const gl = this.__renderer.gl
 
+    renderstate.pushGLStack()
+
     const prevRendertarget = renderstate.boundRendertarget
 
     if (this.renderer.outlineThickness > 0 && gl.name == 'webgl2') {
@@ -297,11 +299,11 @@ class GLBaseViewport extends ParameterOwner {
     gl.colorMask(true, true, true, false)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
-    gl.enable(gl.DEPTH_TEST)
+    renderstate.glEnable(gl.DEPTH_TEST)
 
     this.__renderer.drawScene(renderstate)
 
-    this.drawHighlights(renderstate)
+    this.drawHighlights(<HighlightRenderState>renderstate)
 
     // //////////////////////////////////
     // Post processing.
@@ -335,6 +337,7 @@ class GLBaseViewport extends ParameterOwner {
       screenQuad.draw(renderstate, this.offscreenBuffer!)
     }
 
+    renderstate.popGLStack()
     this.renderer.emit('redrawOccurred')
   }
 
@@ -344,6 +347,7 @@ class GLBaseViewport extends ParameterOwner {
    * @private
    */
   drawSilhouettes(renderstate: RenderState): void {
+    renderstate.pushGLStack()
     // We cannot render silhouettes in iOS because EXT_frag_depth is not supported
     // and without it, we cannot draw lines over the top of geometries.
     // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
@@ -377,10 +381,11 @@ class GLBaseViewport extends ParameterOwner {
 
     // ////////////////////////////////////
     //
-    gl2.enable(gl2.BLEND)
+    renderstate.glEnable(gl.BLEND)
+    renderstate.glDisable(gl.DEPTH_TEST)
+
     gl2.blendEquation(gl2.FUNC_ADD)
     gl2.blendFunc(gl2.SRC_ALPHA, gl2.ONE_MINUS_SRC_ALPHA) // For add
-    gl2.disable(gl2.DEPTH_TEST)
     gl2.depthMask(false)
 
     this.renderer.silhouetteShader.bind(renderstate)
@@ -401,8 +406,9 @@ class GLBaseViewport extends ParameterOwner {
 
     this.quad.bindAndDraw(renderstate)
 
-    gl2.enable(gl2.DEPTH_TEST)
     gl2.depthMask(true)
+
+    renderstate.popGLStack()
   }
 
   /**
@@ -410,18 +416,19 @@ class GLBaseViewport extends ParameterOwner {
    * @param renderstate - The object tracking the current state of the renderer
    * @private
    */
-  drawHighlights(renderstate: RenderState): void {
+  drawHighlights(renderstate: HighlightRenderState): void {
     if (this.highlightedGeomsBufferFbo) {
       const gl = this.__renderer.gl
 
       this.highlightedGeomsBufferFbo.bindForWriting(renderstate)
       this.highlightedGeomsBufferFbo.clear()
 
+      renderstate.pushGLStack()
       // Highlighted geoms should always be rendered 2-sided
-      gl.disable(gl.CULL_FACE)
+      renderstate.glEnable(gl.CULL_FACE)
+      renderstate.glEnable(gl.DEPTH_TEST)
+      renderstate.glDisable(gl.BLEND)
 
-      gl.disable(gl.BLEND)
-      gl.enable(gl.DEPTH_TEST)
       gl.depthFunc(gl.LESS)
       gl.depthMask(true)
       renderstate.glShader = null // clear any bound shaders.
@@ -442,7 +449,9 @@ class GLBaseViewport extends ParameterOwner {
         this.__renderer.screenQuad!.draw(renderstate)
       } else {
         this.renderer.highlightsShader.bind(renderstate)
-        gl.enable(gl.BLEND)
+        renderstate.pushGLStack()
+        renderstate.glEnable(gl.BLEND)
+
         gl.blendEquation(gl.FUNC_ADD)
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
 
@@ -452,10 +461,10 @@ class GLBaseViewport extends ParameterOwner {
         gl.uniform2f(unifs.highlightDataTextureSize.location, renderstate.region[2], renderstate.region[3])
         this.quad.bindAndDraw(renderstate)
 
-        gl.disable(gl.BLEND)
+        renderstate.popGLStack()
       }
 
-      gl.enable(gl.CULL_FACE)
+      renderstate.popGLStack()
     }
   }
 

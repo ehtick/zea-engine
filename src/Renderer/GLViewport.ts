@@ -15,7 +15,8 @@ import { ZeaWheelEvent } from '../Utilities/Events/ZeaWheelEvent'
 import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent'
 import { ZeaMouseEvent } from '../Utilities/Events/ZeaMouseEvent'
 import { ZeaUIEvent } from '../Utilities/Events/ZeaUIEvent'
-import { GeomDataRenderState, RenderState, ColorRenderState, Uniform } from './types/renderer'
+import { Uniform } from './types/renderer'
+import { GeomDataRenderState, RenderState, ColorRenderState } from './RenderStates'
 
 let activeViewport: GLViewport = null
 /**
@@ -361,7 +362,7 @@ class GLViewport extends GLBaseViewport {
    */
   renderGeomDataFbo(): void {
     if (this.__geomDataBufferFbo) {
-      const geomDataRenderstate: GeomDataRenderState = <GeomDataRenderState>{}
+      const geomDataRenderstate: GeomDataRenderState = new GeomDataRenderState(this.renderer.__gl)
       this.initRenderState(geomDataRenderstate)
 
       // Note: GLLinesPass binds a new Fbo, but shares this ones depth buffer.
@@ -881,7 +882,7 @@ class GLViewport extends GLBaseViewport {
         viewMatrix: this.__viewMat,
         projectionMatrix: this.__projectionMatrix,
         viewportFrustumSize: this.__frustumDim,
-        isOrthographic: this.__camera.isOrthographic(),
+        isOrthographic: this.__camera.isOrthographic() ? 1 : 0,
         fovY: this.__camera.getFov(),
       },
     ]
@@ -890,18 +891,25 @@ class GLViewport extends GLBaseViewport {
   /**
    * The draw method.
    */
-  draw(): void {
-    const renderstate: ColorRenderState = <ColorRenderState>{}
+  draw(renderstate: ColorRenderState): void {
+    const gl = this.__renderer.gl
     this.initRenderState(renderstate)
 
+    renderstate.pushGLStack()
+    renderstate.glDisable(gl.BLEND)
+    renderstate.glEnable(gl.DEPTH_TEST)
+    renderstate.glEnable(gl.CULL_FACE)
+
     super.draw(renderstate)
+
+    renderstate.popGLStack()
 
     // Turn this on to debug the geom data buffer.
     if (this.debugGeomDataBuffer) {
       this.renderGeomDataFbo()
       // Note: renderGeomDataFbo would have bound other shaders.
       // and the renderstate used above is no blonger valid. Reset.
-      const renderstate: ColorRenderState = <ColorRenderState>{}
+      const renderstate = new ColorRenderState(this.__renderer.gl)
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
       screenQuad.draw(renderstate, this.__geomDataBuffer, new Vec2(0, 0), new Vec2(1, 1))
@@ -909,11 +917,10 @@ class GLViewport extends GLBaseViewport {
     if (this.debugHighlightedGeomsBuffer) {
       // Note: renderGeomDataFbo would have bound other shaders.
       // and the renderstate used above is no blonger valid. Reset.
-      const renderstate: ColorRenderState = <ColorRenderState>{}
+      const renderstate = new ColorRenderState(this.__renderer.gl)
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
 
-      const gl = this.__renderer.gl
       gl.enable(gl.BLEND)
       gl.blendEquation(gl.FUNC_ADD)
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)

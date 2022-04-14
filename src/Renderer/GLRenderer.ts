@@ -14,7 +14,7 @@ import { HDRImage } from '../SceneTree/Images/HDRImage'
 import { EnvMapAssignedEvent } from '../Utilities/Events/EnvMapAssignedEvent'
 import { GLViewport } from './GLViewport'
 import { IntersectionData } from '../Utilities/IntersectionData'
-import { GeomDataRenderState, ColorRenderState } from './types/renderer'
+import { GeomDataRenderState, ColorRenderState } from './RenderStates'
 import { WebGL12RenderingContext } from './types/webgl'
 
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
@@ -330,17 +330,17 @@ class GLRenderer extends GLBaseRenderer {
    */
   raycastWithProjection(xfo: Xfo, projectionMatrix: Mat4, ray: Ray, mask = ALL_PASSES): IntersectionData | null {
     const region = [0, 0, 3, 3]
-    const renderstate = <GeomDataRenderState>{
-      cameraMatrix: xfo.toMat4(),
-      viewports: [
-        {
-          region,
-          viewMatrix: xfo.inverse().toMat4(),
-          projectionMatrix,
-          isOrthographic: true,
-        },
-      ],
-    }
+    const renderstate = new GeomDataRenderState(this.__gl)
+    renderstate.cameraMatrix = xfo.toMat4()
+    renderstate.viewports = [
+      {
+        region,
+        viewMatrix: xfo.inverse().toMat4(),
+        projectionMatrix,
+        isOrthographic: 1,
+        fovY: 0,
+      },
+    ]
 
     const gl = this.__gl
     if (!this.__rayCastRenderTarget) {
@@ -450,13 +450,13 @@ class GLRenderer extends GLBaseRenderer {
 
     const region = [0, 0, 3, 3]
 
-    const renderstate = <GeomDataRenderState>{}
+    const renderstate = new GeomDataRenderState(this.__gl)
     renderstate.viewports = [
       {
         region,
         viewMatrix: xfo.inverse().toMat4(),
         projectionMatrix: this.__rayCastRenderTargetProjMatrix,
-        isOrthographic: true,
+        isOrthographic: 1,
       },
     ]
     renderstate.cameraMatrix = xfo.toMat4()

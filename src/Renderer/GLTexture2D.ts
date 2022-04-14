@@ -2,7 +2,8 @@ import { BaseImage, RefCounted } from '../SceneTree/index'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { MathFunctions } from '../Utilities/MathFunctions'
 import { processTextureParams } from './processTextureParams'
-import { Uniform, Uniforms, RenderState } from './types/renderer'
+import { Uniform, Uniforms } from './types/renderer'
+import { RenderState } from './RenderStates'
 import { WebGL12RenderingContext } from './types/webgl'
 
 /**

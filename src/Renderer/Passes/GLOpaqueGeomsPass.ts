@@ -8,8 +8,8 @@ import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
 import { GLMaterialGeomItemSets } from '../Drawing/GLMaterialGeomItemSets'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLGeomItem } from '../Drawing'
-import { RenderState, GeomDataRenderState, ColorRenderState } from '../types/renderer'
 import { OpacityStateChangedEvent } from '../../Utilities'
+import { GeomDataRenderState, ColorRenderState, HighlightRenderState } from '../RenderStates'
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLStandardGeomsPass
@@ -199,7 +199,11 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    */
   draw(renderstate: ColorRenderState): void {
     const gl = this.__gl!
-    gl.disable(gl.BLEND)
+
+    renderstate.pushGLStack()
+    renderstate.glDisable(gl.BLEND)
+    renderstate.glEnable(gl.DEPTH_TEST)
+    // gl.disable(gl.BLEND)
 
     // Note: our zcad files can contain surfaces with flipped normals.
     // This is due to re-using geoms on various sides of a mesh, while applying
@@ -207,26 +211,30 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     // by default.
     if (true) {
       // 2-sided rendering.
-      gl.disable(gl.CULL_FACE)
+      // gl.disable(gl.CULL_FACE)
+      renderstate.glDisable(gl.CULL_FACE)
     } else {
-      gl.enable(gl.CULL_FACE)
+      renderstate.glEnable(gl.CULL_FACE)
+      // gl.enable(gl.CULL_FACE)
       gl.cullFace(gl.BACK)
     }
 
-    gl.enable(gl.DEPTH_TEST)
+    // gl.enable(gl.DEPTH_TEST)
     gl.depthFunc(gl.LEQUAL)
     gl.depthMask(true)
 
     this.__traverseTreeAndDraw(renderstate)
 
     renderstate.viewport.drawSilhouettes(renderstate)
+
+    renderstate.popGLStack()
   }
 
   /**
    * The drawHighlightedGeoms method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  drawHighlightedGeoms(renderstate: RenderState): void {
+  drawHighlightedGeoms(renderstate: HighlightRenderState): void {
     const gl = this.__gl!
     gl.disable(gl.CULL_FACE) // 2-sided rendering.
 

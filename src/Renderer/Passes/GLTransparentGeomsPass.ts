@@ -5,9 +5,9 @@ import { GLStandardGeomsPass } from './GLStandardGeomsPass'
 import { GLRenderer } from '../GLRenderer'
 import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
 import { GLBaseRenderer } from '../GLBaseRenderer'
-import { RenderState, GeomDataRenderState } from '../types/renderer'
 import { GLViewport } from '../GLViewport'
 import { BaseEvent, OpacityStateChangedEvent } from '../../Utilities'
+import { RenderState, GeomDataRenderState, HighlightRenderState } from '../RenderStates'
 
 /** Class representing a GL transparent geoms pass.
  * @extends GLStandardGeomsPass
@@ -331,10 +331,15 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       }
     }
 
-    gl.enable(gl.DEPTH_TEST)
-    gl.depthFunc(gl.LESS)
+    renderstate.pushGLStack()
+    renderstate.glEnable(gl.BLEND)
+    renderstate.glEnable(gl.DEPTH_TEST)
+    renderstate.glEnable(gl.CULL_FACE)
 
-    gl.enable(gl.BLEND)
+    // gl.enable(gl.DEPTH_TEST)
+    // gl.enable(gl.BLEND)
+
+    gl.depthFunc(gl.LESS)
     gl.blendEquation(gl.FUNC_ADD)
     // Complex transparent surfaces require multiple passes.
     // First the multiply pass tints the background color, simulating
@@ -362,20 +367,22 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     // Only draw font faces. BEcause all faces are drawn, it can make a mess to see the back faces through the front faces.
     // e.g. we might see the triangles on the other side of a sphere rendered over the top of triangles on the near side.
-    gl.enable(gl.CULL_FACE)
+    // gl.enable(gl.CULL_FACE)
     gl.cullFace(gl.BACK)
 
     this._drawItems(renderstate)
 
-    gl.disable(gl.BLEND)
-    gl.depthMask(true)
+    // gl.disable(gl.BLEND)
+    // gl.depthMask(true)
+
+    renderstate.popGLStack()
   }
 
   /**
    * The drawHighlightedGeoms method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  drawHighlightedGeoms(renderstate: RenderState): void {
+  drawHighlightedGeoms(renderstate: HighlightRenderState): void {
     const gl = this.__gl!
     gl.disable(gl.CULL_FACE) // 2-sided rendering.
 
@@ -426,11 +433,17 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    */
   drawGeomData(renderstate: GeomDataRenderState): void {
     const gl = this.__gl!
-    gl.disable(gl.BLEND)
-    gl.disable(gl.CULL_FACE)
-    gl.enable(gl.DEPTH_TEST)
-    gl.depthFunc(gl.LESS)
-    gl.depthMask(true)
+
+    renderstate.pushGLStack()
+    // renderstate.glDisable(gl.BLEND)
+    renderstate.glEnable(gl.DEPTH_TEST)
+    renderstate.glEnable(gl.CULL_FACE)
+
+    // gl.disable(gl.BLEND)
+    // gl.disable(gl.CULL_FACE)
+    // gl.enable(gl.DEPTH_TEST)
+    // gl.depthFunc(gl.LESS)
+    // gl.depthMask(true)
 
     // eslint-disable-next-line guard-for-in
     for (const shaderName in this.__glShaderGeomSets) {
@@ -474,6 +487,8 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     }
 
     if (cache.currentGLGeom) cache.currentGLGeom.unbind(renderstate)
+
+    renderstate.popGLStack()
   }
 }
 

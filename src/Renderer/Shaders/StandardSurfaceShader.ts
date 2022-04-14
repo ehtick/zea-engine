@@ -13,7 +13,7 @@ import { MaterialColorParam, ColorSpace } from '../../SceneTree/Parameters/Mater
 import { MaterialFloatParam } from '../../SceneTree/Parameters/MaterialFloatParam'
 import { StandardSurfaceMaterial } from '../../SceneTree/Materials/StandardSurfaceMaterial'
 import { WebGL12RenderingContext } from '../types/webgl'
-import { ColorRenderState, RenderState } from '../types/renderer'
+import { ColorRenderState, RenderState } from '../RenderStates'
 
 /** A standard shader handling Opaque and transparent items and PBR rendering.
  * @extends GLShader
@@ -37,21 +37,23 @@ class StandardSurfaceShader extends GLShader {
    * @return - The return value.
    */
   bind(renderstate: RenderState, key: string): boolean {
-    const colorRenderState = <ColorRenderState>renderstate
     super.bind(renderstate, key)
 
-    const gl = this.__gl!
-    if (colorRenderState.envMap) {
-      colorRenderState.envMap.bind(colorRenderState)
-    }
+    if (renderstate instanceof ColorRenderState) {
+      const colorRenderState = <ColorRenderState>renderstate
+      const gl = this.__gl!
+      if (colorRenderState.envMap) {
+        colorRenderState.envMap.bind(colorRenderState)
+      }
 
-    const { exposure, cutColor } = colorRenderState.unifs
-    if (exposure) {
-      gl.uniform1f(exposure.location, colorRenderState.exposure)
-    }
+      const { exposure, cutColor } = colorRenderState.unifs
+      if (exposure) {
+        gl.uniform1f(exposure.location, colorRenderState.exposure)
+      }
 
-    if (cutColor) {
-      gl.uniform4f(cutColor.location, 0.3, 0, 0, 1)
+      if (cutColor) {
+        gl.uniform4f(cutColor.location, 0.3, 0, 0, 1)
+      }
     }
 
     return true

@@ -3,8 +3,8 @@ import '../Math/index'
 import { GLTexture2D } from './GLTexture2D'
 import { BaseEvent } from '../Utilities/BaseEvent'
 import { Color } from '../Math/index'
-import { RenderState } from './types/renderer'
 import { WebGL12RenderingContext } from './types/webgl'
+import { RenderState } from './RenderStates'
 
 /**
  * This class abstracts the rendering of a collection of geometries to screen.

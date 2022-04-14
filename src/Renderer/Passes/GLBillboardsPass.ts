@@ -10,7 +10,7 @@ import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLShader } from '../GLShader'
 import { GeomItemAndDist } from '../../Utilities/IntersectionData'
-import { RenderState, GeomDataRenderState } from '../types/renderer'
+import { RenderState, GeomDataRenderState, HighlightRenderState } from '../RenderStates'
 
 const pixelsPerItem = 7 // The number of pixels per draw item.
 
@@ -268,7 +268,7 @@ class GLBillboardsPass extends GLPass {
    * The reqUpdateIndexArray method.
    * @private
    */
-  reqUpdateIndexArray(): void{
+  reqUpdateIndexArray(): void {
     if (this.indexArrayUpdateNeeded) return
     this.indexArrayUpdateNeeded = true
     this.emit('updated')
@@ -479,7 +479,7 @@ class GLBillboardsPass extends GLPass {
       this.atlas.bindToUniform(renderstate, unifs.atlasBillboards)
     }
 
-    if (floatGeomBuffer) {
+    if (floatGeomBuffer && renderstate instanceof GeomDataRenderState) {
       gl.uniform1i(floatGeomBuffer.location, (<GeomDataRenderState>renderstate).floatGeomBuffer ? 1 : 0)
     }
     if (passId) {
@@ -581,7 +581,7 @@ class GLBillboardsPass extends GLPass {
    * The drawHighlightedGeoms method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  drawHighlightedGeoms(renderstate: RenderState): void {
+  drawHighlightedGeoms(renderstate: HighlightRenderState): void {
     if (this.drawCount == 0) return
     this.__draw(renderstate, 'DRAW_HIGHLIGHT')
   }

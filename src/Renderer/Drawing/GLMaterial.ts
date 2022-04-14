@@ -1,7 +1,7 @@
 import { Material } from '../../SceneTree/Material'
 import { EventEmitter } from '../../Utilities/EventEmitter'
 import { GLShader } from '../GLShader'
-import { RenderState } from '../types/renderer'
+import { RenderState } from '../RenderStates'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { MaterialShaderBinding } from './MaterialShaderBinding'
 

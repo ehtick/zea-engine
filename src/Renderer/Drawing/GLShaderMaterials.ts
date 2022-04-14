@@ -1,7 +1,7 @@
 import { EventEmitter } from '../../Utilities/index'
 import { GLShader } from '../GLShader'
 import { GLOpaqueGeomsPass, GLPass } from '../Passes'
-import { RenderState, GeomDataRenderState } from '../types/renderer'
+import { RenderState, GeomDataRenderState, HighlightRenderState } from '../RenderStates'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeom } from './GLGeom'
 import { GLGeomItem } from './GLGeomItem'
@@ -98,7 +98,7 @@ class GLShaderMaterials extends EventEmitter {
    * The getMaterialGeomItemSets method.
    * @return - The return value.
    */
-  getMaterialGeomItemSets(): GLMaterialGeomItemSets[]{
+  getMaterialGeomItemSets(): GLMaterialGeomItemSets[] {
     return this.glMaterialGeomItemSets
   }
 
@@ -122,7 +122,7 @@ class GLShaderMaterials extends EventEmitter {
    * The drawHighlightedGeoms method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  drawHighlightedGeoms(renderstate: RenderState): void {
+  drawHighlightedGeoms(renderstate: HighlightRenderState): void {
     if (!this.glselectedshader || !this.glselectedshader.bind(renderstate, 'highlight')) return
 
     this.pass.renderer.glGeomItemLibrary.bind(renderstate)

@@ -26,7 +26,7 @@ import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCullin
 import { GeomItem } from '../../SceneTree/GeomItem'
 import { GLBaseRenderer, RendererOptions } from '../GLBaseRenderer'
 import { Material } from '../../SceneTree/Material'
-import { GeomDataRenderState, RenderState } from '../types/renderer'
+import { GeomDataRenderState, RenderState } from '../RenderStates'
 import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
 import { OpacityStateChangedEvent } from '../../Utilities/Events/OpacityStateChangedEvent'
 
@@ -509,7 +509,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
     const gl = this.renderer.gl
 
-    const renderstate: GeomDataRenderState = <GeomDataRenderState>{ shaderopts: {} }
+    const renderstate = new GeomDataRenderState(gl)
     this.renderer.bindGLBaseRenderer(renderstate)
     renderstate.directives = [...this.renderer.directives, '#define DRAW_GEOMDATA']
     renderstate.shaderopts.directives = renderstate.directives
@@ -528,9 +528,12 @@ class GLGeomItemLibrary extends EventEmitter {
     const drawSceneGeomData = (renderstate: GeomDataRenderState) => {
       this.occlusionDataBuffer.bindForWriting(renderstate, true)
 
-      gl.disable(gl.BLEND)
-      gl.disable(gl.CULL_FACE)
-      gl.enable(gl.DEPTH_TEST)
+      renderstate.glDisable(gl.BLEND)
+      renderstate.glDisable(gl.CULL_FACE)
+      renderstate.glEnable(gl.DEPTH_TEST)
+      // gl.disable(gl.BLEND)
+      // gl.disable(gl.CULL_FACE)
+      // gl.enable(gl.DEPTH_TEST)
       gl.depthFunc(gl.LESS)
       gl.depthMask(true)
 

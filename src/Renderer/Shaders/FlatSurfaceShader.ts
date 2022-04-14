@@ -9,7 +9,7 @@ import './GLSL/index'
 import vert from './FlatSurface.vert'
 // @ts-ignore
 import frag from './FlatSurface.frag'
-import { RenderState } from '../types/renderer'
+import { RenderState } from '../RenderStates'
 import { WebGL12RenderingContext } from '../types/webgl'
 
 class FlatSurfaceShader extends GLShader {
@@ -32,10 +32,13 @@ class FlatSurfaceShader extends GLShader {
   bind(renderstate: RenderState, key?: string) {
     super.bind(renderstate, key)
 
+    renderstate.pushGLStack()
+
     // Note: The GLTransparentGeoms pass only  renders the font faces of objects because for complex geoms, this makes sense
     // but flat surfaces should be double sided, as they are almost always labels, or UI elements.
     const gl = this.__gl!
-    gl.disable(gl.CULL_FACE)
+    // gl.disable(gl.CULL_FACE)
+    renderstate.glDisable(gl.CULL_FACE)
 
     return true
   }
@@ -49,7 +52,8 @@ class FlatSurfaceShader extends GLShader {
     super.unbind(renderstate)
 
     const gl = this.__gl!
-    gl.enable(gl.CULL_FACE)
+    // gl.enable(gl.CULL_FACE)
+    renderstate.popGLStack()
 
     return true
   }

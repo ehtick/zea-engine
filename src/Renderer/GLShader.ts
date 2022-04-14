@@ -4,7 +4,8 @@ import { BaseItem } from '../SceneTree/BaseItem'
 import { Material } from '../SceneTree/Material'
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { shaderLibrary } from './ShaderLibrary'
-import { ShaderParseResult, Shaderopts, RenderState } from './types/renderer'
+import { ShaderParseResult, Shaderopts } from './types/renderer'
+import { RenderState } from './RenderStates'
 import { WebGL12RenderingContext } from './types/webgl'
 
 // interface Result {

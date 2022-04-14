@@ -6,7 +6,8 @@ import { HDRImage } from '../SceneTree/Images/HDRImage'
 import { Color } from '../Math/Color'
 import { BaseImage } from '../SceneTree/BaseImage'
 import { GLShader } from './GLShader'
-import { RenderState, Uniform } from './types/renderer'
+import { Uniform } from './types/renderer'
+import { RenderState } from './RenderStates'
 import { WebGL12RenderingContext } from './types/webgl'
 
 /** Class representing a GL high dynamic range (HDR) image.
@@ -113,7 +114,7 @@ class GLHDRImage extends GLTexture2D {
 
     this.fbo.bindAndClear()
 
-    const renderstate: RenderState = <RenderState>{}
+    const renderstate = new RenderState(gl)
     this.unpackHDRShader!.bind(renderstate, 'GLHDRImage')
     this.shaderBinding!.bind(renderstate)
 

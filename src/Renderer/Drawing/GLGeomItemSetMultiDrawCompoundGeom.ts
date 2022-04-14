@@ -9,7 +9,7 @@ import { GLBaseRenderer } from '../GLBaseRenderer'
 import { checkFramebuffer } from '../GLFbo'
 import { GLTexture2D } from '../GLTexture2D'
 import { FattenLinesShader } from '../Shaders/FattenLinesShader'
-import { GeomDataRenderState, RenderState } from '../types/renderer'
+import { GeomDataRenderState, HighlightRenderState, RenderState } from '../RenderStates'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeomItem } from './GLGeomItem'
 import { GLMesh } from './GLMesh'
@@ -584,7 +584,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
    * The updateHighlightedIDsBuffer method.
    * @param {RenderState} renderstate - The object used to track state changes during rendering.
    */
-  updateHighlightedIDsBuffer(renderstate: RenderState) {
+  updateHighlightedIDsBuffer(renderstate: HighlightRenderState) {
     if (this.highlightedIdsBufferDirty) {
       // Clear all previous highlight buffers.
       // Note: we could considerably simplify the following code if we don't plan on
@@ -826,6 +826,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     if (this.drawIdsBufferDirty) {
       this.updateDrawIDsBuffer(renderstate)
     }
+    renderstate.pushGLStack()
 
     const gl = this.renderer.gl
     const unifs = renderstate.unifs
@@ -963,13 +964,15 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       this.renderer.glGeomLibrary.bind(renderstate)
       this.renderer.glMaterialLibrary.bind(renderstate)
     }
+
+    renderstate.popGLStack()
   }
 
   /**
    * The drawHighlighted method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param {HighlightRenderState} renderstate - The object tracking the current state of the renderer
    */
-  drawHighlighted(renderstate: RenderState) {
+  drawHighlighted(renderstate: HighlightRenderState) {
     if (Object.keys(this.highlightedItems).length == 0) {
       return
     }
@@ -980,8 +983,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     // console.log(this.highlightElementCounts)
     // console.log(this.highlightElementOffsets)
 
+    renderstate.pushGLStack()
     const gl = this.renderer.gl
-    gl.disable(gl.CULL_FACE) // 2-sided rendering of highlight geoms.
+    renderstate.glDisable(gl.CULL_FACE) // 2-sided rendering of highlight geoms.
 
     this.bindAndRender(
       renderstate,
@@ -992,6 +996,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       this.highlightedIdsArraysAllocators,
       false
     )
+    renderstate.popGLStack()
   }
 
   /**
@@ -1013,6 +1018,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     const gl = this.gl
     const unifs = renderstate.unifs
 
+    renderstate.pushGLStack()
+
     // Specify an instanced draw to the shader so it knows how
     // to retrieve the geomItemId.
     // if (unifs.instancedDraw) {
@@ -1027,7 +1034,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     // when it unbinds which then affects the rendering of other items like this.
     // An issue is logged to clean this up.
     // https://github.com/ZeaInc/zea-engine/issues/699
-    gl.disable(gl.CULL_FACE)
+    renderstate.glDisable(gl.CULL_FACE)
 
     const { drawIdsTexture, geomType } = renderstate.unifs
 
@@ -1045,9 +1052,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           allocators['TRIANGLES'].allocatedSpace
         )
       }
-
       if (blendPointsAndLines) {
-        gl.enable(gl.BLEND)
+        renderstate.glEnable(gl.BLEND)
+        // gl.enable(gl.BLEND)
         gl.blendEquation(gl.FUNC_ADD)
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
       }
@@ -1079,14 +1086,12 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           allocators['POINTS'].allocatedSpace
         )
       }
-      if (blendPointsAndLines) {
-        gl.disable(gl.BLEND)
-      }
     })
 
     // Reset to drawing triangles in case the shader is used
     // to draw a regular mesh next.
     if (geomType) gl.uniform1i(geomType.location, 0)
+    renderstate.popGLStack()
   }
 
   multiDrawMeshes(

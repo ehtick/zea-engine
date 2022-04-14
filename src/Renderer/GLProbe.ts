@@ -5,7 +5,7 @@ import { ConvolveIrradianceShader } from './Shaders/ConvolveIrradianceShader'
 import { ConvolveSpecularShader } from './Shaders/ConvolveSpecularShader'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
 import { GLTexture2D } from './GLTexture2D'
-import { RenderState } from './types/renderer'
+import { RenderState } from './RenderStates'
 import { WebGL12RenderingContext } from './types/webgl'
 
 /** Class representing a GL probe.
@@ -50,7 +50,7 @@ class GLProbe extends EventEmitter {
   convolveProbe(srcGLTex: GLTexture2D): void {
     const gl = this.__gl
 
-    const renderstate: RenderState = <RenderState>{}
+    const renderstate = new RenderState(gl)
     renderstate.shaderopts = { directives: ['#define ENABLE_ES3', '#define ENABLE_FLOAT_TEXTURES'] }
 
     // Note: in testing we are running on the Google SwiftShader emulated GPU.

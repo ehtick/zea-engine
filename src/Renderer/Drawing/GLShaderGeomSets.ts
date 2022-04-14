@@ -10,9 +10,9 @@ import { GLMeshItemSet } from './GLMeshItemSet'
 import { GLStandardGeomsPass } from '../Passes'
 import { GLGeomItem } from './GLGeomItem'
 import { Vec3 } from '../../Math/Vec3'
-import { RenderState, GeomDataRenderState, ColorRenderState } from '../types/renderer'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeomItemSet } from './GLGeomItemSet'
+import { RenderState, GeomDataRenderState, ColorRenderState, HighlightRenderState } from '../RenderStates'
 
 /** Class representing GL shader materials.
  * @private
@@ -149,7 +149,7 @@ class GLShaderGeomSets extends EventEmitter {
    * The drawHighlightedGeoms method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  drawHighlightedGeoms(renderstate: RenderState) {
+  drawHighlightedGeoms(renderstate: HighlightRenderState) {
     if (!this.glHighlightShader) return
     this.bindShader(this.glHighlightShader, renderstate, this.glHighlightShaderKey)
 

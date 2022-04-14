@@ -8,7 +8,8 @@ import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomSha
 import { MathFunctions } from '../Utilities/MathFunctions'
 import { AtlasLayoutShader } from './Shaders/AtlasLayoutShader'
 import { GLShader } from './GLShader'
-import { LayoutItem, RenderState, Uniform, Uniforms } from './types/renderer'
+import { LayoutItem, Uniform, Uniforms } from './types/renderer'
+import { RenderState } from './RenderStates'
 import { WebGL12RenderingContext } from './types/webgl'
 
 /**
@@ -308,7 +309,7 @@ class GLImageAtlas extends GLRenderTarget {
       this.generateAtlasLayout()
     }
     const gl = this.__gl
-    const renderstate: RenderState = <RenderState>{}
+    const renderstate = new RenderState(gl)
     this.bindForWriting(renderstate, true)
 
     this.__atlasLayoutShader!.bind(renderstate, 'GLImageAtlas')

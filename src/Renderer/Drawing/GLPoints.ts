@@ -1,7 +1,7 @@
 import { GLGeom } from './GLGeom'
 import { generateShaderGeomBinding } from './GeomShaderBinding'
 import { WebGL12RenderingContext } from '../types/webgl'
-import { RenderState } from '../types/renderer'
+import { RenderState } from '../RenderStates'
 
 /** Class representing GL points.
  * @extends GLGeom

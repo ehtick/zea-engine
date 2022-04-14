@@ -25,7 +25,8 @@ import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
 
 import { GLShader } from './GLShader'
 import { WebGL12RenderingContext } from './types/webgl'
-import { RenderState, Uniforms, GeomDataRenderState } from './types/renderer'
+import { Uniforms } from './types/renderer'
+import { RenderState, GeomDataRenderState, HighlightRenderState, ColorRenderState } from './RenderStates'
 import { StateChangedEvent } from '../Utilities/Events/StateChangedEvent'
 import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
 
@@ -1124,8 +1125,9 @@ class GLBaseRenderer extends ParameterOwner {
     if (this.isContinuouslyDrawing() || this.__xrViewportPresenting) return
 
     const onAnimationFrame = () => {
+      const renderstate = new ColorRenderState(this.gl)
       if (this.__continuousDrawing && !this.__xrViewportPresenting) window.requestAnimationFrame(onAnimationFrame)
-      for (const vp of this.__viewports) vp.draw()
+      for (const vp of this.__viewports) vp.draw(renderstate)
     }
 
     this.__continuousDrawing = true
@@ -1175,8 +1177,9 @@ class GLBaseRenderer extends ParameterOwner {
 
     const onAnimationFrame = () => {
       this.__redrawRequested = false
+      const renderstate = new ColorRenderState(this.gl)
       for (const vp of this.__viewports) {
-        vp.draw()
+        vp.draw(renderstate)
       }
     }
     window.requestAnimationFrame(onAnimationFrame)
@@ -1194,8 +1197,9 @@ class GLBaseRenderer extends ParameterOwner {
     }
 
     this.__redrawRequested = false
+    const renderstate = new ColorRenderState(this.gl)
     for (const vp of this.__viewports) {
-      vp.draw()
+      vp.draw(renderstate)
     }
   }
 
@@ -1295,7 +1299,7 @@ class GLBaseRenderer extends ParameterOwner {
    * The drawHighlightedGeoms method.
    * @param renderstate - The renderstate value.
    */
-  drawHighlightedGeoms(renderstate: RenderState): void {
+  drawHighlightedGeoms(renderstate: HighlightRenderState): void {
     this.bindGLBaseRenderer(renderstate)
 
     renderstate.directives = [...this.directives, '#define DRAW_HIGHLIGHT']
@@ -1315,6 +1319,10 @@ class GLBaseRenderer extends ParameterOwner {
    * @param mask - The mask value
    */
   drawSceneGeomData(renderstate: GeomDataRenderState, mask = 255): void {
+    renderstate.pushGLStack()
+    renderstate.glEnable(this.__gl.DEPTH_TEST)
+    renderstate.glEnable(this.__gl.CULL_FACE)
+
     this.bindGLBaseRenderer(renderstate)
 
     renderstate.directives = [...this.directives, '#define DRAW_GEOMDATA']
@@ -1333,6 +1341,7 @@ class GLBaseRenderer extends ParameterOwner {
         if (pass.enabled) pass.drawGeomData(renderstate)
       }
     }
+    renderstate.popGLStack()
   }
 
   // ////////////////////////////////////////

@@ -8,7 +8,7 @@ import { GLMesh } from './GLMesh'
 import { GLGeom } from './GLGeom'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { IndexEvent } from '../../Utilities/Events/IndexEvent'
-import { RenderState } from '../types/renderer'
+import { RenderState } from '../RenderStates'
 import { WebGL12RenderingContext } from '../types/webgl'
 
 const resizeIntArray = (intArray: Int32Array, newSize: number) => {
