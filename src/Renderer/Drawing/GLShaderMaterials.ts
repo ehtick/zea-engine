@@ -1,7 +1,7 @@
 import { EventEmitter } from '../../Utilities/index'
 import { GLShader } from '../GLShader'
 import { GLOpaqueGeomsPass, GLPass } from '../Passes'
-import { RenderState, GeomDataRenderState, HighlightRenderState } from '../RenderStates'
+import { RenderState, GeomDataRenderState, HighlightRenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeom } from './GLGeom'
 import { GLGeomItem } from './GLGeomItem'

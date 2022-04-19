@@ -37,7 +37,7 @@ class InstanceItem extends TreeItem {
     const clonedContext = new CloneContext()
     const clonedTree = this.srcTree.clone(clonedContext)
     clonedTree.localXfoParam.value = new Xfo()
-    this.addChild(clonedTree, false)
+    this.addChild(clonedTree, false, false)
   }
 
   /**
@@ -65,17 +65,20 @@ class InstanceItem extends TreeItem {
     this.srcTreePath = reader.loadStrArray()
     if (this.srcTreePath.length > 0) {
       try {
-        context.resolvePath(
-          this.srcTreePath,
-          (treeItem: BaseItem | Parameter<any>) => {
-            this.setSrcTree(<TreeItem>treeItem)
-          },
-          (error: Error) => {
-            console.warn(
-              `Error loading InstanceItem: ${this.getPath()}, unable to resolve: ${this.srcTreePath}. ` + error.message
-            )
-          }
-        )
+        context.addPLCB(() => {
+          context.resolvePath(
+            this.srcTreePath,
+            (treeItem: BaseItem | Parameter<any>) => {
+              this.setSrcTree(<TreeItem>treeItem)
+            },
+            (error: Error) => {
+              console.warn(
+                `Error loading InstanceItem: ${this.getPath()}, unable to resolve: ${this.srcTreePath}. ` +
+                  error.message
+              )
+            }
+          )
+        })
       } catch (error: any) {
         console.warn(`Error loading InstanceItem: ${this.getPath()}: ` + error)
       }

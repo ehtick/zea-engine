@@ -316,6 +316,12 @@ class BaseGeom extends ParameterOwner {
     }
   }
 
+  /**
+   * Once the buffers have been uploaded to the GPU, we are free to release them.
+   * The GLGeomLibrary may call this function to let the geometry know it can release any handles.
+   */
+  freeBuffers(): void {}
+
   // ////////////////////////////////////////
   // Persistence
   /**

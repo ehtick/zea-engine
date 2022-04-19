@@ -4,7 +4,7 @@ import { EnvMapShader } from './Shaders/EnvMapShader'
 import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomShaderBinding'
 import { EnvMap } from '../SceneTree/Images/EnvMap'
 import { GLRenderer } from './GLRenderer'
-import { ColorRenderState } from './RenderStates'
+import { ColorRenderState } from './RenderStates/index'
 
 /** Class representing a GL environment map.
  * @extends GLProbe
@@ -149,6 +149,7 @@ class GLEnvMap extends GLProbe {
         renderstate.bindViewports(unifs, () => {
           gl.drawQuad()
         })
+        gl.depthMask(true)
       }
     }
   }

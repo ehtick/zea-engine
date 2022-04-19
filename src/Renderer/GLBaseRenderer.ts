@@ -28,7 +28,7 @@ import { WebGL12RenderingContext } from './types/webgl'
 import { Uniforms } from './types/renderer'
 import { StateChangedEvent } from '../Utilities/Events/StateChangedEvent'
 import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
-import { ColorRenderState, GeomDataRenderState, HighlightRenderState, RenderState } from './RenderStates'
+import { ColorRenderState, GeomDataRenderState, HighlightRenderState, RenderState } from './RenderStates/index'
 
 let activeGLRenderer: GLBaseRenderer | undefined
 let pointerIsDown = false
@@ -121,6 +121,7 @@ class GLBaseRenderer extends ParameterOwner {
   protected __drawSuspensionLevel = 0
   __xrViewportPresenting: boolean = false
   floatGeomBuffer: boolean = true
+  multiSampledScreenBuffer: boolean = false
 
   protected __supportXR: boolean = false
   protected __xrViewport: XRViewport | undefined = undefined
@@ -668,9 +669,11 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.handleResize(this.__glcanvas.parentElement.clientWidth, this.__glcanvas.parentElement.clientHeight)
 
+    const disablingOnMacOsChrome = SystemDesc.OS === 'macOS' && SystemDesc.browserName === 'Chrome'
+    const disablingOnMobileSafari = SystemDesc.isIOSDevice
     const webglOptions: Record<string, any> = {}
     webglOptions.preserveDrawingBuffer = true
-    webglOptions.antialias = options.antialias ?? true
+    webglOptions.antialias = disablingOnMacOsChrome || disablingOnMobileSafari ? false : options.antialias ?? true
     webglOptions.depth = true
     webglOptions.stencil = true
     webglOptions.alpha = options.alpha ?? false
@@ -678,6 +681,8 @@ class GLBaseRenderer extends ParameterOwner {
     // an WebGL context, if the XR device was unplugged. We also call 'makeXRCompatible' when setting
     // up the XRViewport, so we to get an XR Compatible context anyway.
     webglOptions.xrCompatible = false
+
+    this.multiSampledScreenBuffer = webglOptions.antialias
 
     // Most applications of our engine will prefer the high-performance context by default.
     webglOptions.powerPreference = options.powerPreference || 'high-performance'

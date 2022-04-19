@@ -9,7 +9,7 @@ import './GLSL/index'
 import vert from './FlatSurface.vert'
 // @ts-ignore
 import frag from './FlatSurface.frag'
-import { RenderState } from '../RenderStates'
+import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 
 class FlatSurfaceShader extends GLShader {

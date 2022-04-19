@@ -1,7 +1,7 @@
 import { GLGeom } from './GLGeom'
 import '../../SceneTree/Geometry/Mesh'
 import { Mesh } from '../../SceneTree/Geometry/Mesh'
-import { RenderState } from '../RenderStates'
+import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 
 /** Class representing a GL mesh.

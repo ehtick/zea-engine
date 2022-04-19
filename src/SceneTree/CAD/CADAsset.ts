@@ -113,7 +113,6 @@ class CADAsset extends AssetItem {
       context.assetItem = <AssetItem>this
       context.url = url
       context.folder = folder
-      context.xrefs = {}
 
       context.on('done', () => {
         this.loaded = true

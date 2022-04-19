@@ -2,7 +2,7 @@ import { GLTexture2D } from './GLTexture2D'
 import { GLFbo } from './GLFbo'
 import { GLImageAtlas } from './GLImageAtlas'
 import { GLScreenQuad } from './GLScreenQuad'
-import { RenderState } from './RenderStates'
+import { RenderState } from './RenderStates/index'
 import { WebGL12RenderingContext } from './types/webgl'
 
 const Math_log2 = function (value: number) {

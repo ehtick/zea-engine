@@ -1,4 +1,5 @@
 import { SystemDesc } from '../SystemDesc'
+import { EventEmitter } from './EventEmitter'
 
 interface TaskData {
   taskData: object
@@ -10,7 +11,7 @@ interface Task {
 }
 
 let taskCounter = 0
-export abstract class WorkerPool<WorkerClass> {
+export abstract class WorkerPool<WorkerClass> extends EventEmitter {
   poolSize: number = Math.max(1, SystemDesc.hardwareConcurrency - 1) // always leave one main thread code spare.
   workers: WorkerClass[] = []
   workerTaskCount: number[] = []
@@ -23,6 +24,7 @@ export abstract class WorkerPool<WorkerClass> {
   terminationLatency: number = 2000
 
   constructor(terminateWorkersWhenFree: boolean) {
+    super()
     this.terminateWorkersWhenFree = terminateWorkersWhenFree
   }
 
@@ -60,6 +62,13 @@ export abstract class WorkerPool<WorkerClass> {
     if (this.workerTaskCount[workerId] > 0) {
       return
     }
+    if (this.taskQueue.length == 0) {
+      // Multiple consumeTask were issued, and all tasks have been consumed.
+      if (this.terminateWorkersWhenFree) {
+        this.scheduleWorkerTermination(workerId)
+      }
+      return
+    }
     if (this.terminationTimeouts[workerId] != -1) {
       clearTimeout(this.terminationTimeouts[workerId])
       this.terminationTimeouts[workerId] = -1
@@ -69,6 +78,9 @@ export abstract class WorkerPool<WorkerClass> {
     }
     if (this.taskQueue.length == 0) {
       // Multiple consumeTask were issued, and all tasks have been consumed.
+      if (this.terminateWorkersWhenFree) {
+        this.scheduleWorkerTermination(workerId)
+      }
       return
     }
     const task = this.taskQueue.pop()
@@ -116,6 +128,9 @@ export abstract class WorkerPool<WorkerClass> {
                 this.scheduleWorkerTermination(workerId)
               }
             }
+          } else if (event.data.eventName) {
+            event.data.workerId = workerId
+            this.emit(event.data.eventName, event.data)
           }
         }
 

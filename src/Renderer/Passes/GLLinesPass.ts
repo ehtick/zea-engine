@@ -6,7 +6,7 @@ import { GeomItem, Lines, LinesProxy, Points, PointsProxy } from '../../SceneTre
 import { FattenLinesShader } from '../Shaders/FattenLinesShader'
 import { Plane } from '../../SceneTree/index'
 import { GLMesh } from '../Drawing/GLMesh'
-import {  GeomDataRenderState, ColorRenderState } from '../RenderStates'
+import {  GeomDataRenderState, ColorRenderState } from '../RenderStates/index'
 import { checkFramebuffer } from '../GLFbo'
 
 /** Class representing a GL opaque geoms pass.

@@ -8,6 +8,7 @@ interface GPUDescription {
 }
 
 interface SystemDescription {
+  OS: string
   isMobileDevice: boolean
   isIOSDevice: boolean
   browserName: string
@@ -190,10 +191,31 @@ function getGPUDesc(): GPUDescription {
   }
 }
 
+const getOS = () => {
+  const userAgent = window.navigator.userAgent
+
+  let os: string = null
+
+  if (/macintosh/i.test(userAgent)) {
+    os = 'macOS'
+  } else if (/ios/i.test(userAgent)) {
+    os = 'iOS'
+  } else if (/win/i.test(userAgent)) {
+    os = 'Windows'
+  } else if (/android/i.test(userAgent)) {
+    os = 'Android'
+  } else if (/linux/i.test(userAgent)) {
+    os = 'Linux'
+  }
+
+  return os
+}
+
 const SystemDesc: SystemDescription = (function () {
   if (!globalThis.navigator) {
     // When running in NodeJS
     return {
+      OS: 'Node',
       isMobileDevice: false,
       isIOSDevice: false,
       browserName: 'Node',
@@ -309,6 +331,7 @@ const SystemDesc: SystemDescription = (function () {
   }
 
   return {
+    OS: getOS(),
     isMobileDevice: isMobile,
     isIOSDevice: isIOSDevice(),
     browserName: browserDesc.browserName,

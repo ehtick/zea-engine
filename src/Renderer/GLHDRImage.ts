@@ -7,7 +7,7 @@ import { Color } from '../Math/Color'
 import { BaseImage } from '../SceneTree/BaseImage'
 import { GLShader } from './GLShader'
 import { Uniform } from './types/renderer'
-import { RenderState } from './RenderStates'
+import { RenderState } from './RenderStates/index'
 import { WebGL12RenderingContext } from './types/webgl'
 
 /** Class representing a GL high dynamic range (HDR) image.

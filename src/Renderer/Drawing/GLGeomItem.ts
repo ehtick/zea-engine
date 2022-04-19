@@ -1,6 +1,6 @@
 import { EventEmitter } from '../../Utilities/index'
 import { GeomItem, CADBody } from '../../SceneTree'
-import { RenderState } from '../RenderStates'
+import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { VisibilityChangedEvent, OpacityStateChangedEvent, StateChangedEvent } from '../../Utilities/Events'
 

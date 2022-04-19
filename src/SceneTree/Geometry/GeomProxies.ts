@@ -62,6 +62,20 @@ class BaseProxy extends EventEmitter {
   genBuffers(): any {
     return this.__buffers
   }
+
+  /**
+   * Once the buffers have been uploaded to the GPU, we are free to release them.
+   * The GLGeomLibrary may call this function to let the geometry know it can release any handles.
+   */
+  freeBuffers(): void {
+    for (const attrName in this.__buffers.attrBuffers) {
+      const attrData = this.__buffers.attrBuffers[attrName]
+      attrData.values = null
+    }
+    if (this.__buffers.indices) {
+      this.__buffers.indices = null
+    }
+  }
 }
 
 /** Class representing a points proxy.

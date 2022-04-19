@@ -182,7 +182,12 @@ class Allocator1D extends EventEmitter {
       const index = this.allocations.length
       this.allocatedSpace += size
       const reserved = MathFunctions.nextPow2(this.allocatedSpace)
-      if (reserved != this.reservedSpace) {
+
+      // Only re-allocate if we  need more space than is reserved.
+      // this means we won't resize smaller, even if we free up all allocated space
+      // In general, we don't want that anyway, as we would prefer to grow memory, and then
+      // keep it.
+      if (reserved > this.reservedSpace) {
         this.reservedSpace = reserved
         this.emit('resized', { reservedSpace: this.reservedSpace })
       }

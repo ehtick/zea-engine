@@ -8,7 +8,7 @@ import { GLMesh } from './GLMesh'
 import { GLGeom } from './GLGeom'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { IndexEvent } from '../../Utilities/Events/IndexEvent'
-import { RenderState } from '../RenderStates'
+import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 
 const resizeIntArray = (intArray: Int32Array, newSize: number) => {
@@ -23,26 +23,30 @@ const resizeIntArray = (intArray: Int32Array, newSize: number) => {
 class GLGeomLibrary extends EventEmitter {
   protected renderer: GLBaseRenderer
   protected __gl: WebGL12RenderingContext
-  protected shaderAttrSpec: Record<string, any>
-  protected freeGeomIndices: number[]
-  protected geoms: Array<BaseGeom | null>
-  protected geomRefCounts: number[]
-  protected geomsDict: Record<string, number>
-  protected glGeomsDict: Record<string, GLGeom>
-  protected geomBuffersTmp: any[] // for each geom, these are the buffer
-  protected glattrbuffers: Record<string, any>
-  protected shaderBindings: Record<string, any>
-  protected bufferNeedsRealloc: boolean
-  protected attributesAllocator: Allocator1D
-  protected dirtyGeomIndices: Set<number>
-  protected geomVertexOffsets: Int32Array
-  protected geomVertexCounts: Int32Array
-  protected numIndices: number
-  protected indicesAllocator: Allocator1D
-  protected indicesCounts: Int32Array
-  protected indicesOffsets: Int32Array
+  protected shaderAttrSpec: Record<string, any> = {}
+  protected freeGeomIndices: number[] = []
+  protected geoms: Array<BaseGeom | null> = []
+  protected geomRefCounts: number[] = []
+  protected geomsDict: Record<string, number> = {}
+  protected glGeomsDict: Record<string, GLGeom> = {}
+  protected geomBuffersTmp: any[] = [] // for each geom, these are the buffer
+  protected glattrbuffers: Record<string, any> = {}
+  protected shaderBindings: Record<string, any> = {}
+  protected attributesBufferNeedsRealloc: boolean = false
+  protected attributesBufferNeedsAlloc: string[] = []
+  protected attributesAllocator: Allocator1D = new Allocator1D()
+  protected dirtyGeomIndices: Set<number> = new Set()
+  protected geomVertexOffsets: Int32Array = new Int32Array(1)
+  protected geomVertexCounts: Int32Array = new Int32Array(1)
+  protected numIndices: number = 0
+  protected indicesBufferNeedsRealloc = false
+  protected indicesAllocator: Allocator1D = new Allocator1D()
+  protected indicesCounts: Int32Array = new Int32Array(1)
+  protected indicesOffsets: Int32Array = new Int32Array(1)
   protected indexBuffer: WebGLBuffer | null = null
+  freeDataAfterUpload: boolean = true
   protected __destroyed: boolean = false
+
   /**
    * Create a GLGeomLibrary.
    * @param renderer - The renderer object
@@ -53,22 +57,9 @@ class GLGeomLibrary extends EventEmitter {
     this.renderer = renderer
     this.__gl = renderer.gl
 
-    this.shaderAttrSpec = {}
-    this.freeGeomIndices = []
-    this.geoms = []
-    this.geomRefCounts = []
-    this.geomsDict = {}
-    this.glGeomsDict = {}
-    this.geomBuffersTmp = [] // for each geom, these are the buffer
-    this.glattrbuffers = {}
-    this.shaderBindings = {}
-    this.bufferNeedsRealloc = false
-    this.attributesAllocator = new Allocator1D()
-    this.dirtyGeomIndices = new Set()
-
     // If the allocator ever resizes, then we need to re-upload everything.
     this.attributesAllocator.on('resized', () => {
-      this.bufferNeedsRealloc = true
+      this.attributesBufferNeedsRealloc = true
     })
     this.attributesAllocator.on('dataReallocated', (event: any) => {
       // during allocation, a defragment might occur, which means
@@ -81,19 +72,12 @@ class GLGeomLibrary extends EventEmitter {
       this.geomVertexCounts[id] = allocation.size
     })
 
-    this.geomVertexCounts = new Int32Array(1)
-    this.geomVertexOffsets = new Int32Array(1)
-    this.indicesCounts = new Int32Array(1)
-    this.indicesOffsets = new Int32Array(1)
     this.freeGeomIndices.push(0)
 
     // //////////////////////////////////////
     // Indices
-    this.numIndices = 0
-    this.indicesAllocator = new Allocator1D()
-
     this.indicesAllocator.on('resized', () => {
-      this.bufferNeedsRealloc = true
+      this.indicesBufferNeedsRealloc = true
     })
     this.indicesAllocator.on('dataReallocated', (event: any) => {
       // during allocation, a defragment might occur, which means
@@ -101,6 +85,14 @@ class GLGeomLibrary extends EventEmitter {
       const id = event.id
       this.dirtyGeomIndices.add(id)
     })
+
+    // Allocate 128Mb of data to begin with. This avoids lots of small
+    // copies when loading small files.
+    const size = Math.pow(2, 23)
+    this.attributesAllocator.reservedSpace = size
+    this.indicesAllocator.reservedSpace = size * 4
+    this.attributesBufferNeedsRealloc = true
+    this.indicesBufferNeedsRealloc = true
   }
 
   /**
@@ -255,7 +247,7 @@ class GLGeomLibrary extends EventEmitter {
    * Allocates space for the geomBuffers for the specified geometry
    * @param index - The index of the geom to upload
    */
-  allocateBuffers(index: number): void {
+  private allocateBuffers(index: number): void {
     const geom = this.geoms[index]
     if (!geom) return
     const geomBuffers = geom.genBuffers()
@@ -286,6 +278,8 @@ class GLGeomLibrary extends EventEmitter {
           dimension: geomAttrDesc.dimension,
           elementSize: geomAttrDesc.elementSize,
         }
+
+        this.attributesBufferNeedsAlloc.push(attrName)
       }
     }
 
@@ -319,20 +313,25 @@ class GLGeomLibrary extends EventEmitter {
   /**
    * Generates the GPU buffers required to store all the geometries
    */
-  genBuffers(): void {
-    const reservedSpace = this.attributesAllocator.reservedSpace
-    // console.log('GeomSet GPU buffers resized:', reservedSpace)
-    const gl = this.__gl
-
+  private genAttributesBuffers(): void {
     // eslint-disable-next-line guard-for-in
     for (const attrName in this.shaderAttrSpec) {
+      this.genAttributesBuffer(attrName)
+    }
+
+    // Clear this list if it had anything in it.
+    this.attributesBufferNeedsAlloc = []
+  }
+
+  /**
+   * Generates a single GPU buffer
+   */
+  private genAttributesBuffer(attrName: string): void {
+    const reservedSpace = this.attributesAllocator.reservedSpace
+    const gl = this.__gl
+    {
       const attrSpec = this.shaderAttrSpec[attrName]
       const numValues = reservedSpace * attrSpec.dimension
-      attrSpec.numValues = numValues // cache for debugging only
-
-      if (this.glattrbuffers[attrName] && this.glattrbuffers[attrName].buffer) {
-        gl.deleteBuffer(this.glattrbuffers[attrName].buffer)
-      }
 
       const attrBuffer = gl.createBuffer()
       gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer)
@@ -340,35 +339,54 @@ class GLGeomLibrary extends EventEmitter {
       const sizeInBytes = numValues * attrSpec.elementSize
       gl.bufferData(gl.ARRAY_BUFFER, sizeInBytes, gl.STATIC_DRAW)
 
-      this.glattrbuffers[attrName] = {
+      if (this.glattrbuffers[attrName] && this.glattrbuffers[attrName].buffer) {
+        gl.bindBuffer(gl.COPY_WRITE_BUFFER, attrBuffer)
+        gl.bindBuffer(gl.COPY_READ_BUFFER, this.glattrbuffers[attrName].buffer)
+        gl.copyBufferSubData(
+          gl.COPY_READ_BUFFER,
+          gl.COPY_WRITE_BUFFER,
+          0,
+          0,
+          this.glattrbuffers[attrName].length * attrSpec.elementSize
+        )
+        gl.deleteBuffer(this.glattrbuffers[attrName].buffer)
+      }
+
+      attrSpec.numValues = numValues // cache for debugging only
+
+      const targetName = attrName == 'textureCoords' ? 'texCoords' : attrName
+      this.glattrbuffers[targetName] = {
         buffer: attrBuffer,
         dataType: attrSpec.dataType,
         normalized: attrSpec.normalized,
         length: numValues,
         dimension: attrSpec.dimension,
       }
-
-      if (attrName == 'textureCoords') this.glattrbuffers['texCoords'] = this.glattrbuffers['textureCoords']
     }
+  }
 
+  private genIndicesBuffers(): void {
     // //////////////////////////////////////
     // Indices
-    const length = this.indicesAllocator.reservedSpace
-    if (this.numIndices != length) {
+    const reservedSpace = this.indicesAllocator.reservedSpace
+    if (this.numIndices != reservedSpace) {
       const gl = this.__gl
+
+      const indexBuffer = gl.createBuffer()
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
+
+      const elementSize = 4 //  Uint32Array for UNSIGNED_INT
+      const sizeInBytes = reservedSpace * elementSize
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sizeInBytes, gl.STATIC_DRAW)
       if (this.indexBuffer) {
+        gl.bindBuffer(gl.COPY_WRITE_BUFFER, indexBuffer)
+        gl.bindBuffer(gl.COPY_READ_BUFFER, this.indexBuffer)
+        gl.copyBufferSubData(gl.COPY_READ_BUFFER, gl.COPY_WRITE_BUFFER, 0, 0, this.numIndices * elementSize)
         gl.deleteBuffer(this.indexBuffer)
       }
 
-      this.indexBuffer = gl.createBuffer()
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
-
-      const length = this.indicesAllocator.reservedSpace
-      const elementSize = 4 //  Uint32Array for UNSIGNED_INT
-      const sizeInBytes = length * elementSize
-      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sizeInBytes, gl.STATIC_DRAW)
-
-      this.numIndices = length
+      this.indexBuffer = indexBuffer
+      this.numIndices = reservedSpace
     }
   }
 
@@ -444,26 +462,26 @@ class GLGeomLibrary extends EventEmitter {
       gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, dstByteOffsetInBytes, offsettedIndices)
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
     }
-    let event = new IndexEvent(index)
-    this.emit('geomDataChanged', event)
+
+    // if (this.freeDataAfterUpload) {
+    //   const geom = this.geoms[index]
+    //   geom.freeBuffers()
+    // }
+
+    this.emit('geomDataChanged', new IndexEvent(index))
   }
 
   /**
    * Cleans the state of this GeomSet during rendering.
    */
   cleanGeomBuffers(): void {
-    // First we alocate all memory needed to clean the GeomSet,
+    // First we allocate all memory needed to clean the GeomSet,
     // and then we start uploading all the data.
-    // Note: during allocation, some buffers that were not dirty may
-    // need to be uploaded because of re-allocation
-    // Note: copy the source array as new dirty items may be added during
-    // allocation.
-    const dirtyGeomIndices = new Set(this.dirtyGeomIndices)
-    dirtyGeomIndices.forEach((index: number) => {
+    this.dirtyGeomIndices.forEach((index: number) => {
       this.allocateBuffers(index)
     })
 
-    if (this.bufferNeedsRealloc) {
+    if (this.attributesBufferNeedsRealloc || this.indicesBufferNeedsRealloc) {
       // If the geom buffers are re-allocated, we need to regenerate
       // all the shader bindings.
       for (const shaderkey in this.shaderBindings) {
@@ -471,13 +489,22 @@ class GLGeomLibrary extends EventEmitter {
         shaderBinding.destroy()
       }
       this.shaderBindings = {}
-
-      for (let i = 0; i < this.geoms.length; i++) {
-        if (this.geoms[i]) this.dirtyGeomIndices.add(i)
+      if (this.attributesBufferNeedsRealloc) {
+        this.genAttributesBuffers()
+        this.attributesBufferNeedsRealloc = false
       }
-
-      this.genBuffers()
-      this.bufferNeedsRealloc = false
+      if (this.indicesBufferNeedsRealloc) {
+        this.genIndicesBuffers()
+        this.indicesBufferNeedsRealloc = false
+      }
+    } else if (this.attributesBufferNeedsAlloc.length > 0) {
+      // Sometimes new attributes are added after the main attributes.
+      // e.g. Normals could be computed.
+      // We now need to generate those missing buffers.
+      this.attributesBufferNeedsAlloc.forEach((attrName) => {
+        this.genAttributesBuffer(attrName)
+      })
+      this.attributesBufferNeedsAlloc = []
     }
 
     this.dirtyGeomIndices.forEach((index: number) => {

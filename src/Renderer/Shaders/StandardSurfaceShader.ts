@@ -13,7 +13,7 @@ import { MaterialColorParam, ColorSpace } from '../../SceneTree/Parameters/Mater
 import { MaterialFloatParam } from '../../SceneTree/Parameters/MaterialFloatParam'
 import { StandardSurfaceMaterial } from '../../SceneTree/Materials/StandardSurfaceMaterial'
 import { WebGL12RenderingContext } from '../types/webgl'
-import { ColorRenderState, RenderState } from '../RenderStates'
+import { ColorRenderState, RenderState } from '../RenderStates/index'
 
 /** A standard shader handling Opaque and transparent items and PBR rendering.
  * @extends GLShader

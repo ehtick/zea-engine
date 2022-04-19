@@ -13,6 +13,7 @@ import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
 import { ColorRenderState, RenderState, HighlightRenderState } from './RenderStates/index'
 import { WebGL12RenderingContext } from './types/webgl'
 import { GLBaseRenderer } from './GLBaseRenderer'
+import { SystemDesc } from '../SystemDesc'
 
 const FRAMEBUFFER = {
   MSAA_RENDERBUFFER: 0,
@@ -186,10 +187,21 @@ class GLBaseViewport extends ParameterOwner {
    * @param height - The height  used by this viewport.
    */
   resizeRenderTargets(width: number, height: number): void {
-    // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
-    // and so we are simply disabling silhouettes on all low end devices now.
+    if (this.highlightedGeomsBuffer) {
+      this.highlightedGeomsBufferFbo.resize(width, height)
+    }
+
     const gl = this.__renderer.gl
     if (this.renderer.outlineThickness > 0 && this.renderer.outlineMethod == 'image') {
+      const disableOnSafari = SystemDesc.browserName == 'Safari'
+
+      // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
+      // and so we are simply disabling silhouettes on all low end devices now.
+      if (disableOnSafari || gl.name == 'webgl') {
+        console.warn('Disabling outlines on Safari due to a regression in WebKit', SystemDesc)
+        return
+      }
+
       if (this.fb) {
         gl.deleteFramebuffer(this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
         gl.deleteFramebuffer(this.fb[FRAMEBUFFER.COLORBUFFER])
@@ -208,12 +220,16 @@ class GLBaseViewport extends ParameterOwner {
 
       // Create the color buffer
       gl.bindRenderbuffer(gl.RENDERBUFFER, this.colorRenderbuffer)
-      gl.renderbufferStorageMultisample(gl.RENDERBUFFER, 4, gl.RGBA8, width, height)
+      // iOS devices have trouble with Multisample render buffers
+      if (this.renderer.multiSampledScreenBuffer) gl.renderbufferStorage(gl.RENDERBUFFER, gl.RGBA8, width, height)
+      else gl.renderbufferStorageMultisample(gl.RENDERBUFFER, 4, gl.RGBA8, width, height)
       gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.RENDERBUFFER, this.colorRenderbuffer)
 
       this.depthBuffer = gl.createRenderbuffer()
       gl.bindRenderbuffer(gl.RENDERBUFFER, this.depthBuffer)
-      gl.renderbufferStorageMultisample(gl.RENDERBUFFER, 4, gl.DEPTH24_STENCIL8, width, height)
+      if (this.renderer.multiSampledScreenBuffer)
+        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH24_STENCIL8, width, height)
+      else gl.renderbufferStorageMultisample(gl.RENDERBUFFER, 4, gl.DEPTH24_STENCIL8, width, height)
       gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this.depthBuffer)
 
       // //////////////////////////////////
@@ -255,9 +271,6 @@ class GLBaseViewport extends ParameterOwner {
         }
       }
     }
-    if (this.highlightedGeomsBuffer) {
-      this.highlightedGeomsBuffer.resize(width, height)
-    }
   }
 
   /**
@@ -272,13 +285,18 @@ class GLBaseViewport extends ParameterOwner {
     const prevRendertarget = renderstate.boundRendertarget
 
     if (this.renderer.outlineThickness > 0 && this.renderer.outlineMethod == 'image') {
-      if (!this.fb) this.resizeRenderTargets(this.__width, this.__height)
-      const frameBuffer = this.fb![FRAMEBUFFER.MSAA_RENDERBUFFER]!
-      gl.bindFramebuffer(
-        gl.name == 'webgl2' ? (<WebGL2RenderingContext>gl).DRAW_FRAMEBUFFER : gl.FRAMEBUFFER,
-        frameBuffer
-      )
-      renderstate.boundRendertarget = frameBuffer
+      const disableOnSafari = SystemDesc.browserName == 'Safari'
+      if (disableOnSafari || gl.name == 'webgl') {
+        console.warn('Disabling outlines on Safari due to a regression in WebKit', SystemDesc)
+      } else {
+        if (!this.fb) this.resizeRenderTargets(this.__width, this.__height)
+        const frameBuffer = this.fb![FRAMEBUFFER.MSAA_RENDERBUFFER]!
+        gl.bindFramebuffer(
+          gl.name == 'webgl2' ? (<WebGL2RenderingContext>gl).DRAW_FRAMEBUFFER : gl.FRAMEBUFFER,
+          frameBuffer
+        )
+        renderstate.boundRendertarget = frameBuffer
+      }
     } else {
       // Make sure the default fbo is bound
       // Note: Sometimes an Fbo is left bound
@@ -339,6 +357,7 @@ class GLBaseViewport extends ParameterOwner {
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
       screenQuad.draw(renderstate, this.offscreenBuffer!)
+      gl.enable(gl.DEPTH_TEST)
     }
 
     renderstate.popGLStack()

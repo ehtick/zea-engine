@@ -2,7 +2,7 @@ import { Vec2, Color } from '../Math/index'
 import { ScreenQuadShader } from './Shaders/ScreenQuadShader'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
 import { GLTexture2D } from './GLTexture2D'
-import { RenderState } from './RenderStates'
+import { RenderState } from './RenderStates/index'
 import { WebGL12RenderingContext } from './types/webgl'
 
 /** Class representing a GL screen quad.

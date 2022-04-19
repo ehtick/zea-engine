@@ -3,24 +3,22 @@ import { EventEmitter, MathFunctions, Allocator1D, Allocation1D } from '../../Ut
 import { GLMaterial } from './GLMaterial'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { Material } from '../../SceneTree'
-import { RenderState } from '../RenderStates'
+import { RenderState } from '../RenderStates/index'
 
 /** Class representing a GL CAD material library.
  * @ignore
  */
 class GLMaterialLibrary extends EventEmitter {
   protected renderer: GLBaseRenderer
-  protected materials: any[] = []
+  protected materials: Material[] = []
   protected materialIndices: Record<string, number> = {}
   protected glMaterials: Record<number, GLMaterial> = {}
-  protected refCounts: number[] = []
+  protected refCounts: number[] = [] // The number of times this material was added to the library.
   protected freeIndices: number[] = []
-  protected dirtyIndices: Set<number>
+  protected dirtyIndices: Set<number> = new Set()
   protected materialsAllocator = new Allocator1D()
-  protected materialsTexture: any
+  protected materialsTexture: GLTexture2D
 
-  protected dirtyItemIndices: any
-  protected glGeomItemsTexture: any
   /**
    * Create a GL CAD material library.
    * @param renderer - The renderer object
@@ -28,13 +26,6 @@ class GLMaterialLibrary extends EventEmitter {
   constructor(renderer: GLBaseRenderer) {
     super()
     this.renderer = renderer
-    this.materials = []
-    this.refCounts = [] // The number of times this material was added to the library.
-    this.materialIndices = {}
-    this.glMaterials = {}
-    this.freeIndices = []
-    this.dirtyIndices = new Set()
-    this.materialsAllocator = new Allocator1D()
 
     this.materialsAllocator.on('dataReallocated', (event: any) => {
       // during allocation, a defragment might occur, which means
@@ -195,7 +186,7 @@ class GLMaterialLibrary extends EventEmitter {
         const x = (allocation.start + consumed) % texWidth
         const y = Math.floor((allocation.start + consumed) / texWidth)
         const data = matData.subarray(consumed * 4, (consumed + width) * 4)
-        gl.texSubImage2D(gl.TEXTURE_2D, level, x, y, width, height, tex.__format, tex.__type, data)
+        gl.texSubImage2D(gl.TEXTURE_2D, level, x, y, width, height, tex.getFormat(), tex.getType(), data)
         consumed += width
         remaining -= width
       }
@@ -210,8 +201,7 @@ class GLMaterialLibrary extends EventEmitter {
    * @param renderstate - The object tracking the current state of the renderer
    */
   update(renderstate: RenderState): void {
-    if (this.dirtyItemIndices.length > 0) this.uploadMaterials(renderstate)
-    renderstate.drawItemsTexture = this.glGeomItemsTexture
+    if (this.dirtyIndices.size > 0) this.uploadMaterials(renderstate)
   }
 
   /**

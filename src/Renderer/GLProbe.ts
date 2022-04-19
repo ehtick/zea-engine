@@ -5,7 +5,7 @@ import { ConvolveIrradianceShader } from './Shaders/ConvolveIrradianceShader'
 import { ConvolveSpecularShader } from './Shaders/ConvolveSpecularShader'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
 import { GLTexture2D } from './GLTexture2D'
-import { RenderState } from './RenderStates'
+import { RenderState } from './RenderStates/index'
 import { WebGL12RenderingContext } from './types/webgl'
 
 /** Class representing a GL probe.

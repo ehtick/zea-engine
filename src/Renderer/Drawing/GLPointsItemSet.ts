@@ -1,6 +1,6 @@
 import { GLGeomItemSetMultiDraw } from './GLGeomItemSetMultiDraw'
 import '../../SceneTree/Geometry/Mesh'
-import { RenderState } from '../RenderStates'
+import { RenderState } from '../RenderStates/index'
 
 /** Class representing a GL mesh.
  * @extends GLGeom

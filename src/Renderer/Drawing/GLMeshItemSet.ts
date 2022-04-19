@@ -1,6 +1,6 @@
 import { GLGeomItemSetMultiDraw } from './GLGeomItemSetMultiDraw'
 import '../../SceneTree/Geometry/Mesh'
-import { ColorRenderState, RenderState } from '../RenderStates'
+import { ColorRenderState, RenderState } from '../RenderStates/index'
 
 enum GeomType {
   TRIANGLES = 0,

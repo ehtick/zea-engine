@@ -21,11 +21,19 @@ import { AssetItem } from './AssetItem'
 // For synchronous loading, uncomment these lines.
 // @ts-ignore
 import { handleMessage } from './Geometry/GeomParser-worker.js'
-class GeomParserWorkerPool {
-  constructor() {}
+class GeomParserWorkerPool extends EventEmitter {
+  constructor() {
+    super()
+  }
+  // @ts-ignore
   addTask(taskData, transferables) {
     return new Promise((resolve) => {
+      // @ts-ignore
       handleMessage(taskData, (results) => {
+        if (results.eventName) {
+          this.emit(results.eventName, results)
+          return
+        }
         resolve(results)
       })
     })
@@ -178,7 +186,7 @@ class GeomLibrary extends EventEmitter {
    * @param buffer - The buffer value.
    * @param context - The context value.
    */
-  readBinaryBuffer(geomFileID: string, buffer: ArrayBuffer, context: Record<string, any>): void {
+  readBinaryBuffer(geomFileID: string, buffer: ArrayBuffer, context: AssetLoadContext): void {
     const reader = new BinReader(buffer, 0, SystemDesc.isMobileDevice)
     const numGeoms = reader.loadUInt32()
 

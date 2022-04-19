@@ -7,7 +7,7 @@ import { GLShaderMaterials } from '../Drawing/GLShaderMaterials'
 import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
 import { GLMaterialGeomItemSets } from '../Drawing/GLMaterialGeomItemSets'
 import { GLGeomItem } from '../Drawing'
-import { ColorRenderState, GeomDataRenderState, HighlightRenderState } from '../RenderStates'
+import { ColorRenderState, GeomDataRenderState, HighlightRenderState } from '../RenderStates/index'
 
 
 

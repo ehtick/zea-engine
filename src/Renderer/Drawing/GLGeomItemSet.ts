@@ -2,7 +2,7 @@ import '../../SceneTree/GeomItem'
 import { CountChangedEvent } from '../../Utilities/Events/CountChangedEvent'
 
 import { EventEmitter } from '../../Utilities/index'
-import { ColorRenderState, GeomDataRenderState, RenderState } from '../RenderStates'
+import { ColorRenderState, GeomDataRenderState, RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeom } from './GLGeom'
 import { GLGeomItem } from './GLGeomItem'

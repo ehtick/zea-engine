@@ -69,7 +69,7 @@
       const scene = new Scene()
       scene.setupGrid(20 * sceneScale, 10)
 
-      const renderer = new GLRenderer(document.getElementById('viewport'))
+      const renderer = new GLRenderer(document.getElementById('viewport'), { antialias: false })
       renderer.setScene(scene)
 
       const treeItem = new TreeItem('TreeItem')

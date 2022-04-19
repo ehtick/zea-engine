@@ -12,7 +12,7 @@ import { GLGeomItem } from './GLGeomItem'
 import { Vec3 } from '../../Math/Vec3'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeomItemSet } from './GLGeomItemSet'
-import { RenderState, GeomDataRenderState, ColorRenderState, HighlightRenderState } from '../RenderStates'
+import { RenderState, GeomDataRenderState, ColorRenderState, HighlightRenderState } from '../RenderStates/index'
 
 /** Class representing GL shader materials.
  * @private

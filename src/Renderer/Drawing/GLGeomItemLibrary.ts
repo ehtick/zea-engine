@@ -26,7 +26,7 @@ import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCullin
 import { GeomItem } from '../../SceneTree/GeomItem'
 import { GLBaseRenderer, RendererOptions } from '../GLBaseRenderer'
 import { Material } from '../../SceneTree/Material'
-import { GeomDataRenderState, RenderState } from '../RenderStates'
+import { GeomDataRenderState, RenderState } from '../RenderStates/index'
 import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
 import { OpacityStateChangedEvent } from '../../Utilities/Events/OpacityStateChangedEvent'
 

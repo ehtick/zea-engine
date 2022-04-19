@@ -1,6 +1,6 @@
 /* eslint-disable guard-for-in */
 
-import { RenderState } from '../RenderStates'
+import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 
 /**

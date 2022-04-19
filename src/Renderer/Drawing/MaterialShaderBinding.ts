@@ -16,7 +16,7 @@ import {
 import { GLMaterial } from '.'
 import { BaseClass } from '../../Utilities/BaseClass'
 import { Uniform, Uniforms } from '../types/renderer'
-import { RenderState } from '../RenderStates'
+import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 
 class ParamUniformBinding extends BaseClass {

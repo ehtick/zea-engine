@@ -20,7 +20,7 @@
 
       const scene = new Scene()
 
-      const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false, debugGeomIds: false })
+      const renderer = new GLRenderer(domElement, { antialias: false, debugGeomIds: false })
       renderer.setScene(scene)
       renderer.getViewport().debugGeomShader = true
 
@@ -91,30 +91,21 @@
 
       const geomItem = new GeomItem('Cuboid', compoundGeom, standardMaterial)
       scene.getRoot().addChild(geomItem)
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(3, 3, 1.7), new Vec3(0, 0, 0.1))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(3, 3, 1.7), new Vec3(0, 0, 0.1))
 
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           cuboid.getParameter('Z').setValue(0.1)
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           window.postMessage(`done-${data}`)
         }

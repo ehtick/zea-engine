@@ -9,7 +9,7 @@ import { MathFunctions } from '../Utilities/MathFunctions'
 import { AtlasLayoutShader } from './Shaders/AtlasLayoutShader'
 import { GLShader } from './GLShader'
 import { LayoutItem, Uniform, Uniforms } from './types/renderer'
-import { RenderState } from './RenderStates'
+import { RenderState } from './RenderStates/index'
 import { WebGL12RenderingContext } from './types/webgl'
 
 /**

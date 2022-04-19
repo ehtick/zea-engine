@@ -5,7 +5,7 @@ import '../../SceneTree/GeomItem'
 import { EventEmitter, MathFunctions } from '../../Utilities/index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLTexture2D } from '../GLTexture2D'
-import { ColorRenderState, GeomDataRenderState, RenderState } from '../RenderStates'
+import { ColorRenderState, GeomDataRenderState, RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeomItem } from './GLGeomItem'
 

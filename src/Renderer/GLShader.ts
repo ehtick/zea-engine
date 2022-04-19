@@ -5,7 +5,7 @@ import { Material } from '../SceneTree/Material'
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { shaderLibrary } from './ShaderLibrary'
 import { ShaderParseResult, Shaderopts } from './types/renderer'
-import { RenderState } from './RenderStates'
+import { RenderState } from './RenderStates/index'
 import { WebGL12RenderingContext } from './types/webgl'
 
 // interface Result {

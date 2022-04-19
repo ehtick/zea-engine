@@ -1,5 +1,5 @@
 import { BaseGeom, Mesh, RefCounted } from '../../SceneTree/index'
-import { RenderState } from '../RenderStates'
+import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { generateShaderGeomBinding } from './GeomShaderBinding'
 

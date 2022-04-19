@@ -126,6 +126,23 @@
       if (separatorH && topPanel && bottomPanel) {
         dragElement(separatorH, topPanel, bottomPanel, 'V')
       }
+
+      let leftPanelVisible = true
+      const toggleSidePanel = () => {
+        if (leftPanelVisible) {
+          leftPanel.classList.add('invisible')
+          leftPanel.style.width = '0px'
+          separatorV.style.left = '0px'
+          leftPanelVisible = false
+        } else {
+          leftPanel.classList.remove('invisible')
+          leftPanel.style.width = '340px'
+          separatorV.style.left = '340px'
+          leftPanelVisible = true
+        }
+      }
+
+      document.getElementById('logo').addEventListener('click', toggleSidePanel)
     </script>
 
     <script type="module">
@@ -149,6 +166,7 @@
           PMIItem,
           CompoundGeom,
           StringFunctions,
+          Xfo,
         } = zeaEngine
 
         const urlParams = new URLSearchParams(window.location.search)
@@ -389,8 +407,9 @@
         // Load the asset
 
         const asset = new CADAsset()
-        const zcad = urlParams.has('zcad') ? urlParams.get('zcad') : '../data/HC_SRO4.zcad'
-        if (zcad) {
+        if (urlParams.has('zcad')) {
+          const zcad = urlParams.get('zcad')
+          const start = performance.now()
           const context = new AssetLoadContext()
           // context.units = "Millimeters"
           context.camera = renderer.getViewport().getCamera()
@@ -408,6 +427,8 @@
             renderer.frameAll()
           })
           asset.getGeometryLibrary().on('loaded', () => {
+            const duration = performance.now() - start
+            console.log('done-loading :' + duration)
             setStatusText('done-loading')
           })
           if (urlParams.has('ytoz')) {

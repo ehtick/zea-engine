@@ -201,7 +201,7 @@ class GLViewport extends GLBaseViewport {
     super.resizeRenderTargets(width, height)
 
     if (this.__geomDataBufferFbo) {
-      this.__geomDataBuffer.resize(
+      this.__geomDataBufferFbo.resize(
         Math.floor(this.__width / this.__geomDataBufferSizeFactor),
         Math.floor(this.__height / this.__geomDataBufferSizeFactor)
       )

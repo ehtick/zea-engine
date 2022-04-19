@@ -13,7 +13,7 @@ import { Material } from '../../SceneTree/Material'
 import { MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
 import { NumberParameter } from '../../SceneTree/Parameters/NumberParameter'
 import { FatLinesMaterial } from '../../SceneTree/Materials/FatLinesMaterial'
-import { RenderState } from '../RenderStates'
+import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 
 /** Shader for drawing Fat lines

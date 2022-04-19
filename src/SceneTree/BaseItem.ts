@@ -108,7 +108,8 @@ class BaseItem extends ParameterOwner implements Owner {
   protected updatePath(): void {
     if (this.__ownerItem == undefined) this.__path = [this.__name]
     else {
-      this.__path = [...this.__ownerItem.getPath(), this.__name]
+      this.__path = this.__ownerItem.getPath().slice()
+      this.__path.push(this.__name)
     }
   }
 
@@ -174,11 +175,10 @@ class BaseItem extends ParameterOwner implements Owner {
     // this.__private.set(ownerItem, ownerItem);
     if (this.__ownerItem !== ownerItem) {
       this.__ownerItem = ownerItem
-      this.updatePath()
     } else if (!ownerItem) {
       this.__ownerItem = undefined
-      this.updatePath()
     }
+    this.updatePath()
   }
 
   // ////////////////////////////////////////

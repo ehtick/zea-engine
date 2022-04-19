@@ -2,7 +2,6 @@ import { parseGeomsBinary } from './parseGeomsBinary'
 
 const handleMessage = function (srcData, postMessage) {
   parseGeomsBinary(srcData, (resultData, transferables) => {
-    resultData.taskId = srcData.taskId
     postMessage(resultData, transferables)
   })
 }
