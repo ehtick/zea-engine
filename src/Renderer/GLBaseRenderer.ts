@@ -672,7 +672,7 @@ class GLBaseRenderer extends ParameterOwner {
     const disablingOnMacOsChrome = SystemDesc.OS === 'macOS' && SystemDesc.browserName === 'Chrome'
     const disablingOnMobileSafari = SystemDesc.isIOSDevice
     const webglOptions: Record<string, any> = {}
-    webglOptions.preserveDrawingBuffer = true
+    webglOptions.preserveDrawingBuffer = true // Note: The unit tests all render black if this is false
     webglOptions.antialias = disablingOnMacOsChrome || disablingOnMobileSafari ? false : options.antialias ?? true
     webglOptions.depth = true
     webglOptions.stencil = true
@@ -1189,7 +1189,7 @@ class GLBaseRenderer extends ParameterOwner {
         vp.draw(renderstate)
       }
       if (renderstate.stack.length != 1) {
-        console.warn(" corrupt renderstate.stack.length:", renderstate.stack.length)
+        console.warn(' corrupt renderstate.stack.length:', renderstate.stack.length)
       }
     }
     window.requestAnimationFrame(onAnimationFrame)

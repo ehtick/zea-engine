@@ -52,13 +52,15 @@ class StandardSurfaceShader extends GLShader {
       }
 
       if (colorRenderState.renderMode && renderMode) {
-        if (colorRenderState.renderMode == 'flat') {
+        if (colorRenderState.renderMode == 'flat' || colorRenderState.renderMode == 'flat-noedges') {
+          gl.uniform1i(renderMode.location, 1)
+        } else if (colorRenderState.renderMode == 'shaded' || colorRenderState.renderMode == 'shaded-noedges') {
           gl.uniform1i(renderMode.location, 2)
-        } else if (colorRenderState.renderMode == 'pbr') {
+        } else if (colorRenderState.renderMode == 'pbr' || colorRenderState.renderMode == 'pbr-noedges') {
           gl.uniform1i(renderMode.location, 3)
         }
       }
-      
+
       if (cutColor) {
         gl.uniform4f(cutColor.location, 0.3, 0, 0, 1)
       }

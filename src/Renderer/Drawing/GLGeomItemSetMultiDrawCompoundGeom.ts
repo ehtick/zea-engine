@@ -10,7 +10,7 @@ import { GLRenderer } from '../GLRenderer'
 import { checkFramebuffer } from '../GLFbo'
 import { GLTexture2D } from '../GLTexture2D'
 import { FattenLinesShader } from '../Shaders/FattenLinesShader'
-import { GeomDataRenderState, HighlightRenderState, RenderState } from '../RenderStates/index'
+import { GeomDataRenderState, HighlightRenderState, RenderState, ColorRenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeomItem } from './GLGeomItem'
 import { GLMesh } from './GLMesh'
@@ -824,15 +824,20 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     gl.depthFunc(gl.LEQUAL)
 
     const { drawIdsTexture, geomType, outlineThickness, viewportWidth, occluded, renderMode } = renderstate.unifs
-    if (this.renderer.renderMode == 'flat') {
-      gl.uniform1i(renderMode.location, 2)
-    } else if (this.renderer.renderMode == 'pbr') {
-      gl.uniform1i(renderMode.location, 3)
-    }
 
+    const renderModeValue: string | null =
+      renderstate instanceof ColorRenderState && renderMode ? renderstate.renderMode : null
+
+    const drawEdges =
+      renderModeValue != 'flat-noedges' && renderModeValue != 'shaded-noedges' && renderModeValue != 'pbr-noedges'
     const drawingOutlines =
-      outlineThickness && this.renderer.outlineMethod == 'geometry' && this.renderer.outlineThickness > 0
-    const drawingWireframeOutlines = drawingOutlines && this.renderer.renderMode == 'wireframe'
+      renderstate instanceof ColorRenderState &&
+      outlineThickness &&
+      renderstate.outlineMethod == 'geometry' &&
+      renderstate.outlineThickness > 0 &&
+      drawEdges
+
+    const drawingWireframeOutlines = drawingOutlines && renderModeValue == 'wireframe'
 
     // @ts-ignore
     const drawingHiddenLines =
@@ -855,7 +860,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       gl.disable(gl.DEPTH_TEST)
       gl.depthMask(false)
       gl.colorMask(false, false, false, false)
-    } else if (this.renderer.renderMode == 'hiddenline') {
+    } else if (renderModeValue == 'hiddenline') {
       // don't render surfaces
       gl.colorMask(false, false, false, false)
     } else {
@@ -872,7 +877,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       if (gl.multiDrawElements) drawIdsTextures['TRIANGLES'].bindToUniform(renderstate, drawIdsTexture)
 
       if (geomType) gl.uniform1i(geomType.location, GeomType.TRIANGLES)
-      if (drawingOutlines) {
+
+      // Always zero this value before drawing the faces, else the shader could think its drawing the outline.
+      if (outlineThickness) {
         gl.uniform1f(outlineThickness.location, 0)
       }
 
@@ -885,7 +892,6 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           allocators['TRIANGLES'].allocatedSpace
         )
       })
-
       if (drawingOutlines) {
         // Only draw font faces. BEcause all faces are drawn, it can make a mess to see the back faces through the front faces.
         // e.g. we might see the triangles on the other side of a sphere rendered over the top of triangles on the near side.
@@ -893,7 +899,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         gl.cullFace(gl.FRONT)
         gl.uniform1f(outlineThickness.location, this.renderer.outlineThickness)
         gl.uniform1f(viewportWidth.location, renderstate.region[2] - renderstate.region[0])
-        if (this.renderer.renderMode == 'hiddenline') {
+        if (renderModeValue == 'hiddenline') {
           // start rendering surfaces again
           gl.colorMask(true, true, true, false)
         }
@@ -952,7 +958,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       }
     }
 
-    if (drawIdsArray['LINES'] && allocators['LINES'].allocatedSpace > 0) {
+    if (drawEdges && drawIdsArray['LINES'] && allocators['LINES'].allocatedSpace > 0) {
       if (gl.multiDrawElements) drawIdsTextures['LINES'].bindToUniform(renderstate, drawIdsTexture)
 
       if (geomType) gl.uniform1i(geomType.location, GeomType.LINES)

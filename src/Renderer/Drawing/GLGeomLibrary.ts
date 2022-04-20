@@ -430,8 +430,8 @@ class GLGeomLibrary extends EventEmitter {
 
       gl.bindBuffer(gl.ARRAY_BUFFER, glattrbuffer.buffer)
       const elementSize = attrSpec.elementSize
-      const dstByteOffsetInBytes = this.geomVertexOffsets[index] * elementSize * attrSpec.dimension
-      gl.bufferSubData(gl.ARRAY_BUFFER, dstByteOffsetInBytes, attrData.values)
+      const offsetInBytes = this.geomVertexOffsets[index] * elementSize * attrSpec.dimension
+      gl.bufferSubData(gl.ARRAY_BUFFER, offsetInBytes, attrData.values)
     }
     gl.bindBuffer(gl.ARRAY_BUFFER, null)
 
@@ -458,8 +458,8 @@ class GLGeomLibrary extends EventEmitter {
       const gl = this.__gl
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
       const elementSize = 4 //  Uint32Array
-      const dstByteOffsetInBytes = allocation.start * elementSize
-      gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, dstByteOffsetInBytes, offsettedIndices)
+      const offsetInBytes = allocation.start * elementSize
+      gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, offsetInBytes, offsettedIndices)
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
     }
 

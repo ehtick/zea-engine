@@ -7,6 +7,10 @@ import 'cutaways.glsl'
 import 'gamma.glsl'
 import 'materialparams.glsl'
 
+#ifdef DEBUG_GEOM_ID
+import 'debugColors.glsl'
+#endif
+
 #ifndef ENABLE_MULTI_DRAW
 
 uniform color BaseColor;
@@ -98,6 +102,14 @@ void main(void) {
 
   //////////////////////////////////////////////
   fragColor = baseColor;
+
+#ifdef DEBUG_GEOM_ID
+  // ///////////////////////
+  // Debug Draw ID (this correlates to GeomID within a GLGeomSet)
+  float geomId = v_geomItemData.w;
+  fragColor.rgb = getDebugColor(geomId);
+  // ///////////////////////
+#endif
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
   fragColor.rgb = toGamma(fragColor.rgb);

@@ -1,6 +1,6 @@
 import { GLGeomItemSetMultiDraw } from './GLGeomItemSetMultiDraw'
 import '../../SceneTree/Geometry/Mesh'
-import { RenderState } from '../RenderStates/index'
+import { RenderState, ColorRenderState } from '../RenderStates/index'
 
 /** Class representing a GL mesh.
  * @extends GLGeom
@@ -22,21 +22,22 @@ class GLLinesItemSet extends GLGeomItemSetMultiDraw {
     offsets: Int32Array,
     drawCount: number
   ): void {
-    const { occluded } = renderstate.unifs
+    const { occluded, hiddenLineColor } = renderstate.unifs
+
     // @ts-ignore
     const drawingHiddenLines =
       // @ts-ignore
       renderstate.hiddenLineColor &&
       // @ts-ignore
       renderstate.hiddenLineColor.a > 0 &&
-      occluded
+      occluded &&
+      hiddenLineColor
 
     const gl = this.gl
     if (gl.multiDrawArrays) {
       gl.multiDrawElements(gl.LINES, counts, 0, gl.UNSIGNED_INT, offsets, 0, drawCount)
 
       if (drawingHiddenLines) {
-        const { hiddenLineColor } = renderstate.unifs
         gl.uniform1i(occluded.location, 1)
         // @ts-ignore
         gl.uniform4fv(hiddenLineColor.location, renderstate.hiddenLineColor.asArray())
@@ -55,8 +56,7 @@ class GLLinesItemSet extends GLGeomItemSetMultiDraw {
         gl.drawElements(gl.LINES, counts[i], gl.UNSIGNED_INT, offsets[i])
       }
 
-      if (occluded) {
-        const { hiddenLineColor } = renderstate.unifs
+      if (drawingHiddenLines) {
         gl.uniform1i(occluded.location, 1)
         // @ts-ignore
         gl.uniform4fv(hiddenLineColor.location, renderstate.hiddenLineColor.asArray())

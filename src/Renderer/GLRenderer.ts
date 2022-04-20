@@ -36,7 +36,16 @@ class GLRenderer extends GLBaseRenderer {
   highlightsShader: HighlightsShader
   silhouetteShader: SilhouetteShader
   highlightOutlineThickness: number = 1
-  renderMode: 'wireframe' | 'hiddenline' | 'flat' | 'pbr' = 'pbr'
+  renderMode:
+    | 'wireframe'
+    | 'hiddenline'
+    | 'flat'
+    | 'flat-noedges'
+    | 'shaded'
+    | 'shaded-noedges'
+    | 'pbr'
+    | 'pbr-noedges' = 'pbr'
+
   outlineMethod: 'geometry' | 'image' = 'geometry'
   outlineThickness: number = 0
   outlineColor: Color = new Color(0.15, 0.15, 0.15, 1)

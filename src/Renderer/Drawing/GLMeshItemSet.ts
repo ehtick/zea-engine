@@ -49,19 +49,13 @@ class GLMeshItemSet extends GLGeomItemSetMultiDraw {
     const renderModeValue: string | null =
       renderstate instanceof ColorRenderState && renderMode ? renderstate.renderMode : null
 
-    if (renderModeValue && renderstate instanceof ColorRenderState) {
-      if (renderModeValue == 'flat') {
-        gl.uniform1i(renderMode.location, 2)
-      } else if (renderModeValue == 'pbr') {
-        gl.uniform1i(renderMode.location, 3)
-      }
-    }
-
     const drawingOutlines =
       renderstate instanceof ColorRenderState &&
       outlineThickness &&
       renderstate.outlineMethod == 'geometry' &&
-      renderstate.outlineThickness > 0
+      renderstate.outlineThickness > 0 &&
+      renderModeValue != 'flat-noedges' &&
+      renderModeValue != 'pbr-noedges'
 
     const drawingWireframeOutlines = drawingOutlines && renderModeValue == 'wireframe'
     if (drawingWireframeOutlines) {
@@ -87,9 +81,12 @@ class GLMeshItemSet extends GLGeomItemSetMultiDraw {
     }
 
     if (geomType) gl.uniform1i(geomType.location, GeomType.TRIANGLES)
-    if (drawingOutlines) {
+
+    // Always zero this value before drawing the faces, else the shader could think its drawing the outline.
+    if (outlineThickness) {
       gl.uniform1f(outlineThickness.location, 0)
     }
+
     multiDrawMeshes()
 
     if (drawingOutlines) {

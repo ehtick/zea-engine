@@ -278,9 +278,13 @@ void main(void) {
       if (edgeColor.a < 0.001) discard;
       fragColor = edgeColor;
     } else {
-      if (renderMode == 2) {
+      if (renderMode == 1) { // Flat
         fragColor = vec4(material.baseColor, material.opacity);
-      } else if (renderMode == 3) {
+      } else if (renderMode == 2) { // Shaded
+        // simple irradiance. 
+        float ndotv = dot(normal, viewVector);
+        fragColor = vec4((ndotv * material.baseColor) + (material.emission * material.baseColor), material.opacity);
+      } else if (renderMode == 3) { // PBR
         fragColor = pbrSurfaceRadiance(material, normal, viewVector);
       }
       

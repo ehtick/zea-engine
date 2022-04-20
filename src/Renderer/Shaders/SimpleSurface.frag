@@ -157,12 +157,8 @@ void main(void) {
   // fade away to nothing. (not become a transparent glass object).
   fragColor.a *= treeItemOpacity;
 
-#ifdef DEBUG_GEOM_ID
-  if (testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {
-    discard;
-    return;
-  }
 
+#ifdef DEBUG_GEOM_ID
   // ///////////////////////
   // Debug Draw ID (this correlates to GeomID within a GLGeomSet)
   float geomId = v_geomItemData.w;

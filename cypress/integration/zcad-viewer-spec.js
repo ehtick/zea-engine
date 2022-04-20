@@ -31,8 +31,16 @@ describe('zcad-viewer-HC_SRO4', () => {
     cy.visit(`testing-e2e/zcad-viewer.html?zcad=data/zcad/3.9.1/HC_SRO4.step.zcad`)
 
     cy.get('#status').should('have.text', `done-loading`)
-    const test = 'zcad-viewer-HC_SRO4'
     cy.get('canvas').percySnapshot('zcad-viewer-HC_SRO4')
+  })
+})
+
+describe('zcad-viewer-DodgeChallenger', () => {
+  it('Capture snapshots', () => {
+    cy.visit(`testing-e2e/zcad-viewer.html?zcad=data/zcad/3.9.1/DodgeChallenger.xcgm.zcad`)
+
+    cy.get('#status').should('have.text', `done-loading`)
+    cy.get('canvas').percySnapshot('zcad-viewer-DodgeChallenger')
   })
 })
 
