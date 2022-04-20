@@ -28,18 +28,25 @@ class GLMeshItemSet extends GLGeomItemSetMultiDraw {
     offsets: Int32Array,
     drawCount: number
   ): void {
+    console.log(',,,,,,,,,,,,,,,,,,, multiDraw start')
     const gl = this.gl
 
     const multiDrawMeshes = () => {
+      console.log('__________ multiDrawMeshes', drawCount)
       if (gl.multiDrawElements) {
         gl.multiDrawElements(gl.TRIANGLES, counts, 0, gl.UNSIGNED_INT, offsets, 0, drawCount)
       } else {
         const { geomItemId } = renderstate.unifs
         for (let i = 0; i < drawCount; i++) {
+          if (i % 500 === 0) {
+            console.log(i)
+          }
+
           gl.uniform1i(geomItemId.location, drawIds[i])
           gl.drawElements(gl.TRIANGLES, counts[i], gl.UNSIGNED_INT, offsets[i])
         }
       }
+      console.log('__________ multiDrawMeshes end')
     }
 
     gl.depthFunc(gl.LEQUAL)
@@ -148,6 +155,7 @@ class GLMeshItemSet extends GLGeomItemSetMultiDraw {
         gl.disable(gl.STENCIL_TEST)
       }
     }
+    console.log(',,,,,,,,,,,,,,,,,,, multiDraw end')
   }
 }
 

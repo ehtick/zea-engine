@@ -547,12 +547,14 @@ class GLRenderer extends GLBaseRenderer {
    * @param renderstate - The object tracking the current state of the renderer
    */
   drawScene(renderstate: ColorRenderState): void {
+    console.log('............ drawScene start')
     this.bindGLRenderer(renderstate)
 
     if (this.__displayEnvironment) this.drawBackground(renderstate)
 
     super.drawScene(renderstate)
     // console.log("Draw Calls:" + renderstate['drawCalls']);
+    console.log('............ drawScene end')
   }
 }
 

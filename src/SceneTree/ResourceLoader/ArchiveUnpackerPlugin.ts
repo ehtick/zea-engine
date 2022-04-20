@@ -35,6 +35,8 @@ class ArchiveUnpackerWorkerPool {
 
 const buffer = Uint8Array.from(atob(unpackBase64Str), (c) => c.charCodeAt(0))
 
+console.log('=====buffer:', buffer.byteLength)
+
 import { WorkerPool } from '../../Utilities/WorkerPool'
 // @ts-ignore
 import ArchiveUnpackerWorker from 'web-worker:./ArchiveUnpacker-worker.js'
@@ -43,11 +45,14 @@ class ArchiveUnpackerWorkerPool extends WorkerPool<ArchiveUnpackerWorker> {
     super(true)
   }
   constructWorker(): Promise<ArchiveUnpackerWorker> {
+    console.log('ArchiveUnpackerWorkerPool CONSTRUCTWORKER -----------------------')
     return new Promise<ArchiveUnpackerWorker>((resolve) => {
       const worker = new ArchiveUnpackerWorker()
       worker.onmessage = (event: Record<string, any>) => {
+        console.log('wasm loaded -----------------------')
         if (event.data.type == 'WASM_LOADED') resolve(worker)
       }
+
       worker.postMessage({
         type: 'init',
         buffer: buffer.buffer,

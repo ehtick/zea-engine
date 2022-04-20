@@ -802,6 +802,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
+    console.log(',,,,,,,,,,,,,,,,,,, draw start')
     if (this.drawOrderToIndex.length == 0) {
       return
     }
@@ -1031,6 +1032,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     if (geomType) gl.uniform1i(geomType.location, 0)
 
     renderstate.popGLStack()
+
+    console.log(',,,,,,,,,,,,,,,,,,, draw end')
   }
 
   /**

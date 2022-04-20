@@ -88,11 +88,11 @@ class GLGeomLibrary extends EventEmitter {
 
     // Allocate 128Mb of data to begin with. This avoids lots of small
     // copies when loading small files.
-    const size = Math.pow(2, 23)
-    this.attributesAllocator.reservedSpace = size
-    this.indicesAllocator.reservedSpace = size * 4
-    this.attributesBufferNeedsRealloc = true
-    this.indicesBufferNeedsRealloc = true
+    // const size = Math.pow(2, 23)
+    // this.attributesAllocator.reservedSpace = size
+    // this.indicesAllocator.reservedSpace = size * 4
+    // this.attributesBufferNeedsRealloc = true
+    // this.indicesBufferNeedsRealloc = true
   }
 
   /**
@@ -475,6 +475,7 @@ class GLGeomLibrary extends EventEmitter {
    * Cleans the state of this GeomSet during rendering.
    */
   cleanGeomBuffers(): void {
+    console.log('111111 start cleanGeomBuffers')
     // First we allocate all memory needed to clean the GeomSet,
     // and then we start uploading all the data.
     this.dirtyGeomIndices.forEach((index: number) => {
@@ -512,6 +513,8 @@ class GLGeomLibrary extends EventEmitter {
     })
 
     this.dirtyGeomIndices = new Set()
+
+    console.log('111111 end cleanGeomBuffers')
   }
 
   // /////////////////////////////////////

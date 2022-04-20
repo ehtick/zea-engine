@@ -50,6 +50,7 @@ class GeomParserWorkerPool extends WorkerPool<GeomParserWorker> {
     super(true)
   }
   constructWorker(): Promise<GeomParserWorker> {
+    console.log('GeomParserWorkerPool CONSTRUCTWORKER -----------------------')
     const worker = new GeomParserWorker()
     return Promise.resolve(worker)
   }
@@ -247,7 +248,7 @@ class GeomLibrary extends EventEmitter {
       // e.g. one file per worker.
       // but sometimes we are loading one big file and we need to break the file into chunks
       // to get it processed on all available cores.
-      const bytesPerWorkload = 2000000
+      const bytesPerWorkload = 500_000
 
       let offset = 0
       while (offset < numGeoms) {
@@ -274,6 +275,7 @@ class GeomLibrary extends EventEmitter {
 
         // ////////////////////////////////////////////
         // Multi Threaded Parsing
+        console.log('++++++ geomsRange:', geomsRange)
         geomParserWorkerPool
           .addTask(
             {
@@ -307,6 +309,9 @@ class GeomLibrary extends EventEmitter {
    */
   __receiveGeomDatas(results: object): boolean {
     const { geomFileID, geomDatas, geomIndexOffset, geomsRange } = <any>results
+
+    console.log('2222222222 geomsRange', geomsRange)
+
     // We are storing a subset of the geoms from a binary file
     // which is a subset of the geoms in an asset.
     // geomIndexOffset: the offset of the file geoms in the asset.
@@ -363,6 +368,8 @@ class GeomLibrary extends EventEmitter {
       // console.log('GeomLibrary Loaded:' + this.assetItem.getName() + ' loaded:' + this.loadedCount)
       this.emit('loaded')
     }
+
+    console.log('33333333 end __receiveGeomDatas')
 
     // Return true if we are done loading geoms
     // This allows the worker to be shut down and free up memory.
