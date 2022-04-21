@@ -20,6 +20,7 @@ import { Version } from '../Version'
  */
 class CADAsset extends AssetItem {
   cadfileVersion: Version = new Version('0,0,0')
+  sdk: string
   url: string
   private metadataLoadPromise: Promise<void>
   private metadataLoaded: boolean = false
@@ -84,6 +85,7 @@ class CADAsset extends AssetItem {
     context.versions = {}
     context.versions['zea-cad'] = new Version(reader.loadStr())
     context.sdk = reader.loadStr()
+    this.sdk = context.sdk
     this.cadfileVersion = context.versions['zea-cad']
     // console.log('Loading CAD File version:', this.cadfileVersion, ' exported using SDK:', context.cadSDK)
 

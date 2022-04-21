@@ -38,6 +38,7 @@ export class AssetLoadContext extends EventEmitter {
     super()
     if (context) {
       this.units = context.units
+      this.sdk = context.sdk
       this.xrefs = context.xrefs
       this.resources = context.resources
       this.xrefs = context.xrefs
