@@ -1,4 +1,5 @@
-import { version } from './package.json'
+//@ts-ignore
+import { version } from '../package.json'
 
 /* NODE_START
 // console.log(`Zea Engine v${version} - Node`)
