@@ -418,6 +418,7 @@
           // context.units = "Millimeters"
           context.camera = renderer.getViewport().getCamera()
           asset.load(zcad, context).then(() => {
+            console.log('Loading CAD File version:', asset.cadfileVersion, ' exported using SDK:', asset.sdk)
             asset.materialLibrary.getMaterials().forEach((material) => {
               // const edgeColorParam = material.getParameter('EdgeColor')
               // if (edgeColorParam) {
