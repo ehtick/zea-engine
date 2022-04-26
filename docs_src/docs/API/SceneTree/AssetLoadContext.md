@@ -38,7 +38,7 @@ Create a AssetLoadContext
 
 #### Defined in
 
-[src/SceneTree/AssetLoadContext.ts:35](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/AssetLoadContext.ts#L35)
+[src/SceneTree/AssetLoadContext.ts:37](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L37)
 
 ## Properties
 
@@ -52,7 +52,7 @@ Create a AssetLoadContext
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -77,47 +77,47 @@ ___
 
 #### Defined in
 
-[src/SceneTree/AssetLoadContext.ts:30](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/AssetLoadContext.ts#L30)
+[src/SceneTree/AssetLoadContext.ts:32](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L32)
 
 ___
 
 ### assetItem
 
-• **assetItem**: [`AssetItem`](SceneTree_AssetItem.AssetItem)
+• **assetItem**: [`AssetItem`](SceneTree_AssetItem.AssetItem) = `null`
 
 #### Defined in
 
-[src/SceneTree/AssetLoadContext.ts:23](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/AssetLoadContext.ts#L23)
-
-___
-
-### assets
-
-• `Protected` **assets**: `Record`<`string`, `any`\>
-
-#### Defined in
-
-[src/SceneTree/AssetLoadContext.ts:17](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/AssetLoadContext.ts#L17)
+[src/SceneTree/AssetLoadContext.ts:23](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L23)
 
 ___
 
 ### asyncCount
 
-• `Protected` **asyncCount**: `number`
+• `Protected` **asyncCount**: `number` = `0`
 
 #### Defined in
 
-[src/SceneTree/AssetLoadContext.ts:27](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/AssetLoadContext.ts#L27)
+[src/SceneTree/AssetLoadContext.ts:30](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L30)
+
+___
+
+### camera
+
+• **camera**: [`Camera`](SceneTree_Camera.Camera) = `null`
+
+#### Defined in
+
+[src/SceneTree/AssetLoadContext.ts:22](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L22)
 
 ___
 
 ### folder
 
-• **folder**: `string`
+• **folder**: `string` = `''`
 
 #### Defined in
 
-[src/SceneTree/AssetLoadContext.ts:21](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/AssetLoadContext.ts#L21)
+[src/SceneTree/AssetLoadContext.ts:21](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L21)
 
 ___
 
@@ -131,87 +131,122 @@ ___
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
 ### numGeomItems
 
-• **numGeomItems**: `number`
+• **numGeomItems**: `number` = `0`
 
 #### Defined in
 
-[src/SceneTree/AssetLoadContext.ts:25](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/AssetLoadContext.ts#L25)
+[src/SceneTree/AssetLoadContext.ts:28](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L28)
 
 ___
 
 ### numTreeItems
 
-• **numTreeItems**: `number`
+• **numTreeItems**: `number` = `0`
 
 #### Defined in
 
-[src/SceneTree/AssetLoadContext.ts:24](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/AssetLoadContext.ts#L24)
+[src/SceneTree/AssetLoadContext.ts:27](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L27)
 
 ___
 
 ### postLoadCallbacks
 
-• `Protected` **postLoadCallbacks**: () => `void`[]
+• `Protected` **postLoadCallbacks**: () => `void`[] = `[]`
 
 #### Defined in
 
-[src/SceneTree/AssetLoadContext.ts:26](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/AssetLoadContext.ts#L26)
+[src/SceneTree/AssetLoadContext.ts:29](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L29)
 
 ___
 
 ### resources
 
-• `Protected` **resources**: `Record`<`string`, `any`\>
+• **resources**: `Record`<`string`, `string`\> = `null`
 
 #### Defined in
 
-[src/SceneTree/AssetLoadContext.ts:18](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/AssetLoadContext.ts#L18)
+[src/SceneTree/AssetLoadContext.ts:24](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L24)
 
 ___
 
 ### sdk
 
-• `Protected` **sdk**: `string`
+• **sdk**: `string` = `''`
 
 #### Defined in
 
-[src/SceneTree/AssetLoadContext.ts:22](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/AssetLoadContext.ts#L22)
+[src/SceneTree/AssetLoadContext.ts:19](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L19)
 
 ___
 
 ### units
 
-• **units**: `string`
+• **units**: `string` = `'meters'`
 
 #### Defined in
 
-[src/SceneTree/AssetLoadContext.ts:16](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/AssetLoadContext.ts#L16)
+[src/SceneTree/AssetLoadContext.ts:17](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L17)
 
 ___
 
 ### url
 
-• **url**: `string`
+• **url**: `string` = `''`
 
 #### Defined in
 
-[src/SceneTree/AssetLoadContext.ts:20](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/AssetLoadContext.ts#L20)
+[src/SceneTree/AssetLoadContext.ts:20](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L20)
 
 ___
 
 ### versions
 
-• **versions**: `Record`<`string`, [`Version`](SceneTree_Version.Version)\>
+• **versions**: `Record`<`string`, [`Version`](SceneTree_Version.Version)\> = `{}`
 
 #### Defined in
 
-[src/SceneTree/AssetLoadContext.ts:19](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/AssetLoadContext.ts#L19)
+[src/SceneTree/AssetLoadContext.ts:18](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L18)
+
+___
+
+### xrefLoadCallback
+
+• **xrefLoadCallback**: (`resourceId`: `string`, `xref`: [`XRef`](CAD/SceneTree_CAD_XRef.XRef)) => `string` = `null`
+
+#### Type declaration
+
+▸ (`resourceId`, `xref`): `string`
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `resourceId` | `string` |
+| `xref` | [`XRef`](CAD/SceneTree_CAD_XRef.XRef) |
+
+##### Returns
+
+`string`
+
+#### Defined in
+
+[src/SceneTree/AssetLoadContext.ts:26](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L26)
+
+___
+
+### xrefs
+
+• **xrefs**: `Record`<`string`, [`XRef`](CAD/SceneTree_CAD_XRef.XRef)\> = `{}`
+
+#### Defined in
+
+[src/SceneTree/AssetLoadContext.ts:25](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L25)
 
 ## Methods
 
@@ -235,7 +270,24 @@ e.g. an instance will
 
 #### Defined in
 
-[src/SceneTree/AssetLoadContext.ts:116](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/AssetLoadContext.ts#L116)
+[src/SceneTree/AssetLoadContext.ts:118](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L118)
+
+___
+
+### clone
+
+▸ **clone**(): [`AssetLoadContext`](SceneTree_AssetLoadContext.AssetLoadContext)
+
+The clone method constructs a new AssetLoadContext, copies its values
+from this instance and returns it.
+
+#### Returns
+
+[`AssetLoadContext`](SceneTree_AssetLoadContext.AssetLoadContext)
+
+#### Defined in
+
+[src/SceneTree/AssetLoadContext.ts:126](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L126)
 
 ___
 
@@ -252,7 +304,7 @@ asset to know that the subtrees are loaded.
 
 #### Defined in
 
-[src/SceneTree/AssetLoadContext.ts:66](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/AssetLoadContext.ts#L66)
+[src/SceneTree/AssetLoadContext.ts:64](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L64)
 
 ___
 
@@ -279,7 +331,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -301,7 +353,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -325,7 +377,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -345,7 +397,7 @@ Asset know to wait till the children are loaded before emitting its own 'loaded'
 
 #### Defined in
 
-[src/SceneTree/AssetLoadContext.ts:58](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/AssetLoadContext.ts#L58)
+[src/SceneTree/AssetLoadContext.ts:56](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L56)
 
 ___
 
@@ -372,7 +424,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -401,7 +453,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -425,7 +477,7 @@ asset.once('loaded', () => {
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `eventName` | `string` | The eventName value |
-| `listener` | (`event`: [`BaseEvent`](../Utilities/Utilities_BaseEvent.BaseEvent)) => `void` | The listener value |
+| `listener` | (`event`: `any`) => `void` | The listener value |
 
 #### Returns
 
@@ -439,7 +491,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -466,7 +518,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -492,5 +544,5 @@ or an instance can find its source tree.
 
 #### Defined in
 
-[src/SceneTree/AssetLoadContext.ts:82](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/AssetLoadContext.ts#L82)
+[src/SceneTree/AssetLoadContext.ts:80](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/AssetLoadContext.ts#L80)
 

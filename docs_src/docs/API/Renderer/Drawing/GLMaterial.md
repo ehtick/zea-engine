@@ -37,7 +37,7 @@ Create a GL material.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLMaterial.ts:24](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLMaterial.ts#L24)
+[src/Renderer/Drawing/GLMaterial.ts:24](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLMaterial.ts#L24)
 
 ## Properties
 
@@ -47,7 +47,7 @@ Create a GL material.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLMaterial.ts:17](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLMaterial.ts#L17)
+[src/Renderer/Drawing/GLMaterial.ts:17](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLMaterial.ts#L17)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLMaterial.ts:13](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLMaterial.ts#L13)
+[src/Renderer/Drawing/GLMaterial.ts:13](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLMaterial.ts#L13)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLMaterial.ts:15](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLMaterial.ts#L15)
+[src/Renderer/Drawing/GLMaterial.ts:15](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLMaterial.ts#L15)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLMaterial.ts:14](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLMaterial.ts#L14)
+[src/Renderer/Drawing/GLMaterial.ts:14](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLMaterial.ts#L14)
 
 ___
 
@@ -101,7 +101,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLMaterial.ts:16](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLMaterial.ts#L16)
+[src/Renderer/Drawing/GLMaterial.ts:16](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLMaterial.ts#L16)
 
 ___
 
@@ -115,7 +115,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L26)
 
 ## Methods
 
@@ -129,7 +129,7 @@ The bind method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-
+| `renderstate` | [`RenderState`](../RenderStates/Renderer_RenderStates_RenderState.RenderState) | The object tracking the current state of the renderer |
 | `warnMissingUnifs` | `any` | The renderstate value. |
 
 #### Returns
@@ -138,7 +138,7 @@ The bind method.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLMaterial.ts:55](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLMaterial.ts#L55)
+[src/Renderer/Drawing/GLMaterial.ts:55](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLMaterial.ts#L55)
 
 ___
 
@@ -165,7 +165,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -187,7 +187,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -205,7 +205,7 @@ The getGLShader method.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLMaterial.ts:46](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLMaterial.ts#L46)
+[src/Renderer/Drawing/GLMaterial.ts:46](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLMaterial.ts#L46)
 
 ___
 
@@ -229,7 +229,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -247,7 +247,7 @@ The getMaterial method.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLMaterial.ts:38](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLMaterial.ts#L38)
+[src/Renderer/Drawing/GLMaterial.ts:38](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLMaterial.ts#L38)
 
 ___
 
@@ -274,7 +274,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -303,7 +303,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -327,7 +327,7 @@ asset.once('loaded', () => {
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `eventName` | `string` | The eventName value |
-| `listener` | (`event`: [`BaseEvent`](../../Utilities/Utilities_BaseEvent.BaseEvent)) => `void` | The listener value |
+| `listener` | (`event`: `any`) => `void` | The listener value |
 
 #### Returns
 
@@ -341,7 +341,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -368,7 +368,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -382,7 +382,7 @@ The unbind method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-
+| `renderstate` | [`RenderState`](../RenderStates/Renderer_RenderStates_RenderState.RenderState) | The object tracking the current state of the renderer |
 
 #### Returns
 
@@ -390,5 +390,5 @@ The unbind method.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLMaterial.ts:71](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLMaterial.ts#L71)
+[src/Renderer/Drawing/GLMaterial.ts:71](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLMaterial.ts#L71)
 

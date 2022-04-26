@@ -10,12 +10,8 @@ All notable changes to this project will be documented in this file. See [standa
 * Build system now generates a NodeJS compatible cjs build. ([3580137](https://github.com/ZeaInc/zea-engine/commit/35801373709c44dbb34940937416826e8239303a))
 * GLRenderer now support rendering outlines using a new geometry base technique for cleaner outlines. ([3ae4fb0](https://github.com/ZeaInc/zea-engine/commit/3ae4fb09021dfe3ba984ee3687773df18c5bdd48))
 * Improved load times using a more efficient web worker class called the WorkerPool. ([640569e](https://github.com/ZeaInc/zea-engine/commit/640569edca5b7e0341e333f727e3b9888a62d364))
-* Improved load times using a more efficient web worker class called the WorkerPool. ([eabe9f8](https://github.com/ZeaInc/zea-engine/commit/eabe9f8bbf786109b6329f3f13483e1005256afc))
-* Improved load times using a more efficient web worker class called the WorkerPool. ([f6ad499](https://github.com/ZeaInc/zea-engine/commit/f6ad4999a7f886a5f019c8e19ba9ad03f22fc41d))
 * XRef loading now supports firing a callback on the asset load context to generate the URL for the XRef ([7c6b0cb](https://github.com/ZeaInc/zea-engine/commit/7c6b0cb57ccdf71e194ae350c8cf2aa6c8989225))
 * ZCAD loading now spreads work more evenly across workers. When many files are loading, we can reduce memory requirements. ([ae96a26](https://github.com/ZeaInc/zea-engine/commit/ae96a26b1d6ddcec5c50d2036898f7b223acac7a))
-* ZCAD loading now spreads work more evenly across workers. When many files are loading, we can reduce memory requirements. ([1596ce3](https://github.com/ZeaInc/zea-engine/commit/1596ce3af35e0e5f322969c0c09132ee854f387f))
-* ZCAD loading now spreads work more evenly across workers. When many files are loading, we can reduce memory requirements. ([45fa5d3](https://github.com/ZeaInc/zea-engine/commit/45fa5d33938c749d7d0782d2bb72211bbb445ffd))
 
 
 ### Bug Fixes
@@ -57,14 +53,12 @@ All notable changes to this project will be documented in this file. See [standa
 * If an item was not visible when the CADAsset was initially loaded, in some cases could not be made visible. ([3fce9ad](https://github.com/ZeaInc/zea-engine/commit/3fce9ad112ccef121de8ffe949cfbb300657e82f))
 * Mesh items visibility was in some cases, not being honored due to a regression caused by the integration of the occlusion culling system. ([1f5816a](https://github.com/ZeaInc/zea-engine/commit/1f5816ae6085954a337267eef0bbc2578d2bee4f))
 * PMI highlighting now modifies the drawn color of the PMI text geometries. ([4070864](https://github.com/ZeaInc/zea-engine/commit/4070864d7f0c3c72717c57942ec8887cc1190c46))
-* PMI highlighting now modifies the drawn color of the PMI text geometries. ([ee62529](https://github.com/ZeaInc/zea-engine/commit/ee62529a3bd100523775a397580aaca59a410813))
 * PMIView activation now correctly configures the orthographic Viewport height. ([62afcdd](https://github.com/ZeaInc/zea-engine/commit/62afcdd4a1a6a97cdf7782ff1570a917c8af166a))
 * Progress bars now complete when loading zcad files with steaming geoms. ([45a13fb](https://github.com/ZeaInc/zea-engine/commit/45a13fb798f62f96cac494eb547f359abfaf009f))
 * Re-enable contextual menus ([c291b4a](https://github.com/ZeaInc/zea-engine/commit/c291b4a7a93cf06e94fb605bc423a2f4be8b06e6))
 * XRefs in large shattered assemblies would cause name collisions due to losing their unique name. ([4505801](https://github.com/ZeaInc/zea-engine/commit/45058016908b163373a7f399e9621e8b6e268c48))
 * XRefs in large shattered assemblies would cause name collisions due to losing their unique name. ([133f373](https://github.com/ZeaInc/zea-engine/commit/133f3730f78053c7f3c0b44aa0517fb08e71eb59))
 * XRefs will no longer try to load if a resource dictionary was provided, but no mapping was given for the XRef source file. ([6503835](https://github.com/ZeaInc/zea-engine/commit/6503835aa1d28a88ea9ef240bf24010edb54985b))
-* XRefs will no longer try to load if a resource dictionary was provided, but no mapping was given for the XRef source file. ([353e362](https://github.com/ZeaInc/zea-engine/commit/353e36231a5fc3cf0610bd794ffce07fb33a836f))
 
 ## [4.2.0](https://github.com/ZeaInc/zea-engine/compare/v4.1.1...v4.2.0) (2022-02-15)
 

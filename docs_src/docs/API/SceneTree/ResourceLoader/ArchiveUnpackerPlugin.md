@@ -17,105 +17,29 @@ Archive unpacker plugin.
 
 #### Defined in
 
-[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:29](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L29)
+[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:76](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L76)
 
 ## Properties
 
-### \_\_callbacks
-
-• `Protected` **\_\_callbacks**: `Record`<`string`, `any`\>
-
-#### Defined in
-
-[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:24](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L24)
-
-___
-
-### \_\_nextWorker
-
-• `Protected` **\_\_nextWorker**: `number`
-
-#### Defined in
-
-[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:26](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L26)
-
-___
-
-### \_\_workers
-
-• `Protected` **\_\_workers**: `any`[]
-
-#### Defined in
-
-[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:25](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L25)
-
-___
-
 ### resourceLoader
 
-• `Protected` **resourceLoader**: `any`
+• `Protected` **resourceLoader**: [`ResourceLoader`](../SceneTree_resourceLoader.ResourceLoader)
 
 #### Defined in
 
-[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:27](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L27)
+[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:74](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L74)
+
+___
+
+### threadPool
+
+• `Protected` **threadPool**: `ArchiveUnpackerWorkerPool`
+
+#### Defined in
+
+[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:73](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L73)
 
 ## Methods
-
-### \_\_getWorker
-
-▸ `Private` **__getWorker**(): `any`
-
-The __getWorker method.
-
-#### Returns
-
-`any`
-
-- The return value.
-
-#### Defined in
-
-[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:52](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L52)
-
-___
-
-### \_\_onFinishedReceiveFileData
-
-▸ `Private` **__onFinishedReceiveFileData**(`fileData`): `void`
-
-The __onFinishedReceiveFileData method.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `fileData` | `Record`<`string`, `any`\> | The fileData value. |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:146](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L146)
-
-___
-
-### \_\_terminateWorkers
-
-▸ `Private` **__terminateWorkers**(): `void`
-
-The __terminateWorkers value.
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:94](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L94)
-
-___
 
 ### getType
 
@@ -131,7 +55,7 @@ The type of file.
 
 #### Defined in
 
-[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:43](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L43)
+[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:86](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L86)
 
 ___
 
@@ -151,7 +75,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:35](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L35)
+[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:78](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L78)
 
 ___
 
@@ -176,19 +100,5 @@ Note: using the resource loader to centralize data loading enables progress to b
 
 #### Defined in
 
-[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:105](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L105)
-
-___
-
-### shutDownWorkers
-
-▸ **shutDownWorkers**(): `void`
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:157](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L157)
+[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:96](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L96)
 

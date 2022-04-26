@@ -39,7 +39,7 @@ Create a GL texture 2D.
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:49](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L49)
+[src/Renderer/GLTexture2D.ts:50](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L50)
 
 ## Properties
 
@@ -49,7 +49,7 @@ Create a GL texture 2D.
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:22](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L22)
+[src/Renderer/GLTexture2D.ts:23](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L23)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/RefCounted.ts:15](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/RefCounted.ts#L15)
+[src/SceneTree/RefCounted.ts:15](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/RefCounted.ts#L15)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:35](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L35)
+[src/Renderer/GLTexture2D.ts:36](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L36)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:27](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L27)
+[src/Renderer/GLTexture2D.ts:28](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L28)
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:42](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L42)
+[src/Renderer/GLTexture2D.ts:43](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L43)
 
 ___
 
@@ -103,7 +103,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:15](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L15)
+[src/Renderer/GLTexture2D.ts:16](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L16)
 
 ___
 
@@ -113,7 +113,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:40](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L40)
+[src/Renderer/GLTexture2D.ts:41](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L41)
 
 ___
 
@@ -127,7 +127,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -137,7 +137,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:24](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L24)
+[src/Renderer/GLTexture2D.ts:25](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L25)
 
 ___
 
@@ -147,7 +147,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:25](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L25)
+[src/Renderer/GLTexture2D.ts:26](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L26)
 
 ___
 
@@ -157,7 +157,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:21](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L21)
+[src/Renderer/GLTexture2D.ts:22](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L22)
 
 ___
 
@@ -167,7 +167,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:32](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L32)
+[src/Renderer/GLTexture2D.ts:33](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L33)
 
 ___
 
@@ -177,7 +177,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:31](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L31)
+[src/Renderer/GLTexture2D.ts:32](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L32)
 
 ___
 
@@ -187,7 +187,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:36](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L36)
+[src/Renderer/GLTexture2D.ts:37](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L37)
 
 ___
 
@@ -201,7 +201,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/RefCounted.ts:14](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/RefCounted.ts#L14)
+[src/SceneTree/RefCounted.ts:14](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/RefCounted.ts#L14)
 
 ___
 
@@ -211,7 +211,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:26](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L26)
+[src/Renderer/GLTexture2D.ts:27](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L27)
 
 ___
 
@@ -221,7 +221,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:41](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L41)
+[src/Renderer/GLTexture2D.ts:42](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L42)
 
 ___
 
@@ -231,7 +231,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:28](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L28)
+[src/Renderer/GLTexture2D.ts:29](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L29)
 
 ___
 
@@ -241,7 +241,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:33](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L33)
+[src/Renderer/GLTexture2D.ts:34](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L34)
 
 ___
 
@@ -251,7 +251,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:34](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L34)
+[src/Renderer/GLTexture2D.ts:35](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L35)
 
 ___
 
@@ -261,7 +261,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:38](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L38)
+[src/Renderer/GLTexture2D.ts:39](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L39)
 
 ___
 
@@ -271,7 +271,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:18](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L18)
+[src/Renderer/GLTexture2D.ts:19](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L19)
 
 ___
 
@@ -281,7 +281,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:37](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L37)
+[src/Renderer/GLTexture2D.ts:38](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L38)
 
 ___
 
@@ -295,7 +295,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -305,7 +305,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:30](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L30)
+[src/Renderer/GLTexture2D.ts:31](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L31)
 
 ___
 
@@ -315,7 +315,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:16](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L16)
+[src/Renderer/GLTexture2D.ts:17](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L17)
 
 ___
 
@@ -325,7 +325,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:20](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L20)
+[src/Renderer/GLTexture2D.ts:21](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L21)
 
 ___
 
@@ -335,7 +335,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:19](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L19)
+[src/Renderer/GLTexture2D.ts:20](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L20)
 
 ___
 
@@ -345,7 +345,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:17](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L17)
+[src/Renderer/GLTexture2D.ts:18](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L18)
 
 ## Accessors
 
@@ -363,7 +363,7 @@ Returns the value of the WebGLTexture value
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:553](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L553)
+[src/Renderer/GLTexture2D.ts:554](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L554)
 
 ## Methods
 
@@ -379,7 +379,7 @@ The __updateGLTexParams method.
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:208](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L208)
+[src/Renderer/GLTexture2D.ts:209](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L209)
 
 ___
 
@@ -407,7 +407,7 @@ The addRef method.
 
 #### Defined in
 
-[src/SceneTree/RefCounted.ts:51](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/RefCounted.ts#L51)
+[src/SceneTree/RefCounted.ts:51](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/RefCounted.ts#L51)
 
 ___
 
@@ -421,7 +421,7 @@ Binds Texture to the Uniform attribute.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-
+| `renderstate` | [`RenderState`](RenderStates/Renderer_RenderStates_RenderState.RenderState) | The renderstate value. |
 | `unif` | [`Uniform`](types/Renderer_types_renderer.Uniform) | The unif value. |
 | `bindings?` | `Record`<`string`, `any`\> | The bindings value. |
 
@@ -433,7 +433,7 @@ Binds Texture to the Uniform attribute.
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:587](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L587)
+[src/Renderer/GLTexture2D.ts:588](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L588)
 
 ___
 
@@ -459,7 +459,7 @@ Initializes and creates the buffer of the object's data store.
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:234](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L234)
+[src/Renderer/GLTexture2D.ts:235](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L235)
 
 ___
 
@@ -475,7 +475,7 @@ Clears the buffers to preset values
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:393](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L393)
+[src/Renderer/GLTexture2D.ts:394](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L394)
 
 ___
 
@@ -498,7 +498,7 @@ Parameters must have the `BaseImage` properties structure.
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:157](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L157)
+[src/Renderer/GLTexture2D.ts:158](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L158)
 
 ___
 
@@ -519,7 +519,7 @@ Users should never need to call this method directly.
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:618](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L618)
+[src/Renderer/GLTexture2D.ts:619](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L619)
 
 ___
 
@@ -546,7 +546,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -568,7 +568,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -586,7 +586,7 @@ Returns the value of the specified texel data. It must be the same as the `inter
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:127](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L127)
+[src/Renderer/GLTexture2D.ts:128](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L128)
 
 ___
 
@@ -609,7 +609,7 @@ identifier which is based on a counter that is incremented.
 
 #### Defined in
 
-[src/SceneTree/RefCounted.ts:34](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/RefCounted.ts#L34)
+[src/SceneTree/RefCounted.ts:34](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/RefCounted.ts#L34)
 
 ___
 
@@ -627,7 +627,7 @@ Returns the `BaseImage` of the GL Texture
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:100](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L100)
+[src/Renderer/GLTexture2D.ts:101](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L101)
 
 ___
 
@@ -645,7 +645,7 @@ Returns the specified value of the color components in the texture.
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:109](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L109)
+[src/Renderer/GLTexture2D.ts:110](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L110)
 
 ___
 
@@ -663,7 +663,7 @@ Returns the value of the specified binding point.
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:145](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L145)
+[src/Renderer/GLTexture2D.ts:146](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L146)
 
 ___
 
@@ -691,7 +691,7 @@ The getRefIndex method.
 
 #### Defined in
 
-[src/SceneTree/RefCounted.ts:89](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/RefCounted.ts#L89)
+[src/SceneTree/RefCounted.ts:89](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/RefCounted.ts#L89)
 
 ___
 
@@ -719,7 +719,7 @@ The getRefer method.
 
 #### Defined in
 
-[src/SceneTree/RefCounted.ts:80](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/RefCounted.ts#L80)
+[src/SceneTree/RefCounted.ts:80](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/RefCounted.ts#L80)
 
 ___
 
@@ -737,7 +737,7 @@ Returns the `width`(Index 0) and the `height`(Index 1) of the GL Texture.
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:544](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L544)
+[src/Renderer/GLTexture2D.ts:545](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L545)
 
 ___
 
@@ -755,7 +755,7 @@ Returns the value of the WebGLTexture value
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:562](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L562)
+[src/Renderer/GLTexture2D.ts:563](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L563)
 
 ___
 
@@ -773,7 +773,7 @@ Returns the value of the specified data type of the texel data.
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:118](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L118)
+[src/Renderer/GLTexture2D.ts:119](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L119)
 
 ___
 
@@ -791,7 +791,7 @@ Returns the value of the specified wrapping function for texture coordinate
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:136](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L136)
+[src/Renderer/GLTexture2D.ts:137](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L137)
 
 ___
 
@@ -813,7 +813,7 @@ Returns true if this object has already been destroyed.
 
 #### Defined in
 
-[src/SceneTree/RefCounted.ts:97](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/RefCounted.ts#L97)
+[src/SceneTree/RefCounted.ts:97](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/RefCounted.ts#L97)
 
 ___
 
@@ -831,7 +831,7 @@ Returns the loaded status of the 2D Texture
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:91](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L91)
+[src/Renderer/GLTexture2D.ts:92](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L92)
 
 ___
 
@@ -853,7 +853,7 @@ The numRefs method.
 
 #### Defined in
 
-[src/SceneTree/RefCounted.ts:42](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/RefCounted.ts#L42)
+[src/SceneTree/RefCounted.ts:42](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/RefCounted.ts#L42)
 
 ___
 
@@ -880,7 +880,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -909,7 +909,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -933,7 +933,7 @@ asset.once('loaded', () => {
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `eventName` | `string` | The eventName value |
-| `listener` | (`event`: [`BaseEvent`](../Utilities/Utilities_BaseEvent.BaseEvent)) => `void` | The listener value |
+| `listener` | (`event`: `any`) => `void` | The listener value |
 
 #### Returns
 
@@ -947,7 +947,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -974,7 +974,7 @@ Upload data for the image to the GPU.
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:526](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L526)
+[src/Renderer/GLTexture2D.ts:527](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L527)
 
 ___
 
@@ -999,7 +999,7 @@ The preBind method.
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:572](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L572)
+[src/Renderer/GLTexture2D.ts:573](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L573)
 
 ___
 
@@ -1026,7 +1026,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -1052,7 +1052,7 @@ The removeRef method.
 
 #### Defined in
 
-[src/SceneTree/RefCounted.ts:64](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/RefCounted.ts#L64)
+[src/SceneTree/RefCounted.ts:64](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/RefCounted.ts#L64)
 
 ___
 
@@ -1077,7 +1077,7 @@ The resize method.
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:467](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L467)
+[src/Renderer/GLTexture2D.ts:468](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L468)
 
 ___
 
@@ -1097,7 +1097,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:627](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L627)
+[src/Renderer/GLTexture2D.ts:628](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L628)
 
 ___
 
@@ -1118,5 +1118,5 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLTexture2D.ts:633](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLTexture2D.ts#L633)
+[src/Renderer/GLTexture2D.ts:634](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLTexture2D.ts#L634)
 

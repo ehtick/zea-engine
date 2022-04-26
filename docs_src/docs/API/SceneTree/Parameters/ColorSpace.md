@@ -15,7 +15,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[src/SceneTree/Parameters/MaterialColorParam.ts:9](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/Parameters/MaterialColorParam.ts#L9)
+[src/SceneTree/Parameters/MaterialColorParam.ts:9](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Parameters/MaterialColorParam.ts#L9)
 
 ___
 
@@ -25,5 +25,5 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Parameters/MaterialColorParam.ts:10](https://github.com/ZeaInc/zea-engine/blob/819769315/src/SceneTree/Parameters/MaterialColorParam.ts#L10)
+[src/SceneTree/Parameters/MaterialColorParam.ts:10](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Parameters/MaterialColorParam.ts#L10)
 

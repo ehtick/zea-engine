@@ -15,7 +15,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[src/Renderer/types/renderer.ts:78](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/types/renderer.ts#L78)
+[src/Renderer/types/renderer.ts:18](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/types/renderer.ts#L18)
 
 ___
 
@@ -25,7 +25,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/renderer.ts:77](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/types/renderer.ts#L77)
+[src/Renderer/types/renderer.ts:17](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/types/renderer.ts#L17)
 
 ___
 
@@ -35,5 +35,5 @@ ___
 
 #### Defined in
 
-[src/Renderer/types/renderer.ts:79](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/types/renderer.ts#L79)
+[src/Renderer/types/renderer.ts:19](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/types/renderer.ts#L19)
 

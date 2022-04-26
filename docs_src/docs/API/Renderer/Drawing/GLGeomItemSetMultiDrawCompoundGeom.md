@@ -35,7 +35,7 @@ Create a GL geom item set.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:75](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L75)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:83](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L83)
 
 ## Properties
 
@@ -49,7 +49,7 @@ Create a GL geom item set.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:39](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L39)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:47](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L47)
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:63](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L63)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:71](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L71)
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:46](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L46)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:54](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L54)
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:47](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L47)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:55](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L55)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:44](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L44)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:52](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L52)
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:43](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L43)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:51](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L51)
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:40](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L40)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:48](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L48)
 
 ___
 
@@ -129,7 +129,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:45](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L45)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:53](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L53)
 
 ___
 
@@ -139,7 +139,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:48](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L48)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:56](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L56)
 
 ___
 
@@ -149,7 +149,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:67](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L67)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:75](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L75)
 
 ___
 
@@ -159,7 +159,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:69](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L69)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:77](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L77)
 
 ___
 
@@ -169,7 +169,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:37](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L37)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:45](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L45)
 
 ___
 
@@ -179,7 +179,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:33](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L33)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:41](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L41)
 
 ___
 
@@ -189,7 +189,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:35](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L35)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:43](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L43)
 
 ___
 
@@ -199,7 +199,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:34](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L34)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:42](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L42)
 
 ___
 
@@ -209,7 +209,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:36](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L36)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:44](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L44)
 
 ___
 
@@ -219,7 +219,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:59](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L59)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:67](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L67)
 
 ___
 
@@ -229,7 +229,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:60](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L60)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:68](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L68)
 
 ___
 
@@ -239,7 +239,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:61](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L61)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:69](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L69)
 
 ___
 
@@ -249,7 +249,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:57](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L57)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:65](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L65)
 
 ___
 
@@ -259,7 +259,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:64](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L64)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:72](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L72)
 
 ___
 
@@ -269,7 +269,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:62](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L62)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:70](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L70)
 
 ___
 
@@ -279,7 +279,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:56](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L56)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:64](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L64)
 
 ___
 
@@ -289,7 +289,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:49](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L49)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:57](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L57)
 
 ___
 
@@ -299,7 +299,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:66](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L66)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:74](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L74)
 
 ___
 
@@ -313,7 +313,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -323,17 +323,17 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:68](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L68)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:76](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L76)
 
 ___
 
 ### renderer
 
-• `Protected` **renderer**: [`GLBaseRenderer`](../Renderer_GLBaseRenderer.GLBaseRenderer)
+• `Protected` **renderer**: [`GLRenderer`](../Renderer_GLRenderer.GLRenderer)
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:32](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L32)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:40](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L40)
 
 ## Methods
 
@@ -355,34 +355,7 @@ The addGLGeomItem method.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:98](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L98)
-
-___
-
-### bindAndRender
-
-▸ `Private` **bindAndRender**(`renderstate`, `drawIdsArray`, `counts`, `offsets`, `drawIdsTextures`, `allocators`): `void`
-
-The bindAndRender method.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-
-| `drawIdsArray` | `Record`<`string`, `Float32Array`\> | - |
-| `counts` | `Record`<`string`, `Int32Array`\> | the counts for each element drawn in by this draw call. |
-| `offsets` | `Record`<`string`, `Int32Array`\> | the offsets for each element drawn in by this draw call. |
-| `drawIdsTextures` | `Record`<`string`, [`GLTexture2D`](../Renderer_GLTexture2D.GLTexture2D)\> | - |
-| `allocators` | `Record`<`string`, [`Allocator1D`](../../Utilities/Utilities_Allocator1D.Allocator1D)\> | - |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:1052](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L1052)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:106](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L106)
 
 ___
 
@@ -399,7 +372,7 @@ Users should never need to call this method directly.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:1369](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L1369)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:1500](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L1500)
 
 ___
 
@@ -413,7 +386,7 @@ The draw method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-
+| `renderstate` | [`RenderState`](../RenderStates/Renderer_RenderStates_RenderState.RenderState) | The object tracking the current state of the renderer |
 
 #### Returns
 
@@ -421,7 +394,7 @@ The draw method.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:839](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L839)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:817](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L817)
 
 ___
 
@@ -435,7 +408,7 @@ The drawGeomData method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `renderstate` | [`GeomDataRenderState`](../types/Renderer_types_renderer.GeomDataRenderState) | The object tracking the current state of the renderer |
+| `renderstate` | [`GeomDataRenderState`](../RenderStates/Renderer_RenderStates_GeomDataRenderState.GeomDataRenderState) | The object tracking the current state of the renderer |
 
 #### Returns
 
@@ -443,7 +416,7 @@ The drawGeomData method.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:861](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L861)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:1064](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L1064)
 
 ___
 
@@ -457,7 +430,7 @@ The drawHighlighted method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-
+| `renderstate` | [`HighlightRenderState`](../RenderStates/Renderer_RenderStates_HighlightRenderState.HighlightRenderState) | The object tracking the current state of the renderer |
 
 #### Returns
 
@@ -465,7 +438,7 @@ The drawHighlighted method.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:1021](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L1021)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:1216](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L1216)
 
 ___
 
@@ -492,7 +465,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -514,7 +487,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -538,7 +511,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -550,7 +523,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-
+| `renderstate` | [`RenderState`](../RenderStates/Renderer_RenderStates_RenderState.RenderState) |
 | `drawIds` | `Float32Array` |
 | `counts` | `Int32Array` |
 | `offsets` | `Int32Array` |
@@ -562,7 +535,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:1140](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L1140)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:1314](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L1314)
 
 ___
 
@@ -574,7 +547,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-
+| `renderstate` | [`RenderState`](../RenderStates/Renderer_RenderStates_RenderState.RenderState) |
 | `drawIds` | `Float32Array` |
 | `counts` | `Int32Array` |
 | `offsets` | `Int32Array` |
@@ -586,7 +559,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:1121](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L1121)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:1295](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L1295)
 
 ___
 
@@ -598,7 +571,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-
+| `renderstate` | [`RenderState`](../RenderStates/Renderer_RenderStates_RenderState.RenderState) |
 | `drawIds` | `Float32Array` |
 | `counts` | `Int32Array` |
 | `offsets` | `Int32Array` |
@@ -610,7 +583,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:1201](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L1201)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:1333](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L1333)
 
 ___
 
@@ -637,7 +610,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -666,7 +639,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -690,7 +663,7 @@ asset.once('loaded', () => {
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `eventName` | `string` | The eventName value |
-| `listener` | (`event`: [`BaseEvent`](../../Utilities/Utilities_BaseEvent.BaseEvent)) => `void` | The listener value |
+| `listener` | (`event`: `any`) => `void` | The listener value |
 
 #### Returns
 
@@ -704,7 +677,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -726,7 +699,7 @@ The removeGLGeomItem method.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:281](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L281)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:247](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L247)
 
 ___
 
@@ -753,7 +726,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -775,7 +748,7 @@ Sorts the drawn items in order furthest to nearest when rendering transparent ob
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:1241](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L1241)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:1372](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L1372)
 
 ___
 
@@ -789,7 +762,7 @@ The updateDrawIDsBuffer method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-
+| `renderstate` | [`RenderState`](../RenderStates/Renderer_RenderStates_RenderState.RenderState) | The object used to track state changes during rendering. |
 
 #### Returns
 
@@ -797,7 +770,7 @@ The updateDrawIDsBuffer method.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:332](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L332)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:302](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L302)
 
 ___
 
@@ -811,7 +784,7 @@ The updateHighlightedIDsBuffer method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-
+| `renderstate` | [`HighlightRenderState`](../RenderStates/Renderer_RenderStates_HighlightRenderState.HighlightRenderState) | The object used to track state changes during rendering. |
 
 #### Returns
 
@@ -819,5 +792,5 @@ The updateHighlightedIDsBuffer method.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:624](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L624)
+[src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts:594](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomItemSetMultiDrawCompoundGeom.ts#L594)
 

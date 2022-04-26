@@ -5,6 +5,64 @@ sidebar_position: 5
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.4.0](https://github.com/ZeaInc/zea-engine/compare/v4.3.0...v4.4.0) (2022-04-26)
+
+
+### Features
+
+* Build system now generates a NodeJS compatible cjs build. ([3580137](https://github.com/ZeaInc/zea-engine/commit/35801373709c44dbb34940937416826e8239303a))
+* GLRenderer now support rendering outlines using a new geometry base technique for cleaner outlines. ([3ae4fb0](https://github.com/ZeaInc/zea-engine/commit/3ae4fb09021dfe3ba984ee3687773df18c5bdd48))
+* Improved load times using a more efficient web worker class called the WorkerPool. ([640569e](https://github.com/ZeaInc/zea-engine/commit/640569edca5b7e0341e333f727e3b9888a62d364))
+* XRef loading now supports firing a callback on the asset load context to generate the URL for the XRef ([7c6b0cb](https://github.com/ZeaInc/zea-engine/commit/7c6b0cb57ccdf71e194ae350c8cf2aa6c8989225))
+* ZCAD loading now spreads work more evenly across workers. When many files are loading, we can reduce memory requirements. ([ae96a26](https://github.com/ZeaInc/zea-engine/commit/ae96a26b1d6ddcec5c50d2036898f7b223acac7a))
+
+
+### Bug Fixes
+
+* XRef cloning would result in incorrect transformations. ([c229a64](https://github.com/ZeaInc/zea-engine/commit/c229a64272900f2fcf02e9e5534f4107aed2c208))
+* Address regression on older Safari browsers that still only support WebGL1 ([53576fc](https://github.com/ZeaInc/zea-engine/commit/53576fca34efda0d0e4c8a1c1be55e8d800ed0f5))
+* Applied workaround to address performance regression in Safari. ([846cacd](https://github.com/ZeaInc/zea-engine/commit/846cacd56f0ce11669f9d358c9e72d2595e5aa5f))
+* CADAsset now generates a useful error message when loading zcad files that are corrupt in some way. ([8341c66](https://github.com/ZeaInc/zea-engine/commit/8341c6662ce2b63914aacc2b086b8cda83656ccb))
+* CADAssets would fail to resolve the load promise if nested XRefs failed to load. ([487bc0a](https://github.com/ZeaInc/zea-engine/commit/487bc0aad7679846fd26c48d8a638cced4ef033c))
+* Cleaned up TreeItem opacity propagation. ([d22a957](https://github.com/ZeaInc/zea-engine/commit/d22a9571cc719208453f527210d000adea87d946))
+* Edge lines now blend correctly over the top of faces. ([cab33cd](https://github.com/ZeaInc/zea-engine/commit/cab33cdfa2c7840b198b25805a00ca86101a8ebd))
+* Fixed a crash on systems unable to run WebGL2 code, such as iOS devices that have not yet been updated to iOS 15. ([696eb1f](https://github.com/ZeaInc/zea-engine/commit/696eb1fee038785c7047807cddcad6527d5224ca))
+* Items that were initially culled, but becoming visible could cause artifacts in the rendering ([b66c701](https://github.com/ZeaInc/zea-engine/commit/b66c7013e5bc61c66908c61f9194a3a6be7ef3d3))
+* Loading zcad files containing XRefs now correctly resolves the promise. ([b28a19e](https://github.com/ZeaInc/zea-engine/commit/b28a19e40cbcb656b30f01f82007398388db36fe))
+* Removed redundant logging. Logging should be implemented at the application level. ([191033a](https://github.com/ZeaInc/zea-engine/commit/191033af0c642413ffbf8309cd47975e71c4d5bb))
+* removed static material configuration in PMIItem as it threw exceptions (silent) exceptions during load. ([ad39a8f](https://github.com/ZeaInc/zea-engine/commit/ad39a8ff8b984ffeb63b2d0dd411d2ab46d18f66))
+* Version 3.11.0 and below of the C++ libraries were not correctly exporting points 'sub-geoms'. The loading code now handles loading these files. ([4004a0a](https://github.com/ZeaInc/zea-engine/commit/4004a0a2220db2d2ec0efa59b27dbbf30d89a66f))
+* When loading multiple assets using a shared context, the units value would be modified during load, causing the subsequent a ([fea04aa](https://github.com/ZeaInc/zea-engine/commit/fea04aaa1510e9caf81576bbd0d2d61a801ec0fa))
+
+## [4.3.0](https://github.com/ZeaInc/zea-engine/compare/v4.2.0...v4.3.0) (2022-03-17)
+
+
+### Features
+
+* BaseClass and BaseEvent classes are now exported by the engine. ([eaf61ae](https://github.com/ZeaInc/zea-engine/commit/eaf61ae3298c259bd7ac0f22406fe8096a224b6f))
+* CADAsset now has a 'FileUnits' parameter that can be displayed by our parameter display widgets. ([82d1d81](https://github.com/ZeaInc/zea-engine/commit/82d1d813753e38ad6b88aa6d8ad547da8d87be7b))
+* CADAsset now logs the version and SDK used to produce the zcad file it is loading. ([5215e6d](https://github.com/ZeaInc/zea-engine/commit/5215e6d2b3f2c0ae983730025bab62e718f567f2))
+* CADAsset.loadMetadata now support taking a url to the .zmetadata file, so that it can be explicitly specified, instead of inferred. ([7b25f09](https://github.com/ZeaInc/zea-engine/commit/7b25f0913d97854630e4bb26200da861b718fb5e))
+* Clicking on PMIText has been made easier by generating a plane to fill in the background, so pointer events are always caught when moving the mouse. ([3461e38](https://github.com/ZeaInc/zea-engine/commit/3461e38569bbd139591aba57980eee2d57f904c0))
+* FlatSurfaceShader and FlatSurfaceMaterial now provide a new 'Overlay' param that enables geometry to be rendered on top of other geometry in the scene. Similar to the LinesShader and PointsShader currently work. ([a070f0a](https://github.com/ZeaInc/zea-engine/commit/a070f0a4620a5fa8a2549f2fbfbbddc394313fc3))
+* PMIView now correctly sets up CuttingPlanes. ([09ca588](https://github.com/ZeaInc/zea-engine/commit/09ca58872d1910616d0988498e625337f78d606b))
+
+
+### Bug Fixes
+
+* A regression was fixed in visibility toggling that affected only the new CompoundGeometry items available in zcad 3.9.0 and above. ([624596e](https://github.com/ZeaInc/zea-engine/commit/624596ee1ca6eed6936c4862c33ed724c2dd61c1))
+* Disable multidraw in Safari ([686ede4](https://github.com/ZeaInc/zea-engine/commit/686ede4ab1d73420d67b1fe7e981c2d0a2eac301))
+* Fixed an exception thrown when an Item was made transparent, and then a mouseover occurred ([fb0c08f](https://github.com/ZeaInc/zea-engine/commit/fb0c08f63116c620e74148398bf8d56340548bcd))
+* If an item was not visible when the CADAsset was initially loaded, in some cases could not be made visible. ([3fce9ad](https://github.com/ZeaInc/zea-engine/commit/3fce9ad112ccef121de8ffe949cfbb300657e82f))
+* Mesh items visibility was in some cases, not being honored due to a regression caused by the integration of the occlusion culling system. ([1f5816a](https://github.com/ZeaInc/zea-engine/commit/1f5816ae6085954a337267eef0bbc2578d2bee4f))
+* PMI highlighting now modifies the drawn color of the PMI text geometries. ([4070864](https://github.com/ZeaInc/zea-engine/commit/4070864d7f0c3c72717c57942ec8887cc1190c46))
+* PMIView activation now correctly configures the orthographic Viewport height. ([62afcdd](https://github.com/ZeaInc/zea-engine/commit/62afcdd4a1a6a97cdf7782ff1570a917c8af166a))
+* Progress bars now complete when loading zcad files with steaming geoms. ([45a13fb](https://github.com/ZeaInc/zea-engine/commit/45a13fb798f62f96cac494eb547f359abfaf009f))
+* Re-enable contextual menus ([c291b4a](https://github.com/ZeaInc/zea-engine/commit/c291b4a7a93cf06e94fb605bc423a2f4be8b06e6))
+* XRefs in large shattered assemblies would cause name collisions due to losing their unique name. ([4505801](https://github.com/ZeaInc/zea-engine/commit/45058016908b163373a7f399e9621e8b6e268c48))
+* XRefs in large shattered assemblies would cause name collisions due to losing their unique name. ([133f373](https://github.com/ZeaInc/zea-engine/commit/133f3730f78053c7f3c0b44aa0517fb08e71eb59))
+* XRefs will no longer try to load if a resource dictionary was provided, but no mapping was given for the XRef source file. ([6503835](https://github.com/ZeaInc/zea-engine/commit/6503835aa1d28a88ea9ef240bf24010edb54985b))
+
 ## [4.2.0](https://github.com/ZeaInc/zea-engine/compare/v4.1.1...v4.2.0) (2022-02-15)
 
 

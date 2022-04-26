@@ -40,7 +40,7 @@ Create an image pyramid.
 
 #### Defined in
 
-[src/Renderer/ImagePyramid.ts:32](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/ImagePyramid.ts#L32)
+[src/Renderer/ImagePyramid.ts:32](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/ImagePyramid.ts#L32)
 
 ## Properties
 
@@ -54,7 +54,7 @@ Create an image pyramid.
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:26](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L26)
+[src/Renderer/GLImageAtlas.ts:27](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L27)
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:33](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L33)
+[src/Renderer/GLImageAtlas.ts:34](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L34)
 
 ___
 
@@ -82,7 +82,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:32](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L32)
+[src/Renderer/GLImageAtlas.ts:33](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L33)
 
 ___
 
@@ -96,7 +96,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:30](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L30)
+[src/Renderer/GLImageAtlas.ts:31](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L31)
 
 ___
 
@@ -106,7 +106,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/ImagePyramid.ts:21](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/ImagePyramid.ts#L21)
+[src/Renderer/ImagePyramid.ts:21](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/ImagePyramid.ts#L21)
 
 ___
 
@@ -120,7 +120,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:21](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L21)
+[src/Renderer/GLImageAtlas.ts:22](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L22)
 
 ___
 
@@ -134,7 +134,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:26](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L26)
+[src/Renderer/GLRenderTarget.ts:27](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L27)
 
 ___
 
@@ -148,7 +148,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -162,7 +162,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:29](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L29)
+[src/Renderer/GLImageAtlas.ts:30](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L30)
 
 ___
 
@@ -176,7 +176,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:25](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L25)
+[src/Renderer/GLImageAtlas.ts:26](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L26)
 
 ___
 
@@ -190,7 +190,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:31](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L31)
+[src/Renderer/GLImageAtlas.ts:32](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L32)
 
 ___
 
@@ -204,7 +204,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:20](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L20)
+[src/Renderer/GLImageAtlas.ts:21](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L21)
 
 ___
 
@@ -218,7 +218,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:46](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L46)
+[src/Renderer/GLRenderTarget.ts:47](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L47)
 
 ___
 
@@ -228,7 +228,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/ImagePyramid.ts:20](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/ImagePyramid.ts#L20)
+[src/Renderer/ImagePyramid.ts:20](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/ImagePyramid.ts#L20)
 
 ___
 
@@ -242,7 +242,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:24](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L24)
+[src/Renderer/GLImageAtlas.ts:25](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L25)
 
 ___
 
@@ -256,7 +256,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:22](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L22)
+[src/Renderer/GLImageAtlas.ts:23](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L23)
 
 ___
 
@@ -270,7 +270,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:42](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L42)
+[src/Renderer/GLRenderTarget.ts:43](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L43)
 
 ___
 
@@ -284,7 +284,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:43](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L43)
+[src/Renderer/GLRenderTarget.ts:44](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L44)
 
 ___
 
@@ -298,7 +298,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:28](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L28)
+[src/Renderer/GLRenderTarget.ts:29](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L29)
 
 ___
 
@@ -312,7 +312,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:39](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L39)
+[src/Renderer/GLRenderTarget.ts:40](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L40)
 
 ___
 
@@ -326,7 +326,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:34](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L34)
+[src/Renderer/GLRenderTarget.ts:35](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L35)
 
 ___
 
@@ -340,7 +340,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:30](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L30)
+[src/Renderer/GLRenderTarget.ts:31](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L31)
 
 ___
 
@@ -354,7 +354,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:41](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L41)
+[src/Renderer/GLRenderTarget.ts:42](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L42)
 
 ___
 
@@ -368,7 +368,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:35](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L35)
+[src/Renderer/GLRenderTarget.ts:36](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L36)
 
 ___
 
@@ -382,7 +382,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -396,7 +396,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:27](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L27)
+[src/Renderer/GLImageAtlas.ts:28](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L28)
 
 ___
 
@@ -410,7 +410,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:37](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L37)
+[src/Renderer/GLRenderTarget.ts:38](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L38)
 
 ___
 
@@ -424,7 +424,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:36](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L36)
+[src/Renderer/GLRenderTarget.ts:37](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L37)
 
 ___
 
@@ -438,7 +438,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:32](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L32)
+[src/Renderer/GLRenderTarget.ts:33](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L33)
 
 ___
 
@@ -452,7 +452,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:28](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L28)
+[src/Renderer/GLImageAtlas.ts:29](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L29)
 
 ___
 
@@ -462,7 +462,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/ImagePyramid.ts:22](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/ImagePyramid.ts#L22)
+[src/Renderer/ImagePyramid.ts:22](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/ImagePyramid.ts#L22)
 
 ___
 
@@ -472,7 +472,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/ImagePyramid.ts:19](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/ImagePyramid.ts#L19)
+[src/Renderer/ImagePyramid.ts:19](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/ImagePyramid.ts#L19)
 
 ___
 
@@ -486,7 +486,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:29](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L29)
+[src/Renderer/GLRenderTarget.ts:30](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L30)
 
 ___
 
@@ -500,7 +500,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:27](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L27)
+[src/Renderer/GLRenderTarget.ts:28](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L28)
 
 ___
 
@@ -514,7 +514,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:44](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L44)
+[src/Renderer/GLRenderTarget.ts:45](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L45)
 
 ___
 
@@ -528,7 +528,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:33](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L33)
+[src/Renderer/GLRenderTarget.ts:34](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L34)
 
 ___
 
@@ -542,7 +542,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:40](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L40)
+[src/Renderer/GLRenderTarget.ts:41](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L41)
 
 ___
 
@@ -556,7 +556,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:38](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L38)
+[src/Renderer/GLRenderTarget.ts:39](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L39)
 
 ## Methods
 
@@ -584,7 +584,7 @@ The addSubImage method.
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:84](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L84)
+[src/Renderer/GLImageAtlas.ts:85](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L85)
 
 ___
 
@@ -598,7 +598,7 @@ The bindColorTexture method.
 
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
-
+| `renderstate` | [`RenderState`](RenderStates/Renderer_RenderStates_RenderState.RenderState) | `undefined` | The object tracking the current state of the renderer |
 | `unif` | [`Uniform`](types/Renderer_types_renderer.Uniform) | `undefined` | - |
 | `channelId` | `number` | `0` | The channelId value. |
 
@@ -614,7 +614,7 @@ The bindColorTexture method.
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:270](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L270)
+[src/Renderer/GLRenderTarget.ts:271](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L271)
 
 ___
 
@@ -628,7 +628,7 @@ The bindDepthTexture method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-
+| `renderstate` | [`RenderState`](RenderStates/Renderer_RenderStates_RenderState.RenderState) | The object tracking the current state of the renderer |
 | `unif` | [`Uniform`](types/Renderer_types_renderer.Uniform) | The WebGL uniform |
 
 #### Returns
@@ -643,7 +643,7 @@ The bindDepthTexture method.
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:285](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L285)
+[src/Renderer/GLRenderTarget.ts:286](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L286)
 
 ___
 
@@ -663,7 +663,7 @@ Binds the render target in preparation for 'readPixels' calls to pull data back 
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:249](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L249)
+[src/Renderer/GLRenderTarget.ts:250](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L250)
 
 ___
 
@@ -677,7 +677,7 @@ The bindForWriting method.
 
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
-
+| `renderstate?` | [`RenderState`](RenderStates/Renderer_RenderStates_RenderState.RenderState) | `undefined` | The object tracking the current state of the renderer |
 | `clear` | `boolean` | `false` | The clear value. |
 
 #### Returns
@@ -690,7 +690,7 @@ The bindForWriting method.
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:207](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L207)
+[src/Renderer/GLRenderTarget.ts:208](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L208)
 
 ___
 
@@ -704,7 +704,7 @@ The bindToUniform method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-
+| `renderstate` | [`RenderState`](RenderStates/Renderer_RenderStates_RenderState.RenderState) | The object tracking the current state of the renderer |
 | `unif` | [`Uniform`](types/Renderer_types_renderer.Uniform) | The WebGL uniform |
 
 #### Returns
@@ -719,7 +719,7 @@ The bindToUniform method.
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:359](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L359)
+[src/Renderer/GLImageAtlas.ts:360](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L360)
 
 ___
 
@@ -739,7 +739,7 @@ The checkFramebuffer method.
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:173](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L173)
+[src/Renderer/GLRenderTarget.ts:174](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L174)
 
 ___
 
@@ -759,7 +759,7 @@ The cleanup method.
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:382](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L382)
+[src/Renderer/GLImageAtlas.ts:383](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L383)
 
 ___
 
@@ -785,7 +785,7 @@ The clear method.
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:234](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L234)
+[src/Renderer/GLRenderTarget.ts:235](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L235)
 
 ___
 
@@ -811,7 +811,7 @@ The configure method.
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:70](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L70)
+[src/Renderer/GLRenderTarget.ts:71](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L71)
 
 ___
 
@@ -829,7 +829,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:60](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L60)
+[src/Renderer/GLImageAtlas.ts:61](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L61)
 
 ___
 
@@ -850,7 +850,7 @@ Users should never need to call this method directly.
 
 #### Defined in
 
-[src/Renderer/ImagePyramid.ts:115](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/ImagePyramid.ts#L115)
+[src/Renderer/ImagePyramid.ts:116](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/ImagePyramid.ts#L116)
 
 ___
 
@@ -877,7 +877,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -903,7 +903,7 @@ The generateAtlasLayout method.
 
 #### Defined in
 
-[src/Renderer/ImagePyramid.ts:67](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/ImagePyramid.ts#L67)
+[src/Renderer/ImagePyramid.ts:67](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/ImagePyramid.ts#L67)
 
 ___
 
@@ -925,7 +925,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -949,7 +949,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -977,7 +977,7 @@ The getLayoutData method.
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:294](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L294)
+[src/Renderer/GLImageAtlas.ts:295](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L295)
 
 ___
 
@@ -1005,7 +1005,7 @@ The getSubImage method.
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:142](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L142)
+[src/Renderer/GLImageAtlas.ts:143](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L143)
 
 ___
 
@@ -1029,7 +1029,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:54](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L54)
+[src/Renderer/GLImageAtlas.ts:55](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L55)
 
 ___
 
@@ -1051,7 +1051,7 @@ The isLoaded method.
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:74](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L74)
+[src/Renderer/GLImageAtlas.ts:75](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L75)
 
 ___
 
@@ -1073,7 +1073,7 @@ The isReady method.
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:349](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L349)
+[src/Renderer/GLImageAtlas.ts:350](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L350)
 
 ___
 
@@ -1095,7 +1095,7 @@ The numSubImages method.
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:150](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L150)
+[src/Renderer/GLImageAtlas.ts:151](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L151)
 
 ___
 
@@ -1122,7 +1122,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -1151,7 +1151,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -1175,7 +1175,7 @@ asset.once('loaded', () => {
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `eventName` | `string` | The eventName value |
-| `listener` | (`event`: [`BaseEvent`](../Utilities/Utilities_BaseEvent.BaseEvent)) => `void` | The listener value |
+| `listener` | (`event`: `any`) => `void` | The listener value |
 
 #### Returns
 
@@ -1189,7 +1189,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -1216,7 +1216,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -1242,7 +1242,7 @@ The removeSubImage method.
 
 #### Defined in
 
-[src/Renderer/GLImageAtlas.ts:120](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLImageAtlas.ts#L120)
+[src/Renderer/GLImageAtlas.ts:121](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLImageAtlas.ts#L121)
 
 ___
 
@@ -1268,7 +1268,7 @@ The renderAtlas method.
 
 #### Defined in
 
-[src/Renderer/ImagePyramid.ts:99](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/ImagePyramid.ts#L99)
+[src/Renderer/ImagePyramid.ts:99](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/ImagePyramid.ts#L99)
 
 ___
 
@@ -1296,7 +1296,7 @@ The resize method.
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:307](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L307)
+[src/Renderer/GLRenderTarget.ts:308](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L308)
 
 ___
 
@@ -1310,7 +1310,7 @@ The unbind method.
 
 | Name | Type |
 | :------ | :------ |
-
+| `renderstate?` | [`RenderState`](RenderStates/Renderer_RenderStates_RenderState.RenderState) |
 
 #### Returns
 
@@ -1322,7 +1322,7 @@ The unbind method.
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:297](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L297)
+[src/Renderer/GLRenderTarget.ts:298](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L298)
 
 ___
 
@@ -1342,7 +1342,7 @@ The unbindForReading method.
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:258](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L258)
+[src/Renderer/GLRenderTarget.ts:259](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L259)
 
 ___
 
@@ -1356,7 +1356,7 @@ The unbindForWriting method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-
+| `renderstate?` | [`RenderState`](RenderStates/Renderer_RenderStates_RenderState.RenderState) | The object tracking the current state of the renderer |
 
 #### Returns
 
@@ -1368,5 +1368,5 @@ The unbindForWriting method.
 
 #### Defined in
 
-[src/Renderer/GLRenderTarget.ts:223](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLRenderTarget.ts#L223)
+[src/Renderer/GLRenderTarget.ts:224](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLRenderTarget.ts#L224)
 

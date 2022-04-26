@@ -35,7 +35,7 @@ Create a GLGeomLibrary.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:50](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L50)
+[src/Renderer/Drawing/GLGeomLibrary.ts:54](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L54)
 
 ## Properties
 
@@ -45,7 +45,7 @@ Create a GLGeomLibrary.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:45](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L45)
+[src/Renderer/Drawing/GLGeomLibrary.ts:48](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L48)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:25](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L25)
+[src/Renderer/Drawing/GLGeomLibrary.ts:25](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L25)
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -79,17 +79,27 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:36](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L36)
+[src/Renderer/Drawing/GLGeomLibrary.ts:37](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L37)
 
 ___
 
-### bufferNeedsRealloc
+### attributesBufferNeedsAlloc
 
-• `Protected` **bufferNeedsRealloc**: `boolean`
+• `Protected` **attributesBufferNeedsAlloc**: `string`[] = `[]`
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:35](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L35)
+[src/Renderer/Drawing/GLGeomLibrary.ts:36](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L36)
+
+___
+
+### attributesBufferNeedsRealloc
+
+• `Protected` **attributesBufferNeedsRealloc**: `boolean` = `false`
+
+#### Defined in
+
+[src/Renderer/Drawing/GLGeomLibrary.ts:35](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L35)
 
 ___
 
@@ -99,37 +109,47 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:37](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L37)
+[src/Renderer/Drawing/GLGeomLibrary.ts:38](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L38)
+
+___
+
+### freeDataAfterUpload
+
+• **freeDataAfterUpload**: `boolean` = `true`
+
+#### Defined in
+
+[src/Renderer/Drawing/GLGeomLibrary.ts:47](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L47)
 
 ___
 
 ### freeGeomIndices
 
-• `Protected` **freeGeomIndices**: `number`[]
+• `Protected` **freeGeomIndices**: `number`[] = `[]`
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:27](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L27)
+[src/Renderer/Drawing/GLGeomLibrary.ts:27](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L27)
 
 ___
 
 ### geomBuffersTmp
 
-• `Protected` **geomBuffersTmp**: `any`[]
+• `Protected` **geomBuffersTmp**: `any`[] = `[]`
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:32](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L32)
+[src/Renderer/Drawing/GLGeomLibrary.ts:32](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L32)
 
 ___
 
 ### geomRefCounts
 
-• `Protected` **geomRefCounts**: `number`[]
+• `Protected` **geomRefCounts**: `number`[] = `[]`
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:29](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L29)
+[src/Renderer/Drawing/GLGeomLibrary.ts:29](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L29)
 
 ___
 
@@ -139,7 +159,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:39](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L39)
+[src/Renderer/Drawing/GLGeomLibrary.ts:40](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L40)
 
 ___
 
@@ -149,47 +169,47 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:38](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L38)
+[src/Renderer/Drawing/GLGeomLibrary.ts:39](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L39)
 
 ___
 
 ### geoms
 
-• `Protected` **geoms**: [`BaseGeom`](../../SceneTree/Geometry/SceneTree_Geometry_BaseGeom.BaseGeom)[]
+• `Protected` **geoms**: [`BaseGeom`](../../SceneTree/Geometry/SceneTree_Geometry_BaseGeom.BaseGeom)[] = `[]`
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:28](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L28)
+[src/Renderer/Drawing/GLGeomLibrary.ts:28](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L28)
 
 ___
 
 ### geomsDict
 
-• `Protected` **geomsDict**: `Record`<`string`, `number`\>
+• `Protected` **geomsDict**: `Record`<`string`, `number`\> = `{}`
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:30](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L30)
+[src/Renderer/Drawing/GLGeomLibrary.ts:30](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L30)
 
 ___
 
 ### glGeomsDict
 
-• `Protected` **glGeomsDict**: `Record`<`string`, [`GLGeom`](Renderer_Drawing_GLGeom.GLGeom)\>
+• `Protected` **glGeomsDict**: `Record`<`string`, [`GLGeom`](Renderer_Drawing_GLGeom.GLGeom)\> = `{}`
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:31](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L31)
+[src/Renderer/Drawing/GLGeomLibrary.ts:31](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L31)
 
 ___
 
 ### glattrbuffers
 
-• `Protected` **glattrbuffers**: `Record`<`string`, `any`\>
+• `Protected` **glattrbuffers**: `Record`<`string`, `any`\> = `{}`
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:33](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L33)
+[src/Renderer/Drawing/GLGeomLibrary.ts:33](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L33)
 
 ___
 
@@ -199,7 +219,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:44](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L44)
+[src/Renderer/Drawing/GLGeomLibrary.ts:46](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L46)
 
 ___
 
@@ -209,7 +229,17 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:41](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L41)
+[src/Renderer/Drawing/GLGeomLibrary.ts:43](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L43)
+
+___
+
+### indicesBufferNeedsRealloc
+
+• `Protected` **indicesBufferNeedsRealloc**: `boolean` = `false`
+
+#### Defined in
+
+[src/Renderer/Drawing/GLGeomLibrary.ts:42](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L42)
 
 ___
 
@@ -219,7 +249,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:42](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L42)
+[src/Renderer/Drawing/GLGeomLibrary.ts:44](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L44)
 
 ___
 
@@ -229,7 +259,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:43](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L43)
+[src/Renderer/Drawing/GLGeomLibrary.ts:45](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L45)
 
 ___
 
@@ -243,17 +273,17 @@ ___
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
 ### numIndices
 
-• `Protected` **numIndices**: `number`
+• `Protected` **numIndices**: `number` = `0`
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:40](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L40)
+[src/Renderer/Drawing/GLGeomLibrary.ts:41](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L41)
 
 ___
 
@@ -263,27 +293,27 @@ ___
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:24](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L24)
+[src/Renderer/Drawing/GLGeomLibrary.ts:24](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L24)
 
 ___
 
 ### shaderAttrSpec
 
-• `Protected` **shaderAttrSpec**: `Record`<`string`, `any`\>
+• `Protected` **shaderAttrSpec**: `Record`<`string`, `any`\> = `{}`
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:26](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L26)
+[src/Renderer/Drawing/GLGeomLibrary.ts:26](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L26)
 
 ___
 
 ### shaderBindings
 
-• `Protected` **shaderBindings**: `Record`<`string`, `any`\>
+• `Protected` **shaderBindings**: `Record`<`string`, `any`\> = `{}`
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:34](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L34)
+[src/Renderer/Drawing/GLGeomLibrary.ts:34](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L34)
 
 ## Methods
 
@@ -307,13 +337,13 @@ Adds a geom to the GLGeomLibrary.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:142](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L142)
+[src/Renderer/Drawing/GLGeomLibrary.ts:134](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L134)
 
 ___
 
 ### allocateBuffers
 
-▸ **allocateBuffers**(`index`): `void`
+▸ `Private` **allocateBuffers**(`index`): `void`
 
 Allocates space for the geomBuffers for the specified geometry
 
@@ -329,7 +359,7 @@ Allocates space for the geomBuffers for the specified geometry
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:258](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L258)
+[src/Renderer/Drawing/GLGeomLibrary.ts:250](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L250)
 
 ___
 
@@ -343,7 +373,7 @@ The bind method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-
+| `renderstate` | [`RenderState`](../RenderStates/Renderer_RenderStates_RenderState.RenderState) | The renderstate value. |
 
 #### Returns
 
@@ -353,7 +383,7 @@ The bind method.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:498](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L498)
+[src/Renderer/Drawing/GLGeomLibrary.ts:525](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L525)
 
 ___
 
@@ -369,7 +399,7 @@ Cleans the state of this GeomSet during rendering.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:454](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L454)
+[src/Renderer/Drawing/GLGeomLibrary.ts:477](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L477)
 
 ___
 
@@ -385,7 +415,7 @@ The clearBuffers method.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:533](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L533)
+[src/Renderer/Drawing/GLGeomLibrary.ts:577](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L577)
 
 ___
 
@@ -409,7 +439,7 @@ Given a BaseGeom, constructs the GLGeom that manages the state of the geometry i
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:111](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L111)
+[src/Renderer/Drawing/GLGeomLibrary.ts:103](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L103)
 
 ___
 
@@ -426,7 +456,7 @@ Users should never need to call this method directly.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:560](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L560)
+[src/Renderer/Drawing/GLGeomLibrary.ts:604](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L604)
 
 ___
 
@@ -453,13 +483,35 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
-### genBuffers
+### genAttributesBuffer
 
-▸ **genBuffers**(): `void`
+▸ `Private` **genAttributesBuffer**(`attrName`): `void`
+
+Generates a single GPU buffer
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `attrName` | `string` |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/Renderer/Drawing/GLGeomLibrary.ts:329](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L329)
+
+___
+
+### genAttributesBuffers
+
+▸ `Private` **genAttributesBuffers**(): `void`
 
 Generates the GPU buffers required to store all the geometries
 
@@ -469,7 +521,21 @@ Generates the GPU buffers required to store all the geometries
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:322](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L322)
+[src/Renderer/Drawing/GLGeomLibrary.ts:316](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L316)
+
+___
+
+### genIndicesBuffers
+
+▸ `Private` **genIndicesBuffers**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/Renderer/Drawing/GLGeomLibrary.ts:368](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L368)
 
 ___
 
@@ -491,7 +557,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -515,7 +581,7 @@ Returns a Geom managed by this GLGeomLibrary.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:229](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L229)
+[src/Renderer/Drawing/GLGeomLibrary.ts:221](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L221)
 
 ___
 
@@ -539,7 +605,7 @@ Returns a Geom managed by this GLGeomLibrary.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:247](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L247)
+[src/Renderer/Drawing/GLGeomLibrary.ts:239](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L239)
 
 ___
 
@@ -563,7 +629,7 @@ Returns a Geom managed by this GLGeomLibrary.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:238](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L238)
+[src/Renderer/Drawing/GLGeomLibrary.ts:230](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L230)
 
 ___
 
@@ -587,7 +653,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -614,7 +680,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -643,7 +709,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -667,7 +733,7 @@ asset.once('loaded', () => {
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `eventName` | `string` | The eventName value |
-| `listener` | (`event`: [`BaseEvent`](../../Utilities/Utilities_BaseEvent.BaseEvent)) => `void` | The listener value |
+| `listener` | (`event`: `any`) => `void` | The listener value |
 
 #### Returns
 
@@ -681,7 +747,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -703,7 +769,7 @@ Removes a Geom managed by this GLGeomLibrary.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:190](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L190)
+[src/Renderer/Drawing/GLGeomLibrary.ts:182](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L182)
 
 ___
 
@@ -730,7 +796,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -744,7 +810,7 @@ The unbind method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-
+| `renderstate` | [`RenderState`](../RenderStates/Renderer_RenderStates_RenderState.RenderState) | The object tracking the current state of the renderer |
 
 #### Returns
 
@@ -752,7 +818,7 @@ The unbind method.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:518](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L518)
+[src/Renderer/Drawing/GLGeomLibrary.ts:562](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L562)
 
 ___
 
@@ -774,5 +840,5 @@ The uploadBuffers method.
 
 #### Defined in
 
-[src/Renderer/Drawing/GLGeomLibrary.ts:379](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/Drawing/GLGeomLibrary.ts#L379)
+[src/Renderer/Drawing/GLGeomLibrary.ts:397](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/GLGeomLibrary.ts#L397)
 

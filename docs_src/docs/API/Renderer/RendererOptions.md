@@ -15,7 +15,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:60](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLBaseRenderer.ts#L60)
+[src/Renderer/GLBaseRenderer.ts:61](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseRenderer.ts#L61)
 
 ___
 
@@ -25,7 +25,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:63](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLBaseRenderer.ts#L63)
+[src/Renderer/GLBaseRenderer.ts:64](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseRenderer.ts#L64)
 
 ___
 
@@ -35,7 +35,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:88](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLBaseRenderer.ts#L88)
+[src/Renderer/GLBaseRenderer.ts:89](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseRenderer.ts#L89)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:75](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLBaseRenderer.ts#L75)
+[src/Renderer/GLBaseRenderer.ts:76](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseRenderer.ts#L76)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:90](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLBaseRenderer.ts#L90)
+[src/Renderer/GLBaseRenderer.ts:91](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseRenderer.ts#L91)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:83](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLBaseRenderer.ts#L83)
+[src/Renderer/GLBaseRenderer.ts:84](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseRenderer.ts#L84)
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:72](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLBaseRenderer.ts#L72)
+[src/Renderer/GLBaseRenderer.ts:73](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseRenderer.ts#L73)
 
 ___
 
@@ -85,7 +85,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:78](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLBaseRenderer.ts#L78)
+[src/Renderer/GLBaseRenderer.ts:79](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseRenderer.ts#L79)
 
 ___
 
@@ -95,7 +95,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:80](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLBaseRenderer.ts#L80)
+[src/Renderer/GLBaseRenderer.ts:81](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseRenderer.ts#L81)
 
 ___
 
@@ -105,7 +105,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:86](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLBaseRenderer.ts#L86)
+[src/Renderer/GLBaseRenderer.ts:87](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseRenderer.ts#L87)
 
 ___
 
@@ -115,7 +115,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:69](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLBaseRenderer.ts#L69)
+[src/Renderer/GLBaseRenderer.ts:70](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseRenderer.ts#L70)
 
 ___
 
@@ -125,5 +125,5 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseRenderer.ts:58](https://github.com/ZeaInc/zea-engine/blob/819769315/src/Renderer/GLBaseRenderer.ts#L58)
+[src/Renderer/GLBaseRenderer.ts:59](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseRenderer.ts#L59)
 
