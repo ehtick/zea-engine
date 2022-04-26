@@ -316,7 +316,7 @@ class GLGeomItemLibrary extends EventEmitter {
         // https://www.khronos.org/registry/webgl/extensions/EXT_disjoint_timer_query_webgl2/
         this.timer_query_ext = gl.getExtension('EXT_disjoint_timer_query_webgl2')
 
-        let occlusionDataBufferSizeFactor = 1
+        let occlusionDataBufferSizeFactor = 1 / window.devicePixelRatio
         const occlusionDataBufferWidth = Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor)
         const occlusionDataBufferHeight = Math.ceil(this.renderer.getHeight() * occlusionDataBufferSizeFactor)
         this.occlusionDataBuffer = new GLRenderTarget(gl, {
