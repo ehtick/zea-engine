@@ -51,7 +51,7 @@ const builds = [
       name: 'zeaEngine',
       file: pkg.umd,
       format: 'umd',
-      sourcemap: true,
+      // sourcemap: true,
     },
     plugins,
   },
@@ -63,14 +63,19 @@ if (isProduction) {
     output: {
       file: pkg.browser,
       format: 'es',
-      sourcemap: true,
+      // sourcemap: true,
     },
 
     plugins,
   })
+
   builds.push({
     input: 'src/index.ts',
-    output: { file: pkg.main, format: 'cjs', sourcemap: true },
+    output: {
+      file: pkg.main,
+      format: 'cjs',
+      // sourcemap: true
+    },
     plugins: [
       preprocess({
         repl: {
@@ -82,16 +87,18 @@ if (isProduction) {
       ...plugins,
     ],
   })
+
   builds.push({
     input: 'src/index.ts',
     output: {
       name: 'zeaEngine',
       file: pkg['umd.min'],
       format: 'umd',
-      sourcemap: true,
+      // sourcemap: true,
     },
     plugins: [...plugins, terser()],
   })
+
   builds.push({
     input: './src/index.ts',
     output: [{ file: './dist/zea-engine.d.ts', format: 'es' }],
