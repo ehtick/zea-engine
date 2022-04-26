@@ -101,7 +101,9 @@
             geomItem.opacityParam.value = 1
           }
         })
-        setStatusText(`done-variant-01`)
+        renderer.on('CullingUpdated', (event) => {
+          setStatusText(`done-variant-01`)
+        })
       })
       document.querySelector('#variant-02').addEventListener('click', () => {
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-25, -25, 13), new Vec3(10, 0, 0))
@@ -119,13 +121,17 @@
             geomItem.opacityParam.value = 1
           }
         })
-        setStatusText(`done-variant-03`)
+        renderer.on('CullingUpdated', (event) => {
+          setStatusText(`done-variant-03`)
+        })
       })
       document.querySelector('#variant-04').addEventListener('click', () => {
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
         renderer.frameAll()
         scene.getRoot().opacityParam.value = 1
-        setStatusText(`done-variant-04`)
+        renderer.on('CullingUpdated', (event) => {
+          setStatusText(`done-variant-04`)
+        })
       })
       document.querySelector('#variant-05').addEventListener('click', () => {
         // Make all opaque again.
@@ -133,7 +139,9 @@
           geomItem.removeHighlight('Foo')
           geomItem.opacityParam.value = 1
         })
-        setStatusText(`done-variant-05`)
+        renderer.on('CullingUpdated', (event) => {
+          setStatusText(`done-variant-05`)
+        })
       })
 
       const cullElement = document.getElementById('cull-stats')

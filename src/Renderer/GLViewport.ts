@@ -433,8 +433,7 @@ class GLViewport extends GLBaseViewport {
       const bufferHeight = this.__geomDataBufferFbo.height
       const x = Math.floor(screenPos.x * (bufferWidth / this.__width))
       const y = Math.floor(screenPos.y * (bufferHeight / this.__height))
-      // const x = Math.floor(screenPos.x / this.__geomDataBufferSizeFactor)
-      // const y = Math.floor(screenPos.y / this.__geomDataBufferSizeFactor)
+
       let passId
       let geomData: Float32Array | Uint8Array
       if (this.__renderer.floatGeomBuffer) {
@@ -557,7 +556,10 @@ class GLViewport extends GLBaseViewport {
    * @private
    */
   __getPointerPos(rendererX: number, rendererY: number): Vec2 {
-    return new Vec2(rendererX - this.getPosX(), rendererY - this.getPosY())
+    return new Vec2(
+      (rendererX - this.getPosX()) * window.devicePixelRatio,
+      (rendererY - this.getPosY()) * window.devicePixelRatio
+    )
   }
 
   /**
@@ -599,7 +601,10 @@ class GLViewport extends GLBaseViewport {
     // If the manipulator or the viewport handle that
     // then skip the 'pointerDown' event.
     const downTime = Date.now()
-    if (downTime - this.__prevDownTime < this.doubleClickTimeParam.value) {
+    if (
+      downTime - this.__prevDownTime < this.doubleClickTimeParam.value &&
+      (event instanceof ZeaMouseEvent || (event instanceof ZeaTouchEvent && event.touches.length == 1))
+    ) {
       if (this.manipulator) {
         this.manipulator.onPointerDoublePress(event)
         if (!event.propagating) return

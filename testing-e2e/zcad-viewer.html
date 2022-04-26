@@ -5,6 +5,7 @@
 
     <link rel="shortcut icon" type="image/png" href="./data/favicon-32x32.png" />
     <meta charset="UTF-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.9/tailwind.min.css" />
     <link rel="stylesheet" href="./src/styles.css" />
     <!-- <link rel="stylesheet" href="styles/test.css" /> -->
@@ -74,19 +75,16 @@
       <header class="p-2">
         <img src="./data/logo-zea.svg" id="logo" />
         <div class="rendermode-buttons">
-          <label>
-            <span class="text-white">RenderMode:</span>
-            <select id="selectRenderMode">
-              <option value="wireframe">Wireframe</option>
-              <option value="hiddenline">hidden Line</option>
-              <option value="flat-noedges">Flat-NoEdges</option>
-              <option value="flat">Flat</option>
-              <option value="shaded-noedges">Shaded-NoEdges</option>
-              <option value="shaded">Shaded</option>
-              <option value="pbr-noedges" selected="selected">PBR-NoEdges</option>
-              <option value="pbr" selected="selected">PBR</option>
-            </select>
-          </label>
+          <select id="selectRenderMode">
+            <option value="wireframe">Wireframe</option>
+            <option value="hiddenline">hidden Line</option>
+            <option value="flat-noedges">Flat-NoEdges</option>
+            <option value="flat">Flat</option>
+            <option value="shaded-noedges">Shaded-NoEdges</option>
+            <option value="shaded">Shaded</option>
+            <option value="pbr-noedges" selected="selected">PBR-NoEdges</option>
+            <option value="pbr" selected="selected">PBR</option>
+          </select>
         </div>
       </header>
       <main class="flex flex-col flex-1">
@@ -140,13 +138,14 @@
           leftPanelVisible = false
         } else {
           leftPanel.classList.remove('invisible')
-          leftPanel.style.width = '340px'
-          separatorV.style.left = '340px'
+          leftPanel.style.width = '200px'
+          separatorV.style.left = '200px'
           leftPanelVisible = true
         }
       }
 
       document.getElementById('logo').addEventListener('click', toggleSidePanel)
+      if (ZeaSystemDesc.isMobileDevice) toggleSidePanel()
     </script>
 
     <script type="module">
@@ -338,18 +337,22 @@
               //   //   // })
               //   // })
               // }
-            } else {
-              const item = filterItem(event.intersectionData.geomItem)
-              if (item) selectionManager.toggleItemSelection(item, event.ctrlKey)
             }
           }
         })
         renderer.getViewport().on('pointerUp', (event) => {
           if (event.intersectionData) {
-            const geomItem = event.intersectionData.geomItem
-            console.log('', geomItem.getPath())
+            const item = filterItem(event.intersectionData.geomItem)
+            console.log('', item.getPath())
+            if (item) selectionManager.toggleItemSelection(item, !event.ctrlKey)
           }
         })
+        renderer.getViewport().on('pointerDoublePressed', (event) => {
+          if (!event.intersectionData) {
+            renderer.frameAll()
+          }
+        })
+
         renderer.getViewport().on('keyDown', (event) => {
           if (event.key == 'f') renderer.frameAll()
           else if (event.key == 'd') {
@@ -456,6 +459,8 @@
           renderer.forceRender()
           statusElement.textContent = text
         }
+        const $canvas = document.getElementById('canvas')
+        setStatusText('devicePixelRatio:' + window.devicePixelRatio + ' >' + $canvas.width + ' x ' + $canvas.height)
       }
 
       // To enable simple authentication in this app

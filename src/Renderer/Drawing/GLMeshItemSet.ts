@@ -44,7 +44,7 @@ class GLMeshItemSet extends GLGeomItemSetMultiDraw {
 
     gl.depthFunc(gl.LEQUAL)
 
-    const { geomType, outlineThickness, viewportWidth, renderMode } = renderstate.unifs
+    const { geomType, outlineThickness, viewportSize, renderMode } = renderstate.unifs
 
     const renderModeValue: string | null =
       renderstate instanceof ColorRenderState && renderMode ? renderstate.renderMode : null
@@ -52,6 +52,7 @@ class GLMeshItemSet extends GLGeomItemSetMultiDraw {
     const drawingOutlines =
       renderstate instanceof ColorRenderState &&
       outlineThickness &&
+      viewportSize &&
       renderstate.outlineMethod == 'geometry' &&
       renderstate.outlineThickness > 0 &&
       renderModeValue != 'flat-noedges' &&
@@ -97,7 +98,11 @@ class GLMeshItemSet extends GLGeomItemSetMultiDraw {
       gl.cullFace(gl.FRONT)
       // @ts-ignore
       gl.uniform1f(outlineThickness.location, colorRenderState.outlineThickness)
-      gl.uniform1f(viewportWidth.location, colorRenderState.region[2] - colorRenderState.region[0])
+      gl.uniform2f(
+        viewportSize.location,
+        renderstate.region[2] - renderstate.region[0],
+        renderstate.region[3] - renderstate.region[1]
+      )
       // @ts-ignore
       if (renderModeValue == 'hiddenline') {
         // start rendering surfaces again

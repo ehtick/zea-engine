@@ -563,8 +563,8 @@ class GLBaseRenderer extends ParameterOwner {
       return
     }
 
-    const width = Math.max(4, newWidth)
-    const height = Math.max(4, newHeight)
+    const width = Math.max(4, newWidth) * window.devicePixelRatio
+    const height = Math.max(4, newHeight) * window.devicePixelRatio
 
     this.__glcanvas.width = width
     this.__glcanvas.height = height
@@ -698,13 +698,13 @@ class GLBaseRenderer extends ParameterOwner {
 
     {
       // Note: disabling multi-draw on Safari 15.4 until we can figure out how to address this regression.
-      const disableOnSafari = SystemDesc.browserName == 'Safari' && SystemDesc.fullVersion == '15.4'
-      if (disableOnSafari) {
-        console.warn('Disabling multi-draw on Safari 15.4 due to a regression in WebKit', SystemDesc)
-      }
-      webglOptions.disableMultiDraw = options.disableMultiDraw || disableOnSafari
+      // const disableOnSafari = SystemDesc.browserName == 'Safari' && SystemDesc.fullVersion == '15.4'
+      // if (disableOnSafari) {
+      //   console.warn('Disabling multi-draw on Safari 15.4 due to a regression in WebKit', SystemDesc)
+      // }
+      // const disableMultiDraw = options.disableMultiDraw //|| disableOnSafari
       const ext = gl.name == 'webgl2' ? gl.getExtension('WEBGL_multi_draw') : null
-      if (ext && !webglOptions.disableMultiDraw) {
+      if (ext && !options.disableMultiDraw) {
         gl.multiDrawArrays = ext.multiDrawArraysWEBGL.bind(ext)
         gl.multiDrawElements = ext.multiDrawElementsWEBGL.bind(ext)
         gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)

@@ -212,8 +212,11 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     {
       if (!this.drawIdsArray || this.drawOrderToIndex.length > this.drawIdsArray.length) {
         this.drawIdsArray = new Float32Array(this.drawOrderToIndex.length)
-        this.drawElementOffsets = new Int32Array(this.drawOrderToIndex.length)
-        this.drawElementCounts = new Int32Array(this.drawOrderToIndex.length)
+
+        // Note: the +1 here is to avoid an exception thrown on Safari if the offsets and counts are
+        // exactly the size of the number of drawn items. (a bug in the validation).
+        this.drawElementOffsets = new Int32Array(this.drawOrderToIndex.length + 1)
+        this.drawElementCounts = new Int32Array(this.drawOrderToIndex.length + 1)
       }
 
       this.drawOrderToIndex.forEach((itemIndex, drawIndex) => {
@@ -300,8 +303,11 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     if (this.highlightedIdsBufferDirty) {
       if (!this.highlightedIdsArray || this.highlightedItems.length > this.highlightedIdsArray.length) {
         this.highlightedIdsArray = new Float32Array(this.highlightedItems.length)
-        this.highlightElementOffsets = new Int32Array(this.highlightedItems.length)
-        this.highlightElementCounts = new Int32Array(this.highlightedItems.length)
+
+        // Note: the +1 here is to avoid an exception thrown on Safari if the offsets and counts are
+        // exactly the size of the number of drawn items. (a bug in the validation).
+        this.highlightElementOffsets = new Int32Array(this.highlightedItems.length + 1)
+        this.highlightElementCounts = new Int32Array(this.highlightedItems.length + 1)
       }
 
       // Collect all visible geom ids into the instanceIds array.

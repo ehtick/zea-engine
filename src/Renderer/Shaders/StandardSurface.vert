@@ -16,7 +16,7 @@ uniform mat4 projectionMatrix;
 uniform int geomType;
 
 uniform float outlineThickness;
-uniform float viewportWidth;
+uniform vec2 viewportSize;
 
 // should be imported by bottom 3
 import 'GLSLUtils.glsl'
@@ -69,9 +69,8 @@ void main(void) {
   // at all by the surface.
   if (geomType == TRIANGLES) {
     if (outlineThickness > 0.00001) {
-      vec3 screenNormal = v_viewNormal;
-      screenNormal.z = 0.0;
-      gl_Position.xyz += normalize(screenNormal) * ((2.0 / viewportWidth) * outlineThickness) * gl_Position.w;
+      vec2 screenNormal = v_viewNormal.xy;
+      gl_Position.xy += normalize(screenNormal) * ((2.0 / viewportSize) * outlineThickness) * gl_Position.w;
     }
   }
   else if (geomType == LINES) { // start 'LINES'

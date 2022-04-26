@@ -532,6 +532,23 @@ class GLGeomLibrary extends EventEmitter {
       const gl = this.__gl
       shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.glattrbuffers, this.indexBuffer)
       this.shaderBindings[renderstate.shaderkey!] = shaderBinding
+
+      {
+        // Hack to force the primitive restart index cache to be dirty...
+        // https://bugs.webkit.org/show_bug.cgi?id=239015
+        // - First draw updates the indexType to be correct (invalid enum -> draw buffer element type)
+        const gl = this.__gl
+        gl.drawElements(gl.POINTS, 1, gl.UNSIGNED_INT, 0)
+        gl.drawElements(gl.LINES, 2, gl.UNSIGNED_INT, 0)
+        gl.drawElements(gl.TRIANGLES, 3, gl.UNSIGNED_INT, 0)
+
+        // - dummy subbuffer update marks the cache dirty
+        // bufferSubData an array of size 1 at the end of the current allocation.
+        const dummyIndices = new Uint32Array(1)
+        const elementSize = 4 //  Uint32Array
+        const offsetInBytes = this.indicesAllocator.allocatedSpace * elementSize
+        gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, offsetInBytes, dummyIndices)
+      }
     } else {
       shaderBinding.bind(renderstate)
     }

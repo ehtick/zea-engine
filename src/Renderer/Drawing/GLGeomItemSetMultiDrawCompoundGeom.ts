@@ -345,13 +345,18 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     let regen = false
     for (let key in this.drawIdsArraysAllocators) {
       const allocator = this.drawIdsArraysAllocators[key]
-      if (!this.drawElementCounts[key] || allocator.reservedSpace > this.drawElementCounts[key].length) {
-        if (this.drawElementCounts[key] && allocator.reservedSpace > this.drawElementCounts[key].length) {
+      // Note: the - 1 here is to avoid an exception thrown on Safari if the offsets and counts are
+      // exactly the size of the number of drawn items. (a bug in the validation).
+      if (!this.drawElementCounts[key] || allocator.reservedSpace > this.drawElementCounts[key].length - 1) {
+        if (this.drawElementCounts[key] && allocator.reservedSpace > this.drawElementCounts[key].length - 1) {
           regen = true
         }
         this.drawIdsArrays[key] = new Float32Array(allocator.reservedSpace * 4) // one RGBA pixel per drawn geometry.
-        this.drawElementOffsets[key] = new Int32Array(allocator.reservedSpace)
-        this.drawElementCounts[key] = new Int32Array(allocator.reservedSpace)
+
+        // Note: the +1 here is to avoid an exception thrown on Safari if the offsets and counts are
+        // exactly the size of the number of drawn items. (a bug in the validation).
+        this.drawElementOffsets[key] = new Int32Array(allocator.reservedSpace + 1)
+        this.drawElementCounts[key] = new Int32Array(allocator.reservedSpace + 1)
       }
     }
     if (regen) {
@@ -639,11 +644,19 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       // let regen = false
       for (let key in this.highlightedIdsArraysAllocators) {
         const allocator = this.highlightedIdsArraysAllocators[key]
-        if (!this.highlightElementCounts[key] || allocator.reservedSpace > this.highlightElementCounts[key].length) {
-          // if (this.highlightElementCounts[key] && allocator.reservedSpace > this.highlightElementCounts[key].length) regen = true
+        // Note: the - 1 here is to avoid an exception thrown on Safari if the offsets and counts are
+        // exactly the size of the number of drawn items. (a bug in the validation).
+        if (
+          !this.highlightElementCounts[key] ||
+          allocator.reservedSpace > this.highlightElementCounts[key].length - 1
+        ) {
+          // if (this.highlightElementCounts[key] && allocator.reservedSpace > this.highlightElementCounts[key].length - 1) regen = true
           this.highlightedIdsArray[key] = new Float32Array(allocator.reservedSpace * 4) // one RGBA pixel per drawn geometry.
-          this.highlightElementOffsets[key] = new Int32Array(allocator.reservedSpace)
-          this.highlightElementCounts[key] = new Int32Array(allocator.reservedSpace)
+
+          // Note: the +1 here is to avoid an exception thrown on Safari if the offsets and counts are
+          // exactly the size of the number of drawn items. (a bug in the validation).
+          this.highlightElementOffsets[key] = new Int32Array(allocator.reservedSpace + 1)
+          this.highlightElementCounts[key] = new Int32Array(allocator.reservedSpace + 1)
         }
       }
 
@@ -823,7 +836,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
 
     gl.depthFunc(gl.LEQUAL)
 
-    const { drawIdsTexture, geomType, outlineThickness, viewportWidth, occluded, renderMode } = renderstate.unifs
+    const { drawIdsTexture, geomType, outlineThickness, viewportSize, occluded, renderMode } = renderstate.unifs
 
     const renderModeValue: string | null =
       renderstate instanceof ColorRenderState && renderMode ? renderstate.renderMode : null
@@ -833,6 +846,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     const drawingOutlines =
       renderstate instanceof ColorRenderState &&
       outlineThickness &&
+      viewportSize &&
       renderstate.outlineMethod == 'geometry' &&
       renderstate.outlineThickness > 0 &&
       drawEdges
@@ -898,7 +912,11 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         gl.enable(gl.CULL_FACE)
         gl.cullFace(gl.FRONT)
         gl.uniform1f(outlineThickness.location, this.renderer.outlineThickness)
-        gl.uniform1f(viewportWidth.location, renderstate.region[2] - renderstate.region[0])
+        gl.uniform2f(
+          viewportSize.location,
+          renderstate.region[2] - renderstate.region[0],
+          renderstate.region[3] - renderstate.region[1]
+        )
         if (renderModeValue == 'hiddenline') {
           // start rendering surfaces again
           gl.colorMask(true, true, true, false)
@@ -1382,16 +1400,16 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     const drawElementCounts: Record<string, Int32Array> = {}
     const drawElementOffsets: Record<string, Int32Array> = {}
     if (this.drawElementCounts.TRIANGLES) {
-      drawElementCounts.TRIANGLES = new Int32Array(this.drawElementCounts.TRIANGLES.length)
-      drawElementOffsets.TRIANGLES = new Int32Array(this.drawElementOffsets.TRIANGLES.length)
+      drawElementCounts.TRIANGLES = new Int32Array(this.drawElementCounts.TRIANGLES.length + 1)
+      drawElementOffsets.TRIANGLES = new Int32Array(this.drawElementOffsets.TRIANGLES.length + 1)
     }
     if (this.drawElementCounts.TRIANGLES) {
-      drawElementCounts.LINES = new Int32Array(this.drawElementCounts.LINES.length)
-      drawElementOffsets.LINES = new Int32Array(this.drawElementOffsets.LINES.length)
+      drawElementCounts.LINES = new Int32Array(this.drawElementCounts.LINES.length + 1)
+      drawElementOffsets.LINES = new Int32Array(this.drawElementOffsets.LINES.length + 1)
     }
     if (this.drawElementCounts.POINTS) {
-      drawElementCounts.POINTS = new Int32Array(this.drawElementCounts.POINTS.length)
-      drawElementOffsets.POINTS = new Int32Array(this.drawElementOffsets.POINTS.length)
+      drawElementCounts.POINTS = new Int32Array(this.drawElementCounts.POINTS.length + 1)
+      drawElementOffsets.POINTS = new Int32Array(this.drawElementOffsets.POINTS.length + 1)
     }
 
     const drawOffsets: Record<string, number> = {
