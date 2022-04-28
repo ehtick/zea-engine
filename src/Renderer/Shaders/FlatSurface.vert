@@ -1,5 +1,6 @@
 
 precision highp float;
+precision highp int;
 
 attribute vec3 positions;
 #ifdef ENABLE_TEXTURES
@@ -8,6 +9,7 @@ attribute vec2 texCoords;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform int isOrthographic;
 
 import 'GLSLUtils.glsl'
 
@@ -60,7 +62,11 @@ void main(void) {
   float overlay = Overlay;
 #endif
 
-  gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
+  if (isOrthographic > 0){
+    gl_Position.z -= overlay;
+  } else {
+    gl_Position.z = mix(gl_Position.z, -gl_Position.z, overlay);
+  }
 
   //////////////////////////////////////////////
   

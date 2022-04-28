@@ -7,6 +7,7 @@ import 'quadVertexFromID.glsl'
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 cameraMatrix;
+uniform int isOrthographic;
 
 import 'GLSLUtils.glsl'
 
@@ -165,6 +166,10 @@ void main(void) {
 
   // Use cross platform bit flags methods
   if (drawOnTop) {
-    gl_Position.z = mix(gl_Position.z, -gl_Position.w, 0.5);
+    if (isOrthographic > 0){
+      gl_Position.z = mix(gl_Position.z, -1.0, 0.5);
+    } else {
+      gl_Position.z = mix(gl_Position.z, -gl_Position.z, 0.5);
+    }
   }
 }

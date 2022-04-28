@@ -1,10 +1,12 @@
 
 precision highp float;
+precision highp int;
 
 instancedattribute vec3 positions;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform int isOrthographic;
 
 import 'GLSLUtils.glsl' 
 import 'inverse.glsl'
@@ -52,7 +54,10 @@ void main(void) {
   v_viewPos = -viewPos.xyz;
   
   gl_Position = projectionMatrix * viewPos;
-  if (Overlay > 0.0) {
-    gl_Position.z = mix(gl_Position.z, -gl_Position.w, Overlay);
+
+  if (isOrthographic > 0){
+    gl_Position.z -= Overlay;
+  } else {
+    gl_Position.z = mix(gl_Position.z, -gl_Position.z, Overlay);
   }
 }

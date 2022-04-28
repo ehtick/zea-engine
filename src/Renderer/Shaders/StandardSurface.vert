@@ -10,6 +10,7 @@ attribute vec2 texCoords;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform int isOrthographic;
 
 // Now that we render multiple types of geometry from a single shader
 // we need to know what kind of geometry it is...
@@ -75,11 +76,19 @@ void main(void) {
   }
   else if (geomType == LINES) { // start 'LINES'
     float overlay = 0.00001;
-    gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
+    if (isOrthographic > 0){
+      gl_Position.z -= overlay;
+    } else {
+      gl_Position.z = mix(gl_Position.z, -gl_Position.z, overlay);
+    }
   } // end 'LINES'
   else if (geomType == POINTS) { // start 'POINTS'
     float overlay = 0.00003;
-    gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
+    if (isOrthographic > 0){
+      gl_Position.z -= overlay;
+    } else {
+      gl_Position.z = mix(gl_Position.z, -gl_Position.z, overlay);
+    }
   }  // end 'POINTS'
 
 

@@ -1,5 +1,6 @@
 
 precision highp float;
+precision highp int;
 
 attribute vec3 positions;
 attribute vec3 positionsNext;
@@ -11,6 +12,7 @@ import 'modelMatrix.glsl'
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform int isOrthographic;
 
 #ifdef ENABLE_MULTI_DRAW
 import 'materialparams.glsl'
@@ -62,11 +64,18 @@ void main(void) {
   float overlay = Overlay;
 #endif
 
+   
 #if defined(DRAW_GEOMDATA)
-  gl_Position.z = mix(gl_Position.z, -gl_Position.w, mix(overlay, 1.0, 0.0001));
+  float _overlay = mix(overlay, 1.0, 0.0001);
 #else
-  gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
+  float _overlay = overlay;
 #endif
+
+  if (isOrthographic > 0){
+    gl_Position.z -= _overlay;
+  } else {
+    gl_Position.z = mix(gl_Position.z, -gl_Position.z, _overlay);
+  }
 
   //////////////////////////////////////////////
   

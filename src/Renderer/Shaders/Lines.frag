@@ -1,11 +1,13 @@
 
 precision highp float;
+precision highp int;
 
 import 'GLSLUtils.glsl'
 import 'drawItemTexture.glsl'
 import 'cutaways.glsl'
 import 'materialparams.glsl'
 
+#if defined(DRAW_COLOR)
 
 uniform int occluded;
 uniform vec4 hiddenLineColor;
@@ -19,7 +21,7 @@ uniform color OccludedColor;
 
 #endif // ENABLE_MULTI_DRAW
 
-#if defined(DRAW_GEOMDATA)
+#elif defined(DRAW_GEOMDATA)
 
 uniform int isOrthographic;
 

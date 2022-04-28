@@ -10,6 +10,7 @@ import 'modelMatrix.glsl'
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform int isOrthographic;
 
 #ifdef ENABLE_MULTI_DRAW
 import 'materialparams.glsl'
@@ -56,8 +57,12 @@ void main(void) {
   // Make the geom data point size at least 8 pixels across, else its impossible to hit.
   gl_PointSize = max(8.0, pointSize);
 #endif
-  gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
 
+  if (isOrthographic > 0){
+    gl_Position.z -= overlay;
+  } else {
+    gl_Position.z = mix(gl_Position.z, -gl_Position.z, overlay);
+  }
   
   v_viewPos = -viewPos.xyz;
 }

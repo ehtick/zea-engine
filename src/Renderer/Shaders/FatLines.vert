@@ -6,6 +6,7 @@ attribute float vertexIDs;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform int isOrthographic;
 
 
 import 'drawItemTexture.glsl'
@@ -59,8 +60,11 @@ void main(void) {
   #endif
 
   gl_Position     = projectionMatrix * vec4(v_viewPos, 1.0);
-  if (Overlay > 0.0) {
-    gl_Position.z = mix(gl_Position.z, -gl_Position.w, Overlay);
+
+  if (isOrthographic > 0){
+    gl_Position.z -= mix(gl_Position.z, -1.0, Overlay);
+  } else {
+    gl_Position.z = mix(gl_Position.z, -gl_Position.z, Overlay);
   }
 
 }

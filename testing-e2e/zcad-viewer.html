@@ -85,6 +85,10 @@
             <option value="pbr-noedges" selected="selected">PBR-NoEdges</option>
             <option value="pbr" selected="selected">PBR</option>
           </select>
+          <select id="selectFrustum">
+            <option value="persp">Perspective</option>
+            <option value="ortho">Orthographic</option>
+          </select>
         </div>
       </header>
       <main class="flex flex-col flex-1">
@@ -186,8 +190,8 @@
         })
 
         renderer.outlineMethod = 'geometry'
-        renderer.outlineThickness = 1
-        renderer.highlightOutlineThickness = 0.75
+        renderer.outlineThickness = 1.5
+        renderer.highlightOutlineThickness = 1.75
         renderer.hiddenLineColor = new Color(1, 0.15, 0.15, 0.1)
         // renderer.getViewport().debugHighlightedGeomsBuffer = true
 
@@ -407,6 +411,15 @@
         renderModelSelect.addEventListener('change', () => {
           renderer.renderMode = renderModelSelect.value
           renderer.requestRedraw()
+        })
+        const selectFrustum = document.getElementById('selectFrustum')
+        selectFrustum.addEventListener('change', () => {
+          const camera = renderer.getViewport().getCamera()
+          if (selectFrustum.value == 'persp') {
+            camera.setIsOrthographic(0, 400)
+          } else {
+            camera.setIsOrthographic(1, 400)
+          }
         })
         //
 

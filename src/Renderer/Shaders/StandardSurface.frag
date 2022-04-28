@@ -23,25 +23,25 @@ varying vec3 v_worldPos;
   out vec4 fragColor;
 #endif
 
-
 // Now that we render multiple types of geometry from a single shader
 // we need to know what kind of geometry it is...
 uniform int geomType;
 import 'geomType.glsl'
 
-uniform float outlineThickness;
-uniform int occluded;
-uniform vec4 hiddenLineColor;
-uniform int renderMode;
+uniform int isOrthographic;
 
 #if defined(DRAW_COLOR)
+
+uniform int renderMode;
+uniform int occluded;
+uniform float outlineThickness;
+uniform vec4 hiddenLineColor;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
 #endif
 
 uniform mat4 cameraMatrix;
-uniform int isOrthographic;
 
 #ifndef ENABLE_MULTI_DRAW
 
@@ -117,9 +117,7 @@ import 'debugColors.glsl'
 // end DRAW_COLOR
 #elif defined(DRAW_GEOMDATA)
 
-uniform int isOrthographic;
 import 'surfaceGeomData.glsl'
-
 
 #elif defined(DRAW_HIGHLIGHT)
 import 'surfaceHighlight.glsl'
@@ -181,7 +179,7 @@ void main(void) {
     if (isOrthographic == 0)
       viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
     else 
-      viewVector = vec3(-cameraMatrix[2][0], -cameraMatrix[2][1], -cameraMatrix[2][2]);
+      viewVector = vec3(cameraMatrix[2][0], cameraMatrix[2][1], cameraMatrix[2][2]);
       
     if (dot(normal, viewVector) < 0.0) {
       normal = -normal;
@@ -354,6 +352,7 @@ void main(void) {
   fragColor.rgb = toGamma(fragColor.rgb * exposure);
 #endif
 
+// end DRAW_COLOR
 #elif defined(DRAW_GEOMDATA)
   // Cutaways
   if (testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {
@@ -381,28 +380,15 @@ void main(void) {
     }
   } // end 'TRIANGLES'
   else if (geomType == LINES) { // start 'LINES'
-    if (occluded == 1) {
 #ifdef ENABLE_MULTI_DRAW
-      vec4 hiddenEdgeColor      = getMaterialValue(materialCoords, 5);
+    vec4 edgeColor      = getMaterialValue(materialCoords, 3);
 #else 
-      vec4 hiddenEdgeColor      = EdgeColor;
+    vec4 edgeColor      = EdgeColor;
 #endif // ENABLE_MULTI_DRAW
-      float opacity          = hiddenEdgeColor.a * treeItemOpacity;
-      if (opacity < 0.001) {
-        discard;
-        return;
-      }
-    } else {
-#ifdef ENABLE_MULTI_DRAW
-      vec4 edgeColor      = getMaterialValue(materialCoords, 3);
-#else 
-      vec4 edgeColor      = EdgeColor;
-#endif // ENABLE_MULTI_DRAW
-      float opacity          = edgeColor.a * treeItemOpacity;
-      if (opacity < 0.001) {
-        discard;
-        return;
-      }
+    float opacity          = edgeColor.a * treeItemOpacity;
+    if (opacity < 0.001) {
+      discard;
+      return;
     }
   } // end 'LINES'
   else if (geomType == POINTS) { // start 'POINTS'
