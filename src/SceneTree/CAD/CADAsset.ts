@@ -184,7 +184,13 @@ class CADAsset extends AssetItem {
               console.error("Corrupt zcad file. Missing 'geoms':", url)
               resourceLoader.incrementWorkDone(1)
             } else {
-              this.geomLibrary.loadGeomFilesStream(geomLibraryJSON, basePath, context)
+              if (!context.lazyLoading) {
+                this.geomLibrary.loadGeomFilesStream(geomLibraryJSON, basePath, context)
+              } else {
+                this.geomLibrary.prepareLazyLoad(basePath, context)
+
+                resourceLoader.incrementWorkDone(1)
+              }
             }
           } else {
             // No geoms in this file, so we won't wait for the 'done' event in the GeomLibrary.

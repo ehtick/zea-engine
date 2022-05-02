@@ -24,6 +24,7 @@ export class AssetLoadContext extends EventEmitter {
   resources: Record<string, string> | null = null // a mapping of the key to asset urls.
   xrefs: Record<string, XRef> = {} // a mapping of the xrefs that have been loaded to their paths.
   xrefLoadCallback: (resourceId: string, xref: XRef) => string | null = null // When XRefs load, this callback can be used to supply the URL for the zcad file
+  lazyLoading: false
   protected postLoadCallbacks: Array<() => void> = []
   protected asyncCount: number = 0
 
@@ -40,6 +41,7 @@ export class AssetLoadContext extends EventEmitter {
       this.xrefs = context.xrefs
       this.resources = context.resources
       this.xrefs = context.xrefs
+      this.lazyLoading = context.lazyLoading
       this.xrefLoadCallback = context.xrefLoadCallback
     }
   }

@@ -73,9 +73,9 @@ class GeomLibrary extends EventEmitter {
   protected genBuffersOpts: Record<string, any> = {}
   protected loadContext?: AssetLoadContext
   protected numGeoms: number = -1
-  protected geoms: Array<BaseProxy | BaseGeom> = []
-  protected basePath: string = ''
-  protected loadedCount: number = 0
+  geoms: Array<BaseProxy | BaseGeom> = []
+  basePath: string = ''
+  loadedCount: number = 0
   /**
    * Create a geom library.
    */
@@ -121,6 +121,11 @@ class GeomLibrary extends EventEmitter {
         this.readBinaryBuffer(geomFileUrl, geomsData.buffer, this.loadContext)
       })
     })
+  }
+
+  prepareLazyLoad(basePath: string, context: AssetLoadContext) {
+    this.basePath = basePath
+    this.loadContext = context
   }
 
   /**
@@ -215,7 +220,7 @@ class GeomLibrary extends EventEmitter {
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer
 
     const isHugeFile = buffer.byteLength > 20000000
-    if (numGeomLibraries > 1 && !isHugeFile) {
+    if ((numGeomLibraries > 1 && !isHugeFile) || context.lazyLoading) {
       // In scenes loading many files, we just load each file on a different worker.
       // This has one big advantage that we don't clone the buffer using the 'slice' method
       // potentially reducing temporary memory consumption by a lot.

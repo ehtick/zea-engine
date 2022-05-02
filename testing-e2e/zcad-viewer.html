@@ -346,6 +346,12 @@
         })
         renderer.getViewport().on('pointerUp', (event) => {
           if (event.intersectionData) {
+            const geomItem = event.intersectionData.geomItem
+            if (!geomItem.loaded) {
+              geomItem.loadGeom()
+              event.stopPropagation()
+              return
+            }
             const item = filterItem(event.intersectionData.geomItem)
             console.log('', item.getPath())
             if (item) selectionManager.toggleItemSelection(item, !event.ctrlKey)
@@ -431,7 +437,7 @@
           const zcad = urlParams.get('zcad')
           const start = performance.now()
           const context = new AssetLoadContext()
-          // context.units = "Millimeters"
+          context.lazyLoading = true
           context.camera = renderer.getViewport().getCamera()
           asset.load(zcad, context).then(() => {
             console.log('Loading CAD File version:', asset.cadfileVersion, ' exported using SDK:', asset.sdk)

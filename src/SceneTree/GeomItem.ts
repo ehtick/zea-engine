@@ -1,4 +1,4 @@
-import { Xfo, Box3, Vec3, Mat4 } from '../Math/index'
+import { Xfo, Box3, Vec3, Quat } from '../Math/index'
 import { XfoParameter, Mat4Parameter } from './Parameters/index'
 import { GeometryParameter } from './Parameters/GeometryParameter'
 import { Registry } from '../Registry'
@@ -7,14 +7,17 @@ import { Operator } from './Operators/Operator'
 import { XfoOperatorInput } from './Operators/OperatorInput'
 import { Mat4OperatorOutput } from './Operators/OperatorOutput'
 import { BaseProxy } from './Geometry/GeomProxies'
-import { BaseGeom } from './Geometry'
+import { BaseGeom, Cuboid } from './Geometry'
 import { Material } from './Material'
 import { BinReader } from './BinReader'
 import { Vec3Attribute } from './Geometry/Vec3Attribute'
-import { AssetItem, AssetLoadContext } from '.'
+import { AssetItem } from './AssetItem'
+import { AssetLoadContext } from './AssetLoadContext'
 import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'
 import { CloneContext } from './CloneContext'
+import { CADAsset } from './CAD/CADAsset'
 
+const cuboid = new Cuboid(1, 1, 1, false)
 let calculatePreciseBoundingBoxes = false
 
 /** The operator the calculates the global Xfo of a TreeItem based on its parents GlobalXfo and its own LocalXfo
@@ -72,6 +75,7 @@ class GeomItem extends BaseGeomItem {
   protected assetItem: AssetItem | null = null
   protected calcGeomMatOperator: Operator
   public cullable: boolean = true
+  public loaded = true
 
   /**
    * @member geomOffsetXfoParam - Provides an offset transformation that is applied only to the geometry and not inherited by child items.
@@ -182,26 +186,9 @@ class GeomItem extends BaseGeomItem {
 
     const itemFlags = reader.loadUInt8()
     const geomIndex = reader.loadUInt32()
-    const geomLibrary = context.assetItem.getGeometryLibrary()
 
     this.geomIndex = geomIndex
     this.assetItem = context.assetItem
-
-    const geom = geomLibrary.getGeom(geomIndex)
-    if (geom) {
-      this.geomParam.loadValue(<BaseGeom>geom)
-    } else {
-      const onGeomLoaded = (event: Record<string, any>) => {
-        const { range } = event
-        if (geomIndex >= range[0] && geomIndex < range[1]) {
-          const geom = geomLibrary.getGeom(geomIndex)
-          if (geom) this.geomParam.value = <BaseGeom>geom
-          else console.warn('Geom not loaded:', this.getName())
-          geomLibrary.removeListenerById('rangeLoaded', onGeomLoadedListenerID)
-        }
-      }
-      const onGeomLoadedListenerID = geomLibrary.on('rangeLoaded', onGeomLoaded)
-    }
 
     // this.setVisibility(j.visibility);
     // Note: to save space, some values are skipped if they are identity values
@@ -212,6 +199,20 @@ class GeomItem extends BaseGeomItem {
         reader.loadFloat32Quat(),
         reader.loadFloat32Vec3()
       )
+    }
+
+    if (!context.lazyLoading) {
+      const geomLibrary = context.assetItem.getGeometryLibrary()
+      const onGeomLoaded = (event: Record<string, any>) => {
+        const { range } = event
+        if (geomIndex >= range[0] && geomIndex < range[1]) {
+          const geom = geomLibrary.getGeom(geomIndex)
+          if (geom) this.geomParam.value = <BaseGeom>geom
+          else console.warn('Geom not loaded:', this.getName())
+          geomLibrary.removeListenerById('rangeLoaded', onGeomLoadedListenerID)
+        }
+      }
+      const onGeomLoadedListenerID = geomLibrary.on('rangeLoaded', onGeomLoaded)
     }
 
     // BaseGeomItem now handles loading materials.
@@ -240,6 +241,15 @@ class GeomItem extends BaseGeomItem {
       reader.loadFloat32Vec2()
     } else {
       this.geomBBox = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
+
+      if (context.lazyLoading) {
+        const diagonal = this.geomBBox.diagonal()
+        const center = this.geomBBox.p0.add(this.geomBBox.p1)
+        center.scaleInPlace(0.5)
+        this.geomOffsetXfoParam.value = new Xfo(center, new Quat(), diagonal)
+        this.geomParam.value = cuboid
+        this.loaded = false
+      }
     }
   }
 
@@ -277,30 +287,50 @@ class GeomItem extends BaseGeomItem {
   copyFrom(src: GeomItem, context?: CloneContext): void {
     super.copyFrom(src, context)
 
-    if (!src.geomParam.value && src.geomIndex != -1) {
-      const geomLibrary = src.assetItem.getGeometryLibrary()
+    if (src.geomIndex != -1) {
       this.assetItem = src.assetItem
       this.geomIndex = src.geomIndex
       this.geomBBox = src.geomBBox
-      const onGeomLoaded = (event: RangeLoadedEvent) => {
-        const { range } = event
-        if (this.geomIndex >= range[0] && this.geomIndex < range[1]) {
-          const geom = geomLibrary.getGeom(this.geomIndex)
-          // Note: we need the 'valueChanged' event to be received by the
-          // renderer to then load the geometry into the GPU.
-          // @ts-ignore
-          if (geom) this.geomParam.value = geom
-          else console.warn('Geom not loaded:', this.getName())
-          geomLibrary.removeListenerById('rangeLoaded', this.listenerIDs['rangeLoaded'])
+
+      if (!src.geomParam.value) {
+        const geomLibrary = src.assetItem.getGeometryLibrary()
+        const onGeomLoaded = (event: RangeLoadedEvent) => {
+          const { range } = event
+          if (this.geomIndex >= range[0] && this.geomIndex < range[1]) {
+            const geom = geomLibrary.getGeom(this.geomIndex)
+            // Note: we need the 'valueChanged' event to be received by the
+            // renderer to then load the geometry into the GPU.
+            // @ts-ignore
+            if (geom) this.geomParam.value = geom
+            else console.warn('Geom not loaded:', this.getName())
+            geomLibrary.removeListenerById('rangeLoaded', this.listenerIDs['rangeLoaded'])
+          }
         }
+        this.listenerIDs['rangeLoaded'] = geomLibrary.on('rangeLoaded', onGeomLoaded)
+      } else {
+        this.loaded = false
       }
-      this.listenerIDs['rangeLoaded'] = geomLibrary.on('rangeLoaded', onGeomLoaded)
     }
 
     // Geom Xfo should be dirty after cloning.
     // Note: this might not be necessary. It should
     // always be dirty after cloning.
     this.geomMatParam.setDirty(0)
+  }
+
+  loadGeom() {
+    const geomLibrary = this.assetItem.geomLibrary
+    const geom = geomLibrary.getGeom(this.geomIndex)
+    if (geom) {
+      this.geomParam.value = <BaseGeom>geom
+      this.geomOffsetXfoParam.value = new Xfo()
+    } else {
+      geomLibrary.loadGeomFile(this.geomIndex, false).then(() => {
+        this.geomParam.value = <BaseGeom>geomLibrary.getGeom(this.geomIndex)
+        this.geomOffsetXfoParam.value = new Xfo()
+      })
+    }
+    this.loaded = true
   }
 
   /**
