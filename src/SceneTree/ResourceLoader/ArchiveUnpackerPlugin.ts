@@ -1,5 +1,3 @@
-import { ResourceLoader } from '../resourceLoader'
-
 // @ts-ignore
 import unpackBase64Str from './unpack.wasm'
 
@@ -71,13 +69,10 @@ function checkStatus(response: any): any {
  */
 class ArchiveUnpackerPlugin {
   protected threadPool: ArchiveUnpackerWorkerPool = new ArchiveUnpackerWorkerPool()
-  protected resourceLoader: ResourceLoader
 
   constructor() {}
 
-  init(resourceLoader: any): void {
-    this.resourceLoader = resourceLoader
-  }
+  init(): void {}
 
   /**
    * The type of file this plugin handles.
@@ -94,12 +89,9 @@ class ArchiveUnpackerPlugin {
    * @return - The promise value.
    */
   loadFile(url: string): Promise<unknown> {
-    this.resourceLoader.incrementWorkload(1) //  start loading.
-
     const promise = new Promise((resolve, reject) => {
       fetch(url)
         .then((response) => {
-          this.resourceLoader.incrementWorkDone(1) // done loading
           if (checkStatus(response)) return response.arrayBuffer()
           else {
             reject(new Error(`loadArchive: ${response.status} - ${response.statusText} : ${url}`))

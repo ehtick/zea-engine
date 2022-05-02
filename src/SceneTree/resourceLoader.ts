@@ -90,7 +90,7 @@ class ResourceLoader extends EventEmitter {
   // /////////////////////////////////////////////////
   // Register plugins.
   registerPlugin(plugin: any): void {
-    plugin.init(this)
+    plugin.init()
     this.plugins[plugin.getType()] = plugin
   }
 
@@ -118,7 +118,7 @@ class ResourceLoader extends EventEmitter {
       promise.then(
         () => {
           this.loadCount--
-          this.incrementWorkDone()
+          if (incrementWorkload) this.incrementWorkDone()
           this.emit('loaded', { url })
 
           while (this.loadCount < MAX_LOAD_COUNT && this.queue.length > 0) {
@@ -210,7 +210,7 @@ class ResourceLoader extends EventEmitter {
     const percent = (this.__doneWork / this.__totalWork) * 100
     this.emit('progressIncremented', { percent })
     if (this.__doneWork > this.__totalWork) {
-      throw new Error('Mismatch between work loaded and work done.')
+      console.warn('Mismatch between work loaded and work done.')
     }
   }
 }

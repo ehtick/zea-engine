@@ -10,10 +10,7 @@ function checkStatus(response: any) {
  * JSON loader plugin.
  */
 class JsonLoaderPlugin {
-  resourceLoader: any
-  init(resourceLoader: any): void {
-    this.resourceLoader = resourceLoader
-  }
+  init(): void {}
 
   /**
    * The type of file this plugin handles.
@@ -24,12 +21,9 @@ class JsonLoaderPlugin {
   }
 
   loadFile(url: string): Promise<unknown> {
-    this.resourceLoader.incrementWorkload(1)
-
     const promise = new Promise(
       (resolve, reject) => {
         fetch(url).then((response) => {
-          this.resourceLoader.incrementWorkDone(1)
           if (checkStatus(response)) resolve(response.json())
           else reject(`loadJSON: ${response.status} - ${response.statusText} : ${url}`)
         })

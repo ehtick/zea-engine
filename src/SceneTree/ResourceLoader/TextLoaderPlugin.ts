@@ -10,10 +10,7 @@ function checkStatus(response: any) {
  * Text loader plugin.
  */
 class TextLoaderPlugin {
-  resourceLoader: any
-  init(resourceLoader: any) {
-    this.resourceLoader = resourceLoader
-  }
+  init() {}
 
   /**
    * The type of file this plugin handles.
@@ -24,11 +21,8 @@ class TextLoaderPlugin {
   }
 
   loadFile(url: string): Promise<unknown> {
-    this.resourceLoader.incrementWorkload(1)
-
     const promise = new Promise((resolve, reject) => {
       fetch(url).then((response) => {
-        this.resourceLoader.incrementWorkDone(1)
         if (checkStatus(response)) resolve(response.text())
         else reject(`loadText: ${response.status} - ${response.statusText} : ${url}`)
       })
