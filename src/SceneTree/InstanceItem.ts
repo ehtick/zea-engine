@@ -61,7 +61,6 @@ class InstanceItem extends TreeItem {
   readBinary(reader: BinReader, context: AssetLoadContext): void {
     super.readBinary(reader, context)
 
-    // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
     this.srcTreePath = reader.loadStrArray()
     if (this.srcTreePath.length > 0) {
       try {

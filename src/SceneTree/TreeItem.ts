@@ -956,8 +956,6 @@ class TreeItem extends BaseItem {
   fromJSON(j: Record<string, any>, context?: Record<string, any>, onDone?: any): void {
     super.fromJSON(j, context)
 
-    if (context && !Number.isNaN(context.numTreeItems)) context.numTreeItems++
-
     // if ('bbox' in j){
     //     let box = new Box3();
     //     box.fromJSON(j.bbox);
@@ -1045,8 +1043,6 @@ class TreeItem extends BaseItem {
    */
   readBinary(reader: BinReader, context: AssetLoadContext): void {
     super.readBinary(reader, context)
-
-    context.numTreeItems++
 
     const itemFlags = reader.loadUInt8()
 
