@@ -17,7 +17,9 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   protected renderer: GLBaseRenderer
   protected gl: WebGL12RenderingContext
   protected glGeomItems: Array<GLGeomItem | null> = []
-  protected glGeomIdsMapping: Record<string, number[]> = {}
+  protected glGeomItemIdsMapping: Record<number, number> = {}
+  protected glGeomItemGeomIdsMapping: Record<number, number> = {}
+  protected glGeomIdsMapping: Record<number, number[]> = {}
   protected glgeomItemEventHandlers: any[] = []
   protected freeIndices: number[] = []
 
@@ -74,6 +76,8 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     } else {
       this.glGeomIdsMapping[glGeomItem.geomId].push(index)
     }
+    this.glGeomItemIdsMapping[glGeomItem.getId()] = index
+    this.glGeomItemGeomIdsMapping[glGeomItem.getId()] = glGeomItem.geomId
 
     // Note: we now allocate the draw index right away.
     // Visibility only controls the element count value
@@ -133,13 +137,24 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param glGeomItem - The glGeomItem value.
    */
   removeGLGeomItem(glGeomItem: GLGeomItem): void {
-    const index = this.glGeomItems.indexOf(glGeomItem)
-    const geomItemIndices = this.glGeomIdsMapping[glGeomItem.geomId]
+    const index = this.glGeomItemIdsMapping[glGeomItem.getId()]
+    // This is a solution to the problem caused by a new geometry being
+    // assigned to a GeomItem (occurs during lazy loading).
+    // The GLGeomItemLibrary updates the geomId stored in the GLGeomItem
+    // and then this code would run second, and have the wrong goemId.
+    // Now we cache a mapping of GLGeomItem to geomId that was valid
+    // when the GLGeomItem was added.
+    // A better solution would be to make pass-reassignment more centralized
+    // Maybe in the GLRenderer instead of in all these places that can conflict.
+    const geomId = this.glGeomItemGeomIdsMapping[glGeomItem.getId()]
+    const geomItemIndices = this.glGeomIdsMapping[geomId]
     geomItemIndices.splice(geomItemIndices.indexOf(index), 1)
     if (geomItemIndices.length == 0) {
-      delete this.glGeomIdsMapping[glGeomItem.geomId]
-      if (this.dirtyGeomIndices.has(glGeomItem.geomId)) this.dirtyGeomIndices.delete(glGeomItem.geomId)
+      delete this.glGeomIdsMapping[geomId]
+      if (this.dirtyGeomIndices.has(geomId)) this.dirtyGeomIndices.delete(geomId)
     }
+    delete this.glGeomItemIdsMapping[glGeomItem.getId()]
+    delete this.glGeomItemGeomIdsMapping[glGeomItem.getId()]
 
     const eventHandlers = this.glgeomItemEventHandlers[index]
     glGeomItem.geomItem.off('highlightChanged', eventHandlers.highlightChanged)
