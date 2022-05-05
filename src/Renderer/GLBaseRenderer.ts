@@ -623,6 +623,8 @@ class GLBaseRenderer extends ParameterOwner {
     // Now scrollbars can appear causing the content size to change,
     // causing an infinite loop of resizing.
     this.__glcanvas.parentElement.style.overflow = 'hidden'
+    this.__glcanvas.style.width = '100%'
+    this.__glcanvas.style.height = '100%'
     this.__glcanvas.style.position = 'absolute'
 
     // Rapid resizing of the canvas would cause issues with WebGL.
