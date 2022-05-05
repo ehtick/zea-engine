@@ -911,7 +911,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         // e.g. we might see the triangles on the other side of a sphere rendered over the top of triangles on the near side.
         gl.enable(gl.CULL_FACE)
         gl.cullFace(gl.FRONT)
-        gl.uniform1f(outlineThickness.location, this.renderer.outlineThickness)
+        gl.uniform1f(outlineThickness.location, this.renderer.outlineThickness * window.devicePixelRatio)
         gl.uniform2f(
           viewportSize.location,
           renderstate.region[2] - renderstate.region[0],
