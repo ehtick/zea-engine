@@ -126,10 +126,8 @@ class AssetItem extends TreeItem {
    */
   readBinary(reader: BinReader, context: AssetLoadContext): void {
     context.assetItem = this
-    context.numTreeItems = 0
 
     if (!context.units) context.units = 'meters'
-    context.numGeomItems = 0
 
     if (!context.versions['zea-engine']) {
       context.versions['zea-engine'] = new Version(reader.loadStr())
@@ -232,7 +230,6 @@ class AssetItem extends TreeItem {
     for (const cb of postLoadCallbacks) cb()
 
     this.loaded = true
-    // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
   }
 
   /**
@@ -271,8 +268,6 @@ class AssetItem extends TreeItem {
     if (!context) context = {}
 
     context.assetItem = this
-    context.numTreeItems = 0
-    context.numGeomItems = 0
     if (context.version == undefined) context.version = 0
 
     context.assetItem = this
