@@ -75,7 +75,7 @@ void main(void) {
     }
   }
   else if (geomType == LINES) { // start 'LINES'
-    float overlay = 0.00001;
+    float overlay = 0.00003;
     if (isOrthographic > 0){
       gl_Position.z -= overlay;
     } else {
@@ -83,7 +83,7 @@ void main(void) {
     }
   } // end 'LINES'
   else if (geomType == POINTS) { // start 'POINTS'
-    float overlay = 0.00003;
+    float overlay = 0.00005;
     if (isOrthographic > 0){
       gl_Position.z -= overlay;
     } else {
