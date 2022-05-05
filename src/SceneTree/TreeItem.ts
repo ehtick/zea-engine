@@ -21,6 +21,7 @@ import { AssetLoadContext } from './AssetLoadContext'
 import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
 import { VisibilityChangedEvent } from '../Utilities/Events/VisibilityChangedEvent'
 import { OpacityStateChangedEvent } from '../Utilities/Events/OpacityStateChangedEvent'
+import { NameChangedEvent } from '../Utilities/Events'
 
 /**
  * Class representing an Item in the scene tree with hierarchy capabilities (has children).
@@ -506,7 +507,7 @@ class TreeItem extends BaseItem {
    * @param event - The start value.
    * @private
    */
-  protected childNameChanged(event: Record<string, any>): void {
+  protected childNameChanged(event: NameChangedEvent): void {
     // Update the acceleration structure.
     const index = this.__childItemsMapping[event.oldName]
     delete this.__childItemsMapping[event.oldName]
@@ -536,7 +537,7 @@ class TreeItem extends BaseItem {
     }
 
     const listenerIDs: Record<string, number> = {}
-    listenerIDs['nameChanged'] = childItem.on('nameChanged', (event) => {
+    listenerIDs['nameChanged'] = childItem.on('nameChanged', (event: NameChangedEvent) => {
       this.childNameChanged(event)
     })
 
