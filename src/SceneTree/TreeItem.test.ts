@@ -220,6 +220,31 @@ describe('TreeItem', () => {
     expect(mockFn).toHaveBeenCalledTimes(2)
   })
 
+  test('Resolving name conflicts', () => {
+    const parent = new TreeItem('Parent')
+    const childA = new TreeItem('A')
+    const childA2 = new TreeItem('A')
+
+    parent.addChild(childA)
+    parent.addChild(childA2)
+
+    // See that the conflicted main was avoided.
+    expect(childA2.getName()).toBe('A01')
+
+    expect(parent.resolvePath(['.', 'A'])).toBe(childA)
+    expect(parent.resolvePath(['.', 'A01'])).toBe(childA2)
+
+    // Force the names to be conflicted again
+    childA2.setName('A')
+
+    expect(parent.resolvePath(['.', 'A'])).toBe(childA2)
+
+    // Now fix the conflict
+    childA2.setName('A_fixed')
+
+    expect(parent.resolvePath(['.', 'A'])).toBe(childA)
+  })
+
   // test('Saving to JSON (serialization).', () => {
   //   const parent = new TreeItem('Parent')
   //   const child = new TreeItem('Child')

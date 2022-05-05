@@ -324,7 +324,7 @@ class GLBaseViewport extends ParameterOwner {
     const highlightRenderState = renderstate.toHighlightRenderState()
     this.drawHighlights(highlightRenderState)
     if (highlightRenderState.stack.length != 1) {
-      console.warn(" corrupt highlightRenderState.stack.length:", highlightRenderState.stack.length)
+      console.warn(' corrupt highlightRenderState.stack.length:', highlightRenderState.stack.length)
     }
 
     // //////////////////////////////////
@@ -414,7 +414,7 @@ class GLBaseViewport extends ParameterOwner {
     this.depthTexture.bindToUniform(renderstate, unifs.depthTexture)
 
     gl2.uniform2f(unifs.screenSize.location, this.__width, this.__height)
-    gl2.uniform1f(unifs.outlineThickness.location, this.renderer.outlineThickness)
+    gl2.uniform1f(unifs.outlineThickness.location, this.renderer.outlineThickness * window.devicePixelRatio)
 
     const oc = this.renderer.outlineColor.asArray()
     gl2.uniform4f(unifs.outlineColor.location, oc[0], oc[1], oc[2], oc[3])

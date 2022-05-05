@@ -23,7 +23,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   protected dirtyOpIndex: number = 0
   protected firstOP_WRITE: number = 0
   protected name: string
-  __value: T
+  protected __value: T
   protected dataType: string
   protected ownerItem?: ParameterOwner
 

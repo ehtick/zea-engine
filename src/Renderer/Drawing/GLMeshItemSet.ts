@@ -97,7 +97,7 @@ class GLMeshItemSet extends GLGeomItemSetMultiDraw {
       gl.enable(gl.CULL_FACE)
       gl.cullFace(gl.FRONT)
       // @ts-ignore
-      gl.uniform1f(outlineThickness.location, colorRenderState.outlineThickness)
+      gl.uniform1f(outlineThickness.location, colorRenderState.outlineThickness * window.devicePixelRatio)
       gl.uniform2f(
         viewportSize.location,
         renderstate.region[2] - renderstate.region[0],

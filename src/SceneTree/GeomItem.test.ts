@@ -70,7 +70,7 @@ describe('GeomItem', () => {
 
   it('loads from JSON (serialization).', () => {
     const geomItem = new GeomItem('Item')
-    geomItem.fromJSON(Fixtures.fromJSON, { numGeomItems: 0 })
+    geomItem.fromJSON(Fixtures.fromJSON, {})
 
     const standardMaterial = new Material('myMaterial', 'SimpleSurfaceShader')
     standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)

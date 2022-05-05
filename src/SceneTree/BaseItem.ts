@@ -11,18 +11,10 @@ import { SelectabilityChangedEvent } from '../Utilities/Events/SelectabilityChan
 import { SelectedEvent } from '../Utilities/Events/SelectedEvent'
 import { CloneContext } from './CloneContext'
 import { AssetLoadContext } from './AssetLoadContext'
+import { NameChangedEvent } from '../Utilities/Events'
 
 let numBaseItems = 0
 
-class NameChangedEvent extends BaseEvent {
-  oldName: string
-  newName: string
-  constructor(oldName: string, newName: string) {
-    super()
-    this.oldName = oldName
-    this.newName = newName
-  }
-}
 /**
  * Base class for Items in the scene. It can be parameterized and can emit events.
  *

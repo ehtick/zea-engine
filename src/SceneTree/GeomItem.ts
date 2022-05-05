@@ -169,7 +169,6 @@ class GeomItem extends BaseGeomItem {
    */
   fromJSON(json: Record<string, any>, context: Record<string, any>): void {
     super.fromJSON(json, context)
-    context.numGeomItems++
   }
 
   /**
@@ -180,8 +179,6 @@ class GeomItem extends BaseGeomItem {
    */
   readBinary(reader: BinReader, context: AssetLoadContext): void {
     super.readBinary(reader, context)
-
-    context.numGeomItems++
 
     const itemFlags = reader.loadUInt8()
     const geomIndex = reader.loadUInt32()

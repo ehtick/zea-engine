@@ -21,6 +21,7 @@ import { AssetLoadContext } from './AssetLoadContext'
 import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
 import { VisibilityChangedEvent } from '../Utilities/Events/VisibilityChangedEvent'
 import { OpacityStateChangedEvent } from '../Utilities/Events/OpacityStateChangedEvent'
+import { NameChangedEvent } from '../Utilities/Events'
 
 /**
  * Class representing an Item in the scene tree with hierarchy capabilities (has children).
@@ -52,6 +53,7 @@ class TreeItem extends BaseItem {
   protected __childItems: TreeItem[] = []
   protected __childItemsEventHandlers: Array<Record<string, number>> = []
   protected __childItemsMapping: Record<string, number> = {}
+  protected __childItemsMappingCorrupt = false
 
   /**
    * @member globalXfoParam - Stores the global Xfo for this tree item.
@@ -506,11 +508,18 @@ class TreeItem extends BaseItem {
    * @param event - The start value.
    * @private
    */
-  protected childNameChanged(event: Record<string, any>): void {
+  protected childNameChanged(event: NameChangedEvent): void {
     // Update the acceleration structure.
-    const index = this.__childItemsMapping[event.oldName]
-    delete this.__childItemsMapping[event.oldName]
-    this.__childItemsMapping[event.newName] = index
+    if (this.__childItemsMappingCorrupt) {
+      this.updateChildNameMapping(0)
+      this.__childItemsMappingCorrupt = false
+    } else {
+      const index = this.__childItemsMapping[event.oldName]
+      if (this.__childItemsMapping[event.newName] != undefined) this.__childItemsMappingCorrupt = true
+
+      delete this.__childItemsMapping[event.oldName]
+      this.__childItemsMapping[event.newName] = index
+    }
   }
 
   /**
@@ -536,7 +545,7 @@ class TreeItem extends BaseItem {
     }
 
     const listenerIDs: Record<string, number> = {}
-    listenerIDs['nameChanged'] = childItem.on('nameChanged', (event) => {
+    listenerIDs['nameChanged'] = childItem.on('nameChanged', (event: NameChangedEvent) => {
       this.childNameChanged(event)
     })
 
@@ -555,7 +564,10 @@ class TreeItem extends BaseItem {
 
     this.__childItems.splice(index, 0, childItem)
     this.__childItemsEventHandlers.splice(index, 0, listenerIDs)
-    this.__childItemsMapping[childItem.getName()] = index
+    const name = childItem.getName()
+    // If we have non-unique names, we need to regenerate this mapping.
+    if (this.__childItemsMapping[name]) this.__childItemsMappingCorrupt = true
+    this.__childItemsMapping[name] = index
     this.updateChildNameMapping(index)
     childItem.setOwner(this)
 
@@ -956,8 +968,6 @@ class TreeItem extends BaseItem {
   fromJSON(j: Record<string, any>, context?: Record<string, any>, onDone?: any): void {
     super.fromJSON(j, context)
 
-    if (context && !Number.isNaN(context.numTreeItems)) context.numTreeItems++
-
     // if ('bbox' in j){
     //     let box = new Box3();
     //     box.fromJSON(j.bbox);
@@ -1045,8 +1055,6 @@ class TreeItem extends BaseItem {
    */
   readBinary(reader: BinReader, context: AssetLoadContext): void {
     super.readBinary(reader, context)
-
-    context.numTreeItems++
 
     const itemFlags = reader.loadUInt8()
 

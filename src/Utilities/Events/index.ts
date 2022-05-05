@@ -30,3 +30,4 @@ export * from './ZeaUIEvent'
 export * from './ZeaWheelEvent'
 
 export * from './ChildAddedEvent'
+export * from './NameChangedEvent'
