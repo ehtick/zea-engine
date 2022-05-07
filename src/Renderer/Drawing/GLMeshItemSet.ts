@@ -21,22 +21,16 @@ class GLMeshItemSet extends GLGeomItemSetMultiDraw {
    * @param offsets - the geom element offset for each element drawn in by this draw call.
    * @param drawCount - the number of active draw calls for this invocation
    */
-  multiDraw(
-    renderstate: RenderState,
-    drawIds: Float32Array,
-    counts: Int32Array,
-    offsets: Int32Array,
-    drawCount: number
-  ): void {
+  multiDraw(renderstate: RenderState, counts: Int32Array, offsets: Int32Array, drawCount: number): void {
     const gl = this.gl
 
     const multiDrawMeshes = () => {
       if (gl.multiDrawElements) {
         gl.multiDrawElements(gl.TRIANGLES, counts, 0, gl.UNSIGNED_INT, offsets, 0, drawCount)
       } else {
-        const { geomItemId } = renderstate.unifs
+        const { drawId } = renderstate.unifs
         for (let i = 0; i < drawCount; i++) {
-          gl.uniform1i(geomItemId.location, drawIds[i])
+          gl.uniform1i(drawId.location, i)
           gl.drawElements(gl.TRIANGLES, counts[i], gl.UNSIGNED_INT, offsets[i])
         }
       }
