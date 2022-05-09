@@ -31,10 +31,10 @@ import { GLRenderer } from '../GLRenderer'
  * @extends GLBaseViewport
  */
 class XRViewport extends GLBaseViewport {
-  private __projectionMatricesUpdated: boolean
-  private __stageTreeItem: TreeItem
+  private projectionMatricesUpdated: boolean
+  private stageTreeItem: TreeItem
   // __renderer: any // GLBaseRenderer
-  private __xrhead: XRHead
+  private xrhead: XRHead
   private controllersMap: Record<string, XRController>
   private controllers: XRController[]
   private controllerPointerDownTime: number[]
@@ -42,7 +42,7 @@ class XRViewport extends GLBaseViewport {
   private tick: number
   stageScale: number
 
-  private __vrAsset?: VLAAsset
+  private vrAsset?: VLAAsset
   private viewXfo: Xfo = new Xfo()
   private stageXfo: Xfo = new Xfo()
   private invStageMatrix: Mat4 = new Mat4()
@@ -52,31 +52,36 @@ class XRViewport extends GLBaseViewport {
   private hmdAssetPromise?: Promise<VLAAsset | null>
   private region: Array<number> = []
 
-  private __refSpace: any
+  private refSpace: any
 
   private projectionMatrices: Array<Mat4> = []
   private viewMatrices: Array<Mat4> = []
   private cameraMatrices: Array<Mat4> = []
+
+  private ___sessionMode: string = 'immersive-vr'
+
   /**
    * Create a VR viewport.
    * @param renderer - The renderer value.
    */
-  constructor(renderer: any) {
+  constructor(renderer: any, sessionMode: string) {
     super(renderer)
     this.doubleClickTimeParam.value = 300
 
+    this.___sessionMode = sessionMode
+
     // ////////////////////////////////////////////
     // Viewport params
-    this.__projectionMatricesUpdated = false
+    this.projectionMatricesUpdated = false
 
     // ////////////////////////////////////////////
     // Tree
 
-    this.__stageTreeItem = new TreeItem('VRStage')
-    this.__stageTreeItem.setVisible(false)
-    this.__renderer.addTreeItem(this.__stageTreeItem)
+    this.stageTreeItem = new TreeItem('VRStage')
+    this.stageTreeItem.setVisible(false)
+    this.__renderer.addTreeItem(this.stageTreeItem)
 
-    this.__xrhead = new XRHead(this, this.__stageTreeItem)
+    this.xrhead = new XRHead(this, this.stageTreeItem)
 
     this.controllersMap = {}
     this.controllers = []
@@ -103,7 +108,7 @@ class XRViewport extends GLBaseViewport {
    * @return - The return value.
    */
   getAsset(): VLAAsset {
-    return this.__vrAsset
+    return this.vrAsset
   }
 
   /**
@@ -111,7 +116,7 @@ class XRViewport extends GLBaseViewport {
    * @return - The return value.
    */
   getTreeItem(): TreeItem {
-    return this.__stageTreeItem
+    return this.stageTreeItem
   }
 
   /**
@@ -119,7 +124,7 @@ class XRViewport extends GLBaseViewport {
    * @return - The return value.
    */
   getVRHead(): XRHead {
-    return this.__xrhead
+    return this.xrhead
   }
 
   /**
@@ -137,9 +142,8 @@ class XRViewport extends GLBaseViewport {
    */
   setXfo(xfo: Xfo): void {
     this.stageXfo = xfo
-    this.__stageTreeItem.globalXfoParam.value = xfo
+    this.stageTreeItem.globalXfoParam.value = xfo
     this.invStageMatrix = xfo.inverse().toMat4()
-    // this.invStageMatrix.multiplyInPlace(this.__sittingToStandingMatrix);
     this.stageScale = xfo.sc.x
   }
 
@@ -245,9 +249,9 @@ class XRViewport extends GLBaseViewport {
           asset.load(resourceLoader.systemUrls[hmdAssetId])
           resourceLoader.commonResources[hmdAssetId] = asset
         }
-        this.__vrAsset = <VLAAsset>resourceLoader.getCommonResource(hmdAssetId)
+        this.vrAsset = <VLAAsset>resourceLoader.getCommonResource(hmdAssetId)
         const bind = () => {
-          const materialLibrary = this.__vrAsset!.getMaterialLibrary()
+          const materialLibrary = this.vrAsset!.getMaterialLibrary()
           const materialNames = materialLibrary.getMaterialNames()
           for (const name of materialNames) {
             const material = materialLibrary.getMaterial(name, false)
@@ -255,13 +259,13 @@ class XRViewport extends GLBaseViewport {
               material.setShaderName('SimpleSurfaceShader')
             }
           }
-          this.__vrAsset!.traverse((item: any) => {
+          this.vrAsset!.traverse((item: any) => {
             item.setSelectable(false)
           })
-          resolve(this.__vrAsset!)
+          resolve(this.vrAsset!)
         }
-        if (this.__vrAsset.isLoaded()) bind()
-        else this.__vrAsset.once('loaded', bind)
+        if (this.vrAsset.isLoaded()) bind()
+        else this.vrAsset.once('loaded', bind)
       }
     })
     return this.hmdAssetPromise
@@ -279,14 +283,18 @@ class XRViewport extends GLBaseViewport {
 
       // https://github.com/immersive-web/webxr/blob/master/explainer.md
 
+      const options: Record<string, string[]> = {}
+      if (this.___sessionMode == 'immersive-ar') {
+        options.requiredFeatures = ['local-floor']
+        options.optionalFeatures = ['bounded-floor']
+      }
+
       const startPresenting = () => {
         // @ts-ignore
         navigator.xr
-          .requestSession('immersive-vr', {
-            requiredFeatures: ['local-floor'],
-            optionalFeatures: ['bounded-floor'],
-          })
+          .requestSession(this.___sessionMode, options)
           .then((session: any) => {
+            session.isImmersive = true
             const viewport = this.__renderer.getViewport()
             if (viewport) {
               const camera = viewport.getCamera()
@@ -294,8 +302,10 @@ class XRViewport extends GLBaseViewport {
 
               // Convert Y-Up to Z-Up.
               const stageXfo = new Xfo()
-              stageXfo.tr = cameraXfo.tr.clone()
-              stageXfo.tr.z -= 1.3 // assume sitting, and move the floor down a bit
+              if (this.___sessionMode == 'immersive-vr') {
+                stageXfo.tr = cameraXfo.tr.clone()
+                stageXfo.tr.z -= 1.3 // assume sitting, and move the floor down a bit
+              }
               const dir = cameraXfo.ori.getZaxis()
               dir.z = 0
               dir.normalizeInPlace()
@@ -304,7 +314,7 @@ class XRViewport extends GLBaseViewport {
             }
 
             session.addEventListener('end', (event: any) => {
-              this.__stageTreeItem.setVisible(false)
+              this.stageTreeItem.setVisible(false)
               this.session = null
               this.emit('presentingChanged', new StateChangedEvent(false))
             })
@@ -324,7 +334,7 @@ class XRViewport extends GLBaseViewport {
               }
             }
 
-            const createController = (inputSource: any) => {
+            const createVRController = (inputSource: any) => {
               console.log('creating controller:', inputSource.handedness, inputSource.profiles)
               const id = this.controllers.length
               const controller = new XRController(this, inputSource, id)
@@ -341,7 +351,10 @@ class XRViewport extends GLBaseViewport {
               // load as the controller model for that hand.
               for (const inputSource of event.added) {
                 if (inputSource.profiles.length == 0) continue
-                createController(inputSource)
+                if (inputSource.profiles[0] == 'generic-touchscreen') {
+                } else {
+                  createVRController(inputSource)
+                }
               }
             }
             session.addEventListener('selectstart', onSelectStart)
@@ -370,14 +383,21 @@ class XRViewport extends GLBaseViewport {
 
             // eslint-disable-next-line require-jsdoc
             const onRefSpaceCreated = (refSpace: any) => {
-              this.__refSpace = refSpace
-              this.__stageTreeItem.setVisible(true)
+              this.refSpace = refSpace
+              this.stageTreeItem.setVisible(true)
               this.emit('presentingChanged', new StateChangedEvent(true))
 
-              this.loadHMDResources().then(() => {
+              // In VR, we need to load the HMD so we can see
+              // our controllers.
+              if (this.___sessionMode == 'immersive-vr') {
+                this.loadHMDResources().then(() => {
+                  this.__startSession()
+                  resolve()
+                })
+              } else {
                 this.__startSession()
                 resolve()
-              })
+              }
             }
 
             // Attempt to get a 'bounded-floor' reference space, which will align
@@ -454,7 +474,7 @@ class XRViewport extends GLBaseViewport {
         continue
         // this.__createController(i, inputSource)
       }
-      this.controllers[i].updatePose(this.__refSpace, xrFrame, inputSource)
+      this.controllers[i].updatePose(this.refSpace, xrFrame, inputSource)
     }
   }
 
@@ -486,20 +506,16 @@ class XRViewport extends GLBaseViewport {
 
     const layer = session.renderState.baseLayer
 
-    const pose = xrFrame.getViewerPose(this.__refSpace)
+    const pose = xrFrame.getViewerPose(this.refSpace)
     if (!pose) {
       // No pose available during XR present
       // Note: before the Headset is put on the pose is missing, or after it is taken off
       return
     }
 
-    this.__xrhead.update(pose)
-    const viewXfo = this.__xrhead.getTreeItem().globalXfoParam.value
-    this.viewXfo = viewXfo
-
     const views = pose.views
 
-    if (!this.__projectionMatricesUpdated) {
+    if (!this.projectionMatricesUpdated) {
       this.projectionMatrices = []
       this.viewMatrices = []
       this.cameraMatrices = []
@@ -511,15 +527,11 @@ class XRViewport extends GLBaseViewport {
         this.viewMatrices[i] = new Mat4()
         this.cameraMatrices[i] = new Mat4()
       }
-      this.__projectionMatricesUpdated = true
+      this.projectionMatricesUpdated = true
     }
 
     const gl = this.__renderer.gl
-    gl.bindFramebuffer(gl.FRAMEBUFFER, layer.framebuffer)
-    let col = this.backgroundColorParam.value.asArray()
-    gl.clearColor(col[0], col[1], col[2], col[3])
-    gl.colorMask(true, true, true, true)
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+
     this.depthRange = [session.renderState.depthNear, session.renderState.depthFar] // TODO: check if this changes during session
 
     const renderstate = new ColorRenderState(this.__renderer.gl)
@@ -535,6 +547,8 @@ class XRViewport extends GLBaseViewport {
     for (let i = 0; i < views.length; i++) {
       const view = views[i]
       this.viewMatrices[i].setDataArray(view.transform.inverse.matrix)
+
+      // Note: the stage matrix
       this.viewMatrices[i].multiplyInPlace(this.invStageMatrix)
       // this.cameraMatrices[i].setDataArray(view.transform.matrix);
 
@@ -547,26 +561,39 @@ class XRViewport extends GLBaseViewport {
       })
     }
 
+    this.xrhead.update(pose)
+    const viewXfo = this.xrhead.getTreeItem().globalXfoParam.value
+    this.viewXfo = viewXfo
     renderstate.viewXfo = viewXfo
-    renderstate.viewScale = 1.0 / this.stageScale
-    renderstate.cameraMatrix = renderstate.viewXfo.toMat4()
+    renderstate.cameraMatrix = viewXfo.toMat4() // renderstate.viewXfo.toMat4()
+    renderstate.viewScale = this.stageScale
     renderstate.region = this.region
     renderstate.vrPresenting = true // Some rendering is adjusted slightly in VR. e.g. Billboards
 
+    if (this.___sessionMode == 'immersive-vr') {
+      this.updateControllers(xrFrame)
+
+      let col = this.backgroundColorParam.value.asArray()
+      gl.clearColor(col[0], col[1], col[2], col[3])
+      gl.colorMask(true, true, true, true)
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+    }
+
     this.draw(renderstate)
 
-    // ///////////////////////
-    // Prepare the pointerMove event.
-    const event = new XRPoseEvent(this, viewXfo, this.controllers)
-    this.updateControllers(xrFrame)
-    if (event.getCapture()) {
-      event.getCapture().onPointerMove(event)
-      // events are now always sent to the capture item first,
-      // but can continue propagating to other items if no call
-      // to event.stopPropagation() was made.
-    }
-    if (this.manipulator && event.propagating) {
-      this.manipulator.onPointerMove(event)
+    if (this.___sessionMode == 'immersive-vr') {
+      // ///////////////////////
+      // Prepare the pointerMove event.
+      const event = new XRPoseEvent(this, this.viewXfo, this.controllers)
+      if (event.getCapture()) {
+        event.getCapture().onPointerMove(event)
+        // events are now always sent to the capture item first,
+        // but can continue propagating to other items if no call
+        // to event.stopPropagation() was made.
+      }
+      if (this.manipulator && event.propagating) {
+        this.manipulator.onPointerMove(event)
+      }
     }
 
     // ///////////////////////
@@ -587,13 +614,12 @@ class XRViewport extends GLBaseViewport {
       const viewport = this.__renderer.getViewport()
       if (viewport) {
         // display the head in spectator mode.
-        this.__xrhead.setVisible(true)
+        this.xrhead.setVisible(true)
         const renderstate = new ColorRenderState(this.renderer.__gl)
         viewport.draw(renderstate)
-        this.__xrhead.setVisible(false)
+        this.xrhead.setVisible(false)
       }
     }
-
     this.tick++
   }
 

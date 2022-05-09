@@ -187,12 +187,13 @@
           enableFrustumCulling: false,
           enableOcclusionCulling: false,
           disableMultiDraw: urlParams.has('disableMultiDraw'),
+          xrMode: urlParams.has('xrMode') ? urlParams.get('xrMode') : 'AR',
         })
 
         renderer.outlineMethod = 'geometry'
         renderer.outlineThickness = 1.5
         renderer.highlightOutlineThickness = 1.75
-        renderer.hiddenLineColor = new Color(1, 0.15, 0.15, 0.1)
+        renderer.hiddenLineColor = new Color(1, 0.15, 0.15, 0.0)
         // renderer.getViewport().debugHighlightedGeomsBuffer = true
 
         renderer.setScene(scene)
@@ -375,18 +376,19 @@
         })
 
         renderer.getXRViewport().then((xrvp) => {
-          fpsElement.style.bottom = '70px'
+          if (fpsElement) fpsElement.style.bottom = '70px'
 
+          const xrMode = urlParams.has('xrMode') ? urlParams.get('xrMode') : 'AR'
           const xrButton = document.getElementById('xr-button')
-          xrButton.textContent = 'Launch VR'
+          xrButton.textContent = 'Launch ' + xrMode
           xrButton.classList.remove('hidden')
 
           xrvp.on('presentingChanged', (event) => {
             const { state } = event
             if (state) {
-              xrButton.textContent = 'Exit VR'
+              xrButton.textContent = 'Exit ' + xrMode
             } else {
-              xrButton.textContent = 'Launch VR'
+              xrButton.textContent = 'Launch ' + xrMode
             }
           })
 
