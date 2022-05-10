@@ -169,14 +169,18 @@ class CADAsset extends AssetItem {
           context.versions['zea-cad'] = this.getVersion()
           context.versions['zea-engine'] = this.getEngineDataVersion()
 
+          if (entries.geomsdata) {
+            // If metadata is available, load it straight away.
+            this.metadataLoadPromise = new Promise((resolve) => {
+              this.geomLibrary.once('loaded', () => {
+                this.geomLibrary.loadMetadata(entries.geomsdata, context)
+                this.metadataLoaded = true
+                resolve()
+              })
+            })
+          }
           if (entries.geoms) {
             this.geomLibrary.readBinaryBuffer(filename, entries.geoms.buffer, context)
-
-            // If metadata is available, load it straight away.
-            if (entries.geomsdata) {
-              this.geomLibrary.loadMetadata(entries.geomsdata, context)
-              this.metadataLoaded = true
-            }
           } else if (entries['geomLibrary.json']) {
             const geomLibraryJSON = JSON.parse(new TextDecoder('utf-8').decode(entries['geomLibrary.json']))
             const basePath = folder + stem
