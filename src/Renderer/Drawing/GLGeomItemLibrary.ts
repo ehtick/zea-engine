@@ -37,6 +37,8 @@ import { XrViewportEvent } from '../../Utilities/Events/XrViewportEvent'
 import { BBoxOcclusionLinesCuboid } from './BBoxOcclusionLinesCuboid'
 import { GLLines } from './GLLines'
 import { GLGeom } from './GLGeom'
+import { VRViewport } from '../VR/VRViewport'
+import { ARViewport } from '../VR/ARViewport'
 
 // This enabled a visual HUD in the view to display the occlusion buffer.
 // The is the only way to debug the occlusion system in VR.
@@ -222,24 +224,31 @@ class GLGeomItemLibrary extends EventEmitter {
           let frustumHalfAngleY = 62 * degToRad
           let frustumHalfAngleX = 50 * degToRad
 
-          // Note: adding the * 0.5 while debugging the occlusion culling
-          // I rendered the view using this frustum and then displayed it back in the view.
-          // Initially it was far too wide, so adding a * 0.5 it appears to match perfectly now.
-          // This range may differ based on the HMD. Need to test this.
-          switch (xrvp.getHMDName()) {
-            case 'Vive':
-              frustumHalfAngleY *= 0.6
-              frustumHalfAngleX *= 0.6
-              break
-            case 'Oculus':
-              frustumHalfAngleY *= 0.5
-              frustumHalfAngleX *= 0.5
-              break
+          if (xrvp instanceof VRViewport) {
+            // Note: adding the * 0.5 while debugging the occlusion culling
+            // I rendered the view using this frustum and then displayed it back in the view.
+            // Initially it was far too wide, so adding a * 0.5 it appears to match perfectly now.
+            // This range may differ based on the HMD. Need to test this.
+            switch (xrvp.getHMDName()) {
+              case 'Vive':
+                frustumHalfAngleY *= 0.6
+                frustumHalfAngleX *= 0.6
+                break
+              case 'Oculus':
+                frustumHalfAngleY *= 0.5
+                frustumHalfAngleX *= 0.5
+                break
 
-            default:
-              frustumHalfAngleY *= 0.5
-              frustumHalfAngleX *= 0.5
-              break
+              default:
+                frustumHalfAngleY *= 0.5
+                frustumHalfAngleX *= 0.5
+                break
+            }
+          } else if (xrvp instanceof ARViewport) {
+            // TODO: determine the frustum size for a phone.
+            const aspectRatio = xrvp.getWidth() / xrvp.getHeight()
+            frustumHalfAngleY = 62 * degToRad * 0.5
+            frustumHalfAngleX = Math.atan(Math.tan(frustumHalfAngleY) * aspectRatio)
           }
 
           this.xrFovY = frustumHalfAngleY * 2.0

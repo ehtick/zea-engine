@@ -5,23 +5,23 @@ import { TreeItem } from '../../SceneTree/index'
  * @private
  */
 class XRHead {
-  protected __xrvp: any
-  protected __treeItem: TreeItem
-  protected __mat4: Mat4
-  protected __localXfo: Xfo
-  protected hmdGeomItem: any
+  private xrvp: any
+  protected treeItem: TreeItem
+  private mat4: Mat4
+  private localXfo: Xfo
+  private hmdGeomItem: any
   /**
    * Create a VR head.
    * @param xrvp - The VR viewport.
    * @param stageTreeItem - The stageTreeItem value.
    */
   constructor(xrvp: any, stageTreeItem: any) {
-    this.__xrvp = xrvp
-    this.__treeItem = new TreeItem('XRHead')
-    stageTreeItem.addChild(this.__treeItem)
+    this.xrvp = xrvp
+    this.treeItem = new TreeItem('XRHead')
+    stageTreeItem.addChild(this.treeItem)
 
-    this.__mat4 = new Mat4()
-    this.__localXfo = new Xfo()
+    this.mat4 = new Mat4()
+    this.localXfo = new Xfo()
   }
 
   /**
@@ -30,7 +30,7 @@ class XRHead {
    */
   setVisible(state: boolean): void {
     if (state && !this.hmdGeomItem) {
-      const assetItem = this.__xrvp.getAsset()
+      const assetItem = this.xrvp.getAsset()
       if (!assetItem) return
       const hmdGeomItem = assetItem.getChildByName('HMD')
       if (!hmdGeomItem) return
@@ -42,7 +42,7 @@ class XRHead {
           new Vec3(0.001, 0.001, 0.001) // VRAsset units are in mm.
         )
 
-        this.__treeItem.addChild(this.hmdGeomItem, false)
+        this.treeItem.addChild(this.hmdGeomItem, false)
       }
     }
     if (this.hmdGeomItem) {
@@ -56,19 +56,19 @@ class XRHead {
    */
   update(pose: any): void {
     // Old
-    // this.__mat4.setDataArray(pose.poseModelMatrix);
+    // this.mat4.setDataArray(pose.poseModelMatrix);
 
     // New
-    this.__mat4.setDataArray(pose.transform.matrix)
+    this.mat4.setDataArray(pose.transform.matrix)
 
-    this.__localXfo.setFromMat4(this.__mat4)
+    this.localXfo.setFromMat4(this.mat4)
 
     // const pos = pose.transform.position;
-    // this.__localXfo.tr.set(pos.x, pos.y,pos.z);
+    // this.localXfo.tr.set(pos.x, pos.y,pos.z);
     // const ori = pose.transform.orientation;
-    // this.__localXfo.ori.set(ori.x, ori.y, ori.z, ori.x);
+    // this.localXfo.ori.set(ori.x, ori.y, ori.z, ori.x);
 
-    this.__treeItem.localXfoParam.value = this.__localXfo
+    this.treeItem.localXfoParam.value = this.localXfo
   }
 
   /**
@@ -76,7 +76,7 @@ class XRHead {
    * @return - The return value.
    */
   getTreeItem(): TreeItem {
-    return this.__treeItem
+    return this.treeItem
   }
 
   /**
@@ -84,7 +84,7 @@ class XRHead {
    * @return - The return value.
    */
   getXfo(): Xfo {
-    return this.__localXfo
+    return this.localXfo
   }
 }
 

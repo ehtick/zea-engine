@@ -29,6 +29,8 @@ import { Uniforms } from './types/renderer'
 import { StateChangedEvent } from '../Utilities/Events/StateChangedEvent'
 import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
 import { ColorRenderState, GeomDataRenderState, HighlightRenderState, RenderState } from './RenderStates/index'
+import { ARViewport } from './VR/ARViewport'
+import { VRViewport } from './VR/VRViewport'
 
 let activeGLRenderer: GLBaseRenderer | undefined
 let pointerIsDown = false
@@ -1054,7 +1056,7 @@ class GLBaseRenderer extends ParameterOwner {
    */
   __setupXRViewport(sessionMode: string): XRViewport {
     // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
-    const xrvp = new XRViewport(this, sessionMode)
+    const xrvp = sessionMode == 'immersive-ar' ? new ARViewport(this, sessionMode) : new VRViewport(this, sessionMode)
 
     const emitViewChanged = (event: ViewChangedEvent) => {
       this.emit('viewChanged', event)

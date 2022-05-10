@@ -28,7 +28,7 @@ class RenderState {
   shaderkey?: string
   shaderopts: Shaderopts
   directives?: string[]
-  
+
   attrs: Record<string, Record<string, any>> // not Attribute
   unifs: Uniforms
 
@@ -36,7 +36,7 @@ class RenderState {
 
   glGeom?: GLGeom
 
-  vrviewport?: any
+  xrviewport?: any
 
   passIndex: number
   pass?: string

@@ -20,7 +20,7 @@ import { ZeaPointerEvent, POINTER_TYPES } from './ZeaPointerEvent'
 class XRPoseEvent extends ZeaPointerEvent {
   viewXfo: Xfo
   controllers: XRController[] = []
-  constructor(viewport: XRViewport, viewXfo: Xfo, controllers: XRController[]) {
+  constructor(viewport: XRViewport, viewXfo: Xfo, controllers: XRController[] = []) {
     super(POINTER_TYPES.xr)
     this.viewport = viewport
     this.viewXfo = viewXfo

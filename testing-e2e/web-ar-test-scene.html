@@ -83,7 +83,7 @@
       const scene = new Scene()
       const renderer = new GLRenderer(canvas, {
         antialias: false,
-        enableFrustumCulling: true,
+        enableFrustumCulling: false,
         enableOcclusionCulling: false,
         debugOcclusionBuffer: false,
         xrMode: 'AR',
@@ -291,6 +291,12 @@
           if (event.key == ' ') {
             xrvp.togglePresenting()
           }
+        })
+        xrvp.on('pointerPressed', (event) => {
+          const geomItem = new GeomItem('hit', sphere, material, event.xfo)
+          // Make the ball invisible so subsequent pointer events don't see it.
+          geomItem.setSelectable(false)
+          scene.getRoot().addChild(geomItem)
         })
 
         const line = new Lines()

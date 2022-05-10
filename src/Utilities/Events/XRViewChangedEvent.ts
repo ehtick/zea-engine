@@ -6,7 +6,7 @@ import { ViewChangedEvent } from './ViewChangedEvent'
 class XRViewChangedEvent extends ViewChangedEvent {
   hmd: string = ''
   controllers: Array<XRController> = []
-  vrviewport?: XRViewport
+  xrviewport?: XRViewport
 
   constructor(viewXfo: Xfo) {
     super('VR', viewXfo)
