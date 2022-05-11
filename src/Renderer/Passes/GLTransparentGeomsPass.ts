@@ -5,7 +5,7 @@ import { GLStandardGeomsPass } from './GLStandardGeomsPass'
 import { GLRenderer } from '../GLRenderer'
 import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
 import { GLViewport } from '../GLViewport'
-import { GeomDataRenderState, HighlightRenderState, RenderState } from '../RenderStates/index'
+import { GeomDataRenderState, RenderState } from '../RenderStates/index'
 
 /** Class representing a GL transparent geoms pass.
  * @extends GLStandardGeomsPass
@@ -374,55 +374,6 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     // gl.depthMask(true)
 
     renderstate.popGLStack()
-  }
-
-  /**
-   * The drawHighlightedGeoms method.
-   * @param renderstate - The object tracking the current state of the renderer
-   */
-  drawHighlightedGeoms(renderstate: HighlightRenderState): void {
-    const gl = this.__gl!
-    gl.disable(gl.CULL_FACE) // 2-sided rendering.
-
-    // eslint-disable-next-line guard-for-in
-    for (const shaderName in this.__glShaderGeomSets) {
-      this.__glShaderGeomSets[shaderName].drawHighlightedGeoms(renderstate)
-    }
-
-    const cache: Record<string, any> = {
-      currentglShader: null,
-      currentGLMaterial: null,
-      currentGLGeom: null,
-    }
-    for (const transparentItem of this.visibleItems) {
-      if (!transparentItem.geomItem.isHighlighted()) continue
-      if (!transparentItem.shaders.glselectedshader) continue
-      const shaders = transparentItem.shaders
-      if (cache.currentglShader != shaders.glselectedshader) {
-        // Some passes, like the depth pass, bind custom uniforms.
-        if (!shaders.glselectedshader.bind(renderstate, 'highlight')) {
-          continue
-        }
-        cache.currentglShader = shaders.glselectedshader
-      }
-
-      const { floatGeomBuffer, passId, instancedDraw } = renderstate.unifs
-      if (floatGeomBuffer) {
-        gl.uniform1i(floatGeomBuffer.location, gl.floatGeomBuffer ? 1 : 0)
-      }
-      if (passId) {
-        gl.uniform1i(passId.location, this.passIndex)
-      }
-      if (instancedDraw) {
-        gl.uniform1i(instancedDraw.location, 0)
-      }
-
-      this.renderer!.glGeomItemLibrary.bind(renderstate)
-
-      this._drawItem(renderstate, transparentItem, cache)
-    }
-
-    if (cache.currentGLGeom) cache.currentGLGeom.unbind(renderstate)
   }
 
   /**

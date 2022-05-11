@@ -8,8 +8,6 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 uniform int isOrthographic;
 
-import 'GLSLUtils.glsl' 
-import 'inverse.glsl'
 import 'drawItemTexture.glsl'
 import 'modelMatrix.glsl'
 import 'quadVertexFromID.glsl'
@@ -50,7 +48,7 @@ void main(void) {
   // a surface. (else they get fully clipped)
   viewPos.z += 0.5 * PointSize;
 
-  v_geomItemId = float(getGeomItemId());
+  v_geomItemId = float(geomItemId);
   v_viewPos = -viewPos.xyz;
   
   gl_Position = projectionMatrix * viewPos;

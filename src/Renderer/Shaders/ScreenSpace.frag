@@ -36,9 +36,7 @@ varying vec2 v_textureCoord;
 #if defined(DRAW_GEOMDATA)
   uniform int isOrthographic;
   import 'surfaceGeomData.glsl'
-#elif defined(DRAW_HIGHLIGHT)
-  import 'surfaceHighlight.glsl'
-#endif // DRAW_HIGHLIGHT
+#endif // DRAW_GEOMDATA
 
 
 #ifdef ENABLE_ES3
@@ -80,9 +78,7 @@ void main(void) {
   // GeomData
 #elif defined(DRAW_GEOMDATA)
   fragColor = setFragColor_geomData(vec3(0,0,0), floatGeomBuffer, passId, v_geomItemId, 0.0, isOrthographic);
-#elif defined(DRAW_HIGHLIGHT)
-  fragColor = setFragColor_highlight(v_geomItemId);
-#endif // DRAW_HIGHLIGHT
+#endif // DRAW_GEOMDATA
 
 
 #ifndef ENABLE_ES3

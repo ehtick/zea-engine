@@ -24,12 +24,9 @@ uniform color OccludedColor;
 #elif defined(DRAW_GEOMDATA)
 
 uniform int isOrthographic;
-
 import 'surfaceGeomData.glsl'
 
-#elif defined(DRAW_HIGHLIGHT)
-import 'surfaceHighlight.glsl'
-#endif // DRAW_HIGHLIGHT
+#endif // DRAW_GEOMDATA
 
 
 /* VS Outputs */
@@ -89,6 +86,10 @@ void main(void) {
 
   fragColor.a *= Opacity * treeItemOpacity;
 
+  vec4 highlightColor = getHighlightColor(geomItemId);
+  if(highlightColor.r > 0.001 || highlightColor.g > 0.001 || highlightColor.b > 0.001) {
+    fragColor.rgb = mix(fragColor.rgb, highlightColor.rgb, highlightColor.a);
+  }
 
   //////////////////////////////////////////////
   // GeomData
@@ -101,13 +102,7 @@ void main(void) {
   
   fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_geomItemId, 0.0, isOrthographic);
   
-  //////////////////////////////////////////////
-  // Highlight
-#elif defined(DRAW_HIGHLIGHT)
-  
-  fragColor = getHighlightColor(geomItemId);
-
-#endif // DRAW_HIGHLIGHT
+#endif // DRAW_GEOMDATA
 
 
 #ifndef ENABLE_ES3

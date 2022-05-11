@@ -7,7 +7,6 @@ import { GLBaseRenderer, RendererOptions } from './GLBaseRenderer'
 import { GLTexture2D } from './GLTexture2D'
 import { PassType } from './Passes/GLPass'
 import { EnvMapShader } from './Shaders/EnvMapShader'
-import { HighlightsShader } from './Shaders/HighlightsShader'
 import { SilhouetteShader } from './Shaders/SilhouetteShader'
 import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomShaderBinding'
 import { HDRImage } from '../SceneTree/Images/HDRImage'
@@ -33,7 +32,6 @@ class GLRenderer extends GLBaseRenderer {
   protected __debugMode: number
   protected rayCastDist: number
   protected rayCastArea: number
-  highlightsShader: HighlightsShader
   silhouetteShader: SilhouetteShader
   highlightOutlineThickness: number = 1
   renderMode:
@@ -78,7 +76,6 @@ class GLRenderer extends GLBaseRenderer {
     this.rayCastArea = 0
 
     const gl = <WebGL12RenderingContext>this.__gl
-    this.highlightsShader = new HighlightsShader(gl)
     this.silhouetteShader = new SilhouetteShader(gl)
 
     this.__debugTextures = [undefined]

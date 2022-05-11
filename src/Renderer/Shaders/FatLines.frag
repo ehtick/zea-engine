@@ -27,18 +27,12 @@ import 'GLSLBits.glsl'
 uniform int floatGeomBuffer;
 uniform int passId;
 
-
-#if defined(DRAW_HIGHLIGHT)
-  import 'surfaceHighlight.glsl'
-#endif
-
-
 void main(void) {
 #ifndef ENABLE_ES3
   vec4 fragColor;
 #endif
   float treeItemOpacity = v_geomItemData.y;
-
+  
 #if defined(DRAW_COLOR)
   int debugLevel = 0;
   if (debugLevel == 0) {
@@ -52,6 +46,11 @@ void main(void) {
 
     vec4 color = BaseColor * NdotV;
     fragColor = vec4(color.rgb, BaseColor.a * treeItemOpacity);
+
+    vec4 highlightColor = getHighlightColor(int(v_drawItemID));
+    if(highlightColor.r > 0.001 || highlightColor.g > 0.001 || highlightColor.b > 0.001 || highlightColor.a > 0.001) {
+      fragColor.rgb = mix(fragColor.rgb, highlightColor.rgb, highlightColor.a);
+    }
   }
   else {
     fragColor = vec4(v_texCoord.x, 0.0, 0.0, 1.0);
@@ -80,13 +79,10 @@ void main(void) {
   if (floatGeomBuffer != 0) {
     fragColor.r = float(passId); 
     fragColor.g = float(v_drawItemID);
-    fragColor.b = 0.0;// TODO: store poly-id or something.
+    fragColor.b = 0.0;
     fragColor.a = dist;
   }
-#elif defined(DRAW_HIGHLIGHT)
-  fragColor = setFragColor_highlight(v_geomItemId);
 #endif
-
 
 #ifndef ENABLE_ES3
   gl_FragColor = fragColor;

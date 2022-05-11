@@ -201,9 +201,15 @@ class GLGeomItem extends EventEmitter {
       }
     }
 
-    const unif = unifs.geomItemId
-    if (unif) {
-      gl.uniform1i(unif.location, this.geomItemId)
+    const { geomItemId, highlightColor } = unifs
+    if (geomItemId) {
+      gl.uniform1i(geomItemId.location, this.geomItemId)
+    }
+    if (highlightColor) {
+      if (this.geomItem.isHighlighted()) {
+        const highlight = this.geomItem.getHighlight().toLinear()
+        gl.uniform4fv(highlightColor.location, highlight.asArray())
+      }
     }
     return true
   }

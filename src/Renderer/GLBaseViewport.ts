@@ -10,7 +10,7 @@ import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { SceneSetEvent } from '../Utilities/Events/SceneSetEvent'
 import { ZeaPointerEvent } from '../Utilities/Events/ZeaPointerEvent'
 import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
-import { ColorRenderState, RenderState, HighlightRenderState } from './RenderStates/index'
+import { ColorRenderState, RenderState } from './RenderStates/index'
 import { WebGL12RenderingContext } from './types/webgl'
 import { GLBaseRenderer } from './GLBaseRenderer'
 import { SystemDesc } from '../SystemDesc'
@@ -34,8 +34,6 @@ class GLBaseViewport extends ParameterOwner {
   protected quad: GLMesh
   protected offscreenBuffer: GLTexture2D | null = null
   protected depthTexture: GLTexture2D | null = null
-  protected highlightedGeomsBuffer: GLTexture2D
-  protected highlightedGeomsBufferFbo: GLFbo
   protected __backgroundTexture: BaseImage | null = null
   protected __backgroundGLTexture: GLHDRImage | GLTexture2D | null = null
   protected offscreenBufferFbo: GLFbo | null = null
@@ -100,16 +98,6 @@ class GLBaseViewport extends ParameterOwner {
       // this.offscreenBufferFbo = new GLFbo(gl, this.offscreenBuffer, true)
       // this.offscreenBufferFbo.setClearColor(this.backgroundColorParam.value.asArray())
     }
-
-    this.highlightedGeomsBuffer = new GLTexture2D(gl, {
-      type: 'UNSIGNED_BYTE',
-      format: 'RGBA',
-      filter: 'NEAREST',
-      width: 4,
-      height: 4,
-    })
-    this.highlightedGeomsBufferFbo = new GLFbo(gl, this.highlightedGeomsBuffer, true)
-    this.highlightedGeomsBufferFbo.setClearColor(new Color(0, 0, 0, 0))
 
     // //////////////////////////////////
     // Setup Camera Manipulator
@@ -187,10 +175,6 @@ class GLBaseViewport extends ParameterOwner {
    * @param height - The height  used by this viewport.
    */
   resizeRenderTargets(width: number, height: number): void {
-    if (this.highlightedGeomsBuffer) {
-      this.highlightedGeomsBufferFbo.resize(width, height)
-    }
-
     const gl = this.__renderer.gl
     if (this.renderer.outlineThickness > 0 && this.renderer.outlineMethod == 'image') {
       const disableOnSafari = SystemDesc.browserName == 'Safari'
@@ -310,12 +294,6 @@ class GLBaseViewport extends ParameterOwner {
 
     this.__renderer.drawScene(renderstate)
 
-    // const highlightRenderState = renderstate.toHighlightRenderState()
-    // this.drawHighlights(highlightRenderState)
-    // if (highlightRenderState.stack.length != 1) {
-    //   console.warn(' corrupt highlightRenderState.stack.length:', highlightRenderState.stack.length)
-    // }
-
     // //////////////////////////////////
     // Post processing.
     if (this.fb) {
@@ -417,63 +395,6 @@ class GLBaseViewport extends ParameterOwner {
     gl2.depthMask(true)
 
     renderstate.popGLStack()
-  }
-
-  /**
-   * Draws the highlights around geometries.
-   * @param renderstate - The object tracking the current state of the renderer
-   * @private
-   */
-  drawHighlights(renderstate: HighlightRenderState): void {
-    if (this.highlightedGeomsBufferFbo) {
-      const gl = this.__renderer.gl
-
-      this.highlightedGeomsBufferFbo.bindForWriting(renderstate)
-      this.highlightedGeomsBufferFbo.clear()
-
-      renderstate.pushGLStack()
-      // Highlighted geoms should always be rendered 2-sided
-      renderstate.glEnable(gl.CULL_FACE)
-      renderstate.glEnable(gl.DEPTH_TEST)
-      renderstate.glDisable(gl.BLEND)
-
-      gl.depthFunc(gl.LESS)
-      gl.depthMask(true)
-      renderstate.glShader = null // clear any bound shaders.
-
-      this.__renderer.drawHighlightedGeoms(renderstate)
-
-      // Unbind and restore the bound fbo
-      this.highlightedGeomsBufferFbo.unbindForWriting(renderstate)
-
-      // Now render the outlines to the entire screen.
-      gl.viewport(0, 0, this.__width, this.__height)
-
-      // Turn this on to debug the highlight data buffer.
-      const debugHighlightBuffer = false
-      if (debugHighlightBuffer) {
-        this.__renderer.screenQuad!.bindShader(renderstate)
-        this.highlightedGeomsBuffer.bindToUniform(renderstate, renderstate.unifs.image)
-        this.__renderer.screenQuad!.draw(renderstate)
-      } else {
-        this.renderer.highlightsShader.bind(renderstate)
-        renderstate.pushGLStack()
-        renderstate.glEnable(gl.BLEND)
-
-        gl.blendEquation(gl.FUNC_ADD)
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
-
-        const unifs = renderstate.unifs
-        gl.uniform1f(unifs.outlineThickness.location, this.renderer.highlightOutlineThickness)
-        this.highlightedGeomsBuffer.bindToUniform(renderstate, unifs.highlightDataTexture)
-        gl.uniform2f(unifs.highlightDataTextureSize.location, renderstate.region[2], renderstate.region[3])
-        this.quad.bindAndDraw(renderstate)
-
-        renderstate.popGLStack()
-      }
-
-      renderstate.popGLStack()
-    }
   }
 
   // ///////////////////////////

@@ -55,6 +55,11 @@ void main(void) {
 
   fragColor = baseColor;
 
+  vec4 highlightColor = getHighlightColor(int(v_geomItemId));
+  if(highlightColor.r > 0.001 || highlightColor.g > 0.001 || highlightColor.b > 0.001) {
+    fragColor.rgb = mix(fragColor.rgb, highlightColor.rgb, highlightColor.a);
+  }
+
   //////////////////////////////////////////////
   // GeomData
 #elif defined(DRAW_GEOMDATA)
@@ -80,14 +85,7 @@ void main(void) {
     fragColor.a = float16bits.y;
   }
 
-  //////////////////////////////////////////////
-  // Highlight
-#elif defined(DRAW_HIGHLIGHT)
-  
-  int geomItemId = int(v_geomItemId + 0.5);
-  fragColor = getHighlightColor(geomItemId);
-
-#endif // DRAW_HIGHLIGHT
+#endif // DRAW_GEOMDATA
 
 
 #ifndef ENABLE_ES3

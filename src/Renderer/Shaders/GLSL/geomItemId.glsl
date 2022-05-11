@@ -36,44 +36,43 @@ vec4 getDrawItemIds() {
 
 #else // ENABLE_MULTI_DRAW
 
-uniform int geomItemId;
+uniform ivec2 geomItemIds;
 
 #ifdef ENABLE_FLOAT_TEXTURES
 
-attribute float instancedIds;    // instanced attribute..
+attribute vec2 instancedIds;    // instanced attribute..
 uniform int instancedDraw;
 
 int getGeomItemId() {
   if (instancedDraw == 0) {
-    return geomItemId;
+    return geomItemIds.x;
   }
   else {
-    return int(instancedIds);
+    return int(instancedIds.x);
   }
 }
 
 vec4 getDrawItemIds() {
   if (instancedDraw == 0) {
-    return vec4(float(geomItemId), 0.0, -1.0, -1.0);
+    return vec4(float(geomItemIds.x), 0.0, -1.0, float(geomItemIds.y));
   }
   else {
-    return vec4(float(instancedIds), 0.0, -1.0, -1.0);
+    return vec4(instancedIds.x, 0.0, -1.0, instancedIds.y);
   }
 }
 
 #else
 
 int getGeomItemId() {
-  return geomItemId;
+  return geomItemIds.x;
 }
 
 vec4 getDrawItemIds() {
-    return vec4(float(geomItemId), 0.0, -1.0, -1.0);
+    return vec4(float(geomItemIds.x), 0.0, -1.0, float(geomItemIds.y));
 }
 
 #endif // ENABLE_FLOAT_TEXTURES
 #endif // ENABLE_MULTI_DRAW
-
 
 // For backwards compatibility with older plugins (UX.HandleShader)
 int getDrawItemId() {

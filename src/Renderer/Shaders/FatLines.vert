@@ -8,7 +8,6 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 uniform int isOrthographic;
 
-
 import 'drawItemTexture.glsl'
 import 'modelMatrix.glsl'
 
@@ -16,7 +15,6 @@ uniform int geomItemId;
 int getGeomItemId() {
   return geomItemId;
 }
-
 
 uniform sampler2D positionsTexture;
 uniform int positionsTextureSize;
@@ -61,10 +59,9 @@ void main(void) {
 
   gl_Position     = projectionMatrix * vec4(v_viewPos, 1.0);
 
-  if (isOrthographic > 0){
+  if (isOrthographic > 0) {
     gl_Position.z -= mix(gl_Position.z, -1.0, Overlay);
   } else {
     gl_Position.z = mix(gl_Position.z, -gl_Position.z, Overlay);
   }
-
 }

@@ -40,9 +40,7 @@ out vec4 fragColor;
 #if defined(DRAW_GEOMDATA)
   uniform int isOrthographic;
   import 'surfaceGeomData.glsl'
-#elif defined(DRAW_HIGHLIGHT)
-  import 'surfaceHighlight.glsl'
-#endif // DRAW_HIGHLIGHT
+#endif // DRAW_GEOMDATA
 
 void main(void) {
 #ifndef ENABLE_ES3
@@ -50,6 +48,7 @@ void main(void) {
 #endif
 
   int geomItemId = int(v_drawItemIds.x + 0.5);
+  int drawItemFlags = int(v_drawItemIds.w + 0.5);
   int flags = int(v_geomItemData.x + 0.5);
   float treeItemOpacity = v_geomItemData.y;
 
@@ -136,9 +135,7 @@ void main(void) {
   }
   fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_drawItemIds.x, v_drawItemIds.y, isOrthographic);
   
-#elif defined(DRAW_HIGHLIGHT)
-  fragColor = setFragColor_highlight(v_drawItemIds.x);
-#endif // DRAW_HIGHLIGHT
+#endif // DRAW_GEOMDATA
 
 
 #ifndef ENABLE_ES3

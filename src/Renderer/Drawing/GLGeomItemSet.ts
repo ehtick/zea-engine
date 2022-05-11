@@ -21,9 +21,6 @@ class GLGeomItemSet extends EventEmitter {
   protected drawIdsArray: Float32Array | null = null
   protected drawIdsBuffer: WebGLBuffer | null = null
   protected drawIdsBufferDirty: boolean
-  protected highlightedIdsArray: Float32Array | null = null
-  protected highlightedIdsBuffer: WebGLBuffer | null = null
-  protected highlightedIdsBufferDirty: boolean
   protected visibleItems: number[]
   protected highlightedItems: number[]
   /**
@@ -42,10 +39,6 @@ class GLGeomItemSet extends EventEmitter {
     this.drawIdsArray = null
     this.drawIdsBuffer = null
     this.drawIdsBufferDirty = true
-
-    this.highlightedIdsArray = null
-    this.highlightedIdsBuffer = null
-    this.highlightedIdsBufferDirty = true
 
     this.visibleItems = []
     this.highlightedItems = []
@@ -86,27 +79,22 @@ class GLGeomItemSet extends EventEmitter {
     }
     if (glGeomItem.geomItem.isHighlighted()) {
       this.highlightedItems.push(index)
-      this.highlightedIdsBufferDirty = true
     }
 
     const eventHandlers: Record<string, any> = {}
 
-    eventHandlers.highlightChanged = (event: Record<string, any>) => {
+    eventHandlers.highlightChanged = () => {
       if (glGeomItem.geomItem.isHighlighted()) {
         // Note: highlightChanged is fired when the color changes
         // or another highlight is added over the top. We avoid
         // adding the same index again here. (TODO: use Set?)
         if (this.highlightedItems.includes(index)) return
         this.highlightedItems.push(index)
-        const event = new CountChangedEvent(1, this.highlightedItems.length)
-        this.emit('highlightedCountChanged', event)
       } else {
         this.highlightedItems.splice(this.highlightedItems.indexOf(index), 1)
-        const event = new CountChangedEvent(-1, this.highlightedItems.length)
-        this.emit('highlightedCountChanged', event)
       }
       // console.log("highlightChanged:", glGeomItem.geomItem.getName(), glGeomItem.geomItem.isHighlighted(), this.highlightedItems)
-      this.highlightedIdsBufferDirty = true
+      this.drawIdsBufferDirty = true
     }
     glGeomItem.geomItem.on('highlightChanged', eventHandlers.highlightChanged)
     eventHandlers.visibilityChanged = (event: Record<string, any>) => {
@@ -155,8 +143,6 @@ class GLGeomItemSet extends EventEmitter {
     }
     if (glGeomItem.geomItem.isHighlighted()) {
       this.highlightedItems.splice(this.highlightedItems.indexOf(index), 1)
-      const event = new CountChangedEvent(-1, this.highlightedItems.length)
-      this.emit('highlightedCountChanged', event)
     }
     this.drawIdsBufferDirty = true
     // console.log("removeGLGeomItem:", glGeomItem.geomItem.getName(), this.glGeomItems.length)
@@ -179,7 +165,7 @@ class GLGeomItemSet extends EventEmitter {
       this.drawIdsBufferDirty = false
       return
     }
-    if (this.drawIdsBuffer && this.glGeomItems.length != this.drawIdsArray!.length) {
+    if (this.drawIdsBuffer && this.glGeomItems.length * 2 != this.drawIdsArray!.length) {
       this.gl.deleteBuffer(this.drawIdsBuffer)
       this.drawIdsBuffer = null
     }
@@ -201,66 +187,24 @@ class GLGeomItemSet extends EventEmitter {
   getDrawIdsArray(): Float32Array {
     if (this.drawIdsBufferDirty) {
       if (!this.drawIdsArray || this.glGeomItems.length != this.drawIdsArray.length) {
-        this.drawIdsArray = new Float32Array(this.glGeomItems.length)
+        this.drawIdsArray = new Float32Array(this.glGeomItems.length * 2)
       }
 
       // Collect all visible geom ids into the instanceIds array.
       // Note: the draw count can be less than the number of instances
       // we re-use the same buffer and simply invoke fewer draw calls.
       this.visibleItems.forEach((index, tgtIndex) => {
-        this.drawIdsArray![tgtIndex] = this.glGeomItems[index]!.getGeomItemId()
+        const glGeomItem = this.glGeomItems[index]!
+        this.drawIdsArray[tgtIndex * 2] = glGeomItem.getGeomItemId()
+
+        if (glGeomItem.geomItem.isHighlighted()) {
+          this.drawIdsArray[tgtIndex * 2 + 1] = 4
+        }
       })
 
       this.drawIdsBufferDirty = false
     }
     return this.drawIdsArray
-  }
-
-  // ////////////////////////////////////
-  // Selected Items
-
-  /**
-   * The updateHighlightedIDsBuffer method.
-   */
-  updateHighlightedIDsBuffer(): void {
-    const gl = this.gl
-    if (!gl.floatTexturesSupported) {
-      this.highlightedIdsBufferDirty = false
-      return
-    }
-    if (this.highlightedIdsBuffer && this.glGeomItems.length > this.highlightedIdsArray!.length) {
-      this.gl.deleteBuffer(this.highlightedIdsBuffer)
-      this.highlightedIdsBuffer = null
-    }
-    if (!this.highlightedIdsBuffer) {
-      this.highlightedIdsBuffer = gl.createBuffer()
-    }
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.highlightedIdsBuffer)
-    gl.bufferData(gl.ARRAY_BUFFER, this.getHighlightedIdsArray(), gl.STATIC_DRAW)
-
-    this.highlightedIdsBufferDirty = false
-  }
-
-  /**
-   * The getHighlightedIdsArray method.
-   * @return - The drawIds for each GeomItem packed into a Float32Array
-   */
-  getHighlightedIdsArray(): Float32Array {
-    if (this.highlightedIdsBufferDirty) {
-      if (!this.highlightedIdsArray || this.highlightedItems.length > this.highlightedIdsArray.length) {
-        this.highlightedIdsArray = new Float32Array(this.glGeomItems.length)
-      }
-
-      // Collect all visible geom ids into the instanceIds array.
-      // Note: the draw count can be less than the number of instances
-      // we re-use the same buffer and simply invoke fewer draw calls.
-      this.highlightedItems.forEach((index, tgtIndex) => {
-        this.highlightedIdsArray![tgtIndex] = this.glGeomItems[index]!.getGeomItemId()
-      })
-
-      this.highlightedIdsBufferDirty = false
-    }
-    return this.highlightedIdsArray
   }
 
   // ////////////////////////////////////
@@ -279,21 +223,6 @@ class GLGeomItemSet extends EventEmitter {
     }
 
     this.__bindAndRender(renderstate, this.visibleItems, this.drawIdsBuffer)
-  }
-
-  /**
-   * The drawHighlighted method.
-   * @param renderstate - The object tracking the current state of the renderer
-   */
-  drawHighlighted(renderstate: RenderState): void {
-    if (this.highlightedItems.length == 0) {
-      return
-    }
-    if (this.highlightedIdsBufferDirty) {
-      this.updateHighlightedIDsBuffer()
-    }
-
-    this.__bindAndRender(renderstate, this.highlightedItems, this.highlightedIdsBuffer)
   }
 
   /**
@@ -321,6 +250,17 @@ class GLGeomItemSet extends EventEmitter {
   __bindAndRender(renderstate: RenderState, itemIndices: number[], drawIdsBuffer: WebGLBuffer | null): void {
     const gl = this.gl
     const unifs = renderstate.unifs
+    const { instancedDraw } = renderstate.unifs
+    const { instancedIds } = renderstate.attrs
+
+    if (instancedIds) {
+      // The instanced transform ids are bound as an instanced attribute.
+      const location = instancedIds.location
+      gl.enableVertexAttribArray(location)
+      gl.bindBuffer(gl.ARRAY_BUFFER, drawIdsBuffer)
+      gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4 * 2, 0)
+      gl.vertexAttribDivisor(location, 1) // This makes it instanced
+    }
 
     // Lazy unbinding. We can have situations where we have many materials
     // all bound to the same geom. e.g. lots of billboards
@@ -331,8 +271,8 @@ class GLGeomItemSet extends EventEmitter {
     }
 
     if (!gl.floatTexturesSupported || !gl.drawElementsInstanced || !renderstate.supportsInstancing) {
-      if (renderstate.unifs.instancedDraw) {
-        gl.uniform1i(renderstate.unifs.instancedDraw.location, 0)
+      if (instancedDraw) {
+        gl.uniform1i(instancedDraw.location, 0)
       }
       itemIndices.forEach((index: number) => {
         this.glGeomItems[index]!.bind(renderstate)
@@ -345,16 +285,9 @@ class GLGeomItemSet extends EventEmitter {
 
       // Specify an instanced draw to the shader so it knows how
       // to retrieve the modelmatrix.
-      if (renderstate.unifs.instancedDraw) {
-        gl.uniform1i(renderstate.unifs.instancedDraw.location, 1)
+      if (instancedDraw) {
+        gl.uniform1i(instancedDraw.location, 1)
       }
-
-      // The instanced transform ids are bound as an instanced attribute.
-      const location = renderstate.attrs.instancedIds.location
-      gl.enableVertexAttribArray(location)
-      gl.bindBuffer(gl.ARRAY_BUFFER, drawIdsBuffer)
-      gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 1 * 4, 0)
-      gl.vertexAttribDivisor(location, 1) // This makes it instanced
 
       renderstate.bindViewports(unifs, () => {
         this.glGeom.drawInstanced(renderstate, itemIndices.length)
@@ -370,11 +303,6 @@ class GLGeomItemSet extends EventEmitter {
     if (this.drawIdsBuffer) {
       this.gl.deleteBuffer(this.drawIdsBuffer)
       this.drawIdsBuffer = null
-    }
-
-    if (this.highlightedIdsBuffer) {
-      this.gl.deleteBuffer(this.highlightedIdsBuffer)
-      this.highlightedIdsBuffer = null
     }
 
     this.emit('destructing')

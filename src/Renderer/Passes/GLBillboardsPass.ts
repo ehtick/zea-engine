@@ -10,7 +10,7 @@ import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLShader } from '../GLShader'
 import { GeomItemAndDist } from '../../Utilities/IntersectionData'
-import { RenderState, GeomDataRenderState, HighlightRenderState } from '../RenderStates/index'
+import { RenderState, GeomDataRenderState } from '../RenderStates/index'
 
 const pixelsPerItem = 7 // The number of pixels per draw item.
 
@@ -575,15 +575,6 @@ class GLBillboardsPass extends GLPass {
 
     gl.disable(gl.BLEND)
     gl.depthMask(true)
-  }
-
-  /**
-   * The drawHighlightedGeoms method.
-   * @param renderstate - The object tracking the current state of the renderer
-   */
-  drawHighlightedGeoms(renderstate: HighlightRenderState): void {
-    if (this.drawCount == 0) return
-    this.__draw(renderstate, 'DRAW_HIGHLIGHT')
   }
 
   /**

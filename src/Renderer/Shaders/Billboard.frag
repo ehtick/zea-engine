@@ -24,7 +24,7 @@ uniform int instancesTextureSize;
 
 const int cols_per_instance = 7;
 
-vec4 getHilightColor(int id) {
+vec4 getHighlightColor(int id) {
   return fetchTexel(instancesTexture, instancesTextureSize, (id * cols_per_instance) + 6);
 }
 
@@ -45,16 +45,17 @@ void main(void) {
 
 #if defined(DRAW_COLOR)
   fragColor = imageColor;
+  
+  vec4 highlightColor = getHighlightColor(instanceID);
+  if(highlightColor.r > 0.001 || highlightColor.g > 0.001 || highlightColor.b > 0.001) {
+    fragColor.rgb = mix(fragColor.rgb, highlightColor.rgb, highlightColor.a);
+  }
+
   // fragColor.r = 1.0;
   // fragColor.a = 1.0;
 #elif defined(DRAW_GEOMDATA)
   fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_instanceID, 0.0, isOrthographic);
-#elif defined(DRAW_HIGHLIGHT)
-  fragColor = getHilightColor(instanceID);
-  // Skip unhilighting labels.
-  if(fragColor.r < 0.001 && fragColor.g < 0.001 && fragColor.b < 0.001)
-    discard;
-#endif // DRAW_HIGHLIGHT
+#endif // DRAW_GEOMDATA
   
 #ifndef ENABLE_ES3
   gl_FragColor = fragColor;

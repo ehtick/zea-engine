@@ -7,9 +7,7 @@ import { GLShaderMaterials } from '../Drawing/GLShaderMaterials'
 import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
 import { GLMaterialGeomItemSets } from '../Drawing/GLMaterialGeomItemSets'
 import { GLGeomItem } from '../Drawing'
-import { ColorRenderState, GeomDataRenderState, HighlightRenderState } from '../RenderStates/index'
-
-
+import { ColorRenderState, GeomDataRenderState } from '../RenderStates/index'
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLStandardGeomsPass
@@ -231,29 +229,6 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     }
 
     renderstate.popGLStack()
-  }
-
-  /**
-   * The drawHighlightedGeoms method.
-   * @param renderstate - The object tracking the current state of the renderer
-   */
-  drawHighlightedGeoms(renderstate: HighlightRenderState): void {
-    const gl = this.__gl!
-    gl.disable(gl.CULL_FACE) // 2-sided rendering.
-
-    // eslint-disable-next-line guard-for-in
-    for (const shaderName in this.__glShaderGeomSets) {
-      this.__glShaderGeomSets[shaderName].drawHighlightedGeoms(renderstate)
-    }
-    // eslint-disable-next-line guard-for-in
-    for (const shaderName in this.__glshadermaterials) {
-      const glshaderMaterials = this.__glshadermaterials[shaderName]
-      glshaderMaterials.drawHighlightedGeoms(renderstate)
-    }
-
-    if (renderstate.glGeom) {
-      renderstate.glGeom.unbind(renderstate)
-    }
   }
 
   /**

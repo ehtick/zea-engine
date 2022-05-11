@@ -40,12 +40,6 @@ varying vec2 v_textureCoord;
 varying vec3 v_worldPos;
 /* VS Outputs */
 
-#if defined(DRAW_COLOR)
-#elif defined(DRAW_GEOMDATA)
-#elif defined(DRAW_HIGHLIGHT)
-#endif // DRAW_HIGHLIGHT
-
-
 
 void main(void) {
 

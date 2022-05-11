@@ -3,6 +3,7 @@ precision highp float;
 precision highp int;
 
 import 'constants.glsl'
+import 'drawItemTexture.glsl'
 
 
 uniform color BaseColor;
@@ -21,9 +22,7 @@ out vec4 fragColor;
 #if defined(DRAW_GEOMDATA)
   uniform int isOrthographic;
   import 'surfaceGeomData.glsl'
-#elif defined(DRAW_HIGHLIGHT)
-  import 'surfaceHighlight.glsl'
-#endif // DRAW_HIGHLIGHT
+#endif // DRAW_GEOMDATA
 
 
 void main(void) {
@@ -32,26 +31,37 @@ void main(void) {
   vec4 fragColor;
 #endif
 
+int geomItemId = int(v_geomItemId + 0.5);
+
 float dist = length(v_texCoord - 0.5);
 if (dist > 0.5)
   discard;
 
 #if defined(DRAW_COLOR)
 
-  if (dist > 0.5 - (BorderWidth * 0.5))
-    fragColor = vec4(0.,0.,0.,1.);
+  vec4 highlightColor = getHighlightColor(geomItemId);
+  if (dist > 0.5 - (BorderWidth * 0.5)) {
+    if(highlightColor.r > 0.001 || highlightColor.g > 0.001 || highlightColor.b > 0.001 || highlightColor.a > 0.001) {
+      fragColor.rgb = highlightColor.rgb;
+      fragColor.a = 1.0;
+    } else {
+      fragColor = vec4(0.,0.,0.,1.);
+    }
+  }
   else {
     // Modulate the lighting using the texture coord so the point looks round.
     float NdotV = cos(dist * PI);
 
     fragColor = BaseColor * mix(1.0, NdotV, Rounded);
+
+    if(highlightColor.r > 0.001 || highlightColor.g > 0.001 || highlightColor.b > 0.001) {
+      fragColor.rgb = mix(fragColor.rgb, highlightColor.rgb, highlightColor.a);
+    } 
   }
 
 #elif defined(DRAW_GEOMDATA)
   fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_geomItemId, 0.0, isOrthographic);
-#elif defined(DRAW_HIGHLIGHT)
-  fragColor = setFragColor_highlight(v_geomItemId);
-#endif // DRAW_HIGHLIGHT
+#endif // DRAW_GEOMDATA
 
 
   

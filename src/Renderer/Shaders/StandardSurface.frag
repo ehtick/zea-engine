@@ -116,12 +116,8 @@ import 'debugColors.glsl'
 
 // end DRAW_COLOR
 #elif defined(DRAW_GEOMDATA)
-
 import 'surfaceGeomData.glsl'
-
-#elif defined(DRAW_HIGHLIGHT)
-import 'surfaceHighlight.glsl'
-#endif // DRAW_HIGHLIGHT
+#endif // DRAW_GEOMDATA
 
 
 void main(void) {
@@ -132,7 +128,7 @@ void main(void) {
   int geomItemId = int(v_drawItemIds.x + 0.5);
   int elemId = int(v_drawItemIds.y + 0.5);
   int perFaceMaterialId = int(v_drawItemIds.z + 0.5);
-  int drawItemFlags = int(v_drawItemIds.w);
+  int drawItemFlags = int(v_drawItemIds.w + 0.5);
   int flags = int(v_geomItemData.x + 0.5);
   float treeItemOpacity = v_geomItemData.y;
 
@@ -275,8 +271,8 @@ void main(void) {
 #endif // ENABLE_MULTI_DRAW
       edgeColor.a = edgeColor.a * opacity * treeItemOpacity;
       
-      vec4 highlightColor = getHighlightColor(geomItemId);
       if (drawItemFlags != 0) {
+        vec4 highlightColor = getHighlightColor(geomItemId);
         edgeColor = highlightColor;
         edgeColor.a = 1.0;
       }
@@ -336,8 +332,8 @@ void main(void) {
 #endif // ENABLE_MULTI_DRAW
       edgeColor.a = edgeColor.a * opacity * treeItemOpacity;
       
-      vec4 highlightColor = getHighlightColor(geomItemId);
       if (drawItemFlags != 0) {
+        vec4 highlightColor = getHighlightColor(geomItemId);
         edgeColor = highlightColor;
         edgeColor.a = 1.0;
       }
@@ -354,8 +350,8 @@ void main(void) {
 #else 
     vec4 pointColor      = PointColor;
 
-    vec4 highlightColor = getHighlightColor(geomItemId);
     if (drawItemFlags != 0) {
+      vec4 highlightColor = getHighlightColor(geomItemId);
       pointColor = highlightColor;
       pointColor.a = 1.0;
     }
@@ -431,12 +427,9 @@ void main(void) {
     }
   }  // end 'POINTS'
 
-  
   fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_drawItemIds.x, v_drawItemIds.y, isOrthographic);
    
-#elif defined(DRAW_HIGHLIGHT)
-  fragColor = getHighlightColor(geomItemId);
-#endif // DRAW_HIGHLIGHT
+#endif // DRAW_GEOMDATA
 
 #ifndef ENABLE_ES3
   gl_FragColor = fragColor;

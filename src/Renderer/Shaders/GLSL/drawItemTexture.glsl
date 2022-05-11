@@ -26,7 +26,7 @@ vec4 getInstanceData(int id) {
 
 uniform vec4 highlightColor;
 
-vec4 getHighlightColor() {
+vec4 getHighlightColor(int id) {
   return highlightColor;
 }
 

@@ -28,7 +28,7 @@ import { WebGL12RenderingContext } from './types/webgl'
 import { Uniforms } from './types/renderer'
 import { StateChangedEvent } from '../Utilities/Events/StateChangedEvent'
 import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
-import { ColorRenderState, GeomDataRenderState, HighlightRenderState, RenderState } from './RenderStates/index'
+import { ColorRenderState, GeomDataRenderState, RenderState } from './RenderStates/index'
 import { ARViewport } from './VR/ARViewport'
 import { VRViewport } from './VR/VRViewport'
 
@@ -1312,24 +1312,6 @@ class GLBaseRenderer extends ParameterOwner {
       const passSet = this.__passes[key]
       for (const pass of passSet) {
         if (pass.enabled) pass.draw(renderstate)
-      }
-    }
-  }
-
-  /**
-   * The drawHighlightedGeoms method.
-   * @param renderstate - The renderstate value.
-   */
-  drawHighlightedGeoms(renderstate: HighlightRenderState): void {
-    this.bindGLBaseRenderer(renderstate)
-
-    renderstate.directives = [...this.directives, '#define DRAW_HIGHLIGHT']
-    renderstate.shaderopts.directives = renderstate.directives
-
-    for (const key in this.__passes) {
-      const passSet = this.__passes[key]
-      for (const pass of passSet) {
-        if (pass.enabled) pass.drawHighlightedGeoms(renderstate)
       }
     }
   }

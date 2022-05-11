@@ -12,7 +12,8 @@ import { GLGeomItem } from './GLGeomItem'
 import { Vec3 } from '../../Math/Vec3'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeomItemSet } from './GLGeomItemSet'
-import { RenderState, GeomDataRenderState, ColorRenderState, HighlightRenderState } from '../RenderStates/index'
+import { RenderState, GeomDataRenderState, ColorRenderState } from '../RenderStates/index'
+import { GLShader } from '../GLShader'
 
 /** Class representing GL shader materials.
  * @private
@@ -20,14 +21,12 @@ import { RenderState, GeomDataRenderState, ColorRenderState, HighlightRenderStat
 class GLShaderGeomSets extends EventEmitter {
   protected pass: GLStandardGeomsPass
   protected gl: WebGL12RenderingContext
-  protected glShader: any
-  protected glGeomDataShader: any
-  protected glHighlightShader: any
+  protected glShader: GLShader
+  protected glGeomDataShader: GLShader
   protected glGeomItemSets: Record<string, GLGeomItemSetMultiDraw | GLGeomItemSetMultiDrawCompoundGeom> = {}
 
   protected glShaderKey: string
   protected glGeomDataShaderKey: string = ''
-  protected glHighlightShaderKey: string = ''
   /**
    * Create a GL shader material.
    * @param pass - The pass that owns this object.
@@ -41,12 +40,10 @@ class GLShaderGeomSets extends EventEmitter {
     // this.shaderAttrSpec = {}
     this.glShader = shaders.glShader
     this.glGeomDataShader = shaders.glgeomdatashader ? shaders.glgeomdatashader : shaders.glShader
-    this.glHighlightShader = shaders.glselectedshader ? shaders.glselectedshader : shaders.glShader
 
     this.glShaderKey = shaders.glShader.getId() + 'multidraw-draw'
 
     if (this.glGeomDataShader) this.glGeomDataShaderKey = this.glGeomDataShader.getId() + 'multidraw-geomdata'
-    if (this.glHighlightShader) this.glHighlightShaderKey = this.glHighlightShader.getId() + 'multidraw-highlight'
   }
 
   /**
@@ -143,20 +140,6 @@ class GLShaderGeomSets extends EventEmitter {
     }
 
     this.glShader.unbind(renderstate)
-  }
-
-  /**
-   * The drawHighlightedGeoms method.
-   * @param renderstate - The object tracking the current state of the renderer
-   */
-  drawHighlightedGeoms(renderstate: HighlightRenderState) {
-    if (!this.glHighlightShader) return
-    this.bindShader(this.glHighlightShader, renderstate, this.glHighlightShaderKey)
-
-    for (const elementType in this.glGeomItemSets) {
-      this.glGeomItemSets[elementType].drawHighlighted(renderstate)
-    }
-    this.glHighlightShader.unbind(renderstate)
   }
 
   /**

@@ -290,98 +290,6 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   }
 
   // ////////////////////////////////////
-  // Selected Items
-
-  /**
-   * The updateHighlightedIDsBuffer method.
-   * @param renderstate - The object used to track state changes during rendering.
-   */
-  updateHighlightedIDsBuffer(renderstate: RenderState): void {
-    if (this.highlightedIdsBufferDirty) {
-      if (!this.highlightedIdsArray || this.highlightedItems.length > this.highlightedIdsArray.length) {
-        this.highlightedIdsArray = new Float32Array(this.highlightedItems.length)
-
-        // Note: the +1 here is to avoid an exception thrown on Safari if the offsets and counts are
-        // exactly the size of the number of drawn items. (a bug in the validation).
-        this.highlightElementOffsets = new Int32Array(this.highlightedItems.length + 1)
-        this.highlightElementCounts = new Int32Array(this.highlightedItems.length + 1)
-      }
-
-      // Collect all visible geom ids into the instanceIds array.
-      // Note: the draw count can be less than the number of instances
-      // we re-use the same buffer and simply invoke fewer draw calls.
-      this.highlightedItems.forEach((glGeomItem, index) => {
-        this.highlightedIdsArray[index] = glGeomItem.geomItemId
-        const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
-        this.highlightElementOffsets[index] = offsetAndCount[0]
-        this.highlightElementCounts[index] = offsetAndCount[1]
-      })
-      for (let i = this.highlightedItems.length; i < this.highlightElementCounts.length; i++) {
-        this.highlightElementOffsets[i] = 0
-        this.highlightElementCounts[i] = 0
-      }
-
-      this.highlightedIdsBufferDirty = false
-    }
-
-    const gl = this.renderer.gl
-
-    const unit = renderstate.boundTextures++
-    gl.activeTexture(gl.TEXTURE0 + unit)
-    const highlightIdsTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.highlightedItems.length)))
-
-    if (!this.highlightedIdsTexture) {
-      this.highlightedIdsTexture = new GLTexture2D(this.gl, {
-        format: gl.name == 'webgl2' ? 'RED' : 'ALPHA',
-        type: 'FLOAT',
-        width: highlightIdsTextureSize,
-        height: highlightIdsTextureSize,
-        filter: 'NEAREST',
-        wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false,
-      })
-    } else if (
-      this.highlightedIdsTexture.width < highlightIdsTextureSize ||
-      this.highlightedIdsTexture.height < highlightIdsTextureSize
-    ) {
-      this.highlightedIdsTexture.resize(highlightIdsTextureSize, highlightIdsTextureSize)
-    }
-    {
-      const tex = this.highlightedIdsTexture
-      const texWidth = this.highlightedIdsTexture.width
-      gl.bindTexture(gl.TEXTURE_2D, tex.glTex)
-
-      const level = 0
-      const xoffset = 0
-      const height = 1
-      const format = tex.getFormat()
-      const type = tex.getType()
-      const rows = Math.ceil((xoffset + this.highlightedIdsArray.length) / texWidth)
-
-      let consumed = 0
-      let remaining = this.highlightedIdsArray.length
-      let rowStart = xoffset
-      for (let i = 0; i < rows; i++) {
-        let width
-        if (rowStart + remaining > texWidth) {
-          width = texWidth - rowStart
-          rowStart = 0
-        } else {
-          width = remaining
-        }
-        const x = consumed % texWidth
-        const y = Math.floor(consumed / texWidth)
-        const data = this.highlightedIdsArray.subarray(consumed, consumed + width)
-        gl.texSubImage2D(gl.TEXTURE_2D, level, x, y, width, height, format, type, data)
-        consumed += width
-        remaining -= width
-      }
-    }
-
-    gl.bindTexture(gl.TEXTURE_2D, null)
-    renderstate.boundTextures--
-  }
-  // ////////////////////////////////////
   // Drawing
 
   /**
@@ -405,30 +313,6 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     }
 
     this.bindAndRender(renderstate, this.drawElementCounts, this.drawElementOffsets, this.drawOrderToIndex.length)
-  }
-
-  /**
-   * The drawHighlighted method.
-   * @param renderstate - The object tracking the current state of the renderer
-   */
-  drawHighlighted(renderstate: RenderState): void {
-    if (this.highlightedItems.length == 0) {
-      return
-    }
-    if (this.highlightedIdsBufferDirty) {
-      this.updateHighlightedIDsBuffer(renderstate)
-    }
-    if (this.highlightedIdsTexture) {
-      const { drawIdsTexture } = renderstate.unifs
-      this.highlightedIdsTexture.bindToUniform(renderstate, drawIdsTexture)
-    }
-
-    this.bindAndRender(
-      renderstate,
-      this.highlightElementCounts,
-      this.highlightElementOffsets,
-      this.highlightedItems.length
-    )
   }
 
   /**
