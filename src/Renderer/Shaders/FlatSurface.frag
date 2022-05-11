@@ -112,6 +112,11 @@ void main(void) {
   // ///////////////////////
 #endif
 
+  if (drawItemFlags != 0) {
+    vec4 highlightColor = getHighlightColor(geomItemId);
+    fragColor.rgb = mix(fragColor.rgb, highlightColor.rgb, highlightColor.a);
+  }
+
 #ifdef ENABLE_INLINE_GAMMACORRECTION
   fragColor.rgb = toGamma(fragColor.rgb);
 #endif
@@ -130,6 +135,7 @@ void main(void) {
     }
   }
   fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_drawItemIds.x, v_drawItemIds.y, isOrthographic);
+  
 #elif defined(DRAW_HIGHLIGHT)
   fragColor = setFragColor_highlight(v_drawItemIds.x);
 #endif // DRAW_HIGHLIGHT

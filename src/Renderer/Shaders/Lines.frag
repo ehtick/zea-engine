@@ -28,21 +28,7 @@ uniform int isOrthographic;
 import 'surfaceGeomData.glsl'
 
 #elif defined(DRAW_HIGHLIGHT)
-
-#ifdef ENABLE_FLOAT_TEXTURES
-vec4 getHighlightColor(int id) {
-  return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 4);
-}
-#else // ENABLE_FLOAT_TEXTURES
-
-uniform vec4 highlightColor;
-
-vec4 getHighlightColor() {
-  return highlightColor;
-}
-
-#endif // ENABLE_FLOAT_TEXTURES
-
+import 'surfaceHighlight.glsl'
 #endif // DRAW_HIGHLIGHT
 
 

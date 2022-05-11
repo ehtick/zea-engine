@@ -65,6 +65,7 @@ void main(void) {
   int geomItemId = int(v_drawItemIds.x + 0.5);
   int elemId = int(v_drawItemIds.y + 0.5);
   int perFaceMaterialId = int(v_drawItemIds.z);
+  int drawItemFlags = int(v_drawItemIds.w);
   int flags = int(v_geomItemData.x + 0.5);
   float treeItemOpacity = v_geomItemData.y;
 
@@ -157,7 +158,6 @@ void main(void) {
   // fade away to nothing. (not become a transparent glass object).
   fragColor.a *= treeItemOpacity;
 
-
 #ifdef DEBUG_GEOM_ID
   // ///////////////////////
   // Debug Draw ID (this correlates to GeomID within a GLGeomSet)
@@ -165,6 +165,11 @@ void main(void) {
   fragColor.rgb = getDebugColor(geomId);
   // ///////////////////////
 #endif
+
+  if (drawItemFlags != 0) {
+    vec4 highlightColor = getHighlightColor(geomItemId);
+    fragColor.rgb = mix(fragColor.rgb, highlightColor.rgb, highlightColor.a);
+  }
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
   fragColor.rgb = toGamma(fragColor.rgb);

@@ -310,11 +310,11 @@ class GLBaseViewport extends ParameterOwner {
 
     this.__renderer.drawScene(renderstate)
 
-    const highlightRenderState = renderstate.toHighlightRenderState()
-    this.drawHighlights(highlightRenderState)
-    if (highlightRenderState.stack.length != 1) {
-      console.warn(' corrupt highlightRenderState.stack.length:', highlightRenderState.stack.length)
-    }
+    // const highlightRenderState = renderstate.toHighlightRenderState()
+    // this.drawHighlights(highlightRenderState)
+    // if (highlightRenderState.stack.length != 1) {
+    //   console.warn(' corrupt highlightRenderState.stack.length:', highlightRenderState.stack.length)
+    // }
 
     // //////////////////////////////////
     // Post processing.

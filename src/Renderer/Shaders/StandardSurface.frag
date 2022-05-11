@@ -131,7 +131,8 @@ void main(void) {
   
   int geomItemId = int(v_drawItemIds.x + 0.5);
   int elemId = int(v_drawItemIds.y + 0.5);
-  int perFaceMaterialId = int(v_drawItemIds.z);
+  int perFaceMaterialId = int(v_drawItemIds.z + 0.5);
+  int drawItemFlags = int(v_drawItemIds.w);
   int flags = int(v_geomItemData.x + 0.5);
   float treeItemOpacity = v_geomItemData.y;
 
@@ -273,6 +274,13 @@ void main(void) {
       float opacity        = Opacity;
 #endif // ENABLE_MULTI_DRAW
       edgeColor.a = edgeColor.a * opacity * treeItemOpacity;
+      
+      vec4 highlightColor = getHighlightColor(geomItemId);
+      if (drawItemFlags != 0) {
+        edgeColor = highlightColor;
+        edgeColor.a = 1.0;
+      }
+
       if (edgeColor.a < 0.001) discard;
       fragColor = edgeColor;
     } else {
@@ -298,6 +306,11 @@ void main(void) {
       // fragColor = vec4(vec3(material.metallic), 1.0);;
       // fragColor = vec4(vec3(material.roughness), 1.0);;
       // fragColor = vec4(vec3(material.ambientOcclusion), 1.0);
+      
+      if (drawItemFlags != 0) {
+        vec4 highlightColor = getHighlightColor(geomItemId);
+        fragColor.rgb = mix(fragColor.rgb, highlightColor.rgb, highlightColor.a);
+      }
     }
 
   } // end 'TRIANGLES'
@@ -322,6 +335,13 @@ void main(void) {
       float opacity        = Opacity;
 #endif // ENABLE_MULTI_DRAW
       edgeColor.a = edgeColor.a * opacity * treeItemOpacity;
+      
+      vec4 highlightColor = getHighlightColor(geomItemId);
+      if (drawItemFlags != 0) {
+        edgeColor = highlightColor;
+        edgeColor.a = 1.0;
+      }
+
       if (edgeColor.a < 0.001) discard;
       fragColor = edgeColor;
     }
@@ -333,6 +353,13 @@ void main(void) {
     float opacity       = matValue2.g;
 #else 
     vec4 pointColor      = PointColor;
+
+    vec4 highlightColor = getHighlightColor(geomItemId);
+    if (drawItemFlags != 0) {
+      pointColor = highlightColor;
+      pointColor.a = 1.0;
+    }
+
     float opacity        = Opacity;
 #endif // ENABLE_MULTI_DRAW
     pointColor.a = pointColor.a * opacity * treeItemOpacity;

@@ -946,51 +946,55 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // /////////////////////////
     // Geom Item Params
-    let flags = 0
-    if (geomItem.isCutawayEnabled()) {
-      flags |= GLGeomItemFlags.GEOMITEM_FLAG_CUTAWAY
-    }
-    if (!geomItem.isSelectable()) {
-      flags |= GLGeomItemFlags.GEOMITEM_INVISIBLE_IN_GEOMDATA
-    }
-    if (!material.isOpaque() || !geomItem.isOpaque()) {
-      flags |= GLGeomItemFlags.GEOMITEM_TRANSPARENT
-    }
+    {
+      let flags = 0
+      if (geomItem.isCutawayEnabled()) {
+        flags |= GLGeomItemFlags.GEOMITEM_FLAG_CUTAWAY
+      }
+      if (!geomItem.isSelectable()) {
+        flags |= GLGeomItemFlags.GEOMITEM_INVISIBLE_IN_GEOMDATA
+      }
+      if (!material.isOpaque() || !geomItem.isOpaque()) {
+        flags |= GLGeomItemFlags.GEOMITEM_TRANSPARENT
+      }
 
-    const pix0 = new Vec4(new Float32Array(dataArray.buffer, (offset + 0) * 4, 4))
-    pix0.set(flags, geomItem.opacity, 0, 0)
+      const pix0 = new Vec4(new Float32Array(dataArray.buffer, (offset + 0) * 4, 4))
+      pix0.set(flags, geomItem.opacity, 0, 0)
 
-    const allocation = this.renderer.glMaterialLibrary.getMaterialAllocation(material)
-    if (allocation) {
-      pix0.z = allocation.start
+      const allocation = this.renderer.glMaterialLibrary.getMaterialAllocation(material)
+      if (allocation) {
+        pix0.z = allocation.start
+      }
+
+      // Store the geomId for debugging purposes.
+      // see: DEBUG_GEOM_ID
+      pix0.w = geomId
     }
-
-    // Store the geomId for debugging purposes.
-    // see: DEBUG_GEOM_ID
-    pix0.w = geomId
 
     // /////////////////////////
     // Geom Matrix
-    const mat4 = geomItem.geomMatParam.value
-    const pix1 = new Vec4(new Float32Array(dataArray.buffer, (offset + 1 * 4) * 4, 4))
-    const pix2 = new Vec4(new Float32Array(dataArray.buffer, (offset + 2 * 4) * 4, 4))
-    const pix3 = new Vec4(new Float32Array(dataArray.buffer, (offset + 3 * 4) * 4, 4))
-    pix1.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x)
-    pix2.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y)
-    pix3.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z)
+    {
+      const mat4 = geomItem.geomMatParam.value
+      const pix1 = new Vec4(new Float32Array(dataArray.buffer, (offset + 1 * 4) * 4, 4))
+      const pix2 = new Vec4(new Float32Array(dataArray.buffer, (offset + 2 * 4) * 4, 4))
+      const pix3 = new Vec4(new Float32Array(dataArray.buffer, (offset + 3 * 4) * 4, 4))
+      pix1.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x)
+      pix2.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y)
+      pix3.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z)
+    }
 
     // /////////////////////////
     // Highlight
-    const pix4 = new Vec4(new Float32Array(dataArray.buffer, (offset + 4 * 4) * 4, 4))
     if (geomItem.isHighlighted()) {
-      const highlight = geomItem.getHighlight()
+      const highlight = geomItem.getHighlight().toLinear()
+      const pix4 = new Vec4(new Float32Array(dataArray.buffer, (offset + 4 * 4) * 4, 4))
       pix4.set(highlight.r, highlight.g, highlight.b, highlight.a)
     }
 
     // /////////////////////////
     // Cutaway
-    const pix5 = new Vec4(new Float32Array(dataArray.buffer, (offset + 5 * 4) * 4, 4))
     if (geomItem.isCutawayEnabled()) {
+      const pix5 = new Vec4(new Float32Array(dataArray.buffer, (offset + 5 * 4) * 4, 4))
       const cutAwayVector = geomItem.getCutVector()
       const cutAwayDist = geomItem.getCutDist()
       // console.log(geomItem.getName(), geomItem.isCutawayEnabled(), flags, pix0.toString())
@@ -999,11 +1003,13 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // /////////////////////////
     // Bounding Box
-    const bbox = geomItem.boundingBoxParam.value
-    const pix6 = new Vec4(new Float32Array(dataArray.buffer, (offset + 6 * 4) * 4))
-    const pix7 = new Vec4(new Float32Array(dataArray.buffer, (offset + 7 * 4) * 4))
-    pix6.set(bbox.p0.x, bbox.p0.y, bbox.p0.z, 0.0)
-    pix7.set(bbox.p1.x, bbox.p1.y, bbox.p1.z, 0.0)
+    {
+      const bbox = geomItem.boundingBoxParam.value
+      const pix6 = new Vec4(new Float32Array(dataArray.buffer, (offset + 6 * 4) * 4))
+      const pix7 = new Vec4(new Float32Array(dataArray.buffer, (offset + 7 * 4) * 4))
+      pix6.set(bbox.p0.x, bbox.p0.y, bbox.p0.z, 0.0)
+      pix7.set(bbox.p1.x, bbox.p1.y, bbox.p1.z, 0.0)
+    }
   }
 
   /**

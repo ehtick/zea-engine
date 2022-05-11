@@ -188,7 +188,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       if (this.highlightedItems[index] && deepEquals(this.highlightedItems[index], subGeomIndices)) return
       this.highlightedItems[index] = subGeomIndices
 
-      this.highlightedIdsBufferDirty = true
+      // this.highlightedIdsBufferDirty = true
+      this.dirtyGeomItems.add(index)
+      this.drawIdsBufferDirty = true
       this.emit('updated')
     }
     if (glGeomItem.geomItem.isHighlighted()) {
@@ -201,7 +203,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       } else {
         delete this.highlightedItems[index]
         // console.log("highlightChanged:", glGeomItem.geomItem.getName(), glGeomItem.geomItem.isHighlighted(), this.highlightedItems)
-        this.highlightedIdsBufferDirty = true
+        // this.highlightedIdsBufferDirty = true
+        this.dirtyGeomItems.add(index)
+        this.drawIdsBufferDirty = true
         this.emit('updated')
       }
     }
@@ -284,7 +288,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     }
     if (glGeomItem.geomItem.isHighlighted()) {
       delete this.highlightedItems[index]
-      this.highlightedIdsBufferDirty = true
+      // this.highlightedIdsBufferDirty = true
     }
     this.emit('updated')
   }
@@ -372,6 +376,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
 
       // If an item is invisible, we allocate values, but set all count values to zero
       const visible = glGeomItem.isVisible()
+      const subGeomIndices = this.highlightedItems[itemIndex]
 
       if (glGeomItem.shattered) {
         let subIndex = 0
@@ -412,7 +417,12 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
             } else {
               drawIdsArray[drawId * 4 + 2] = 0.0
             }
-            drawIdsArray[drawId * 4 + 3] = 0 // spare
+
+            let flags = 0
+            if (subGeomIndices && subGeomIndices.includes(subIndex)) {
+              flags |= 4
+            }
+            drawIdsArray[drawId * 4 + 3] = flags
             subIndex++
           }
         }
@@ -420,7 +430,6 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         addSubGeoms(geomBuffers.subGeomOffsets['LINES'], geomBuffers.subGeomCounts['LINES'], 'LINES')
         addSubGeoms(geomBuffers.subGeomOffsets['POINTS'], geomBuffers.subGeomCounts['POINTS'], 'POINTS')
       } else {
-        let subIndex = 0
         const addSubGeoms = (subGeoms: SubGeom[], type: string) => {
           const allocator = this.drawIdsArraysAllocators[type]
           const drawIdsArray = this.drawIdsArrays[type]
@@ -455,9 +464,12 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
             } else {
               drawIdsArray[drawId * 4 + 2] = 0.0
             }
-            drawIdsArray[drawId * 4 + 3] = 0 // spare
-
-            subIndex++
+            let flags = 0
+            // If there is any hilight, we enable the flag for the whole geometry.
+            if (subGeomIndices) {
+              flags |= 4
+            }
+            drawIdsArray[drawId * 4 + 3] = flags
           }
         }
         for (let key in geomBuffers.materialSubGeoms) {

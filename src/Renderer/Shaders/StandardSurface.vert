@@ -51,12 +51,15 @@ void main(void) {
 
   v_drawItemIds = getDrawItemIds();
   int geomItemId = int(v_drawItemIds.x + 0.5);
+  int drawItemFlags = int(v_drawItemIds.w + 0.5);
   v_geomItemData = getInstanceData(geomItemId);
   mat4 modelMatrix = getModelMatrix(geomItemId);
 
   vec4 pos = vec4(positions, 1.);
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
   vec4 viewPos    = modelViewMatrix * pos;
+
+
   gl_Position     = projectionMatrix * viewPos;
   v_viewPos = -viewPos.xyz;
   v_worldPos      = (modelMatrix * pos).xyz;
@@ -64,10 +67,11 @@ void main(void) {
   mat3 normalMatrix = mat3(transpose(inverse(modelViewMatrix)));
   v_viewPos       = -viewPos.xyz;
   v_viewNormal    = normalMatrix * normals;
-  
+
   // offset slightly the lines and points to make them clearly defined.
   // This ensures that lines drawn over surfaces are solid and not clipped
   // at all by the surface.
+  float overlay = 0.0;
   if (geomType == TRIANGLES) {
     if (outlineThickness > 0.00001) {
       vec2 screenNormal = v_viewNormal.xy;
@@ -75,22 +79,19 @@ void main(void) {
     }
   }
   else if (geomType == LINES) { // start 'LINES'
-    float overlay = 0.00003;
-    if (isOrthographic > 0){
-      gl_Position.z -= overlay;
-    } else {
-      gl_Position.z = mix(gl_Position.z, -gl_Position.z, overlay);
-    }
+    overlay = 0.00003;
+    if (drawItemFlags != 0) overlay += 0.2;
   } // end 'LINES'
   else if (geomType == POINTS) { // start 'POINTS'
-    float overlay = 0.00005;
-    if (isOrthographic > 0){
-      gl_Position.z -= overlay;
-    } else {
-      gl_Position.z = mix(gl_Position.z, -gl_Position.z, overlay);
-    }
+    overlay = 0.00005;
+    if (drawItemFlags != 0) overlay += 0.2;
   }  // end 'POINTS'
 
+  if (isOrthographic > 0){
+    gl_Position.z -= overlay;
+  } else {
+    gl_Position.z = mix(gl_Position.z, -gl_Position.z, overlay);
+  }
 
 #ifdef ENABLE_TEXTURES
   v_textureCoord  = texCoords;

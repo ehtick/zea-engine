@@ -605,12 +605,18 @@ class GLViewport extends GLBaseViewport {
       downTime - this.__prevDownTime < this.doubleClickTimeParam.value &&
       (event instanceof ZeaMouseEvent || (event instanceof ZeaTouchEvent && event.touches.length == 1))
     ) {
+      this.emit('pointerDoublePressed', event)
+      if (!event.propagating) return
+
+      if (event.intersectionData != undefined) {
+        event.intersectionData.geomItem.emit('pointerDoublePressed', event)
+        if (!event.propagating) return
+      }
+
       if (this.manipulator) {
         this.manipulator.onPointerDoublePress(event)
         if (!event.propagating) return
       }
-      this.emit('pointerDoublePressed', event)
-      if (!event.propagating) return
     } else {
       this.__prevDownTime = downTime
     }
