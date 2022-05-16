@@ -43,14 +43,14 @@
         height: 30px;
       }
 
-      .rendermode-buttons {
+      .header-buttons {
         left: 150px;
         top: 8px;
         display: block;
         position: fixed;
       }
 
-      .rendermode-button {
+      .header-button {
         top: 10px;
         font-family: 'arial';
         background-color: #f9ce03; /* Green */
@@ -74,7 +74,7 @@
     <div class="h-full flex flex-col">
       <header class="p-2">
         <img src="./data/logo-zea.svg" id="logo" />
-        <div class="rendermode-buttons">
+        <div class="header-buttons">
           <select id="selectRenderMode">
             <option value="wireframe">Wireframe</option>
             <option value="hiddenline">hidden Line</option>
@@ -89,6 +89,7 @@
             <option value="persp">Perspective</option>
             <option value="ortho">Orthographic</option>
           </select>
+          <button id="reload" class="header-button">Reload</button>
         </div>
       </header>
       <main class="flex flex-col flex-1">
@@ -423,19 +424,29 @@
             camera.setIsOrthographic(1, 400)
           }
         })
-        //
+
+        // ////////////////////////////////////////////
+        // Reload Asset
+        const reloadAsset = document.getElementById('reload')
+        reloadAsset.addEventListener('click', () => {
+          scene.getRoot().removeAllChildren()
+          if (urlParams.has('zcad')) {
+            loadAsset(urlParams.get('zcad'))
+          }
+        })
 
         // ////////////////////////////////////////////
         // Load the asset
 
-        const asset = new CADAsset()
-        if (urlParams.has('zcad')) {
-          const zcad = urlParams.get('zcad')
+        const loadAsset = (url) => {
+          const asset = new CADAsset()
+          scene.getRoot().addChild(asset)
+
           const start = performance.now()
           const context = new AssetLoadContext()
           // context.units = "Millimeters"
           context.camera = renderer.getViewport().getCamera()
-          asset.load(zcad, context).then(() => {
+          asset.load(url, context).then(() => {
             console.log('Loading CAD File version:', asset.cadfileVersion, ' exported using SDK:', asset.sdk)
             asset.materialLibrary.getMaterials().forEach((material) => {
               // const edgeColorParam = material.getParameter('EdgeColor')
@@ -461,7 +472,9 @@
           }
         }
 
-        scene.getRoot().addChild(asset)
+        if (urlParams.has('zcad')) {
+          loadAsset(urlParams.get('zcad'))
+        }
 
         const cullElement = document.getElementById('cull-stats')
         renderer.on('CullingUpdated', (event) => {
@@ -478,18 +491,7 @@
         setStatusText('devicePixelRatio:' + window.devicePixelRatio + ' >' + $canvas.width + ' x ' + $canvas.height)
       }
 
-      // To enable simple authentication in this app
-      // change this value to true.
-      if (false) {
-        // Show the login page.
-        const login = document.getElementById('login')
-        login.show(() => {
-          // When it is closed, init the scene.
-          init()
-        })
-      } else {
-        init()
-      }
+      init()
     </script>
   </body>
 </html>

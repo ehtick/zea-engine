@@ -626,15 +626,15 @@ class GLTexture2D extends RefCounted {
    * @private
    */
   static getCachedGLTexture2D(image: BaseImage): GLTexture2D {
-    return gltextureCache[image.getId()]
+    return gltextureCache.get(image)
   }
   /**
    * @private
    */
   static setCachedGLTexture2D(image: BaseImage, gltexture: GLTexture2D): void {
-    gltextureCache[image.getId()] = gltexture
+    gltextureCache.set(image, gltexture)
   }
 }
-const gltextureCache: Record<number, GLTexture2D> = {}
+const gltextureCache: Map<BaseImage, GLTexture2D> = new Map()
 
 export { GLTexture2D }

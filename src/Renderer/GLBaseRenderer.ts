@@ -104,7 +104,7 @@ export interface RendererOptions {
  * @extends ParameterOwner
  */
 class GLBaseRenderer extends ParameterOwner {
-  protected listenerIDs: Record<number, Record<string, number>> = {}
+  protected listenerIDs: Map<TreeItem, Record<string, number>> = new Map()
   directives: string[] = []
   solidAngleLimit: number = 0.004
 
@@ -116,7 +116,7 @@ class GLBaseRenderer extends ParameterOwner {
   protected __renderGeomDataFbosRequested: boolean = false
   protected __shaders: Record<string, GLShader> = {}
   protected __passes: Record<number, GLPass[]> = {}
-  private passAssignments: Record<number, number> = {}
+  private passAssignments: Map<TreeItem, GLPass> = new Map()
   protected __passesRegistrationOrder: GLPass[] = []
   protected __passCallbacks: any[] = []
 
@@ -422,9 +422,7 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
-    const id = treeItem.getId()
     const listenerIDs = {}
-    this.listenerIDs[id] = listenerIDs
 
     if (treeItem instanceof GeomItem) {
       const geomParam = treeItem.geomParam
@@ -454,6 +452,7 @@ class GLBaseRenderer extends ParameterOwner {
       this.removeTreeItem(event.childItem)
     })
 
+    this.listenerIDs.set(treeItem, listenerIDs)
     this.renderGeomDataFbos()
   }
 
@@ -477,7 +476,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
       handled = pass.itemAddedToScene(treeItem, rargs)
       if (handled) {
-        this.passAssignments[treeItem.getId()] = i
+        this.passAssignments.set(treeItem, pass)
         if (!rargs.continueInSubTree) return
         break
       }
@@ -506,21 +505,19 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
-    const id = treeItem.getId()
-    const listenerIDs = this.listenerIDs[id]
-    delete this.listenerIDs[id]
+    const listenerIDs = this.listenerIDs.get(treeItem)
+    this.listenerIDs.delete(treeItem)
 
     treeItem.removeListenerById('childAdded', listenerIDs['childAdded'])
     treeItem.removeListenerById('childRemoved', listenerIDs['childRemoved'])
 
-    const passId = this.passAssignments[id]
-    if (passId != undefined) {
-      const pass = this.getPass(passId)
+    const pass = this.passAssignments.get(treeItem)
+    if (pass != undefined) {
       const rargs = {
         continueInSubTree: true,
       }
       pass.itemRemovedFromScene(treeItem, rargs)
-      delete this.passAssignments[id]
+      this.passAssignments.delete(treeItem)
     }
 
     // Traverse the tree adding items till we hit the leaves (which are usually GeomItems).

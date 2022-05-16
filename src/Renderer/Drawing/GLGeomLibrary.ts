@@ -27,11 +27,11 @@ class GLGeomLibrary extends EventEmitter {
   protected freeGeomIndices: number[] = []
   protected geoms: Array<BaseGeom | null> = []
   protected geomRefCounts: number[] = []
-  protected geomsDict: Record<string, number> = {}
-  protected glGeomsDict: Record<string, GLGeom> = {}
+  protected geomsDict: Map<EventEmitter, number> = new Map()
+  protected glGeomsDict: Map<EventEmitter, GLGeom> = new Map()
   protected geomBuffersTmp: any[] = [] // for each geom, these are the buffer
-  protected glattrbuffers: Record<string, any> = {}
-  protected shaderBindings: Record<string, any> = {}
+  protected glattrbuffers: Record<string, any> = new Map()
+  protected shaderBindings: Record<string, any> = new Map()
   protected attributesBufferNeedsRealloc: boolean = false
   protected attributesBufferNeedsAlloc: string[] = []
   protected attributesAllocator: Allocator1D = new Allocator1D()
@@ -101,7 +101,7 @@ class GLGeomLibrary extends EventEmitter {
    * @return - The return value.
    */
   constructGLGeom(geom: BaseGeom): GLGeom {
-    let glgeom = this.glGeomsDict[geom.getId()]
+    let glgeom = this.glGeomsDict.get(geom)
     if (glgeom != undefined) {
       // Increment the ref count for the GLGeom
       // glgeom.addRef(this)
@@ -117,7 +117,7 @@ class GLGeomLibrary extends EventEmitter {
     } else {
       throw new Error('Unsupported geom type:' + geom.constructor.name)
     }
-    this.glGeomsDict[geom.getId()] = glgeom
+    this.glGeomsDict.set(geom, glgeom)
     glgeom.on('updated', () => {
       this.renderer.requestRedraw()
     })
@@ -132,7 +132,7 @@ class GLGeomLibrary extends EventEmitter {
    * @return - The index of the geom in the GLGeomLibrary
    */
   addGeom(geom: BaseGeom): number {
-    let index = this.geomsDict[geom.getId()]
+    let index = this.geomsDict.get(geom)
     if (index != undefined) {
       // Increment the ref count for the GLGeom
       this.geomRefCounts[index]++
@@ -153,7 +153,7 @@ class GLGeomLibrary extends EventEmitter {
 
     this.geoms[index] = geom
     this.geomRefCounts[index] = 1
-    this.geomsDict[geom.getId()] = index
+    this.geomsDict.set(geom, index)
     this.dirtyGeomIndices.add(index)
 
     this.geomVertexCounts[index] = 0
@@ -180,7 +180,7 @@ class GLGeomLibrary extends EventEmitter {
    * @param geom - The geom to remove
    */
   removeGeom(geom: BaseGeom): void {
-    const index = this.geomsDict[geom.getId()]
+    const index = this.geomsDict.get(geom)
 
     this.geomRefCounts[index]--
 
@@ -206,7 +206,7 @@ class GLGeomLibrary extends EventEmitter {
 
     this.geoms[index] = null
     this.freeGeomIndices.push(index)
-    delete this.geomsDict[geom.getId()]
+    this.geomsDict.delete(geom)
     delete this.geomBuffersTmp[index]
 
     this.indicesCounts[index] = 0

@@ -11,8 +11,8 @@ import { RenderState } from '../RenderStates/index'
 class GLMaterialLibrary extends EventEmitter {
   protected renderer: GLBaseRenderer
   protected materials: Material[] = []
-  protected materialIndices: Record<string, number> = {}
-  protected glMaterials: Record<number, GLMaterial> = {}
+  protected materialIndices: Map<Material, number> = new Map()
+  protected glMaterials: Map<Material, GLMaterial> = new Map()
   protected refCounts: number[] = [] // The number of times this material was added to the library.
   protected freeIndices: number[] = []
   protected dirtyIndices: Set<number> = new Set()
@@ -41,7 +41,7 @@ class GLMaterialLibrary extends EventEmitter {
    * @return - The index of GLMaterial
    */
   addMaterial(material: Material): number {
-    let index = this.materialIndices[material.getId()]
+    let index = this.materialIndices.get(material)
     if (index != undefined) {
       // Increment the ref count for the Material
       this.refCounts[index]++
@@ -56,7 +56,7 @@ class GLMaterialLibrary extends EventEmitter {
 
     this.materials[index] = material
     this.refCounts[index] = 1
-    this.materialIndices[material.getId()] = index
+    this.materialIndices.set(material, index)
 
     const matData = material.getShaderClass().getPackedMaterialData(material)
     this.materialsAllocator.allocate(index, matData.length / 4)
@@ -78,8 +78,8 @@ class GLMaterialLibrary extends EventEmitter {
    * @return - The constructed GLMaterial.
    */
   getGLMaterial(material: Material): GLMaterial {
-    if (this.glMaterials[material.getId()]) {
-      return this.glMaterials[material.getId()]
+    if (this.glMaterials.has(material)) {
+      return this.glMaterials.get(material)
     }
 
     const glShader = this.renderer.getOrCreateShader(material.getShaderName())
@@ -90,13 +90,13 @@ class GLMaterialLibrary extends EventEmitter {
     })
     material.setMetadata('glMaterial', glMaterial)
 
-    this.glMaterials[material.getId()] = glMaterial
+    this.glMaterials.set(material, glMaterial)
 
     return glMaterial
   }
 
   getMaterialAllocation(material: Material): Allocation1D | undefined {
-    const index = this.materialIndices[material.getId()]
+    const index = this.materialIndices.get(material)
     if (index != undefined) {
       return this.materialsAllocator.getAllocation(index)
     }
@@ -108,7 +108,7 @@ class GLMaterialLibrary extends EventEmitter {
    * @param material - The material object.
    */
   removeMaterial(material: Material): void {
-    const index = this.materialIndices[material.getId()]
+    const index = this.materialIndices.get(material)
     this.refCounts[index]--
 
     // If there are still refs to this geom. (GeomItems that use it)
@@ -120,7 +120,7 @@ class GLMaterialLibrary extends EventEmitter {
     this.freeIndices.push(index)
     this.materialsAllocator.deallocate(index)
     this.materials[index] = null
-    delete this.materialIndices[material.getId()]
+    this.materialIndices.delete(material)
 
     if (this.dirtyIndices.has(index)) {
       this.dirtyIndices.delete(index)

@@ -15,11 +15,11 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   protected itemCount: number = 0
   protected __glShaderGeomSets: Record<string, any> = {} // GLShaderGeomSets
   protected transparentItems: any[] = []
-  protected transparentItemIndices: Record<string, any> = {}
+  protected transparentItemIndices: Map<GeomItem, number> = new Map()
   protected freeList: any[] = []
   protected visibleItems: any[] = []
-  protected prevSortCameraPos: Vec3 = new Vec3()
-  protected sortCameraMovementDistance: number = 0 // meters
+  protected prevSortCameraPos: Vec3 = new Vec3(999, 999, 999)
+  protected sortCameraMovementDistance: number = 0.25 // meters
   protected reSort: boolean = false
 
   /**
@@ -36,16 +36,6 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    */
   init(renderer: GLRenderer, passIndex: number): void {
     super.init(renderer, passIndex)
-
-    this.itemCount = 0
-    this.__glShaderGeomSets = {}
-    this.transparentItems = []
-    this.transparentItemIndices = {}
-    this.freeList = []
-    this.visibleItems = []
-    this.prevSortCameraPos = new Vec3(999, 999, 999)
-    this.sortCameraMovementDistance = 0.25 // meters
-    this.reSort = false
   }
 
   /**
@@ -84,7 +74,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     super.addGeomItem(geomItem)
     this.itemCount++
 
-    const listenerIDs: Record<string, number> = this.listenerIDs[geomItem.getId()]
+    const listenerIDs: Record<string, number> = this.listenerIDs.get(geomItem)
 
     const material = geomItem.materialParam.value
     const shaderName = material.getShaderName()
@@ -157,7 +147,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     if (this.freeList.length > 0) itemindex = this.freeList.pop()
     else itemindex = this.transparentItems.length
     this.transparentItems[itemindex] = item
-    this.transparentItemIndices[geomItem.getId()] = itemindex
+    this.transparentItemIndices.set(geomItem, itemindex)
     if (geomItem.isVisible()) {
       this.visibleItems.push(item)
     }
@@ -173,7 +163,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   removeGeomItem(geomItem: GeomItem): boolean {
     this.itemCount--
 
-    const listenerIDs = this.listenerIDs[geomItem.getId()]
+    const listenerIDs = this.listenerIDs.get(geomItem)
     super.removeGeomItem(geomItem)
 
     const glGeomItem = this.renderer!.glGeomItemLibrary.getGLGeomItem(geomItem)
@@ -186,9 +176,9 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       glShaderGeomSets.removeGLGeomItem(glGeomItem)
       glGeomItem.GLShaderGeomSets = null
     } else {
-      const itemindex = this.transparentItemIndices[geomItem.getId()]
+      const itemindex = this.transparentItemIndices.get(geomItem)
       const item = this.transparentItems[itemindex]
-      delete this.transparentItemIndices[geomItem.getId()]
+      this.transparentItemIndices.delete(geomItem)
 
       this.transparentItems[itemindex] = null
       this.freeList.push(itemindex)

@@ -15,7 +15,7 @@ class GLGeomItemSet extends EventEmitter {
   protected gl: WebGL12RenderingContext
   protected glGeom: GLGeom
   protected id: number
-  protected glGeomItems: Array<GLGeomItem | null>
+  public glGeomItems: Array<GLGeomItem | null>
   protected glgeomItems_freeIndices: number[]
   protected glgeomItemEventHandlers: any[]
   protected drawIdsArray: Float32Array | null = null

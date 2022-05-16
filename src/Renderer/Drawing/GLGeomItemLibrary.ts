@@ -67,7 +67,7 @@ class GLGeomItemLibrary extends EventEmitter {
   // The reduction shader reads pixel values, and assumes 0 is an empty pixel.
   protected glGeomItems: Array<GLGeomItem | null> = [null]
   protected glGeomItemEventHandlers: any[] = []
-  protected glGeomItemsMap: Record<number, number> = {}
+  protected glGeomItemsMap: Map<GeomItem, number> = new Map()
   protected glGeomItemsIndexFreeList: number[] = []
   protected dirtyItemIndices: number[] = []
 
@@ -732,7 +732,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @return - The index of GLGeomItem
    */
   addGeomItem(geomItem: GeomItem) {
-    let index = this.glGeomItemsMap[geomItem.getId()] //  number | undefined
+    let index = this.glGeomItemsMap.get(geomItem)
     if (index != undefined) {
       // Increment the ref count for the GLGeom
       return this.glGeomItems[index]
@@ -833,7 +833,7 @@ class GLGeomItemLibrary extends EventEmitter {
       geomChanged,
       workerItemDataChanged,
     }
-    this.glGeomItemsMap[geomItem.getId()] = index
+    this.glGeomItemsMap.set(geomItem, index)
 
     // Note: before the renderer is disabled, this is a  no-op.
     this.renderer.requestRedraw()
@@ -847,7 +847,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @return - The return value.
    */
   removeGeomItem(geomItem: GeomItem): GLGeomItem {
-    const index = this.glGeomItemsMap[geomItem.getId()]
+    const index = this.glGeomItemsMap.get(geomItem)
 
     // This GeomItem may not yet have been added to the Renderer.
     // This may be because it is part of an asset that is still loading
@@ -884,7 +884,7 @@ class GLGeomItemLibrary extends EventEmitter {
     this.glGeomItems[index] = null
     this.glGeomItemEventHandlers[index] = null
     this.glGeomItemsIndexFreeList.push(index)
-    delete this.glGeomItemsMap[geomItem.getId()]
+    this.glGeomItemsMap.delete(geomItem)
 
     this.removedItemIndices.push(index)
     if (this.dirtyWorkerItemIndices.has(index)) {
@@ -915,7 +915,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @return - The GLGeomItem that wraps the provided GeomItem
    */
   getGLGeomItem(geomItem: GeomItem): GLGeomItem | null {
-    const index = this.glGeomItemsMap[geomItem.getId()]
+    const index = this.glGeomItemsMap.get(geomItem)
     if (index != undefined) {
       // Increment the ref count for the GLGeom
       return this.glGeomItems[index]

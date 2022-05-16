@@ -1,7 +1,7 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
-import { GLOpaqueGeomsPass } from '../Passes'
-import { RenderState, GeomDataRenderState } from '../RenderStates/index'
+import { GLOpaqueGeomsPass, GLStandardGeomsPass } from '../Passes'
+import { ColorRenderState, GeomDataRenderState, HighlightRenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeom } from './GLGeom'
 import { GLGeomItem } from './GLGeomItem'
@@ -12,35 +12,33 @@ import { GLMaterial } from './GLMaterial'
  * @private
  */
 class GLMaterialGeomItemSets extends EventEmitter {
-  protected pass: GLOpaqueGeomsPass // TODO: check, used to be GLPass
+  protected pass: GLStandardGeomsPass
   protected __gl: WebGL12RenderingContext
   glMaterial: GLMaterial
-  protected glGeomItemSets: Record<string, any> = {}
-  protected drawCount: number
+  protected glGeomItemSets: Map<GLGeom, GLGeomItemSet> = new Map()
+  protected drawCount = 0
   /**
    * Create a GL material geom item set.
    * @param pass - The pass that owns the GLMaterialGeomItemSets.
    * @param glMaterial - The glMaterial value.
    */
-  constructor(pass: GLOpaqueGeomsPass, glMaterial: GLMaterial) {
+  constructor(pass: GLStandardGeomsPass, glMaterial: GLMaterial) {
     super()
     this.pass = pass
     this.__gl = pass.renderer!.gl
     this.glMaterial = glMaterial
-    this.glGeomItemSets = {}
-    this.drawCount = 0
 
     const material = glMaterial.getMaterial()
     const materialChanged = (event: Record<string, any>) => {
       material.off('opacityChanged', materialChanged)
-      for (const key in this.glGeomItemSets) {
-        const glGeomItemSet = this.glGeomItemSets[key]
+
+      this.glGeomItemSets.forEach((glGeomItemSet) => {
         for (const glGeomItem of glGeomItemSet.glGeomItems) {
           const geomItem = glGeomItem.geomItem
           this.pass.removeGeomItem(geomItem)
           this.pass.renderer!.assignTreeItemToGLPass(geomItem)
         }
-      }
+      })
     }
     material.on('opacityChanged', materialChanged)
   }
@@ -60,8 +58,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * @private
    */
   addGLGeomItem(glGeomItem: GLGeomItem, glGeom: GLGeom): void {
-    const id = glGeom.getGeom().getId()
-    let geomItemSet = this.glGeomItemSets[id]
+    let geomItemSet = this.glGeomItemSets.get(glGeom)
     if (!geomItemSet) {
       geomItemSet = new GLGeomItemSet(this.__gl, glGeom)
       this.addGeomItemSet(geomItemSet)
@@ -86,14 +83,13 @@ class GLMaterialGeomItemSets extends EventEmitter {
   __materialChanged(): void {
     const material = this.glMaterial.getMaterial()
     if (!this.pass.checkMaterial(material)) {
-      for (const key in this.glGeomItemSets) {
-        const glGeomItemSet = this.glGeomItemSets[key]
+      this.glGeomItemSets.forEach((glGeomItemSet) => {
         for (const glGeomItem of glGeomItemSet.glGeomItems) {
           const geomItem = glGeomItem.geomItem
           this.pass.removeGeomItem(geomItem)
           this.pass.renderer!.assignTreeItemToGLPass(geomItem)
         }
-      }
+      })
     }
   }
 
@@ -101,16 +97,15 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * The addGeomItemSet method.
    * @param glGeomItemSet - The glGeomItemSet value.
    */
-  addGeomItemSet(glGeomItemSet: any): void {
-    const id = glGeomItemSet.getGLGeom().getGeom().getId()
-    this.glGeomItemSets[id] = glGeomItemSet
+  addGeomItemSet(glGeomItemSet: GLGeomItemSet): void {
+    this.glGeomItemSets.set(glGeomItemSet.getGLGeom(), glGeomItemSet)
     const listenerID = glGeomItemSet.on('drawCountChanged', (event: any) => {
       this.drawCountChanged(event)
     })
     glGeomItemSet.once('destructing', () => {
       glGeomItemSet.removeListenerById('drawCountChanged', listenerID)
-      delete this.glGeomItemSets[id]
-      if (Object.keys(this.glGeomItemSets).length == 0) {
+      this.glGeomItemSets.delete(glGeomItemSet.getGLGeom())
+      if (this.glGeomItemSets.size == 0) {
         // Remove the listeners.
         // const material = this.glMaterial.getMaterial()
         // const baseColorParam = material.getParameter('BaseColor')
@@ -131,14 +126,13 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * Draws all elements, binding the shader and continuing into the GLGeomItemSet
    * @param renderstate - The render state for the current draw traversal
    */
-  draw(renderstate: RenderState): void {
+  draw(renderstate: ColorRenderState): void {
     if (this.drawCount == 0) return
     const warnMissingUnifs = true
     this.glMaterial.bind(renderstate, warnMissingUnifs)
-    for (const key in this.glGeomItemSets) {
-      const glGeomItemSet = this.glGeomItemSets[key]
+    this.glGeomItemSets.forEach((glGeomItemSet) => {
       glGeomItemSet.draw(renderstate)
-    }
+    })
     this.glMaterial.unbind(renderstate)
   }
 
@@ -146,12 +140,11 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * The drawHighlighted method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  drawHighlighted(renderstate: RenderState): void {
+  drawHighlighted(renderstate: HighlightRenderState): void {
     this.glMaterial.bind(renderstate, false)
-    for (const key in this.glGeomItemSets) {
-      const glGeomItemSet = this.glGeomItemSets[key]
+    this.glGeomItemSets.forEach((glGeomItemSet) => {
       glGeomItemSet.drawHighlighted(renderstate)
-    }
+    })
     this.glMaterial.unbind(renderstate)
   }
 
@@ -161,10 +154,9 @@ class GLMaterialGeomItemSets extends EventEmitter {
    */
   drawGeomData(renderstate: GeomDataRenderState): void {
     this.glMaterial.bind(renderstate, false)
-    for (const key in this.glGeomItemSets) {
-      const glGeomItemSet = this.glGeomItemSets[key]
-      glGeomItemSet.draw(renderstate)
-    }
+    this.glGeomItemSets.forEach((glGeomItemSet) => {
+      glGeomItemSet.drawGeomData(renderstate)
+    })
     this.glMaterial.unbind(renderstate)
   }
 }
