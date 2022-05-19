@@ -2,6 +2,69 @@
 
 import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
+import { MathFunctions } from '../../Utilities/MathFunctions'
+
+const convertBuffer = (
+  gl: WebGL12RenderingContext,
+  srcData:
+    | Int8Array
+    | Uint8Array
+    | Uint8ClampedArray
+    | Int16Array
+    | Uint16Array
+    | Int32Array
+    | Uint32Array
+    | Float32Array,
+  attrDesc: any
+): Uint8Array | Uint16Array | Int16Array | Float32Array => {
+  switch (attrDesc.dataType) {
+    case gl.BYTE:
+    case gl.UNSIGNED_BYTE: {
+      if (srcData instanceof Uint8Array) return srcData
+      const tgt = new Uint8Array(srcData.length)
+      // https://www.khronos.org/opengl/wiki/Vertex_Specification#Component_type
+      if (attrDesc.name == 'normals') {
+        // We assume the input values are normalized
+        // so we scale by 255. In the shader, normalized integers wil
+        // be scaled back to 0..1 by dividing by 255
+        // convert the values that are in the ra
+        srcData.forEach((value, i) => (tgt[i] = (value * 0.5 + 0.5) * 255))
+      } else {
+        srcData.forEach((value, i) => (tgt[i] = value * 255))
+      }
+      return tgt
+    }
+    case gl.UNSIGNED_SHORT: {
+      if (srcData instanceof Uint16Array) return srcData
+      const tgt = new Uint16Array(srcData.length)
+      srcData.forEach((value, i) => (tgt[i] = value))
+      return tgt
+    }
+    case gl.SHORT: {
+      if (srcData instanceof Int16Array) return srcData
+      const tgt = new Int16Array(srcData.length)
+      srcData.forEach((value, i) => (tgt[i] = value))
+      return tgt
+    }
+    case gl.HALF_FLOAT: {
+      if (srcData instanceof Uint16Array) return srcData
+      if (srcData instanceof Float32Array) {
+        return MathFunctions.convertFloat32ArrayToUInt16Array(srcData)
+      }
+      const tgt = new Uint16Array(srcData.length)
+      srcData.forEach((value, i) => (tgt[i] = value))
+      return tgt
+    }
+    case gl.FLOAT: {
+      if (srcData instanceof Float32Array) return srcData
+      const tgt = new Float32Array(srcData.length)
+      srcData.forEach((value, i) => (tgt[i] = value))
+      return tgt
+    }
+    default:
+      throw `Unhandled attribute type: ${attrDesc.dataType} for ${srcData.constructor.name}`
+  }
+}
 
 /**
  * Returns a descriptor for the provided geom attribute.
@@ -11,75 +74,107 @@ import { WebGL12RenderingContext } from '../types/webgl'
  *
  * @return
  */
-const genDataTypeDesc = (gl: WebGL12RenderingContext, attrDataType: any) => {
+const genDataTypeDesc = (gl: WebGL12RenderingContext, name: string, attrData: any) => {
   let dimension
   let elementSize
   let dataType
-  switch (attrDataType) {
-    case 'UInt8':
-      dimension = 1
-      elementSize = 4
-      dataType = gl.UNSIGNED_BYTE
-      break
-    case 'SInt8':
-      dimension = 1
-      elementSize = 4
-      dataType = gl.BYTE
-      break
-    case 'UInt16':
-      dimension = 1
-      elementSize = 4
-      dataType = gl.UNSIGNED_SHORT
-      break
-    case 'SInt16':
-      dimension = 1
-      elementSize = 4
-      dataType = gl.SHORT
-      break
-    case 'UInt32':
-      dimension = 1
-      elementSize = 4
-      dataType = gl.UNSIGNED_INT
-      break
-    case 'SInt32':
-      dimension = 1
-      elementSize = 4
-      dataType = gl.INT
-      break
-    case 'Float32':
-      dimension = 1
-      elementSize = 4
-      dataType = gl.FLOAT
-      break
-    case 'Vec2':
-      dimension = 2
-      elementSize = 4
-      dataType = gl.FLOAT
-      break
-    case 'Vec3':
+  let normalized = attrData.normalized
+  // console.log('genDataTypeDesc:', name, attrData.dataType)
+  switch (name) {
+    case 'positions':
+    case 'positionsNext':
       dimension = 3
-      elementSize = 4
-      dataType = gl.FLOAT
+      elementSize = 2
+      dataType = gl.HALF_FLOAT
+      normalized = false
       break
-    case 'Vec4':
-    case 'Color':
-      dimension = 4
-      elementSize = 4
-      dataType = gl.FLOAT
+    case 'normals':
+      dimension = 3
+      elementSize = 1
+      dataType = gl.UNSIGNED_BYTE
+      normalized = true
       break
-    case 'RGBA':
+    case 'texCoords':
+      dimension = 2
+      elementSize = 2
+      dataType = gl.HALF_FLOAT
+      normalized = false
+      break
+    case 'vertexColors':
       dimension = 4
       elementSize = 1
       dataType = gl.UNSIGNED_BYTE
+      normalized = false
       break
     default:
-      throw 'Unhandled Type'
+      switch (attrData.dataType) {
+        case 'UInt8':
+          dimension = 1
+          elementSize = 4
+          dataType = gl.UNSIGNED_BYTE
+          break
+        case 'SInt8':
+          dimension = 1
+          elementSize = 1
+          dataType = gl.BYTE
+          break
+        case 'UInt16':
+          dimension = 1
+          elementSize = 2
+          dataType = gl.UNSIGNED_SHORT
+          break
+        case 'SInt16':
+          dimension = 1
+          elementSize = 2
+          dataType = gl.SHORT
+          break
+        case 'UInt32':
+          dimension = 1
+          elementSize = 4
+          dataType = gl.UNSIGNED_INT
+          break
+        case 'SInt32':
+          dimension = 1
+          elementSize = 4
+          dataType = gl.INT
+          break
+        case 'Float32':
+          dimension = 1
+          elementSize = 4
+          dataType = gl.FLOAT
+          break
+        case 'Vec2':
+          dimension = 2
+          elementSize = 4
+          dataType = gl.FLOAT
+          break
+        case 'Vec3':
+          dimension = 3
+          elementSize = 4
+          dataType = gl.FLOAT
+          break
+        case 'Vec4':
+        case 'Color':
+          dimension = 4
+          elementSize = 4
+          dataType = gl.FLOAT
+          break
+        case 'RGBA':
+          dimension = 4
+          elementSize = 1
+          dataType = gl.UNSIGNED_BYTE
+          break
+        default:
+          throw 'Unhandled Type'
+      }
   }
 
   return {
+    name,
     dimension,
     elementSize,
     dataType,
+    normalized,
   }
 }
 abstract class IGeomShaderBinding {
@@ -135,19 +230,25 @@ class GeomShaderBinding extends IGeomShaderBinding {
         continue
       }
 
-      const geomAttrDesc = genDataTypeDesc(this.gl, geomAttrBuffer.dataType)
+      const geomAttrDesc = genDataTypeDesc(this.gl, attrName, geomAttrBuffer)
 
       const stride = geomAttrDesc.dimension * geomAttrDesc.elementSize
       const offset =
         geomAttrBuffer.offset != undefined
           ? geomAttrBuffer.offset * geomAttrDesc.dimension * geomAttrDesc.elementSize
           : 0
-      const normalized = geomAttrBuffer.normalized == true
       const instanced = shaderAttrDesc.instanced
 
       gl.enableVertexAttribArray(location)
       gl.bindBuffer(gl.ARRAY_BUFFER, geomAttrBuffer.buffer)
-      gl.vertexAttribPointer(location, geomAttrDesc.dimension, geomAttrDesc.dataType, normalized, stride, offset)
+      gl.vertexAttribPointer(
+        location,
+        geomAttrDesc.dimension,
+        geomAttrDesc.dataType,
+        geomAttrDesc.normalized,
+        stride,
+        offset
+      )
 
       if (gl.vertexAttribDivisor) {
         if (instanced == true) {
@@ -237,7 +338,7 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
         }
       }
 
-      const geomAttrDesc = genDataTypeDesc(gl, geomAttrBuffer.dataType)
+      const geomAttrDesc = genDataTypeDesc(gl, attrName, geomAttrBuffer)
 
       const stride = geomAttrDesc.dimension * geomAttrDesc.elementSize
       const offset =
@@ -316,4 +417,4 @@ function generateShaderGeomBinding(
   }
 }
 
-export { generateShaderGeomBinding, genDataTypeDesc, IGeomShaderBinding }
+export { generateShaderGeomBinding, genDataTypeDesc, IGeomShaderBinding, convertBuffer }

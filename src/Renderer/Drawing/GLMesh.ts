@@ -3,6 +3,7 @@ import '../../SceneTree/Geometry/Mesh'
 import { Mesh } from '../../SceneTree/Geometry/Mesh'
 import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
+import { convertBuffer, genDataTypeDesc } from './GeomShaderBinding'
 
 /** Class representing a GL mesh.
  * @extends GLGeom
@@ -63,6 +64,7 @@ class GLMesh extends GLGeom {
     // eslint-disable-next-line guard-for-in
     for (const attrName in geomBuffers.attrBuffers) {
       const attrData = geomBuffers.attrBuffers[attrName]
+      const geomAttrDesc: Record<string, any> = genDataTypeDesc(this.__gl, attrName, attrData)
 
       if (this.__glattrbuffers[attrName] && this.__glattrbuffers[attrName].buffer) {
         gl.deleteBuffer(this.__glattrbuffers[attrName].buffer)
@@ -70,7 +72,9 @@ class GLMesh extends GLGeom {
 
       const attrBuffer = gl.createBuffer()
       gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer)
-      gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW)
+
+      const values = convertBuffer(gl, attrData.values, geomAttrDesc)
+      gl.bufferData(gl.ARRAY_BUFFER, values, gl.STATIC_DRAW)
 
       this.__glattrbuffers[attrName] = {
         buffer: attrBuffer,

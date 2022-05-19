@@ -1,6 +1,6 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter, Allocator1D } from '../../Utilities/index'
-import { generateShaderGeomBinding, genDataTypeDesc } from './GeomShaderBinding'
+import { generateShaderGeomBinding, genDataTypeDesc, convertBuffer } from './GeomShaderBinding'
 import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom } from '../../SceneTree/index'
 import { GLPoints } from './GLPoints'
 import { GLLines } from './GLLines'
@@ -270,10 +270,11 @@ class GLGeomLibrary extends EventEmitter {
     for (const attrName in geomBuffers.attrBuffers) {
       if (!this.shaderAttrSpec[attrName]) {
         const attrData = geomBuffers.attrBuffers[attrName]
-        const geomAttrDesc: Record<string, any> = genDataTypeDesc(this.__gl, attrData.dataType)
+        const geomAttrDesc: Record<string, any> = genDataTypeDesc(this.__gl, attrName, attrData)
 
         this.shaderAttrSpec[attrName] = {
-          dataType: attrData.dataType,
+          name: attrName,
+          dataType: geomAttrDesc.dataType,
           normalized: attrData.normalized,
           dimension: geomAttrDesc.dimension,
           elementSize: geomAttrDesc.elementSize,
@@ -431,7 +432,9 @@ class GLGeomLibrary extends EventEmitter {
       gl.bindBuffer(gl.ARRAY_BUFFER, glattrbuffer.buffer)
       const elementSize = attrSpec.elementSize
       const offsetInBytes = this.geomVertexOffsets[index] * elementSize * attrSpec.dimension
-      gl.bufferSubData(gl.ARRAY_BUFFER, offsetInBytes, attrData.values)
+
+      const values = convertBuffer(gl, attrData.values, attrSpec)
+      gl.bufferSubData(gl.ARRAY_BUFFER, offsetInBytes, values)
     }
     gl.bindBuffer(gl.ARRAY_BUFFER, null)
 
