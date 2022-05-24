@@ -4,6 +4,7 @@ import { ParameterOwner } from '../ParameterOwner'
 import { Attribute } from './Attribute'
 import { Vec3Attribute } from './Vec3Attribute'
 import { Vec2Attribute } from './Vec2Attribute'
+import { PositionsAttribute } from './PositionsAttribute'
 import { BinReader } from '../../SceneTree/BinReader'
 
 const parse8BitPositionsArray = (
@@ -11,7 +12,7 @@ const parse8BitPositionsArray = (
   offset: Vec3,
   sclVec: Vec3,
   positions_quantized: Uint8Array,
-  positionsAttr: Vec3Attribute
+  positionsAttr: PositionsAttribute
 ) => {
   for (let i = range[0]; i < range[1]; i++) {
     const pos = new Vec3(
@@ -29,7 +30,7 @@ const parse16BitPositionsArray = (
   offset: Vec3,
   sclVec: Vec3,
   positions_quantized: Uint16Array,
-  positionsAttr: Vec3Attribute
+  positionsAttr: PositionsAttribute
 ) => {
   for (let i = range[0]; i < range[1]; i++) {
     const pos = new Vec3(
@@ -120,7 +121,7 @@ class BaseGeom extends ParameterOwner {
    */
   constructor() {
     super()
-    this.addVertexAttribute('positions', new Vec3Attribute())
+    this.addVertexAttribute('positions', new PositionsAttribute())
   }
 
   /**
@@ -186,8 +187,8 @@ class BaseGeom extends ParameterOwner {
   /**
    * Returns 'positions' vertex attribute.
    */
-  get positions(): Vec3Attribute {
-    return this.__vertexAttributes.get('positions') as Vec3Attribute
+  get positions(): PositionsAttribute {
+    return this.__vertexAttributes.get('positions') as PositionsAttribute
   }
 
   /**

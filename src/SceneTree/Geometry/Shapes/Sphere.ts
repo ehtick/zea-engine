@@ -87,8 +87,8 @@ class Sphere extends ProceduralMesh {
     let vertex = 0
     if (!positions) return
 
-    positions.getValueRef(vertex).set(0.0, 0.0, radius)
-    if (normals) normals.getValueRef(vertex).set(0.0, 0.0, 1.0)
+    positions.setValue(vertex, new Vec3(0.0, 0.0, radius))
+    if (normals) normals.setValue(vertex, new Vec3(0.0, 0.0, 1.0))
     vertex++
 
     for (let i = 0; i < nbLoops; i++) {
@@ -98,14 +98,14 @@ class Sphere extends ProceduralMesh {
         normal.set(Math.sin(theta) * Math.cos(phi), Math.sin(theta) * Math.sin(phi), Math.cos(theta))
 
         // Set positions and normals at the same time.
-        positions.getValueRef(vertex).setFromOther(normal.scale(radius))
-        if (normals) normals.getValueRef(vertex).setFromOther(normal)
+        positions.setValue(vertex, normal.scale(radius))
+        if (normals) normals.setValue(vertex, normal)
         vertex++
       }
     }
 
-    positions.getValueRef(vertex).set(0.0, 0.0, -radius)
-    if (normals) normals.getValueRef(vertex).set(0.0, 0.0, -1.0)
+    positions.setValue(vertex, new Vec3(0.0, 0.0, -radius))
+    if (normals) normals.setValue(vertex, new Vec3(0.0, 0.0, -1.0))
     vertex++
 
     // ////////////////////////////
@@ -173,7 +173,7 @@ class Sphere extends ProceduralMesh {
    * The resize method.
    * @private
    */
-  resize(): void{
+  resize(): void {
     const radius = this.radiusParam.value
     const nbSides = this.sidesParam.value
     const nbLoops = this.loopsParam.value
@@ -187,8 +187,8 @@ class Sphere extends ProceduralMesh {
     const normals = <Vec3Attribute>this.getVertexAttribute('normals')
     let vertex = 0
     const normal = new Vec3(0.0, 0.0, 1.0)
-    positions.getValueRef(vertex).set(0.0, 0.0, radius)
-    if (normals) normals.getValueRef(vertex).set(0.0, 0.0, 1.0)
+    positions.setValue(vertex, new Vec3(0.0, 0.0, radius))
+    if (normals) normals.setValue(vertex, new Vec3(0.0, 0.0, 1.0))
     vertex++
 
     for (let i = 0; i < nbLoops; i++) {
@@ -198,13 +198,13 @@ class Sphere extends ProceduralMesh {
         normal.set(Math.sin(theta) * Math.cos(phi), Math.sin(theta) * Math.sin(phi), Math.cos(theta))
 
         // Set positions and normals at the same time.
-        positions.getValueRef(vertex).setFromOther(normal.scale(radius))
-        if (normals) normals.getValueRef(vertex).setFromOther(normal)
+        positions.setValue(vertex, normal.scale(radius))
+        if (normals) normals.setValue(vertex, normal)
         vertex++
       }
     }
-    positions.getValueRef(vertex).set(0.0, 0.0, -radius)
-    if (normals) normals.getValueRef(vertex).set(0.0, 0.0, -1.0)
+    positions.setValue(vertex, new Vec3(0.0, 0.0, -radius))
+    if (normals) normals.setValue(vertex, new Vec3(0.0, 0.0, -1.0))
     vertex++
   }
 }

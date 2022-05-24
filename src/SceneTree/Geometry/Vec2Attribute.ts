@@ -30,7 +30,14 @@ class Vec2Attribute extends Attribute {
 
     const offset = index * this.stride
     const valueData = this.data.subarray(offset, offset + this.stride)
-    return new Vec2(valueData)
+    const vec2 = new Vec2()
+    Object.defineProperty(vec2, 'x', { get: () => valueData[0], set: (value) => (valueData[0] = value) })
+    Object.defineProperty(vec2, 'y', { get: () => valueData[1], set: (value) => (valueData[1] = value) })
+    vec2.set = (x: number, y: number): void => {
+      valueData[0] = x
+      valueData[1] = y
+    }
+    return vec2
   }
 
   /**
@@ -45,7 +52,7 @@ class Vec2Attribute extends Attribute {
 
     const offset = index * this.stride
     const valueData = this.data.slice(offset, offset + this.stride)
-    return new Vec2(valueData)
+    return new Vec2(valueData[0], valueData[1])
   }
 
   /**
@@ -72,8 +79,11 @@ class Vec2Attribute extends Attribute {
    * @return - The return value.
    */
   getFaceVertexValueRef(face: number, faceVertex: number): Vec2 {
-    const array = this.getFaceVertexValueRef_array(face, faceVertex)
-    return new Vec2(array)
+    const valueData = this.getFaceVertexValueRef_array(face, faceVertex)
+    const vec2 = new Vec2()
+    Object.defineProperty(vec2, 'x', { get: () => valueData[0], set: (value) => (valueData[0] = value) })
+    Object.defineProperty(vec2, 'y', { get: () => valueData[1], set: (value) => (valueData[1] = value) })
+    return vec2
   }
 
   /**

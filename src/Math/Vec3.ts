@@ -9,7 +9,7 @@ import { BinReader } from '../SceneTree/BinReader'
  * expose getters and setters for the component values.
  */
 class Vec3 {
-  __data: Float32Array | Uint32Array | Int32Array
+  __data: Float32Array | Uint32Array | Int32Array | Uint8Array
   /**
    * Creates a Vec3.
    *
@@ -24,8 +24,8 @@ class Vec3 {
    * @param y - The y value. Default is 0.
    * @param z - The z value. Default is 0.
    */
-  constructor(x: number | Float32Array | Uint32Array | ArrayBuffer = 0, y = 0, z = 0) {
-    if (x instanceof Float32Array || x instanceof Uint32Array) {
+  constructor(x: number | Float32Array | Uint32Array | Uint8Array | ArrayBuffer = 0, y = 0, z = 0) {
+    if (x instanceof Float32Array || x instanceof Uint32Array || x instanceof Uint8Array) {
       this.__data = x
     } else if (x instanceof ArrayBuffer) {
       console.warn(`deprecated, please use new Vec3(new Float32Array(buffer, byteOffset, 3))`)

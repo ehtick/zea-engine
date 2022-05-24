@@ -29,7 +29,7 @@ export interface ShaderParseResult {
   attributes: Record<string, Attribute>
 }
 export interface AttrBuffer {
-  values: Float32Array
+  values: Uint8Array | Uint16Array | Float32Array
   count: number
   dimension: number
   normalized: boolean

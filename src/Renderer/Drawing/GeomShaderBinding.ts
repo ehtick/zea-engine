@@ -17,6 +17,7 @@ const convertBuffer = (
     | Float32Array,
   attrDesc: any
 ): Uint8Array | Uint16Array | Int16Array | Float32Array => {
+  console.log('convertBuffer:', attrDesc.name, srcData)
   switch (attrDesc.dataType) {
     case gl.BYTE:
     case gl.UNSIGNED_BYTE: {
