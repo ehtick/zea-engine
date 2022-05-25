@@ -3,7 +3,8 @@ import { NumberParameter } from '../../Parameters/NumberParameter'
 import { Registry } from '../../../Registry'
 import { ProceduralMesh } from './ProceduralMesh'
 import { Vec3Attribute } from '../Vec3Attribute'
-import { Vec2Attribute } from '../Vec2Attribute'
+import { Vec3f8Attribute } from '../Vec3f8Attribute'
+import { Vec2f16Attribute } from '../Vec2f16Attribute'
 
 /**
  * A class for generating a sphere geometry.
@@ -56,8 +57,8 @@ class Sphere extends ProceduralMesh {
     this.sidesParam.value = sides
     this.loopsParam.value = loops
 
-    if (addNormals) this.addVertexAttribute('normals', new Vec3Attribute())
-    if (addTextureCoords) this.addVertexAttribute('texCoords', new Vec2Attribute())
+    if (addNormals) this.addVertexAttribute('normals', new Vec3f8Attribute())
+    if (addTextureCoords) this.addVertexAttribute('texCoords', new Vec2f16Attribute())
 
     this.topologyParams.push('Sides')
     this.topologyParams.push('Loops')
@@ -110,7 +111,7 @@ class Sphere extends ProceduralMesh {
 
     // ////////////////////////////
     // Build the topology
-    const texCoords = <Vec2Attribute>this.getVertexAttribute('texCoords')
+    const texCoords = <Vec2f16Attribute>this.getVertexAttribute('texCoords')
 
     // build the fan at the first pole.
     let faceIndex = 0

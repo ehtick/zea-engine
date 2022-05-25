@@ -1,3 +1,4 @@
+import { Vec3 } from '../../Math'
 import { Lines, Vec3Attribute } from '../../SceneTree/Geometry'
 
 /**
@@ -9,15 +10,15 @@ class BBoxOcclusionLinesCuboid extends Lines {
     super()
     this.setNumVertices(8)
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
-    positions.getValueRef(0).set(0.5, -0.5, 0.5)
-    positions.getValueRef(1).set(0.5, 0.5, 0.5)
-    positions.getValueRef(2).set(-0.5, 0.5, 0.5)
-    positions.getValueRef(3).set(-0.5, -0.5, 0.5)
+    positions.setValue(0, new Vec3(0.5, -0.5, 0.5))
+    positions.setValue(1, new Vec3(0.5, 0.5, 0.5))
+    positions.setValue(2, new Vec3(-0.5, 0.5, 0.5))
+    positions.setValue(3, new Vec3(-0.5, -0.5, 0.5))
 
-    positions.getValueRef(4).set(0.5, -0.5, -0.5)
-    positions.getValueRef(5).set(0.5, 0.5, -0.5)
-    positions.getValueRef(6).set(-0.5, 0.5, -0.5)
-    positions.getValueRef(7).set(-0.5, -0.5, -0.5)
+    positions.setValue(4, new Vec3(0.5, -0.5, -0.5))
+    positions.setValue(5, new Vec3(0.5, 0.5, -0.5))
+    positions.setValue(6, new Vec3(-0.5, 0.5, -0.5))
+    positions.setValue(7, new Vec3(-0.5, -0.5, -0.5))
     //
     //      7*----------*6
     //     /   \  /   / |

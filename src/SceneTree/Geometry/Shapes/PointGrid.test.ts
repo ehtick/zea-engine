@@ -37,20 +37,20 @@ describe('PointGrid', () => {
     const inputJSON = {
       params: {
         X: {
-          value: 3
+          value: 3,
         },
         XDivisions: {
-          value: 6
+          value: 6,
         },
         Y: {
-          value: 3
+          value: 3,
         },
         YDivisions: {
-          value: 6
-        }
+          value: 6,
+        },
       },
       type: 'PointGrid',
-      vertexAttributes: {}
+      vertexAttributes: {},
     }
     pointGrid.fromJSON(inputJSON)
 

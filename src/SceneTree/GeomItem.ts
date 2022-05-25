@@ -148,7 +148,7 @@ class GeomItem extends BaseGeomItem {
           } else {
             const positions = <Vec3Attribute>geom.getVertexAttribute('positions')
             for (let i = 0; i < geom.getNumVertices(); i++) {
-              bbox.addPoint(mat4.transformVec3(positions.getValueRef(i)))
+              bbox.addPoint(mat4.transformVec3(positions.getValue(i)))
             }
           }
         } else {

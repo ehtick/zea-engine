@@ -24,7 +24,7 @@ describe('Points', () => {
     points.addVertexAttribute('foo', atr)
     atr.setValue(0, new Vec2(1, 1))
     expect(atr.getCount()).toBe(numVertices)
-    expect(atr.getValueRef(0).toJSON()).toStrictEqual({ x: 1, y: 1 })
+    expect(atr.getValue(0).toJSON()).toStrictEqual({ x: 1, y: 1 })
   })
 
   test('Check for calculation of bounding box.', () => {
@@ -32,9 +32,9 @@ describe('Points', () => {
     const numVertices = 3
     points.setNumVertices(numVertices)
     const positions = <Vec3Attribute>points.getVertexAttribute('positions')
-    positions.getValueRef(0).set(1, 2, 3)
-    positions.getValueRef(1).set(-1, -2, -3)
-    positions.getValueRef(2).set(2, 1, -3)
+    positions.setValue(0, new Vec3(1, 2, 3))
+    positions.setValue(1, new Vec3(-1, -2, -3))
+    positions.setValue(2, new Vec3(2, 1, -3))
 
     points.setBoundingBoxDirty()
 
@@ -49,12 +49,12 @@ describe('Points', () => {
 
     points.setNumVertices(3)
     const positions = <Vec3Attribute>points.getVertexAttribute('positions')
-    positions.getValueRef(0).set(1, 2, 3)
-    positions.getValueRef(1).set(-1, -2, -3)
-    positions.getValueRef(2).set(2, 1, -3)
+    positions.setValue(0, new Vec3(1, 2, 3))
+    positions.setValue(1, new Vec3(-1, -2, -3))
+    positions.setValue(2, new Vec3(2, 1, -3))
 
     points.setNumVertices(4)
-    expect(positions.getValueRef(0)).toEqual(new Vec3(1, 2, 3))
+    expect(positions.getValue(0)).toEqual(new Vec3(1, 2, 3))
   })
 
   test('Check resizing smaller the number of vertices.', () => {
@@ -62,12 +62,12 @@ describe('Points', () => {
 
     points.setNumVertices(3)
     const positions = <Vec3Attribute>points.getVertexAttribute('positions')
-    positions.getValueRef(0).set(1, 2, 3)
-    positions.getValueRef(1).set(-1, -2, -3)
-    positions.getValueRef(2).set(2, 1, -3)
+    positions.setValue(0, new Vec3(1, 2, 3))
+    positions.setValue(1, new Vec3(-1, -2, -3))
+    positions.setValue(2, new Vec3(2, 1, -3))
 
     points.setNumVertices(2)
-    expect(positions.getValueRef(0)).toEqual(new Vec3(1, 2, 3))
+    expect(positions.getValue(0)).toEqual(new Vec3(1, 2, 3))
   })
 
   test('Check generated buffers', () => {
@@ -75,9 +75,9 @@ describe('Points', () => {
     const numVertices = 3
     points.setNumVertices(numVertices)
     const positions = <Vec3Attribute>points.getVertexAttribute('positions')
-    positions.getValueRef(0).set(1, 2, 3)
-    positions.getValueRef(1).set(-1, -2, -3)
-    positions.getValueRef(2).set(2, 1, -3)
+    positions.setValue(0, new Vec3(1, 2, 3))
+    positions.setValue(1, new Vec3(-1, -2, -3))
+    positions.setValue(2, new Vec3(2, 1, -3))
 
     expect(points.genBuffers()).toEqual({
       attrBuffers: {
@@ -85,7 +85,7 @@ describe('Points', () => {
           count: 3,
           dataType: 'Vec3',
           normalized: false,
-          values: new Float32Array([1, 2, 3, -1, -2, -3, 2, 1, -3]),
+          values: new Uint16Array([15360, 16384, 16896, 48128, 49152, 49664, 16384, 15360, 49664]),
         },
       },
       numVertices: 3,
@@ -97,9 +97,9 @@ describe('Points', () => {
     const numVertices = 3
     points.setNumVertices(numVertices)
     const positions = <Vec3Attribute>points.getVertexAttribute('positions')
-    positions.getValueRef(0).set(1, 2, 3)
-    positions.getValueRef(1).set(-1, -2, -3)
-    positions.getValueRef(2).set(2, 1, -3)
+    positions.setValue(0, new Vec3(1, 2, 3))
+    positions.setValue(1, new Vec3(-1, -2, -3))
+    positions.setValue(2, new Vec3(2, 1, -3))
 
     expect(JSON.stringify(points.toJSON())).toMatchSnapshot()
   })

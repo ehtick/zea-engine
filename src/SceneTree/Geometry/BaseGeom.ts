@@ -4,7 +4,8 @@ import { ParameterOwner } from '../ParameterOwner'
 import { Attribute } from './Attribute'
 import { Vec3Attribute } from './Vec3Attribute'
 import { Vec2Attribute } from './Vec2Attribute'
-import { PositionsAttribute } from './PositionsAttribute'
+import { Vec3f16Attribute } from './Vec3f16Attribute'
+import { Vec2f16Attribute } from './Vec2f16Attribute'
 import { BinReader } from '../../SceneTree/BinReader'
 
 const parse8BitPositionsArray = (
@@ -12,7 +13,7 @@ const parse8BitPositionsArray = (
   offset: Vec3,
   sclVec: Vec3,
   positions_quantized: Uint8Array,
-  positionsAttr: PositionsAttribute
+  positionsAttr: Vec3f16Attribute
 ) => {
   for (let i = range[0]; i < range[1]; i++) {
     const pos = new Vec3(
@@ -30,7 +31,7 @@ const parse16BitPositionsArray = (
   offset: Vec3,
   sclVec: Vec3,
   positions_quantized: Uint16Array,
-  positionsAttr: PositionsAttribute
+  positionsAttr: Vec3f16Attribute
 ) => {
   for (let i = range[0]; i < range[1]; i++) {
     const pos = new Vec3(
@@ -121,7 +122,7 @@ class BaseGeom extends ParameterOwner {
    */
   constructor() {
     super()
-    this.addVertexAttribute('positions', new PositionsAttribute())
+    this.addVertexAttribute('positions', new Vec3f16Attribute())
   }
 
   /**
@@ -187,8 +188,8 @@ class BaseGeom extends ParameterOwner {
   /**
    * Returns 'positions' vertex attribute.
    */
-  get positions(): PositionsAttribute {
-    return this.__vertexAttributes.get('positions') as PositionsAttribute
+  get positions(): Vec3Attribute {
+    return this.__vertexAttributes.get('positions') as Vec3f16Attribute
   }
 
   /**
@@ -250,7 +251,7 @@ class BaseGeom extends ParameterOwner {
 
     if (positions) {
       const numVerts = positions.getCount()
-      for (let i = 0; i < numVerts; i++) bbox.addPoint(positions.getValueRef(i))
+      for (let i = 0; i < numVerts; i++) bbox.addPoint(positions.getValue(i))
     }
 
     this.__boundingBox = bbox
@@ -338,7 +339,7 @@ class BaseGeom extends ParameterOwner {
     this.__boundingBox.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
 
     this.setNumVertices(numVerts)
-    const positionsAttr = this.positions
+    const positionsAttr = <Vec3f16Attribute>this.positions
     let normalsAttr: Vec3Attribute
     let texCoordsAttr: Vec2Attribute
     if (flags & (1 << 1)) {
@@ -351,7 +352,7 @@ class BaseGeom extends ParameterOwner {
     if (flags & (1 << 2)) {
       texCoordsAttr = <Vec2Attribute>this.getVertexAttribute('texCoords')
       if (!texCoordsAttr) {
-        texCoordsAttr = new Vec2Attribute()
+        texCoordsAttr = new Vec2f16Attribute()
         this.addVertexAttribute('texCoords', texCoordsAttr)
       }
     }

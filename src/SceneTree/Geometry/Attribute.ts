@@ -25,7 +25,7 @@ const resizeArray = (inArray: Uint8Array | Uint16Array | Float32Array, newSize: 
     newArray.set(inArray)
     return newArray
   } else {
-    const newArray = new Uint8Array(newSize)
+    const newArray = new Float32Array(newSize)
     newArray.set(inArray)
     return newArray
   }
@@ -38,7 +38,7 @@ class Attribute extends BaseClass {
   protected data: Uint8Array | Uint16Array | Float32Array
 
   protected mesh!: Mesh
-  protected splitValues: Array<Float32Array> = []
+  protected splitValues: Array<Uint8Array | Uint16Array | Float32Array> = []
   protected splits: Record<number, Record<number, number>> = {}
 
   constructor(dataTypeName: string, stride: number) {
@@ -185,7 +185,7 @@ class Attribute extends BaseClass {
    * @param faceVertex - The index of vertex within the face. [0... num face vertices]
    * @param value - The value value.
    */
-  setFaceVertexValue_array(face: number, faceVertex: number, value: Float32Array): void {
+  setFaceVertexValue_array(face: number, faceVertex: number, value: Uint8Array | Uint16Array | Float32Array): void {
     const vertex = this.mesh.getFaceVertexIndex(face, faceVertex)
     this.setFaceVertexValue_ByVertexIndex(face, vertex, value)
   }
@@ -196,7 +196,7 @@ class Attribute extends BaseClass {
    * @param vertex - The vertex value.
    * @param value - The value value.
    */
-  setFaceVertexValue_ByVertexIndex(face: number, vertex: number, value: Float32Array): void {
+  setFaceVertexValue_ByVertexIndex(face: number, vertex: number, value: Uint8Array | Uint16Array | Float32Array): void {
     const currValue = this.data.subarray(vertex * this.stride, (vertex + 1) * this.stride)
     if (!isInitialized(currValue)) {
       // the value is uninitialized. Initialize it.
@@ -240,7 +240,7 @@ class Attribute extends BaseClass {
    * @param face - The face index.
    * @param value - The value value.
    */
-  setSplitVertexValue_array(vertex: number, face: number, value: Float32Array): void {
+  setSplitVertexValue_array(vertex: number, face: number, value: Uint8Array | Uint16Array | Float32Array): void {
     if (!(vertex in this.splits)) this.splits[vertex] = {}
     if (face in this.splits[vertex]) {
       const currValue = this.splitValues[this.splits[vertex][face]]
@@ -257,7 +257,7 @@ class Attribute extends BaseClass {
    * @param faceGroup - The faceGroup value.
    * @param value - The value value.
    */
-  setSplitVertexValues(vertex: number, faceGroup: number[], value: Float32Array): void {
+  setSplitVertexValues(vertex: number, faceGroup: number[], value: Uint8Array | Uint16Array | Float32Array): void {
     if (!(vertex in this.splits)) this.splits[vertex] = {}
     const splitIndex = this.splitValues.length
     this.splitValues.push(value)
@@ -285,8 +285,7 @@ class Attribute extends BaseClass {
     if (splitCount == 0) return this.data
 
     const numUnSplitValues = this.getCount()
-    const data = new Float32Array((numUnSplitValues + splitCount) * this.stride)
-    data.set(this.data)
+    const data = resizeArray(this.data, (numUnSplitValues + splitCount) * this.stride)
 
     // Now duplicate the split values to generate an attributes array
     // using the shared splits across all attributes.

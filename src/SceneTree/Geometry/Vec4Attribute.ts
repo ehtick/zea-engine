@@ -77,6 +77,20 @@ class Vec4Attribute extends Attribute {
   }
 
   /**
+   * Gets the value of a corner vertex of a face.
+   * > Note: 'Ref' means that the value contains a reference to the data in the attribute.
+   * > The components of the value can be changed causing the attributes data is changed.
+   * > No need to call 'setFaceVertexValue'.
+   * @param face - The face index.
+   * @param faceVertex - The index of vertex within the face. [0... num face vertices]
+   * @return - The return value.
+   */
+  getFaceVertexValue(face: number, faceVertex: number): Vec4 {
+    const array = this.getFaceVertexValueRef_array(face, faceVertex)
+    return new Vec4(array[0], array[1], array[2], array[3])
+  }
+
+  /**
    * Sets the value of a corner vertex of a face.
    * @param face - The face index.
    * @param faceVertex - The index of vertex within the face. [0... num face vertices]

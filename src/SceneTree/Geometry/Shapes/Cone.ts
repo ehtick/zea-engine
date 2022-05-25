@@ -1,10 +1,13 @@
 /* eslint-disable no-unused-vars */
 import { Vec2 } from '../../../Math/Vec2'
+import { Vec3 } from '../../../Math/Vec3'
 import { BooleanParameter, NumberParameter } from '../../../SceneTree/Parameters/index'
 import { Registry } from '../../../Registry'
 import { ProceduralMesh } from './ProceduralMesh'
 import { Vec3Attribute } from '../Vec3Attribute'
+import { Vec3f8Attribute } from '../Vec3f8Attribute'
 import { Vec2Attribute } from '../Vec2Attribute'
+import { Vec2f16Attribute } from '../Vec2f16Attribute'
 
 /**
  * Represents a cone geometry.
@@ -64,8 +67,8 @@ class Cone extends ProceduralMesh {
     ) as NumberParameter
     this.capParam = this.addParameter(new BooleanParameter('Cap', cap)) as BooleanParameter
 
-    if (addNormals) this.addVertexAttribute('normals', new Vec3Attribute())
-    if (addTextureCoords) this.addVertexAttribute('texCoords', new Vec2Attribute())
+    if (addNormals) this.addVertexAttribute('normals', new Vec3f8Attribute())
+    if (addTextureCoords) this.addVertexAttribute('texCoords', new Vec2f16Attribute())
 
     this.topologyParams.push('Detail')
     this.topologyParams.push('Cap')
@@ -93,13 +96,13 @@ class Cone extends ProceduralMesh {
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
 
     if (positions) {
-      positions.getValueRef(tipPoint).set(0.0, 0.0, height)
+      positions.setValue(tipPoint, new Vec3(0.0, 0.0, height))
       for (let i = 0; i < nbSides; i++) {
         const theta = -((i / nbSides) * 2.0 * Math.PI)
-        positions.getValueRef(i).set(radius * Math.cos(theta), radius * Math.sin(theta), 0.0)
+        positions.setValue(i, new Vec3(radius * Math.cos(theta), radius * Math.sin(theta), 0.0))
       }
       if (cap) {
-        positions.getValueRef(basePoint).set(0.0, 0.0, 0.0)
+        positions.setValue(basePoint, new Vec3(0.0, 0.0, 0.0))
       }
     }
 
@@ -157,13 +160,13 @@ class Cone extends ProceduralMesh {
 
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (positions) {
-      positions.getValueRef(tipPoint).set(0.0, 0.0, height)
+      positions.setValue(tipPoint, new Vec3(0.0, 0.0, height))
       for (let i = 0; i < nbSides; i++) {
         const theta = -((i / nbSides) * 2.0 * Math.PI)
-        positions.getValueRef(i).set(radius * Math.cos(theta), radius * Math.sin(theta), 0.0)
+        positions.setValue(i, new Vec3(radius * Math.cos(theta), radius * Math.sin(theta), 0.0))
       }
       if (this.capParam.value) {
-        positions.getValueRef(basePoint).set(0.0, 0.0, 0.0)
+        positions.setValue(basePoint, new Vec3(0.0, 0.0, 0.0))
       }
     }
 

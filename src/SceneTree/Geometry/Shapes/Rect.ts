@@ -2,6 +2,7 @@ import { ProceduralLines } from './ProceduralLines'
 import { NumberParameter } from '../../Parameters/NumberParameter'
 import { Registry } from '../../../Registry'
 import { Vec3Attribute } from '../Vec3Attribute'
+import { Vec3 } from '../../../Math'
 
 /**
  * A class for generating a rectangle shape.
@@ -72,10 +73,10 @@ class Rect extends ProceduralLines {
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (!positions) return
 
-    positions.getValueRef(0).set(-0.5 * x, -0.5 * y, 0.0)
-    positions.getValueRef(1).set(0.5 * x, -0.5 * y, 0.0)
-    positions.getValueRef(2).set(0.5 * x, 0.5 * y, 0.0)
-    positions.getValueRef(3).set(-0.5 * x, 0.5 * y, 0.0)
+    positions.setValue(0, new Vec3(-0.5 * x, -0.5 * y, 0.0))
+    positions.setValue(1, new Vec3(0.5 * x, -0.5 * y, 0.0))
+    positions.setValue(2, new Vec3(0.5 * x, 0.5 * y, 0.0))
+    positions.setValue(3, new Vec3(-0.5 * x, 0.5 * y, 0.0))
   }
 }
 

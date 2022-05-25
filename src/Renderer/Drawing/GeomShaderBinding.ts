@@ -17,7 +17,7 @@ const convertBuffer = (
     | Float32Array,
   attrDesc: any
 ): Uint8Array | Uint16Array | Int16Array | Float32Array => {
-  console.log('convertBuffer:', attrDesc.name, srcData)
+  // console.log('convertBuffer:', attrDesc.name, srcData)
   switch (attrDesc.dataType) {
     case gl.BYTE:
     case gl.UNSIGNED_BYTE: {
@@ -29,9 +29,9 @@ const convertBuffer = (
         // so we scale by 255. In the shader, normalized integers wil
         // be scaled back to 0..1 by dividing by 255
         // convert the values that are in the ra
-        srcData.forEach((value, i) => (tgt[i] = (value * 0.5 + 0.5) * 255))
+        srcData.forEach((value, i) => (tgt[i] = MathFunctions.remap(value, -1, 1, 0, 255)))
       } else {
-        srcData.forEach((value, i) => (tgt[i] = value * 255))
+        srcData.forEach((value, i) => (tgt[i] = MathFunctions.remap(value, 0, 1, 0, 255)))
       }
       return tgt
     }
@@ -93,7 +93,7 @@ const genDataTypeDesc = (gl: WebGL12RenderingContext, name: string, attrData: an
       dimension = 3
       elementSize = 1
       dataType = gl.UNSIGNED_BYTE
-      normalized = true
+      normalized = false
       break
     case 'texCoords':
       dimension = 2

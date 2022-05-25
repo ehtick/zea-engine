@@ -5,6 +5,8 @@ import { Registry } from '../../../Registry'
 import { ProceduralMesh } from './ProceduralMesh'
 import { Vec3Attribute } from '../Vec3Attribute'
 import { Vec2Attribute } from '../Vec2Attribute'
+import { Vec2f16Attribute } from '../Vec2f16Attribute'
+import { Vec3f8Attribute } from '../Vec3f8Attribute'
 
 /**
  * A class for generating a cylinder geometry. It is very much like a cuboid but with `N` number of sides.
@@ -80,8 +82,8 @@ class Cylinder extends ProceduralMesh {
     this.capsParam = this.addParameter(new BooleanParameter('Caps', caps)) as BooleanParameter
     this.baseZAtZeroParam = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero)) as BooleanParameter
 
-    this.addVertexAttribute('texCoords', new Vec2Attribute())
-    this.addVertexAttribute('normals', new Vec3Attribute()) // TODO: review args/params.
+    this.addVertexAttribute('texCoords', new Vec2f16Attribute())
+    this.addVertexAttribute('normals', new Vec3f8Attribute()) // TODO: review args/params.
 
     this.topologyParams.push('Sides')
     this.topologyParams.push('Loops')
@@ -234,13 +236,13 @@ class Cylinder extends ProceduralMesh {
         const z = (i / (nbLoops - 1)) * height - height * zoff
         for (let j = 0; j < nbSides; j++) {
           const phi = (j / nbSides) * 2.0 * Math.PI
-          positions.getValueRef(vertex).set(Math.sin(phi) * radius, Math.cos(phi) * radius, z)
+          positions.setValue(vertex, new Vec3(Math.sin(phi) * radius, Math.cos(phi) * radius, z))
           vertex++
         }
       }
       if (caps) {
-        positions.getValueRef(numVertices - 1).set(0.0, 0.0, height * (baseZAtZero ? 0.0 : -0.5))
-        positions.getValueRef(numVertices - 2).set(0.0, 0.0, height * (baseZAtZero ? 1.0 : 0.5))
+        positions.setValue(numVertices - 1, new Vec3(0.0, 0.0, height * (baseZAtZero ? 0.0 : -0.5)))
+        positions.setValue(numVertices - 2, new Vec3(0.0, 0.0, height * (baseZAtZero ? 1.0 : 0.5)))
       }
     }
     this.dirtyTopology = false

@@ -3,6 +3,7 @@ import { Registry } from '../../../Registry'
 import { ProceduralLines } from './ProceduralLines'
 import { BooleanParameter } from '../../../SceneTree/Parameters'
 import { Vec3Attribute } from '../Vec3Attribute'
+import { Vec3 } from '../../../Math'
 
 /**
  * A class for generating a lines cuboid shape(Without faces).
@@ -92,17 +93,17 @@ class LinesCuboid extends ProceduralLines {
     if (positions) {
       let zoff = 0.5
       if (baseZAtZero) zoff = 1.0
-      positions.getValueRef(0).set(0.5 * x, -0.5 * y, zoff * z)
-      positions.getValueRef(1).set(0.5 * x, 0.5 * y, zoff * z)
-      positions.getValueRef(2).set(-0.5 * x, 0.5 * y, zoff * z)
-      positions.getValueRef(3).set(-0.5 * x, -0.5 * y, zoff * z)
+      positions.setValue(0, new Vec3(0.5 * x, -0.5 * y, zoff * z))
+      positions.setValue(1, new Vec3(0.5 * x, 0.5 * y, zoff * z))
+      positions.setValue(2, new Vec3(-0.5 * x, 0.5 * y, zoff * z))
+      positions.setValue(3, new Vec3(-0.5 * x, -0.5 * y, zoff * z))
 
       zoff = -0.5
       if (baseZAtZero) zoff = 0.0
-      positions.getValueRef(4).set(0.5 * x, -0.5 * y, zoff * z)
-      positions.getValueRef(5).set(0.5 * x, 0.5 * y, zoff * z)
-      positions.getValueRef(6).set(-0.5 * x, 0.5 * y, zoff * z)
-      positions.getValueRef(7).set(-0.5 * x, -0.5 * y, zoff * z)
+      positions.setValue(4, new Vec3(0.5 * x, -0.5 * y, zoff * z))
+      positions.setValue(5, new Vec3(0.5 * x, 0.5 * y, zoff * z))
+      positions.setValue(6, new Vec3(-0.5 * x, 0.5 * y, zoff * z))
+      positions.setValue(7, new Vec3(-0.5 * x, -0.5 * y, zoff * z))
     }
   }
 }

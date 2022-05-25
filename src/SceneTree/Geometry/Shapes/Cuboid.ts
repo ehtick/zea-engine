@@ -4,6 +4,8 @@ import { Vec3 } from '../../../Math/Vec3'
 import { ProceduralMesh } from './ProceduralMesh'
 import { Registry } from '../../../Registry'
 import { Vec3Attribute } from '../Vec3Attribute'
+import { Vec3f8Attribute } from '../Vec3f8Attribute'
+import { Vec2f16Attribute } from '../Vec2f16Attribute'
 // import { Vec2 } from '../../../Math/Vec2'
 // import { Vec2Attribute } from '../Vec2Attribute'
 
@@ -66,8 +68,8 @@ class Cuboid extends ProceduralMesh {
     this.setFaceVertexIndices(4, [0, 3, 7, 4])
     this.setFaceVertexIndices(5, [2, 1, 5, 6])
     this.setNumVertices(8)
-    this.addVertexAttribute('normals', new Vec3Attribute())
-    // this.addVertexAttribute('texCoords', new Vec2Attribute())
+    this.addVertexAttribute('normals', new Vec3f8Attribute())
+    // this.addVertexAttribute('texCoords', new Vec2f16Attribute())
   }
 
   /**
@@ -132,17 +134,17 @@ class Cuboid extends ProceduralMesh {
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (baseZAtZero) zoff = 1.0
     if (!positions) return
-    positions.getValueRef(0).set(0.5 * x, -0.5 * y, zoff * z)
-    positions.getValueRef(1).set(0.5 * x, 0.5 * y, zoff * z)
-    positions.getValueRef(2).set(-0.5 * x, 0.5 * y, zoff * z)
-    positions.getValueRef(3).set(-0.5 * x, -0.5 * y, zoff * z)
+    positions.setValue(0, new Vec3(0.5 * x, -0.5 * y, zoff * z))
+    positions.setValue(1, new Vec3(0.5 * x, 0.5 * y, zoff * z))
+    positions.setValue(2, new Vec3(-0.5 * x, 0.5 * y, zoff * z))
+    positions.setValue(3, new Vec3(-0.5 * x, -0.5 * y, zoff * z))
 
     zoff = -0.5
     if (baseZAtZero) zoff = 0.0
-    positions.getValueRef(4).set(0.5 * x, -0.5 * y, zoff * z)
-    positions.getValueRef(5).set(0.5 * x, 0.5 * y, zoff * z)
-    positions.getValueRef(6).set(-0.5 * x, 0.5 * y, zoff * z)
-    positions.getValueRef(7).set(-0.5 * x, -0.5 * y, zoff * z)
+    positions.setValue(4, new Vec3(0.5 * x, -0.5 * y, zoff * z))
+    positions.setValue(5, new Vec3(0.5 * x, 0.5 * y, zoff * z))
+    positions.setValue(6, new Vec3(-0.5 * x, 0.5 * y, zoff * z))
+    positions.setValue(7, new Vec3(-0.5 * x, -0.5 * y, zoff * z))
   }
 }
 

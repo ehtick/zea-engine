@@ -31,9 +31,10 @@
       points.setNumVertices(count)
       const positions = points.getVertexAttribute('positions')
       for (let i = 0; i < count; i++) {
-        const v = positions.getValueRef(i)
+        const v = new Vec3()
         const coords = hammersley(i, count)
         sphereSample_uniform(coords[0], coords[1], v)
+        positions.setValue(i, v)
       }
 
       const material = new FatPointsMaterial('points')

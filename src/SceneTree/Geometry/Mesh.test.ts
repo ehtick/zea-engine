@@ -1,5 +1,5 @@
 import { Mesh } from './Mesh'
-import { Vec3 } from '../../Math'
+import { Vec2, Vec3 } from '../../Math'
 import { Vec3Attribute } from './Vec3Attribute'
 
 describe('Mesh', () => {
@@ -69,9 +69,9 @@ describe('Mesh', () => {
     mesh.setNumVertices(numVertices)
 
     const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
-    positions.getValueRef(0).set(1, 2, 3)
-    positions.getValueRef(1).set(-1, -2, -3)
-    positions.getValueRef(2).set(2, 1, -3)
+    positions.setValue(0, new Vec3(1, 2, 3))
+    positions.setValue(1, new Vec3(-1, -2, -3))
+    positions.setValue(2, new Vec3(2, 1, -3))
 
     mesh.setFaceCounts([1])
     mesh.setFaceVertexIndices(0, [0, 1, 2])
@@ -90,18 +90,18 @@ describe('Mesh', () => {
     mesh.setNumVertices(numVertices)
 
     const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
-    positions.getValueRef(0).set(0, -1, -1)
-    positions.getValueRef(1).set(0, -1, 1)
-    positions.getValueRef(2).set(0, 1, 1)
-    positions.getValueRef(3).set(0, 1, -1)
+    positions.setValue(0, new Vec3(0, -1, -1))
+    positions.setValue(1, new Vec3(0, -1, 1))
+    positions.setValue(2, new Vec3(0, 1, 1))
+    positions.setValue(3, new Vec3(0, 1, -1))
 
     mesh.addVertexAttribute('normals', new Vec3Attribute())
 
     const normals = <Vec3Attribute>mesh.getVertexAttribute('normals')
-    normals.getValueRef(0).set(-1, 0, 0)
-    normals.getValueRef(1).set(-1, 0, 0)
-    normals.getValueRef(2).set(-1, 0, 0)
-    normals.getValueRef(3).set(-1, 0, 0)
+    normals.setValue(0, new Vec3(-1, 0, 0))
+    normals.setValue(1, new Vec3(-1, 0, 0))
+    normals.setValue(2, new Vec3(-1, 0, 0))
+    normals.setValue(3, new Vec3(-1, 0, 0))
 
     mesh.setFaceCounts([0, 1])
     mesh.setFaceVertexIndices(0, [0, 1, 2, 3])
@@ -118,12 +118,12 @@ describe('Mesh', () => {
     mesh.setNumVertices(numVertices)
 
     const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
-    positions.getValueRef(0).set(0, -1, -1)
-    positions.getValueRef(1).set(0, -1, 1)
-    positions.getValueRef(2).set(0, 1, 1)
-    positions.getValueRef(3).set(0, 1, -1)
-    positions.getValueRef(4).set(1, 1, 1)
-    positions.getValueRef(5).set(1, 1, -1)
+    positions.setValue(0, new Vec3(0, -1, -1))
+    positions.setValue(1, new Vec3(0, -1, 1))
+    positions.setValue(2, new Vec3(0, 1, 1))
+    positions.setValue(3, new Vec3(0, 1, -1))
+    positions.setValue(4, new Vec3(1, 1, 1))
+    positions.setValue(5, new Vec3(1, 1, -1))
 
     mesh.setFaceCounts([0, 2])
     mesh.setFaceVertexIndices(0, [0, 1, 2, 3])
@@ -153,12 +153,12 @@ describe('Mesh', () => {
     mesh.setNumVertices(numVertices)
 
     const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
-    positions.getValueRef(0).set(0, -1, -1)
-    positions.getValueRef(1).set(0, -1, 1)
-    positions.getValueRef(2).set(0, 1, 1)
-    positions.getValueRef(3).set(0, 1, -1)
-    positions.getValueRef(4).set(1, 1, 1)
-    positions.getValueRef(5).set(1, 1, -1)
+    positions.setValue(0, new Vec3(0, -1, -1))
+    positions.setValue(1, new Vec3(0, -1, 1))
+    positions.setValue(2, new Vec3(0, 1, 1))
+    positions.setValue(3, new Vec3(0, 1, -1))
+    positions.setValue(4, new Vec3(1, 1, 1))
+    positions.setValue(5, new Vec3(1, 1, -1))
 
     mesh.setFaceCounts([0, 2, 0])
     mesh.setFaceVertexIndices(0, [0, 1, 2, 3])
@@ -168,17 +168,17 @@ describe('Mesh', () => {
 
     // Now check that the 2 faces have normals
     const faceNormals = <Vec3Attribute>mesh.getFaceAttribute('normals')
-    expect(faceNormals.getValueRef(0)).toEqual(new Vec3(-1, 0, 0))
-    expect(faceNormals.getValueRef(1)).toEqual(new Vec3(0, 1, 0))
+    expect(faceNormals.getValue(0)).toEqual(new Vec3(-1, 0, 0))
+    expect(faceNormals.getValue(1)).toEqual(new Vec3(0, 1, 0))
 
     // Now we check that the 2 normal values for the ve
     // vertex id 2 is used by Face 0 at faceVertex 2, and Face 1 and faceVertex index 1
     // vertex id 3 is used by Face 0 at faceVertex 3, and Face 1 and faceVertex index 0
     const normals = <Vec3Attribute>mesh.getVertexAttribute('normals')
-    expect(normals.getFaceVertexValueRef(0, 2)).toEqual(new Vec3(-1, 0, 0))
-    expect(normals.getFaceVertexValueRef(1, 1)).toEqual(new Vec3(0, 1, 0))
-    expect(normals.getFaceVertexValueRef(0, 3)).toEqual(new Vec3(-1, 0, 0))
-    expect(normals.getFaceVertexValueRef(1, 0)).toEqual(new Vec3(0, 1, 0))
+    expect(normals.getFaceVertexValue(0, 2)).toEqual(new Vec3(-1, 0, 0))
+    expect(normals.getFaceVertexValue(1, 1)).toEqual(new Vec3(0, 1, 0))
+    expect(normals.getFaceVertexValue(0, 3)).toEqual(new Vec3(-1, 0, 0))
+    expect(normals.getFaceVertexValue(1, 0)).toEqual(new Vec3(0, 1, 0))
 
     expect(JSON.stringify(mesh.toJSON())).toMatchSnapshot()
   })
@@ -189,12 +189,12 @@ describe('Mesh', () => {
     mesh.setNumVertices(numVertices)
 
     const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
-    positions.getValueRef(0).set(0, -1, -1)
-    positions.getValueRef(1).set(0, -1, 1)
-    positions.getValueRef(2).set(0, 1, 1)
-    positions.getValueRef(3).set(0, 1, -1)
-    positions.getValueRef(4).set(0, 2, 1)
-    positions.getValueRef(5).set(0, 2, -1)
+    positions.setValue(0, new Vec3(0, -1, -1))
+    positions.setValue(1, new Vec3(0, -1, 1))
+    positions.setValue(2, new Vec3(0, 1, 1))
+    positions.setValue(3, new Vec3(0, 1, -1))
+    positions.setValue(4, new Vec3(0, 2, 1))
+    positions.setValue(5, new Vec3(0, 2, -1))
 
     mesh.addFace([0, 1, 2, 3])
     mesh.addFace([3, 2, 4, 5])
@@ -208,12 +208,12 @@ describe('Mesh', () => {
     mesh.setNumVertices(numVertices)
 
     const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
-    positions.getValueRef(0).set(0, -1, -1)
-    positions.getValueRef(1).set(0, -1, 1)
-    positions.getValueRef(2).set(0, 1, 1)
-    positions.getValueRef(3).set(0, 1, -1)
-    positions.getValueRef(4).set(1, 1, 1)
-    positions.getValueRef(5).set(1, 1, -1)
+    positions.setValue(0, new Vec3(0, -1, -1))
+    positions.setValue(1, new Vec3(0, -1, 1))
+    positions.setValue(2, new Vec3(0, 1, 1))
+    positions.setValue(3, new Vec3(0, 1, -1))
+    positions.setValue(4, new Vec3(1, 1, 1))
+    positions.setValue(5, new Vec3(1, 1, -1))
 
     mesh.addFace([0, 1, 2, 3])
     mesh.addFace([3, 2, 4, 5])
@@ -264,9 +264,9 @@ describe('Mesh', () => {
     mesh.setNumVertices(numVertices)
 
     const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
-    positions.getValueRef(0).set(1, 2, 3)
-    positions.getValueRef(1).set(-1, -2, -3)
-    positions.getValueRef(2).set(2, 1, -3)
+    positions.setValue(0, new Vec3(1, 2, 3))
+    positions.setValue(1, new Vec3(-1, -2, -3))
+    positions.setValue(2, new Vec3(2, 1, -3))
 
     mesh.setFaceCounts([1])
     mesh.setFaceVertexIndices(0, [0, 1, 2])
@@ -278,7 +278,7 @@ describe('Mesh', () => {
           dataType: 'Vec3',
           dimension: 3,
           normalized: false,
-          values: new Float32Array([1, 2, 3, -1, -2, -3, 2, 1, -3]),
+          values: new Uint16Array([15360, 16384, 16896, 48128, 49152, 49664, 16384, 15360, 49664]),
         },
       },
       indices: new Uint8Array([0, 1, 2]),
@@ -293,9 +293,9 @@ describe('Mesh', () => {
     mesh.setNumVertices(numVertices)
 
     const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
-    positions.getValueRef(0).set(1, 2, 3)
-    positions.getValueRef(1).set(-1, -2, -3)
-    positions.getValueRef(2).set(2, 1, -3)
+    positions.setValue(0, new Vec3(1, 2, 3))
+    positions.setValue(1, new Vec3(-1, -2, -3))
+    positions.setValue(2, new Vec3(2, 1, -3))
 
     mesh.setFaceCounts([1])
     mesh.setFaceVertexIndices(0, [0, 1, 2])

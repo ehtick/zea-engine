@@ -2,6 +2,7 @@ import { BooleanParameter, NumberParameter } from '../../Parameters/index'
 import { Registry } from '../../../Registry'
 import { ProceduralLines } from './ProceduralLines'
 import { Vec3Attribute } from '../Vec3Attribute'
+import { Vec3 } from '../../../Math'
 
 /**
  * Represents a network of lines that cross each other to form a series of squares or rectangles.
@@ -120,8 +121,8 @@ class Grid extends ProceduralLines {
       const v1 = idx * 2 + 1
       const x = (i / xDivisions - 0.5) * xSize
       if (positions) {
-        positions.getValueRef(v0).set(x, -0.5 * ySize, 0.0)
-        positions.getValueRef(v1).set(x, 0.5 * ySize, 0.0)
+        positions.setValue(v0, new Vec3(x, -0.5 * ySize, 0.0))
+        positions.setValue(v1, new Vec3(x, 0.5 * ySize, 0.0))
       }
 
       idx++
@@ -132,8 +133,8 @@ class Grid extends ProceduralLines {
       const v1 = idx * 2 + 1
       const y = (i / yDivisions - 0.5) * ySize
       if (positions) {
-        positions.getValueRef(v0).set(-0.5 * xSize, y, 0.0)
-        positions.getValueRef(v1).set(0.5 * xSize, y, 0.0)
+        positions.setValue(v0, new Vec3(-0.5 * xSize, y, 0.0))
+        positions.setValue(v1, new Vec3(0.5 * xSize, y, 0.0))
       }
       idx++
     }
