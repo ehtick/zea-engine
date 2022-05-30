@@ -1,6 +1,7 @@
 import { BaseGeom } from './BaseGeom'
 import { BinReader } from '../BinReader'
 import { AssetLoadContext } from '../AssetLoadContext'
+import { GeomBuffers } from '../types/scene'
 
 interface SubGeom {
   materialId: number
@@ -32,7 +33,7 @@ class CompoundGeomLoader extends BaseGeom {
     super()
   }
 
-  genBuffers() {
+  genBuffers(): GeomBuffers {
     const attrBuffers: Record<string, any> = {}
     for (const [attrName, attr] of this.__vertexAttributes) {
       attrBuffers[attrName] = attr.genBuffer()
@@ -76,9 +77,13 @@ class CompoundGeomLoader extends BaseGeom {
     this.counts['POINTS'] = geomCountsByType[2]
 
     const bytes = reader.loadUInt8()
-    if (bytes == 1) this.indices = reader.loadUInt8Array(undefined, true)
-    else if (bytes == 2) this.indices = reader.loadUInt16Array(undefined, true)
-    else if (bytes == 4) this.indices = reader.loadUInt32Array(undefined, true)
+
+    // Note: do not clone the source arrays as we will transfer the
+    // entire buffer back to the main thread where it will be freed once
+    // the data is uploaded to the GPU.
+    if (bytes == 1) this.indices = reader.loadUInt8Array(undefined, false)
+    else if (bytes == 2) this.indices = reader.loadUInt16Array(undefined, false)
+    else if (bytes == 4) this.indices = reader.loadUInt32Array(undefined, false)
 
     // /////////////////////////////////
     // TRIANGLES subgeoms

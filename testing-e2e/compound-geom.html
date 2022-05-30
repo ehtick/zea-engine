@@ -47,10 +47,10 @@
       // compoundGeom.addSubGeomIndices('POINT', Uint32Array.from([2]))
       // compoundGeom.addSubGeomIndices('POINT', Uint32Array.from([3]))
 
-      positions.getValueRef(0).set(0.1, 0.9, 0)
-      positions.getValueRef(1).set(0.1, 0.1, 0)
-      positions.getValueRef(2).set(0.9, 0.1, 0)
-      positions.getValueRef(3).set(0.9, 0.9, 0.5)
+      positions.setValue(0, new Vec3(0.1, 0.9, 0))
+      positions.setValue(1, new Vec3(0.1, 0.1, 0))
+      positions.setValue(2, new Vec3(0.9, 0.1, 0))
+      positions.setValue(3, new Vec3(0.9, 0.9, 0.5))
 
       // compoundGeom.setSubGeomMetadata(0, 'surfaceType', 'Plane')
       // compoundGeom.setSubGeomMetadata(1, 'surfaceType', 'Plane')
@@ -59,10 +59,10 @@
       ///////////////////////////////////
 
       compoundGeom.addSubGeomIndices('MESH', Uint32Array.from([4 + 0, 4 + 1, 4 + 2, 4 + 0, 4 + 2, 4 + 3]))
-      positions.getValueRef(4 + 0).set(1 + 0.1, 1 + 0.9, 0)
-      positions.getValueRef(4 + 1).set(1 + 0.1, 1 + 0.1, 0)
-      positions.getValueRef(4 + 2).set(1 + 0.9, 1 + 0.1, 0)
-      positions.getValueRef(4 + 3).set(1 + 0.9, 1 + 0.9, 0.5)
+      positions.setValue(4 + 0, new Vec3(1 + 0.1, 1 + 0.9, 0))
+      positions.setValue(4 + 1, new Vec3(1 + 0.1, 1 + 0.1, 0))
+      positions.setValue(4 + 2, new Vec3(1 + 0.9, 1 + 0.1, 0))
+      positions.setValue(4 + 3, new Vec3(1 + 0.9, 1 + 0.9, 0.5))
 
       compoundGeom.addSubGeomIndices('LINE', Uint32Array.from([0, 1]))
       compoundGeom.addSubGeomIndices('LINE', Uint32Array.from([1, 2]))

@@ -348,13 +348,14 @@ class ObjAsset extends AssetItem {
         for (const vsrcKey in geomData.verticesRemapping) {
           const vsrc = Number.parseInt(vsrcKey)
           const vtgt = geomData.verticesRemapping[vsrc]
-          positionsAttr
-            .getValueRef(vtgt)
-            .set(
+          positionsAttr.setValue(
+            vtgt,
+            new Vec3(
               vertices[vsrc][0] * unitsConversion,
               vertices[vsrc][1] * unitsConversion,
               vertices[vsrc][2] * unitsConversion
             )
+          )
         }
 
         let normalsAttr
@@ -405,7 +406,10 @@ class ObjAsset extends AssetItem {
         {
           const offset = delta.negate()
           const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
-          for (let i = 0; i < positions.getCount(); i++) positions.getValueRef(i).addInPlace(offset) // TODO: is getCount() == positions.length?
+          for (let i = 0; i < positions.getCount(); i++) {
+            const v = positions.getValue(i)
+            positions.setValue(i, v.add(offset))
+          }
           mesh.setBoundingBoxDirty()
         }
         geomItem.localXfoParam.value = new Xfo(delta)

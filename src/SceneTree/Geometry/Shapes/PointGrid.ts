@@ -1,8 +1,8 @@
 import { ProceduralPoints } from './ProceduralPoints'
 import { NumberParameter } from '../../Parameters/NumberParameter'
 import { Registry } from '../../../Registry'
-import { Vec2Attribute } from '../Vec2Attribute'
 import { Vec3Attribute } from '../Vec3Attribute'
+import { Vec3 } from '../../../Math'
 
 /**
  * Represents an ordered grid of points along `X` and `Y` axes.
@@ -58,8 +58,6 @@ class PointGrid extends ProceduralPoints {
     this.divisionsXParam = this.addParameter(new NumberParameter('XDivisions', xDivisions)) as NumberParameter
     this.divisionsYParam = this.addParameter(new NumberParameter('YDivisions', yDivisions)) as NumberParameter
 
-    if (addTextureCoords) this.addVertexAttribute('texCoords', new Vec2Attribute())
-
     this.topologyParams.push('XDivisions')
     this.topologyParams.push('YDivisions')
   }
@@ -72,17 +70,6 @@ class PointGrid extends ProceduralPoints {
     const xDivisions = this.divisionsXParam.value
     const yDivisions = this.divisionsYParam.value
     this.setNumVertices(xDivisions * yDivisions)
-
-    const texCoords = <Vec2Attribute>this.getVertexAttribute('texCoords')
-    if (texCoords) {
-      for (let i = 0; i < yDivisions; i++) {
-        const y = i / (yDivisions - 1)
-        for (let j = 0; j < xDivisions; j++) {
-          const x = j / (xDivisions - 1)
-          texCoords.getValueRef(i * xDivisions + j).set(x, y)
-        }
-      }
-    }
     this.resize()
   }
 
@@ -102,7 +89,7 @@ class PointGrid extends ProceduralPoints {
       const newY = (i / (yDivisions - 1) - 0.5) * y
       for (let j = 0; j < xDivisions; j++) {
         const newX = (j / (xDivisions - 1) - 0.5) * x
-        positions.getValueRef(i * xDivisions + j).set(newX, newY, 0.0)
+        positions.setValue(i * xDivisions + j, new Vec3(newX, newY, 0.0))
       }
     }
   }

@@ -9,7 +9,7 @@ import { StringFunctions } from '../Utilities/StringFunctions'
  *
  */
 class Vec2 {
-  __data: Float32Array | Uint32Array | Int32Array
+  __data: Float32Array | Uint32Array | Int32Array | Uint8Array
   /**
    * Creates a Vec2.
    *
@@ -61,8 +61,8 @@ class Vec2 {
    * @param x - The x value. Default is 0.
    * @param y - The y value. Default is 0.
    */
-  constructor(x: number | Float32Array | Uint32Array | Int32Array = 0, y = 0) {
-    if (x instanceof Float32Array || x instanceof Uint32Array || x instanceof Int32Array) {
+  constructor(x: number | Float32Array | Uint32Array | Int32Array | Uint8Array = 0, y = 0) {
+    if (x instanceof Float32Array || x instanceof Uint32Array || x instanceof Int32Array || x instanceof Uint8Array) {
       this.__data = x
     } else if (typeof x == 'number' && typeof y == 'number') {
       this.__data = new Float32Array(2)
@@ -436,7 +436,7 @@ class Vec2 {
    *
    * @return - Returns as an array.
    */
-  asArray(): Float32Array | Uint32Array | Int32Array {
+  asArray(): Float32Array | Uint32Array | Int32Array | Uint8Array {
     return this.__data
   }
 

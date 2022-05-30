@@ -1,6 +1,6 @@
 import { Vec2, Color } from '../Math/index'
 import { ScreenQuadShader } from './Shaders/ScreenQuadShader'
-import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
+import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomShaderBinding'
 import { GLTexture2D } from './GLTexture2D'
 import { RenderState } from './RenderStates/index'
 import { WebGL12RenderingContext } from './types/webgl'
@@ -14,7 +14,7 @@ class GLScreenQuad {
   protected __size: number[]
   protected flipY: boolean
   protected __glshader: ScreenQuadShader
-  protected __quadBinding: any // GeomShaderBinding | VAOGeomShaderBinding
+  protected __quadBinding: IGeomShaderBinding // GeomShaderBinding | VAOGeomShaderBinding
   protected ready: boolean
   /**
    * Create a GL screen quad.

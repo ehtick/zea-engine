@@ -1,5 +1,5 @@
 import { GLGeom } from './GLGeom'
-import { generateShaderGeomBinding } from './GeomShaderBinding'
+import { genDataTypeDesc, generateShaderGeomBinding } from './GeomShaderBinding'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { RenderState } from '../RenderStates/index'
 
@@ -34,15 +34,21 @@ class GLPoints extends GLGeom {
     // eslint-disable-next-line guard-for-in
     for (const attrName in geomBuffers.attrBuffers) {
       const attrData = geomBuffers.attrBuffers[attrName]
+      const attrDesc = genDataTypeDesc(gl, attrData.dataType)
 
       const attrBuffer = gl.createBuffer()
       gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer)
       gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW)
 
       this.__glattrbuffers[attrName] = {
+        dataType: attrDesc.dataType,
+        name: attrName,
+        dimension: attrData.dimension,
+        elementSize: attrDesc.elementSize,
+        normalized: false,
+        shared: false,
+        numValues: attrData.count,
         buffer: attrBuffer,
-        dataType: attrData.dataType,
-        normalized: attrData.normalized,
       }
     }
 

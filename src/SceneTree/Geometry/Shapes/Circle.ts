@@ -2,6 +2,7 @@ import { NumberParameter } from '../../Parameters/index'
 import { Registry } from '../../../Registry'
 import { ProceduralLines } from './ProceduralLines'
 import { Vec3Attribute } from '../Vec3Attribute'
+import { Vec3 } from '../../../Math'
 
 /**
  * A class for generating a circle shape using line segments.
@@ -81,7 +82,7 @@ class Circle extends ProceduralLines {
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (positions) {
       for (let i = 0; i < segs; i++) {
-        positions.getValueRef(i).set(Math.cos(step * i) * radius, Math.sin(step * i) * radius, 0.0)
+        positions.setValue(i, new Vec3(Math.cos(step * i) * radius, Math.sin(step * i) * radius, 0.0))
       }
     }
   }

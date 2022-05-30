@@ -249,9 +249,6 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     }
 
     const gl = this.renderer.gl
-    if (!gl.multiDrawElements) {
-      return
-    }
 
     const unit = renderstate.boundTextures++
     gl.activeTexture(gl.TEXTURE0 + unit)
@@ -343,9 +340,6 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     }
 
     const gl = this.renderer.gl
-    if (!gl.multiDrawElements) {
-      return
-    }
 
     const unit = renderstate.boundTextures++
     gl.activeTexture(gl.TEXTURE0 + unit)
@@ -425,13 +419,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       this.drawIdsTexture.bindToUniform(renderstate, drawIdsTexture)
     }
 
-    this.bindAndRender(
-      renderstate,
-      this.drawIdsArray,
-      this.drawElementCounts,
-      this.drawElementOffsets,
-      this.drawOrderToIndex.length
-    )
+    this.bindAndRender(renderstate, this.drawElementCounts, this.drawElementOffsets, this.drawOrderToIndex.length)
   }
 
   /**
@@ -452,7 +440,6 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
 
     this.bindAndRender(
       renderstate,
-      this.highlightedIdsArray,
       this.highlightElementCounts,
       this.highlightElementOffsets,
       this.highlightedItems.length
@@ -477,13 +464,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       this.drawIdsTexture.bindToUniform(renderstate, drawIdsTexture)
     }
 
-    this.bindAndRender(
-      renderstate,
-      this.drawIdsArray,
-      this.drawElementCounts,
-      this.drawElementOffsets,
-      this.drawOrderToIndex.length
-    )
+    this.bindAndRender(renderstate, this.drawElementCounts, this.drawElementOffsets, this.drawOrderToIndex.length)
   }
 
   /**
@@ -493,13 +474,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param offsets - the offsets for each element drawn in by this draw call.
    * @private
    */
-  bindAndRender(
-    renderstate: RenderState,
-    drawIdsArray: Float32Array,
-    counts: Int32Array,
-    offsets: Int32Array,
-    drawCount: number
-  ): void {
+  bindAndRender(renderstate: RenderState, counts: Int32Array, offsets: Int32Array, drawCount: number): void {
     const gl = this.gl
     const unifs = renderstate.unifs
 
@@ -510,7 +485,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     }
 
     renderstate.bindViewports(unifs, () => {
-      this.multiDraw(renderstate, drawIdsArray, counts, offsets, drawCount)
+      this.multiDraw(renderstate, counts, offsets, drawCount)
     })
   }
 
@@ -522,13 +497,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param offsets - the geom element offset for each element drawn in by this draw call.
    * @param drawCount - the number of active draw calls for this invocation
    */
-  abstract multiDraw(
-    renderstate: RenderState,
-    drawIds: Float32Array,
-    counts: Int32Array,
-    offsets: Int32Array,
-    drawCount: number
-  ): void
+  abstract multiDraw(renderstate: RenderState, counts: Int32Array, offsets: Int32Array, drawCount: number): void
 
   /**
    * Sorts the drawn items in order furthest to nearest when rendering transparent objects.

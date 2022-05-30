@@ -15,20 +15,14 @@ class GLPointsItemSet extends GLGeomItemSetMultiDraw {
    * @param offsets - the geom element offset for each element drawn in by this draw call.
    * @param drawCount - the number of active draw calls for this invocation
    */
-  multiDraw(
-    renderstate: RenderState,
-    drawIds: Float32Array,
-    counts: Int32Array,
-    offsets: Int32Array,
-    drawCount: number
-  ): void {
+  multiDraw(renderstate: RenderState, counts: Int32Array, offsets: Int32Array, drawCount: number): void {
     const gl = this.gl
     if (gl.multiDrawArrays) {
       gl.multiDrawArrays(gl.POINTS, offsets, 0, counts, 0, drawCount)
     } else {
-      const { geomItemId } = renderstate.unifs
+      const { drawId } = renderstate.unifs
       for (let i = 0; i < drawCount; i++) {
-        gl.uniform1i(geomItemId.location, drawIds[i])
+        gl.uniform1i(drawId.location, i)
         gl.drawArrays(gl.POINTS, offsets[i], counts[i])
       }
     }

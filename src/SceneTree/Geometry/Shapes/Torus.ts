@@ -4,6 +4,9 @@ import { Registry } from '../../../Registry'
 import { NumberParameter } from '../../Parameters/NumberParameter'
 import { Vec3Attribute } from '../Vec3Attribute'
 import { Vec2Attribute } from '../Vec2Attribute'
+import { Vec3f8Attribute } from '../Vec3f8Attribute'
+import { Vec2f16Attribute } from '../Vec2f16Attribute'
+import { Vec3 } from '../../../Math'
 
 /**
  * A class for generating a torus geometry.
@@ -55,8 +58,8 @@ class Torus extends ProceduralMesh {
     ) as NumberParameter
     this.arcAngleParam = this.addParameter(new NumberParameter('ArcAngle', arcAngle)) as NumberParameter
 
-    this.addVertexAttribute('texCoords', new Vec2Attribute())
-    this.addVertexAttribute('normals', new Vec3Attribute())
+    this.addVertexAttribute('texCoords', new Vec2f16Attribute())
+    this.addVertexAttribute('normals', new Vec3f8Attribute())
 
     this.topologyParams.push('Detail')
     this.topologyParams.push('ArcAngle')
@@ -136,8 +139,8 @@ class Torus extends ProceduralMesh {
         const d = outerRadius + cphi * innerRadius
 
         // Set positions and normals at the same time.
-        positions.getValueRef(vertex).set(ctheta * d, stheta * d, innerRadius * sphi)
-        normals.getValueRef(vertex).set(ctheta * cphi, stheta * cphi, sphi)
+        positions.setValue(vertex, new Vec3(ctheta * d, stheta * d, innerRadius * sphi))
+        normals.setValue(vertex, new Vec3(ctheta * cphi, stheta * cphi, sphi))
         vertex++
       }
     }

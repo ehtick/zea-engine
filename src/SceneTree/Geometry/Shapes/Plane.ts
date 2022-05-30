@@ -3,6 +3,9 @@ import { Registry } from '../../../Registry'
 import { ProceduralMesh } from './ProceduralMesh'
 import { Vec3Attribute } from '../Vec3Attribute'
 import { Vec2Attribute } from '../Vec2Attribute'
+import { Vec3f8Attribute } from '../Vec3f8Attribute'
+import { Vec2f16Attribute } from '../Vec2f16Attribute'
+import { Vec2, Vec3 } from '../../../Math'
 
 /**
  * A class for generating a plane geometry.
@@ -59,8 +62,8 @@ class Plane extends ProceduralMesh {
     this.sizeYParam = this.addParameter(new NumberParameter('SizeY', SizeY)) as NumberParameter
     this.detailXParam = this.addParameter(new NumberParameter('DetailX', DetailX)) as NumberParameter
     this.detailYParam = this.addParameter(new NumberParameter('DetailY', DetailY)) as NumberParameter
-    if (addNormals) this.addVertexAttribute('normals', new Vec3Attribute())
-    if (addTextureCoords) this.addVertexAttribute('texCoords', new Vec2Attribute())
+    if (addNormals) this.addVertexAttribute('normals', new Vec3f8Attribute())
+    if (addTextureCoords) this.addVertexAttribute('texCoords', new Vec2f16Attribute())
 
     this.topologyParams.push('DetailX')
     this.topologyParams.push('DetailY')
@@ -93,7 +96,7 @@ class Plane extends ProceduralMesh {
     if (normals) {
       for (let i = 0; i <= detailY; i++) {
         for (let j = 0; j <= detailX; j++) {
-          normals.getValueRef(voff).set(0, 0, 1)
+          normals.setValue(voff, new Vec3(0, 0, 1))
           voff++
         }
       }
@@ -106,7 +109,7 @@ class Plane extends ProceduralMesh {
         const y = i / detailY
         for (let j = 0; j <= detailX; j++) {
           const x = j / detailX
-          texCoords.getValueRef(voff).set(x, y)
+          texCoords.setValue(voff, new Vec2(x, y))
           voff++
         }
       }
@@ -133,7 +136,7 @@ class Plane extends ProceduralMesh {
       const y = (i / detailY - 0.5) * sizeY
       for (let j = 0; j <= detailX; j++) {
         const x = (j / detailX - 0.5) * sizeX
-        positions.getValueRef(voff).set(x, y, 0.0)
+        positions.setValue(voff, new Vec3(x, y, 0.0))
         voff++
       }
     }

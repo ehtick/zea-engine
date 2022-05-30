@@ -9,8 +9,8 @@ import { XRViewport } from '.'
 // line.setNumSegments(1)
 // line.setSegmentVertexIndices(0, 0, 1)
 // const positions = <Vec3Attribute>line.getVertexAttribute('positions')
-// positions.getValueRef(0).set(0.0, 0.0, 0.0)
-// positions.getValueRef(1).set(0.0, 0.0, -1.0)
+// positions.setValue(0, new Vec3(0.0, 0.0, 0.0))
+// positions.setValue(1, new Vec3(0.0, 0.0, -1.0))
 // line.setBoundingBoxDirty()
 
 /** Class representing a VR controller.

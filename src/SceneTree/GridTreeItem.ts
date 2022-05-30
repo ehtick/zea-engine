@@ -42,8 +42,8 @@ class GridTreeItem extends TreeItem {
     axisLine.setNumSegments(1)
     axisLine.setSegmentVertexIndices(0, 0, 1)
     const positions = <Vec3Attribute>axisLine.getVertexAttribute('positions')
-    positions.getValueRef(0).set(gridSize * -0.5, 0.0, 0.0)
-    positions.getValueRef(1).set(gridSize * 0.5, 0.0, 0.0)
+    positions.setValue(0, new Vec3(gridSize * -0.5, 0.0, 0.0))
+    positions.setValue(1, new Vec3(gridSize * 0.5, 0.0, 0.0))
 
     const gridXAxisMaterial = new LinesMaterial('gridXAxisMaterial')
     gridXAxisMaterial.baseColorParam.value = new Color(gridColor.luminance(), 0, 0)

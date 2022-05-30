@@ -73,9 +73,10 @@ class GeomLibrary extends EventEmitter {
   protected genBuffersOpts: Record<string, any> = {}
   protected loadContext?: AssetLoadContext
   protected numGeoms: number = -1
-  geoms: Array<BaseProxy | BaseGeom> = []
-  basePath: string = ''
-  loadedCount: number = 0
+  protected numGeomFiles: number = 1
+  public geoms: Array<BaseProxy | BaseGeom> = []
+  public basePath: string = ''
+  public loadedCount: number = 0
   /**
    * Create a geom library.
    */
@@ -135,14 +136,14 @@ class GeomLibrary extends EventEmitter {
    * @param context - The value param.
    */
   loadGeomFilesStream(geomLibraryJSON: Record<string, any>, basePath: string, context: AssetLoadContext): void {
-    const numGeomFiles = geomLibraryJSON.numGeomsPerFile.length
-    resourceLoader.incrementWorkload(numGeomFiles)
+    this.numGeomFiles = geomLibraryJSON.numGeomsPerFile.length
+    resourceLoader.incrementWorkload(this.numGeomFiles)
 
     this.numGeoms = geomLibraryJSON.numGeoms
     this.basePath = basePath
     this.loadContext = context
 
-    for (let geomFileID = 0; geomFileID < numGeomFiles; geomFileID++) {
+    for (let geomFileID = 0; geomFileID < this.numGeomFiles; geomFileID++) {
       this.loadGeomFile(geomFileID, false)
     }
   }
@@ -219,8 +220,7 @@ class GeomLibrary extends EventEmitter {
     // TODO: Use SharedArrayBuffer once available.
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer
 
-    const isHugeFile = buffer.byteLength > 20000000
-    if ((numGeomLibraries > 1 && !isHugeFile) || context.lazyLoading) {
+    if (numGeomLibraries > 1 || this.numGeomFiles > 1 || context.lazyLoading) {
       // In scenes loading many files, we just load each file on a different worker.
       // This has one big advantage that we don't clone the buffer using the 'slice' method
       // potentially reducing temporary memory consumption by a lot.

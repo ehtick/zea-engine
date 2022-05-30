@@ -1,7 +1,7 @@
 import { EventEmitter } from '../../Utilities/index'
 import { GLShader } from '../GLShader'
-import { GLOpaqueGeomsPass, GLPass } from '../Passes'
-import { RenderState, GeomDataRenderState, HighlightRenderState } from '../RenderStates/index'
+import { GLStandardGeomsPass } from '../Passes'
+import { ColorRenderState, GeomDataRenderState, HighlightRenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeom } from './GLGeom'
 import { GLGeomItem } from './GLGeomItem'
@@ -13,7 +13,7 @@ import { GLMaterialGeomItemSets } from './GLMaterialGeomItemSets'
  */
 class GLShaderMaterials extends EventEmitter {
   protected gl: WebGL12RenderingContext
-  protected pass: GLPass
+  protected pass: GLStandardGeomsPass
   protected glShader: GLShader
   protected glgeomdatashader: any
   protected glselectedshader: any
@@ -24,7 +24,7 @@ class GLShaderMaterials extends EventEmitter {
    * @param pass - The pass that owns this GLShaderMaterials object.
    * @param shaders - The shaders value.
    */
-  constructor(gl: WebGL12RenderingContext, pass: GLPass, shaders: Record<string, any>) {
+  constructor(gl: WebGL12RenderingContext, pass: GLStandardGeomsPass, shaders: Record<string, any>) {
     super()
     this.gl = gl
     this.pass = pass
@@ -55,7 +55,7 @@ class GLShaderMaterials extends EventEmitter {
   addGLGeomItem(glGeomItem: GLGeomItem, glGeom: GLGeom, glMaterial: GLMaterial): void {
     let glMaterialGeomItemSets = this.findMaterialGeomItemSets(glMaterial)
     if (!glMaterialGeomItemSets) {
-      glMaterialGeomItemSets = new GLMaterialGeomItemSets(<GLOpaqueGeomsPass>this.pass, glMaterial)
+      glMaterialGeomItemSets = new GLMaterialGeomItemSets(this.pass, glMaterial)
       this.addMaterialGeomItemSets(glMaterialGeomItemSets)
     }
 
@@ -106,7 +106,7 @@ class GLShaderMaterials extends EventEmitter {
    * Draws all elements, binding the shader and continuing into the GLMaterialGeomItemSets
    * @param renderstate - The render state for the current draw traversal
    */
-  draw(renderstate: RenderState): void {
+  draw(renderstate: ColorRenderState): void {
     const glShader = this.glShader
     if (!this.glShader.bind(renderstate)) return
 

@@ -86,7 +86,6 @@ class CADAsset extends AssetItem {
     context.versions['zea-cad'] = new Version(reader.loadStr())
     context.sdk = reader.loadStr()
     this.sdk = context.sdk
-    this.cadfileVersion = context.versions['zea-cad']
     // console.log('Loading CAD File version:', this.cadfileVersion, ' exported using SDK:', context.cadSDK)
 
     super.readBinary(reader, context)
@@ -166,17 +165,20 @@ class CADAsset extends AssetItem {
           // Maintain the name provided by the user before loading.
           if (name != '') this.setName(name)
 
-          context.versions['zea-cad'] = this.getVersion()
           context.versions['zea-engine'] = this.getEngineDataVersion()
 
+          if (entries.geomsdata) {
+            // If metadata is available, load it straight away.
+            this.metadataLoadPromise = new Promise((resolve) => {
+              this.geomLibrary.once('loaded', () => {
+                this.geomLibrary.loadMetadata(entries.geomsdata, context)
+                this.metadataLoaded = true
+                resolve()
+              })
+            })
+          }
           if (entries.geoms) {
             this.geomLibrary.readBinaryBuffer(filename, entries.geoms.buffer, context)
-
-            // If metadata is available, load it straight away.
-            if (entries.geomsdata) {
-              this.geomLibrary.loadMetadata(entries.geomsdata, context)
-              this.metadataLoaded = true
-            }
           } else if (entries['geomLibrary.json']) {
             const geomLibraryJSON = JSON.parse(new TextDecoder('utf-8').decode(entries['geomLibrary.json']))
             const basePath = folder + stem
@@ -230,7 +232,6 @@ class CADAsset extends AssetItem {
       resourceLoader.loadFile('archive', metaDataUrl).then(
         (entries) => {
           const context = new AssetLoadContext()
-          context.versions['zea-cad'] = this.getVersion()
           context.versions['zea-engine'] = this.getEngineDataVersion()
           this.geomLibrary.loadMetadata(entries.geomsdata, context)
           resourceLoader.incrementWorkDone(1)

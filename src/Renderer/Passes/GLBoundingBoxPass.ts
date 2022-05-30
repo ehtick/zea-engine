@@ -20,7 +20,7 @@ class GLBoundingBoxPass extends GLPass {
   protected boxes: any[] = []
   protected dirtyBoxes: Set<any> = new Set()
   protected freeIndices: Array<number> = []
-  protected idToIndex: Array<number> = []
+  protected idToIndex: Map<TreeItem, number> = new Map()
   protected drawCount: number = 0
   protected indexArrayUpdateNeeded: boolean = false
   protected __updateRequested: boolean = false
@@ -135,7 +135,7 @@ class GLBoundingBoxPass extends GLPass {
     let index_check = this.freeIndices.pop()
     if (index_check) index = index_check
     else index = this.boxes.length
-    this.idToIndex[treeItem.getId()] = index
+    this.idToIndex.set(treeItem, index)
 
     const visibilityChanged = () => {
       if (treeItem.isVisible()) {
@@ -175,11 +175,11 @@ class GLBoundingBoxPass extends GLPass {
    * @param treeItem - The treeItem value.
    */
   unbindTreeItem(treeItem: TreeItem): void {
-    if (!(treeItem.getId() in this.idToIndex)) {
+    if (!this.idToIndex.has(treeItem)) {
       console.warn('Billboard already removed.')
       return
     }
-    const index = this.idToIndex[treeItem.getId()]
+    const index = this.idToIndex.get(treeItem)
     const treeItemData = this.boxes[index]
 
     treeItem.off('visibilityChanged', treeItemData.visibilityChanged)

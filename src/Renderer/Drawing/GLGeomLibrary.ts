@@ -1,6 +1,6 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter, Allocator1D } from '../../Utilities/index'
-import { generateShaderGeomBinding, genDataTypeDesc } from './GeomShaderBinding'
+import { generateShaderGeomBinding, genDataTypeDesc, convertBuffer, IGeomShaderBinding } from './GeomShaderBinding'
 import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom } from '../../SceneTree/index'
 import { GLPoints } from './GLPoints'
 import { GLLines } from './GLLines'
@@ -10,6 +10,8 @@ import { GLBaseRenderer } from '../GLBaseRenderer'
 import { IndexEvent } from '../../Utilities/Events/IndexEvent'
 import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
+import { GeomBuffers } from '../../SceneTree/types/scene'
+import { GLAttrBuffer, GLAttrDesc } from '../types/renderer'
 
 const resizeIntArray = (intArray: Int32Array, newSize: number) => {
   const newArray = new Int32Array(newSize)
@@ -23,15 +25,16 @@ const resizeIntArray = (intArray: Int32Array, newSize: number) => {
 class GLGeomLibrary extends EventEmitter {
   protected renderer: GLBaseRenderer
   protected __gl: WebGL12RenderingContext
-  protected shaderAttrSpec: Record<string, any> = {}
   protected freeGeomIndices: number[] = []
   protected geoms: Array<BaseGeom | null> = []
   protected geomRefCounts: number[] = []
-  protected geomsDict: Record<string, number> = {}
-  protected glGeomsDict: Record<string, GLGeom> = {}
-  protected geomBuffersTmp: any[] = [] // for each geom, these are the buffer
-  protected glattrbuffers: Record<string, any> = {}
-  protected shaderBindings: Record<string, any> = {}
+  protected geomsDict: Map<EventEmitter, number> = new Map()
+  protected glGeomsDict: Map<EventEmitter, GLGeom> = new Map()
+  protected geomBuffersTmp: GeomBuffers[] = [] // for each geom, these are the buffer
+
+  protected shaderAttrSpec: Record<string, GLAttrDesc> = {}
+  protected glattrbuffers: Record<string, GLAttrBuffer> = {}
+  protected shaderBindings: Record<string, IGeomShaderBinding> = {}
   protected attributesBufferNeedsRealloc: boolean = false
   protected attributesBufferNeedsAlloc: string[] = []
   protected attributesAllocator: Allocator1D = new Allocator1D()
@@ -77,6 +80,17 @@ class GLGeomLibrary extends EventEmitter {
     // //////////////////////////////////////
     // Indices
     this.indicesAllocator.on('resized', () => {
+      // 540M indices == 2Gb of indices, which is the maximum allows by WebGL.
+      // This is because WebGL may accept JS arrays which can contain floating point indices.
+      // After we have allocated More than 256 Mb of indices, we then force allocations to be limited
+      // to the exact allocated space.
+      if (Math.log2(this.indicesAllocator.reservedSpace) >= 29) {
+        if (Math.log2(this.indicesAllocator.allocatedSpace) >= 29) {
+          throw 'Indices buffer too big. WebGL cannot allocate index buffers more than 2Gb'
+        }
+        // console.log("this.indicesAllocator. capped to':", this.indicesAllocator.allocatedSpace + 1)
+        this.indicesAllocator.reservedSpace = (1 << 29) - 1
+      }
       this.indicesBufferNeedsRealloc = true
     })
     this.indicesAllocator.on('dataReallocated', (event: any) => {
@@ -86,11 +100,11 @@ class GLGeomLibrary extends EventEmitter {
       this.dirtyGeomIndices.add(id)
     })
 
-    // Allocate 128Mb of data to begin with. This avoids lots of small
+    // Allocate enough space for 1M verts to begin with. This avoids lots of small
     // copies when loading small files.
-    const size = Math.pow(2, 23)
+    const size = 2 << 19
     this.attributesAllocator.reservedSpace = size
-    this.indicesAllocator.reservedSpace = size * 4
+    this.indicesAllocator.reservedSpace = size
     this.attributesBufferNeedsRealloc = true
     this.indicesBufferNeedsRealloc = true
   }
@@ -101,7 +115,7 @@ class GLGeomLibrary extends EventEmitter {
    * @return - The return value.
    */
   constructGLGeom(geom: BaseGeom): GLGeom {
-    let glgeom = this.glGeomsDict[geom.getId()]
+    let glgeom = this.glGeomsDict.get(geom)
     if (glgeom != undefined) {
       // Increment the ref count for the GLGeom
       // glgeom.addRef(this)
@@ -117,7 +131,7 @@ class GLGeomLibrary extends EventEmitter {
     } else {
       throw new Error('Unsupported geom type:' + geom.constructor.name)
     }
-    this.glGeomsDict[geom.getId()] = glgeom
+    this.glGeomsDict.set(geom, glgeom)
     glgeom.on('updated', () => {
       this.renderer.requestRedraw()
     })
@@ -132,7 +146,7 @@ class GLGeomLibrary extends EventEmitter {
    * @return - The index of the geom in the GLGeomLibrary
    */
   addGeom(geom: BaseGeom): number {
-    let index = this.geomsDict[geom.getId()]
+    let index = this.geomsDict.get(geom)
     if (index != undefined) {
       // Increment the ref count for the GLGeom
       this.geomRefCounts[index]++
@@ -153,7 +167,7 @@ class GLGeomLibrary extends EventEmitter {
 
     this.geoms[index] = geom
     this.geomRefCounts[index] = 1
-    this.geomsDict[geom.getId()] = index
+    this.geomsDict.set(geom, index)
     this.dirtyGeomIndices.add(index)
 
     this.geomVertexCounts[index] = 0
@@ -180,7 +194,7 @@ class GLGeomLibrary extends EventEmitter {
    * @param geom - The geom to remove
    */
   removeGeom(geom: BaseGeom): void {
-    const index = this.geomsDict[geom.getId()]
+    const index = this.geomsDict.get(geom)
 
     this.geomRefCounts[index]--
 
@@ -206,7 +220,7 @@ class GLGeomLibrary extends EventEmitter {
 
     this.geoms[index] = null
     this.freeGeomIndices.push(index)
-    delete this.geomsDict[geom.getId()]
+    this.geomsDict.delete(geom)
     delete this.geomBuffersTmp[index]
 
     this.indicesCounts[index] = 0
@@ -270,14 +284,8 @@ class GLGeomLibrary extends EventEmitter {
     for (const attrName in geomBuffers.attrBuffers) {
       if (!this.shaderAttrSpec[attrName]) {
         const attrData = geomBuffers.attrBuffers[attrName]
-        const geomAttrDesc: Record<string, any> = genDataTypeDesc(this.__gl, attrData.dataType)
 
-        this.shaderAttrSpec[attrName] = {
-          dataType: attrData.dataType,
-          normalized: attrData.normalized,
-          dimension: geomAttrDesc.dimension,
-          elementSize: geomAttrDesc.elementSize,
-        }
+        this.shaderAttrSpec[attrName] = genDataTypeDesc(this.__gl, attrData.dataType)
 
         this.attributesBufferNeedsAlloc.push(attrName)
       }
@@ -347,20 +355,23 @@ class GLGeomLibrary extends EventEmitter {
           gl.COPY_WRITE_BUFFER,
           0,
           0,
-          this.glattrbuffers[attrName].length * attrSpec.elementSize
+          this.glattrbuffers[attrName].numValues * attrSpec.elementSize
         )
         gl.deleteBuffer(this.glattrbuffers[attrName].buffer)
       }
 
-      attrSpec.numValues = numValues // cache for debugging only
+      // attrSpec.numValues = numValues // cache for debugging only
 
       const targetName = attrName == 'textureCoords' ? 'texCoords' : attrName
       this.glattrbuffers[targetName] = {
+        name: attrName,
+        elementSize: attrSpec.elementSize,
         buffer: attrBuffer,
         dataType: attrSpec.dataType,
         normalized: attrSpec.normalized,
-        length: numValues,
+        numValues: numValues,
         dimension: attrSpec.dimension,
+        shared: false,
       }
     }
   }
@@ -431,7 +442,9 @@ class GLGeomLibrary extends EventEmitter {
       gl.bindBuffer(gl.ARRAY_BUFFER, glattrbuffer.buffer)
       const elementSize = attrSpec.elementSize
       const offsetInBytes = this.geomVertexOffsets[index] * elementSize * attrSpec.dimension
-      gl.bufferSubData(gl.ARRAY_BUFFER, offsetInBytes, attrData.values)
+
+      const values = convertBuffer(gl, attrData.values, attrSpec)
+      gl.bufferSubData(gl.ARRAY_BUFFER, offsetInBytes, values)
     }
     gl.bindBuffer(gl.ARRAY_BUFFER, null)
 
@@ -463,10 +476,10 @@ class GLGeomLibrary extends EventEmitter {
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
     }
 
-    // if (this.freeDataAfterUpload) {
-    //   const geom = this.geoms[index]
-    //   geom.freeBuffers()
-    // }
+    if (this.freeDataAfterUpload) {
+      const geom = this.geoms[index]
+      geom.freeBuffers()
+    }
 
     this.emit('geomDataChanged', new IndexEvent(index))
   }
@@ -497,6 +510,8 @@ class GLGeomLibrary extends EventEmitter {
         this.genIndicesBuffers()
         this.indicesBufferNeedsRealloc = false
       }
+
+      console.log('GLGeomLibrary MemoryAllocation:', this.calcMemoryAllocation())
     } else if (this.attributesBufferNeedsAlloc.length > 0) {
       // Sometimes new attributes are added after the main attributes.
       // e.g. Normals could be computed.
@@ -512,6 +527,36 @@ class GLGeomLibrary extends EventEmitter {
     })
 
     this.dirtyGeomIndices = new Set()
+  }
+
+  calcMemoryAllocation() {
+    const summary = { attrs: {}, indices: {} }
+
+    const MB = 1 << 20
+
+    for (const attrName in this.shaderAttrSpec) {
+      const attrSpec = this.shaderAttrSpec[attrName]
+      const reservedSpace = this.attributesAllocator.reservedSpace
+      const allocatedSpace = this.attributesAllocator.allocatedSpace
+      const numValues = reservedSpace * attrSpec.dimension
+      const sizeInBytes = numValues * attrSpec.elementSize
+      summary.attrs[attrName] = {
+        count: allocatedSpace,
+        MB: sizeInBytes / MB,
+      }
+    }
+
+    const reservedSpace = this.indicesAllocator.reservedSpace
+    const allocatedSpace = this.indicesAllocator.allocatedSpace
+    const elementSize = 4 //  Uint32Array for UNSIGNED_INT
+    const sizeInBytes = reservedSpace * elementSize
+
+    summary.indices = {
+      count: allocatedSpace,
+      MB: sizeInBytes / MB,
+    }
+
+    return summary
   }
 
   // /////////////////////////////////////

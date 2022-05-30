@@ -305,17 +305,6 @@ class GLBaseViewport extends ParameterOwner {
       // right target.
       if (!renderstate.boundRendertarget) gl.bindFramebuffer(gl.FRAMEBUFFER, null)
     }
-    gl.viewport(0, 0, this.__width, this.__height)
-    const bg = this.backgroundColorParam.value.asArray()
-    gl.clearColor(bg[0], bg[1], bg[2], bg[3])
-    // Note: in Chrome's macOS the alpha channel causes strange
-    // compositing issues. Here where we disable the alpha channel
-    // in the color mask which addresses the issues on MacOS.
-    // To see the artifacts, pass 'true' as the 4th parameter, and
-    // open a simple testing scene containing a grid. Moving the
-    // camera causes a ghosting effect to be left behind.
-    gl.colorMask(true, true, true, false)
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
     renderstate.glEnable(gl.DEPTH_TEST)
 
@@ -324,7 +313,7 @@ class GLBaseViewport extends ParameterOwner {
     const highlightRenderState = renderstate.toHighlightRenderState()
     this.drawHighlights(highlightRenderState)
     if (highlightRenderState.stack.length != 1) {
-      console.warn(" corrupt highlightRenderState.stack.length:", highlightRenderState.stack.length)
+      console.warn(' corrupt highlightRenderState.stack.length:', highlightRenderState.stack.length)
     }
 
     // //////////////////////////////////
@@ -414,7 +403,7 @@ class GLBaseViewport extends ParameterOwner {
     this.depthTexture.bindToUniform(renderstate, unifs.depthTexture)
 
     gl2.uniform2f(unifs.screenSize.location, this.__width, this.__height)
-    gl2.uniform1f(unifs.outlineThickness.location, this.renderer.outlineThickness)
+    gl2.uniform1f(unifs.outlineThickness.location, this.renderer.outlineThickness * window.devicePixelRatio)
 
     const oc = this.renderer.outlineColor.asArray()
     gl2.uniform4f(unifs.outlineColor.location, oc[0], oc[1], oc[2], oc[3])

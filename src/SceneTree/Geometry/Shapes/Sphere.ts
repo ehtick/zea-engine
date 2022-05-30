@@ -3,7 +3,8 @@ import { NumberParameter } from '../../Parameters/NumberParameter'
 import { Registry } from '../../../Registry'
 import { ProceduralMesh } from './ProceduralMesh'
 import { Vec3Attribute } from '../Vec3Attribute'
-import { Vec2Attribute } from '../Vec2Attribute'
+import { Vec3f8Attribute } from '../Vec3f8Attribute'
+import { Vec2f16Attribute } from '../Vec2f16Attribute'
 
 /**
  * A class for generating a sphere geometry.
@@ -56,8 +57,8 @@ class Sphere extends ProceduralMesh {
     this.sidesParam.value = sides
     this.loopsParam.value = loops
 
-    if (addNormals) this.addVertexAttribute('normals', new Vec3Attribute())
-    if (addTextureCoords) this.addVertexAttribute('texCoords', new Vec2Attribute())
+    if (addNormals) this.addVertexAttribute('normals', new Vec3f8Attribute())
+    if (addTextureCoords) this.addVertexAttribute('texCoords', new Vec2f16Attribute())
 
     this.topologyParams.push('Sides')
     this.topologyParams.push('Loops')
@@ -87,8 +88,8 @@ class Sphere extends ProceduralMesh {
     let vertex = 0
     if (!positions) return
 
-    positions.getValueRef(vertex).set(0.0, 0.0, radius)
-    if (normals) normals.getValueRef(vertex).set(0.0, 0.0, 1.0)
+    positions.setValue(vertex, new Vec3(0.0, 0.0, radius))
+    if (normals) normals.setValue(vertex, new Vec3(0.0, 0.0, 1.0))
     vertex++
 
     for (let i = 0; i < nbLoops; i++) {
@@ -98,19 +99,19 @@ class Sphere extends ProceduralMesh {
         normal.set(Math.sin(theta) * Math.cos(phi), Math.sin(theta) * Math.sin(phi), Math.cos(theta))
 
         // Set positions and normals at the same time.
-        positions.getValueRef(vertex).setFromOther(normal.scale(radius))
-        if (normals) normals.getValueRef(vertex).setFromOther(normal)
+        positions.setValue(vertex, normal.scale(radius))
+        if (normals) normals.setValue(vertex, normal)
         vertex++
       }
     }
 
-    positions.getValueRef(vertex).set(0.0, 0.0, -radius)
-    if (normals) normals.getValueRef(vertex).set(0.0, 0.0, -1.0)
+    positions.setValue(vertex, new Vec3(0.0, 0.0, -radius))
+    if (normals) normals.setValue(vertex, new Vec3(0.0, 0.0, -1.0))
     vertex++
 
     // ////////////////////////////
     // Build the topology
-    const texCoords = <Vec2Attribute>this.getVertexAttribute('texCoords')
+    const texCoords = <Vec2f16Attribute>this.getVertexAttribute('texCoords')
 
     // build the fan at the first pole.
     let faceIndex = 0
@@ -173,7 +174,7 @@ class Sphere extends ProceduralMesh {
    * The resize method.
    * @private
    */
-  resize(): void{
+  resize(): void {
     const radius = this.radiusParam.value
     const nbSides = this.sidesParam.value
     const nbLoops = this.loopsParam.value
@@ -187,8 +188,8 @@ class Sphere extends ProceduralMesh {
     const normals = <Vec3Attribute>this.getVertexAttribute('normals')
     let vertex = 0
     const normal = new Vec3(0.0, 0.0, 1.0)
-    positions.getValueRef(vertex).set(0.0, 0.0, radius)
-    if (normals) normals.getValueRef(vertex).set(0.0, 0.0, 1.0)
+    positions.setValue(vertex, new Vec3(0.0, 0.0, radius))
+    if (normals) normals.setValue(vertex, new Vec3(0.0, 0.0, 1.0))
     vertex++
 
     for (let i = 0; i < nbLoops; i++) {
@@ -198,13 +199,13 @@ class Sphere extends ProceduralMesh {
         normal.set(Math.sin(theta) * Math.cos(phi), Math.sin(theta) * Math.sin(phi), Math.cos(theta))
 
         // Set positions and normals at the same time.
-        positions.getValueRef(vertex).setFromOther(normal.scale(radius))
-        if (normals) normals.getValueRef(vertex).setFromOther(normal)
+        positions.setValue(vertex, normal.scale(radius))
+        if (normals) normals.setValue(vertex, normal)
         vertex++
       }
     }
-    positions.getValueRef(vertex).set(0.0, 0.0, -radius)
-    if (normals) normals.getValueRef(vertex).set(0.0, 0.0, -1.0)
+    positions.setValue(vertex, new Vec3(0.0, 0.0, -radius))
+    if (normals) normals.setValue(vertex, new Vec3(0.0, 0.0, -1.0))
     vertex++
   }
 }

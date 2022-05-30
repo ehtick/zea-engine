@@ -4,6 +4,9 @@ import { Registry } from '../../../Registry'
 import { ProceduralMesh } from './ProceduralMesh'
 import { Vec2Attribute } from '../Vec2Attribute'
 import { Vec3Attribute } from '../Vec3Attribute'
+import { Vec3f8Attribute } from '../Vec3f8Attribute'
+import { Vec2f16Attribute } from '../Vec2f16Attribute'
+import { Vec2 } from '../../../Math'
 
 /**
  * A class for generating a disc geometry.
@@ -46,8 +49,8 @@ class Disc extends ProceduralMesh {
       new NumberParameter('Sides', sides >= 3 ? sides : 3, [3, 200], 1)
     ) as NumberParameter
 
-    this.addVertexAttribute('texCoords', new Vec2Attribute())
-    this.addVertexAttribute('normals', new Vec3Attribute())
+    this.addVertexAttribute('texCoords', new Vec2f16Attribute())
+    this.addVertexAttribute('normals', new Vec3f8Attribute())
 
     this.topologyParams.push('Sides')
   }
@@ -65,7 +68,7 @@ class Disc extends ProceduralMesh {
     // ////////////////////////////
     // Set Vertex Positions
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
-    if (positions) positions.getValueRef(0).set(0.0, 0.0, 0.0)
+    if (positions) positions.setValue(0, new Vec3(0.0, 0.0, 0.0))
 
     // ////////////////////////////
     // Build the topology
@@ -91,10 +94,10 @@ class Disc extends ProceduralMesh {
     // setUVs
     const texCoords = <Vec2Attribute>this.getVertexAttribute('texCoords')
     if (texCoords) {
-      texCoords.getValueRef(0).set(0.5, 0.5)
+      texCoords.setValue(0, new Vec2(0.5, 0.5))
       for (let i = 0; i < nbSides; i++) {
         const phi = (i / nbSides) * 2.0 * Math.PI
-        texCoords.getValueRef(i + 1).set(Math.sin(phi) * 0.5 + 0.5, Math.cos(phi) * 0.5 + 0.5)
+        texCoords.setValue(i + 1, new Vec2(Math.sin(phi) * 0.5 + 0.5, Math.cos(phi) * 0.5 + 0.5))
       }
     }
 
@@ -112,7 +115,7 @@ class Disc extends ProceduralMesh {
     if (positions) {
       for (let i = 0; i < nbSides; i++) {
         const phi = (i / nbSides) * 2.0 * Math.PI
-        positions.getValueRef(i + 1).set(Math.sin(phi) * radius, Math.cos(phi) * radius, 0.0)
+        positions.setValue(i + 1, new Vec3(Math.sin(phi) * radius, Math.cos(phi) * radius, 0.0))
       }
     }
   }

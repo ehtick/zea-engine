@@ -7,10 +7,10 @@ import { Registry } from '../../Registry'
  */
 class Vec3Attribute extends Attribute {
   /**
-   * Create a Vec2Attribute.
+   * Create a Vec3Attribute.
    */
-  constructor() {
-    super('Vec3', 3)
+  constructor(dataTypeName: string = 'Vec3') {
+    super(dataTypeName, 3)
     this.normalized = false
   }
 
@@ -30,7 +30,16 @@ class Vec3Attribute extends Attribute {
 
     const offset = index * this.stride
     const valueData = this.data.subarray(offset, offset + this.stride)
-    return new Vec3(valueData)
+    const vec3 = new Vec3()
+    Object.defineProperty(vec3, 'x', { get: () => valueData[0], set: (value) => (valueData[0] = value) })
+    Object.defineProperty(vec3, 'y', { get: () => valueData[1], set: (value) => (valueData[1] = value) })
+    Object.defineProperty(vec3, 'z', { get: () => valueData[2], set: (value) => (valueData[2] = value) })
+    vec3.set = (x: number, y: number, z: number): void => {
+      valueData[0] = x
+      valueData[1] = y
+      valueData[2] = z
+    }
+    return vec3
   }
 
   /**
@@ -45,7 +54,7 @@ class Vec3Attribute extends Attribute {
 
     const offset = index * this.stride
     const valueData = this.data.slice(offset, offset + this.stride)
-    return new Vec3(valueData)
+    return new Vec3(valueData[0], valueData[1], valueData[2])
   }
 
   /**
@@ -72,8 +81,31 @@ class Vec3Attribute extends Attribute {
    * @return - The return value.
    */
   getFaceVertexValueRef(face: number, faceVertex: number): Vec3 {
+    const valueData = this.getFaceVertexValueRef_array(face, faceVertex)
+    const vec3 = new Vec3()
+    Object.defineProperty(vec3, 'x', { get: () => valueData[0], set: (value) => (valueData[0] = value) })
+    Object.defineProperty(vec3, 'y', { get: () => valueData[1], set: (value) => (valueData[1] = value) })
+    Object.defineProperty(vec3, 'z', { get: () => valueData[2], set: (value) => (valueData[2] = value) })
+    vec3.set = (x: number, y: number, z: number): void => {
+      valueData[0] = x
+      valueData[1] = y
+      valueData[2] = z
+    }
+    return vec3
+  }
+
+  /**
+   * Gets the value of a corner vertex of a face.
+   * > Note: 'Ref' means that the value contains a reference to the data in the attribute.
+   * > The components of the value can be changed causing the attributes data is changed.
+   * > No need to call 'setFaceVertexValue'.
+   * @param face - The face index.
+   * @param faceVertex - The index of vertex within the face. [0... num face vertices]
+   * @return - The return value.
+   */
+  getFaceVertexValue(face: number, faceVertex: number): Vec3 {
     const array = this.getFaceVertexValueRef_array(face, faceVertex)
-    return new Vec3(array)
+    return new Vec3(array[0], array[1], array[2])
   }
 
   /**

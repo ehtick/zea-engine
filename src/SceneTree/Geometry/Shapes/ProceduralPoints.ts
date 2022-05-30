@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box3 } from '../../../Math/Box3'
+import { GeomBuffers } from '../../types/scene'
 import { Points } from '../Points'
 
 /**
@@ -93,7 +94,7 @@ abstract class ProceduralPoints extends Points {
    * @param opts - The opts value.
    * @return - The return value.
    */
-  genBuffers(opts?: Record<string, any>): Record<string, any> {
+  genBuffers(opts?: Record<string, any>): GeomBuffers {
     this.update()
     return super.genBuffers(opts)
   }

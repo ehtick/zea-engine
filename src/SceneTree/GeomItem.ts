@@ -141,7 +141,7 @@ class GeomItem extends BaseGeomItem {
           // can make loading big scenes take a bit longer.
           const mat4 = this.geomMatParam.value
           if (geom instanceof BaseProxy) {
-            const positions = geom.__buffers.attrBuffers['positions'].values
+            const positions = (<BaseProxy>geom).positions.values
             const getVertex = (index: number) => {
               const start = index * 3
               return new Vec3(positions.subarray(start, start + 3))
@@ -152,7 +152,7 @@ class GeomItem extends BaseGeomItem {
           } else {
             const positions = <Vec3Attribute>geom.getVertexAttribute('positions')
             for (let i = 0; i < geom.getNumVertices(); i++) {
-              bbox.addPoint(mat4.transformVec3(positions.getValueRef(i)))
+              bbox.addPoint(mat4.transformVec3(positions.getValue(i)))
             }
           }
         } else {
@@ -286,6 +286,7 @@ class GeomItem extends BaseGeomItem {
    */
   copyFrom(src: GeomItem, context?: CloneContext): void {
     super.copyFrom(src, context)
+    this.geomOffsetXfoParam.value = src.geomOffsetXfoParam.value
 
     if (src.geomIndex != -1) {
       this.assetItem = src.assetItem
@@ -339,6 +340,8 @@ class GeomItem extends BaseGeomItem {
    * Note: computing the precise bounding box is much slower and can make loading
    * big scenes take a bit longer. This setting is only relevant to geometries loaded
    * from zcad files.
+   * @deprecated
+   * zcad files from version 3.11.0 contain precise bounding boxes by default.
    * @param value - true for precise bounding boxes, else false for faster approximate bounding boxes.
    */
   static setCalculatePreciseBoundingBoxes(value: boolean): void {

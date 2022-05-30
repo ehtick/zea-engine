@@ -29,6 +29,8 @@ import { Uniforms } from './types/renderer'
 import { StateChangedEvent } from '../Utilities/Events/StateChangedEvent'
 import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
 import { ColorRenderState, GeomDataRenderState, HighlightRenderState, RenderState } from './RenderStates/index'
+import { ARViewport } from './VR/ARViewport'
+import { VRViewport } from './VR/VRViewport'
 
 let activeGLRenderer: GLBaseRenderer | undefined
 let pointerIsDown = false
@@ -57,6 +59,11 @@ const registeredPasses: Record<string, Array<typeof GLPass>> = {}
 export interface RendererOptions {
   // Enable WebXR Rendering.
   supportXR?: boolean
+
+  // XR session mode: 'VR' | 'AR'
+  // When lanuching an XRSession, specify the mode to launch the session.
+  xrMode?: 'VR' | 'AR'
+
   // alpha: Boolean that indicates if the canvas contains an alpha buffer.
   alpha?: boolean
 
@@ -69,7 +76,7 @@ export interface RendererOptions {
   // - "low-power": Prioritizes power saving over rendering performance.
   powerPreference?: string
 
-  // GLRenderer
+  // Disables all textured rendering in the Renderer.
   disableTextures?: boolean
   // This debugging option modifies the color of each geometry to display its id as a pseudo-random color.
   // This option is useful to see visually each geometry in the scene.
@@ -97,7 +104,7 @@ export interface RendererOptions {
  * @extends ParameterOwner
  */
 class GLBaseRenderer extends ParameterOwner {
-  protected listenerIDs: Record<number, Record<string, number>> = {}
+  protected listenerIDs: Map<TreeItem, Record<string, number>> = new Map()
   directives: string[] = []
   solidAngleLimit: number = 0.004
 
@@ -109,7 +116,7 @@ class GLBaseRenderer extends ParameterOwner {
   protected __renderGeomDataFbosRequested: boolean = false
   protected __shaders: Record<string, GLShader> = {}
   protected __passes: Record<number, GLPass[]> = {}
-  private passAssignments: Record<number, number> = {}
+  private passAssignments: Map<TreeItem, GLPass> = new Map()
   protected __passesRegistrationOrder: GLPass[] = []
   protected __passCallbacks: any[] = []
 
@@ -186,12 +193,14 @@ class GLBaseRenderer extends ParameterOwner {
     // ////////////////////////////////////////////
     // WebXR
     this.__supportXR = options.supportXR ?? true
+    const xrMode = options.xrMode ?? 'VR' // TBR:AR
     this.__xrViewportPromise = new Promise((resolve, reject) => {
       if (this.__supportXR) {
         // if(!navigator.xr && window.WebVRPolyfill != undefined) {
         //     this.__vrpolyfill = new WebVRPolyfill();
         // }
         if ((navigator as any)?.xr) {
+          const sessionMode = xrMode == 'AR' ? 'immersive-ar' : 'immersive-vr'
           const setupXRViewport = () => {
             // Note: could cause a context loss on machines with
             // multi-gpus (integrated Intel).
@@ -200,14 +209,14 @@ class GLBaseRenderer extends ParameterOwner {
             // TODO: Provide a system to re-load the GPU data.
             // this.__gl.setCompatibleXRDevice(device);
             this.__gl.makeXRCompatible().then(() => {
-              this.__xrViewport = this.__setupXRViewport()
+              this.__xrViewport = this.__setupXRViewport(sessionMode)
               let event = new XrViewportEvent(this.__xrViewport)
               this.emit('xrViewportSetup', event)
               resolve(this.__xrViewport)
             })
           }
           ;(navigator as any)?.xr
-            .isSessionSupported('immersive-vr')
+            .isSessionSupported(sessionMode)
             .then((isSupported: boolean) => {
               if (isSupported) {
                 setupXRViewport()
@@ -413,9 +422,7 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
-    const id = treeItem.getId()
     const listenerIDs = {}
-    this.listenerIDs[id] = listenerIDs
 
     if (treeItem instanceof GeomItem) {
       const geomParam = treeItem.geomParam
@@ -445,6 +452,7 @@ class GLBaseRenderer extends ParameterOwner {
       this.removeTreeItem(event.childItem)
     })
 
+    this.listenerIDs.set(treeItem, listenerIDs)
     this.renderGeomDataFbos()
   }
 
@@ -468,7 +476,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
       handled = pass.itemAddedToScene(treeItem, rargs)
       if (handled) {
-        this.passAssignments[treeItem.getId()] = i
+        this.passAssignments.set(treeItem, pass)
         if (!rargs.continueInSubTree) return
         break
       }
@@ -497,21 +505,19 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
-    const id = treeItem.getId()
-    const listenerIDs = this.listenerIDs[id]
-    delete this.listenerIDs[id]
+    const listenerIDs = this.listenerIDs.get(treeItem)
+    this.listenerIDs.delete(treeItem)
 
     treeItem.removeListenerById('childAdded', listenerIDs['childAdded'])
     treeItem.removeListenerById('childRemoved', listenerIDs['childRemoved'])
 
-    const passId = this.passAssignments[id]
-    if (passId != undefined) {
-      const pass = this.getPass(passId)
+    const pass = this.passAssignments.get(treeItem)
+    if (pass != undefined) {
       const rargs = {
         continueInSubTree: true,
       }
       pass.itemRemovedFromScene(treeItem, rargs)
-      delete this.passAssignments[id]
+      this.passAssignments.delete(treeItem)
     }
 
     // Traverse the tree adding items till we hit the leaves (which are usually GeomItems).
@@ -623,6 +629,8 @@ class GLBaseRenderer extends ParameterOwner {
     // Now scrollbars can appear causing the content size to change,
     // causing an infinite loop of resizing.
     this.__glcanvas.parentElement.style.overflow = 'hidden'
+    this.__glcanvas.style.width = '100%'
+    this.__glcanvas.style.height = '100%'
     this.__glcanvas.style.position = 'absolute'
 
     // Rapid resizing of the canvas would cause issues with WebGL.
@@ -1043,9 +1051,9 @@ class GLBaseRenderer extends ParameterOwner {
    * @return - The return value.
    * @private
    */
-  __setupXRViewport(): XRViewport {
+  __setupXRViewport(sessionMode: string): XRViewport {
     // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
-    const xrvp = new XRViewport(this)
+    const xrvp = sessionMode == 'immersive-ar' ? new ARViewport(this, sessionMode) : new VRViewport(this, sessionMode)
 
     const emitViewChanged = (event: ViewChangedEvent) => {
       this.emit('viewChanged', event)

@@ -14,9 +14,9 @@ describe('Lines', () => {
     lines.setNumVertices(numVertices)
 
     const positions = <Vec3Attribute>lines.getVertexAttribute('positions')
-    positions.getValueRef(0).set(1, 2, 3)
-    positions.getValueRef(1).set(-1, -2, -3)
-    positions.getValueRef(2).set(2, 1, -3)
+    positions.setValue(0, new Vec3(1, 2, 3))
+    positions.setValue(1, new Vec3(-1, -2, -3))
+    positions.setValue(2, new Vec3(2, 1, -3))
 
     lines.setNumSegments(2)
     lines.setSegmentVertexIndices(0, 0, 1)
@@ -72,9 +72,9 @@ describe('Lines', () => {
     lines.setNumVertices(numVertices)
 
     const positions = <Vec3Attribute>lines.getVertexAttribute('positions')
-    positions.getValueRef(0).set(1, 2, 3)
-    positions.getValueRef(1).set(-1, -2, -3)
-    positions.getValueRef(2).set(2, 1, -3)
+    positions.setValue(0, new Vec3(1, 2, 3))
+    positions.setValue(1, new Vec3(-1, -2, -3))
+    positions.setValue(2, new Vec3(2, 1, -3))
 
     lines.setNumSegments(2)
     lines.setSegmentVertexIndices(0, 0, 1)
@@ -87,9 +87,10 @@ describe('Lines', () => {
       attrBuffers: {
         positions: {
           count: 3,
-          dataType: 'Vec3',
+          dataType: 'Vec3f16',
+          dimension: 3,
           normalized: false,
-          values: new Float32Array([1, 2, 3, -1, -2, -3, 2, 1, -3]),
+          values: new Uint16Array([15360, 16384, 16896, 48128, 49152, 49664, 16384, 15360, 49664]),
         },
       },
       indices: new Uint8Array([0, 1, 1, 2]),
@@ -102,9 +103,9 @@ describe('Lines', () => {
     const numVertices = 3
     lines.setNumVertices(numVertices)
     const positions = <Vec3Attribute>lines.getVertexAttribute('positions')
-    positions.getValueRef(0).set(1, 2, 3)
-    positions.getValueRef(1).set(-1, -2, -3)
-    positions.getValueRef(2).set(2, 1, -3)
+    positions.setValue(0, new Vec3(1, 2, 3))
+    positions.setValue(1, new Vec3(-1, -2, -3))
+    positions.setValue(2, new Vec3(2, 1, -3))
 
     lines.setNumSegments(2)
     lines.setSegmentVertexIndices(0, 0, 1)

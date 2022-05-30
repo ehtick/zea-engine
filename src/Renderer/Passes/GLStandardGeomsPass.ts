@@ -10,8 +10,8 @@ import { OpacityStateChangedEvent } from '../../Utilities'
  * @extends GLPass
  */
 class GLStandardGeomsPass extends GLPass {
-  protected materials: Record<number, Material> = {}
-  protected listenerIDs: Record<number, Record<string, number>> = {}
+  protected materials: Map<GeomItem, Material> = new Map()
+  protected listenerIDs: Map<GeomItem, Record<string, number>> = new Map()
   /**
    * Create a GL pass.
    */
@@ -81,12 +81,21 @@ class GLStandardGeomsPass extends GLPass {
   }
 
   /**
+   * Checks the material to see if it is opaque.
+   * @param material - The geomItem value.
+   * @return - The return value.
+   */
+  checkMaterial(material: Material): boolean {
+    return true
+  }
+
+  /**
    * The addGeomItem method.
    * @param geomItem - The geomItem value.
    */
   addGeomItem(geomItem: GeomItem): void {
     const listenerIDs: Record<string, number> = {}
-    this.listenerIDs[geomItem.getId()] = listenerIDs
+    this.listenerIDs.set(geomItem, listenerIDs)
 
     // ////////////////////////////////////
     // Tracking Material Transparency changes...
@@ -106,7 +115,7 @@ class GLStandardGeomsPass extends GLPass {
       }
     }
     const material = geomItem.materialParam.value
-    this.materials[geomItem.getId()] = material
+    this.materials.set(geomItem, material)
     listenerIDs['geomItem.opacityChanged'] = geomItem.on('opacityChanged', opacityChanged)
     listenerIDs['material.opacityChanged'] = material.on('opacityChanged', opacityChanged)
   }
@@ -116,15 +125,14 @@ class GLStandardGeomsPass extends GLPass {
    * @param geomItem - The geomItem value.
    */
   removeGeomItem(geomItem: GeomItem): void {
-    const id = geomItem.getId()
-    const listenerIDs = this.listenerIDs[id]
-    delete this.listenerIDs[id]
+    const listenerIDs = this.listenerIDs.get(geomItem)
+    this.listenerIDs.delete(geomItem)
 
     geomItem.materialParam.removeListenerById('valueChanged', listenerIDs['materialParam.valueChanged'])
     geomItem.geomParam.removeListenerById('valueChanged', listenerIDs['geomParam.valueChanged'])
 
-    const material = this.materials[geomItem.getId()]
-    delete this.materials[id]
+    const material = this.materials.get(geomItem)
+    this.materials.delete(geomItem)
     geomItem.removeListenerById('opacityChanged', listenerIDs['geomItem.opacityChanged'])
     material.removeListenerById('opacityChanged', listenerIDs['material.opacityChanged'])
   }

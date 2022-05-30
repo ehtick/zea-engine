@@ -1,7 +1,6 @@
-import { Material } from '..'
 import { Box3 } from '../../Math/index'
 import { EventEmitter } from '../../Utilities/EventEmitter'
-import { MaterialLibrary } from '../MaterialLibrary'
+import { AttrBuffer, GeomBuffers } from '../types/scene'
 
 /** ProxyGeometries are pupulated from data unpacked using a webworker while loading zcad files.
  * These geometries represent readonly geometries with very basic topologies.
@@ -10,9 +9,9 @@ import { MaterialLibrary } from '../MaterialLibrary'
  */
 class BaseProxy extends EventEmitter {
   protected name: string
-  __buffers: any
+  protected __buffers: GeomBuffers
   protected boundingBox: Box3
-  protected __metaData: any
+  public numVertices: number = 0
 
   /**
    * Create a base proxy.
@@ -22,20 +21,16 @@ class BaseProxy extends EventEmitter {
     super()
     this.name = data.name
     this.__buffers = data.geomBuffers
-    if (this.__buffers.attrBuffers) {
-      // eslint-disable-next-line guard-for-in
-      // for (const attrName in this.__buffers.attrBuffers) {
-      //   const attrData = this.__buffers.attrBuffers[attrName]
-      //   const dataType = Registry.getBlueprint(attrData.dataType)
-      //   attrData.dataType = dataType
-      // }
-    }
 
     this.boundingBox = new Box3()
     this.boundingBox.p0.__data = data.bbox.p0.__data
     this.boundingBox.p1.__data = data.bbox.p1.__data
 
-    this.__metaData = new Map()
+    this.numVertices = this.__buffers.numVertices
+  }
+
+  get positions(): AttrBuffer {
+    return this.__buffers.attrBuffers['positions']
   }
 
   /**
@@ -44,7 +39,7 @@ class BaseProxy extends EventEmitter {
    * @return - The return value.
    */
   getNumVertices(): number {
-    return <number>this.__buffers.numVertices // TODO: check cast
+    return this.numVertices
   }
 
   /**
@@ -59,7 +54,7 @@ class BaseProxy extends EventEmitter {
    * The genBuffers method.
    * @return - The return value.
    */
-  genBuffers(): any {
+  genBuffers(): GeomBuffers {
     return this.__buffers
   }
 
@@ -97,12 +92,14 @@ class PointsProxy extends BaseProxy {
  * @private
  */
 class LinesProxy extends BaseProxy {
+  public numLineSegments: number = 0
   /**
    * Create a lines proxy.
    * @param data - The data value.
    */
   constructor(data: any) {
     super(data)
+    this.numLineSegments = this.__buffers.indices.length / 2
   }
 
   /**
@@ -111,7 +108,7 @@ class LinesProxy extends BaseProxy {
    * @return - The return value.
    */
   getNumLineSegments(): number {
-    return this.__buffers.indices.length / 2
+    return this.numLineSegments
   }
 }
 
@@ -120,12 +117,14 @@ class LinesProxy extends BaseProxy {
  * @private
  */
 class MeshProxy extends BaseProxy {
+  public numTriangles: number = 0
   /**
    * Create a mesh proxy.
    * @param data - The data value.
    */
   constructor(data: any) {
     super(data)
+    this.numTriangles = this.__buffers.indices.length / 3
   }
 
   /**
@@ -134,7 +133,7 @@ class MeshProxy extends BaseProxy {
    * @return - The return value.
    */
   getNumTriangles(): number {
-    return this.__buffers.indices.length / 3
+    return this.numTriangles
   }
 }
 

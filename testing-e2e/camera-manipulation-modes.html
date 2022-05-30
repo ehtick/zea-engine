@@ -67,9 +67,9 @@
         mesh.setFaceCounts([1])
         mesh.setFaceVertexIndices(0, [0, 1, 2])
         const positions = mesh.getVertexAttribute('positions')
-        positions.getValueRef(0).set(0.5, 0.0, 0.0)
-        positions.getValueRef(1).set(0.0, 0.5, 0.0)
-        positions.getValueRef(2).set(-0.5, 0.0, 0.0)
+        positions.setValue(0, new Vec3(0.5, 0.0, 0.0))
+        positions.setValue(1, new Vec3(0.0, 0.5, 0.0))
+        positions.setValue(2, new Vec3(-0.5, 0.0, 0.0))
         return mesh
       }
 
