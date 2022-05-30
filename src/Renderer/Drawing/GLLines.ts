@@ -207,7 +207,7 @@ class GLLines extends GLGeom {
       // eslint-disable-next-line guard-for-in
       for (const attrName in geomBuffers.attrBuffers) {
         const attrData = geomBuffers.attrBuffers[attrName]
-        const attrDesc = genDataTypeDesc(gl, attrName, attrData)
+        const attrDesc = genDataTypeDesc(gl, attrData.dataType)
         if (!this.__glattrbuffers[attrName]) {
           const attrBuffer = gl.createBuffer()
           gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer)

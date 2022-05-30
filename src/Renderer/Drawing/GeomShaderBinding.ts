@@ -3,6 +3,7 @@
 import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { MathFunctions } from '../../Utilities/MathFunctions'
+import { GLAttrBuffer } from '../types/renderer'
 
 const convertBuffer = (
   gl: WebGL12RenderingContext,
@@ -71,125 +72,88 @@ const convertBuffer = (
  *
  * @return
  */
-const genDataTypeDesc = (gl: WebGL12RenderingContext, name: string, attrData: any) => {
-  let dimension
-  let elementSize
-  let dataType
-  let normalized = attrData.normalized
+const genDataTypeDesc = (gl: WebGL12RenderingContext, name: string) => {
+  let dimension: number
+  let elementSize: number
+  let dataType: number
   // console.log('genDataTypeDesc:', name, attrData.dataType)
   switch (name) {
-    case 'positions':
-    case 'positionsNext':
-      dimension = 3
-      elementSize = 2
-      dataType = gl.HALF_FLOAT
-      normalized = false
+    case 'UInt8':
+      dimension = 1
+      elementSize = 4
+      dataType = gl.UNSIGNED_BYTE
       break
-    case 'normals':
-      dimension = 3
+    case 'SInt8':
+      dimension = 1
       elementSize = 1
       dataType = gl.BYTE
-      normalized = false
       break
-    case 'texCoords':
+    case 'UInt16':
+      dimension = 1
+      elementSize = 2
+      dataType = gl.UNSIGNED_SHORT
+      break
+    case 'SInt16':
+      dimension = 1
+      elementSize = 2
+      dataType = gl.SHORT
+      break
+    case 'UInt32':
+      dimension = 1
+      elementSize = 4
+      dataType = gl.UNSIGNED_INT
+      break
+    case 'SInt32':
+      dimension = 1
+      elementSize = 4
+      dataType = gl.INT
+      break
+    case 'Float32':
+      dimension = 1
+      elementSize = 4
+      dataType = gl.FLOAT
+      break
+    case 'Vec2f8':
+      dimension = 2
+      elementSize = 1
+      dataType = gl.BYTE
+      break
+    case 'Vec2f16':
       dimension = 2
       elementSize = 2
       dataType = gl.HALF_FLOAT
-      normalized = false
       break
-    case 'vertexColors':
+    case 'Vec2':
+      dimension = 2
+      elementSize = 4
+      dataType = gl.FLOAT
+      break
+    case 'Vec3f8':
+      dimension = 3
+      elementSize = 1
+      dataType = gl.BYTE
+      break
+    case 'Vec3f16':
+      dimension = 3
+      elementSize = 2
+      dataType = gl.HALF_FLOAT
+      break
+    case 'Vec3':
+      dimension = 3
+      elementSize = 4
+      dataType = gl.FLOAT
+      break
+    case 'Vec4':
+    case 'Color':
+      dimension = 4
+      elementSize = 4
+      dataType = gl.FLOAT
+      break
+    case 'RGBA':
       dimension = 4
       elementSize = 1
       dataType = gl.UNSIGNED_BYTE
-      normalized = false
       break
-    default:
-      switch (attrData.dataType) {
-        case 'UInt8':
-          dimension = 1
-          elementSize = 4
-          dataType = gl.UNSIGNED_BYTE
-          break
-        case 'SInt8':
-          dimension = 1
-          elementSize = 1
-          dataType = gl.BYTE
-          break
-        case 'UInt16':
-          dimension = 1
-          elementSize = 2
-          dataType = gl.UNSIGNED_SHORT
-          break
-        case 'SInt16':
-          dimension = 1
-          elementSize = 2
-          dataType = gl.SHORT
-          break
-        case 'UInt32':
-          dimension = 1
-          elementSize = 4
-          dataType = gl.UNSIGNED_INT
-          break
-        case 'SInt32':
-          dimension = 1
-          elementSize = 4
-          dataType = gl.INT
-          break
-        case 'Float32':
-          dimension = 1
-          elementSize = 4
-          dataType = gl.FLOAT
-          break
-        case 'Vec2':
-          dimension = 2
-          elementSize = 4
-          dataType = gl.FLOAT
-          break
-        case 'Vec3':
-          dimension = 3
-          elementSize = 4
-          dataType = gl.FLOAT
-          break
-        case 'Vec4':
-        case 'Color':
-          dimension = 4
-          elementSize = 4
-          dataType = gl.FLOAT
-          break
-        case 'RGBA':
-          dimension = 4
-          elementSize = 1
-          dataType = gl.UNSIGNED_BYTE
-          break
-        case gl.BYTE:
-          dimension = attrData.dimension
-          elementSize = attrData.elementSize
-          dataType = gl.BYTE
-          break
-        case gl.UNSIGNED_BYTE:
-          dimension = attrData.dimension
-          elementSize = attrData.elementSize
-          dataType = gl.UNSIGNED_BYTE
-          break
-        case gl.UNSIGNED_SHORT:
-          dimension = attrData.dimension
-          elementSize = attrData.elementSize
-          dataType = gl.UNSIGNED_SHORT
-          break
-        case gl.UNSIGNED_INT:
-          dimension = attrData.dimension
-          elementSize = attrData.elementSize
-          dataType = gl.UNSIGNED_INT
-          break
-        case gl.FLOAT:
-          dimension = attrData.dimension
-          elementSize = attrData.elementSize
-          dataType = gl.FLOAT
-          break
-
-        default:
-          throw 'Unhandled Type'
-      }
   }
 
   return {
@@ -197,7 +161,6 @@ const genDataTypeDesc = (gl: WebGL12RenderingContext, name: string, attrData: an
     dimension,
     elementSize,
     dataType,
-    normalized,
   }
 }
 abstract class IGeomShaderBinding {
@@ -224,7 +187,7 @@ class GeomShaderBinding extends IGeomShaderBinding {
   constructor(
     gl: WebGL12RenderingContext,
     shaderAttrs: Record<string, any>,
-    geomAttrBuffers: Record<string, any>,
+    geomAttrBuffers: Record<string, GLAttrBuffer>,
     indexBuffer: WebGLBuffer | null
   ) {
     super()
@@ -253,25 +216,17 @@ class GeomShaderBinding extends IGeomShaderBinding {
         continue
       }
 
-      const geomAttrDesc = genDataTypeDesc(this.gl, attrName, geomAttrBuffer)
-
-      const stride = geomAttrDesc.dimension * geomAttrDesc.elementSize
+      const dimension = geomAttrBuffer.dimension
+      const dataType = geomAttrBuffer.dataType
+      const normalized = geomAttrBuffer.normalized
+      const stride = dimension * geomAttrBuffer.elementSize
       const offset =
-        geomAttrBuffer.offset != undefined
-          ? geomAttrBuffer.offset * geomAttrDesc.dimension * geomAttrDesc.elementSize
-          : 0
+        geomAttrBuffer.offset != undefined ? geomAttrBuffer.offset * dimension * geomAttrBuffer.elementSize : 0
       const instanced = shaderAttrDesc.instanced
 
       gl.enableVertexAttribArray(location)
       gl.bindBuffer(gl.ARRAY_BUFFER, geomAttrBuffer.buffer)
-      gl.vertexAttribPointer(
-        location,
-        geomAttrDesc.dimension,
-        geomAttrDesc.dataType,
-        geomAttrDesc.normalized,
-        stride,
-        offset
-      )
+      gl.vertexAttribPointer(location, dimension, dataType, normalized, stride, offset)
 
       if (gl.vertexAttribDivisor) {
         if (instanced == true) {
@@ -333,7 +288,7 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
   constructor(
     gl: WebGL12RenderingContext,
     shaderAttrs: Record<string, any>,
-    geomAttrBuffers: Record<string, any>,
+    geomAttrBuffers: Record<string, GLAttrBuffer>,
     indexBuffer: WebGLBuffer | null
   ) {
     super()
@@ -361,19 +316,20 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
         }
       }
 
-      const geomAttrDesc = genDataTypeDesc(gl, attrName, geomAttrBuffer)
-
-      const stride = geomAttrDesc.dimension * geomAttrDesc.elementSize
+      const dimension = geomAttrBuffer.dimension
+      const dataType = geomAttrBuffer.dataType
+      const normalized = geomAttrBuffer.normalized == true
+      const stride = geomAttrBuffer.dimension * geomAttrBuffer.elementSize
       const offset =
         shaderAttrDesc.offset != undefined
-          ? shaderAttrDesc.offset * geomAttrDesc.dimension * geomAttrDesc.elementSize
+          ? shaderAttrDesc.offset * geomAttrBuffer.dimension * geomAttrBuffer.elementSize
           : 0
-      const normalized = geomAttrBuffer.normalized == true
+
       const instanced = shaderAttrDesc.instanced
 
       gl.enableVertexAttribArray(location)
       gl.bindBuffer(gl.ARRAY_BUFFER, geomAttrBuffer.buffer)
-      gl.vertexAttribPointer(location, geomAttrDesc.dimension, geomAttrDesc.dataType, normalized, stride, offset)
+      gl.vertexAttribPointer(location, dimension, dataType, normalized, stride, offset)
 
       if (gl.vertexAttribDivisor) {
         if (instanced == true) {
@@ -430,7 +386,7 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
 function generateShaderGeomBinding(
   gl: WebGL12RenderingContext,
   shaderAttrs: Record<string, any>,
-  geomAttrBuffers: Record<string, any>,
+  geomAttrBuffers: Record<string, GLAttrBuffer>,
   indexBuffer: WebGLBuffer | null
 ): IGeomShaderBinding {
   if (gl.createVertexArray == null) {

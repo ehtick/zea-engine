@@ -281,7 +281,7 @@ class GLGeomLibrary extends EventEmitter {
     for (const attrName in geomBuffers.attrBuffers) {
       if (!this.shaderAttrSpec[attrName]) {
         const attrData = geomBuffers.attrBuffers[attrName]
-        const geomAttrDesc: Record<string, any> = genDataTypeDesc(this.__gl, attrName, attrData)
+        const geomAttrDesc: Record<string, any> = genDataTypeDesc(this.__gl, attrData.dataType)
 
         this.shaderAttrSpec[attrName] = {
           name: attrName,
