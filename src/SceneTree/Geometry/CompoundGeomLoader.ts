@@ -76,9 +76,9 @@ class CompoundGeomLoader extends BaseGeom {
     this.counts['POINTS'] = geomCountsByType[2]
 
     const bytes = reader.loadUInt8()
-    if (bytes == 1) this.indices = reader.loadUInt8Array(undefined, true)
-    else if (bytes == 2) this.indices = reader.loadUInt16Array(undefined, true)
-    else if (bytes == 4) this.indices = reader.loadUInt32Array(undefined, true)
+    if (bytes == 1) this.indices = reader.loadUInt8Array(undefined, false)
+    else if (bytes == 2) this.indices = reader.loadUInt16Array(undefined, false)
+    else if (bytes == 4) this.indices = reader.loadUInt32Array(undefined, false)
 
     // /////////////////////////////////
     // TRIANGLES subgeoms

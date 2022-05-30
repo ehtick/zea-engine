@@ -6,6 +6,13 @@ import { MathFunctions } from '../../Utilities'
  * Class representing an attribute.
  */
 class Vec2f16Attribute extends Vec2Attribute {
+  /**
+   * Create a Vec3f8Attribute.
+   */
+  constructor() {
+    super('Vec2f16')
+  }
+
   protected init() {
     this.data = new Uint16Array(0)
     this.initRange(0)

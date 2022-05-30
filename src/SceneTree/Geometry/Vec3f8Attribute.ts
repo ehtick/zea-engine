@@ -11,20 +11,20 @@ class Vec3f8Attribute extends Vec3Attribute {
    * Create a Vec3f8Attribute.
    */
   constructor(valueRange: number[] = [-1, 1]) {
-    super()
+    super('Vec3f8')
     this.valueRange = valueRange
   }
 
   protected init() {
-    this.data = new Uint8Array(0)
+    this.data = new Int8Array(0)
     this.initRange(0)
   }
 
   private mapIn(invalue: number): number {
-    return MathFunctions.remap(invalue, this.valueRange[0], this.valueRange[1], 0, 255)
+    return MathFunctions.remap(invalue, this.valueRange[0], this.valueRange[1], -127, 127)
   }
   private mapOut(invalue: number): number {
-    return MathFunctions.remap(invalue, 0, 255, this.valueRange[0], this.valueRange[1])
+    return MathFunctions.remap(invalue, -127, 127, this.valueRange[0], this.valueRange[1])
   }
 
   /**
@@ -46,16 +46,16 @@ class Vec3f8Attribute extends Vec3Attribute {
     const vec3 = new Vec3()
 
     Object.defineProperty(vec3, 'x', {
-      get: () => valueData[0] / 255,
-      set: (value) => (valueData[0] = value * 255),
+      get: () => this.mapOut(valueData[0]),
+      set: (value) => (valueData[0] = this.mapIn(value)),
     })
     Object.defineProperty(vec3, 'y', {
-      get: () => valueData[1] / 255,
-      set: (value) => (valueData[1] = value * 255),
+      get: () => this.mapOut(valueData[1]),
+      set: (value) => (valueData[1] = this.mapIn(value)),
     })
     Object.defineProperty(vec3, 'z', {
-      get: () => valueData[2] / 255,
-      set: (value) => (valueData[2] = value * 255),
+      get: () => this.mapOut(valueData[2]),
+      set: (value) => (valueData[2] = this.mapIn(value)),
     })
     // @ts-ignore
     vec3.set = (x: number, y: number, z: number): void => {
@@ -150,11 +150,36 @@ class Vec3f8Attribute extends Vec3Attribute {
    * @param value - The value value.
    */
   setFaceVertexValue(face: number, faceVertex: number, value: Vec3): void {
-    const valueData = new Uint8Array(3)
+    const valueData = new Int8Array(3)
     valueData[0] = this.mapIn(value.x)
     valueData[1] = this.mapIn(value.y)
     valueData[2] = this.mapIn(value.z)
     this.setFaceVertexValue_array(face, faceVertex, valueData)
+  }
+
+  /**
+   * The setSplitVertexValues method.
+   * @param vertex - The vertex value.
+   * @param faceGroup - The faceGroup value.
+   * @param value - The value value.
+   */
+  setSplitVertexValues(vertex: number, faceGroup: number[], value: Vec3): void {
+    if (!(vertex in this.splits)) this.splits[vertex] = {}
+    const splitIndex = this.splitValues.length
+    const valueData = new Int8Array(3)
+    valueData[0] = this.mapIn(value.x)
+    valueData[1] = this.mapIn(value.y)
+    valueData[2] = this.mapIn(value.z)
+    this.splitValues.push(valueData)
+    for (const face of faceGroup) {
+      // if (face in this.splits[vertex]) {
+      //     let currValue = this.splitValues[this.splits[vertex][face]];
+      //     if (currValue.approxEqual(value))
+      //         return;
+      //     console.warn("Face Vertex Already Split with different value");
+      // }
+      this.splits[vertex][face] = splitIndex
+    }
   }
 }
 

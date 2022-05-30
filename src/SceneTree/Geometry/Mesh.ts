@@ -7,6 +7,7 @@ import { Attribute } from './Attribute'
 
 import { Registry } from '../../Registry'
 import { Vec3Attribute } from './Vec3Attribute'
+import { Vec3f8Attribute } from './Vec3f8Attribute'
 import { BinReader } from '../BinReader'
 import { AttrBuffer } from '../../Renderer/types/renderer'
 
@@ -441,7 +442,7 @@ class Mesh extends BaseGeom {
    */
   computeFaceNormals(): void {
     const positions = this.positions
-    const faceNormals = new Vec3Attribute()
+    const faceNormals = new Vec3f8Attribute()
     this.addFaceAttribute('normals', faceNormals)
     const numFaces = this.getNumFaces()
     for (let faceIndex = 0; faceIndex < numFaces; faceIndex++) {
@@ -509,7 +510,7 @@ class Mesh extends BaseGeom {
     this.calculateEdgeAngles()
 
     const faceNormals = this.getFaceAttribute('normals') as Vec3Attribute
-    const normalsAttr = new Vec3Attribute()
+    const normalsAttr = new Vec3f8Attribute()
     this.addVertexAttribute('normals', normalsAttr)
 
     // these methods are faster versions than using the methods
@@ -610,7 +611,7 @@ class Mesh extends BaseGeom {
           setVertexNormal(i, normal)
           firstVertex = false
         } else {
-          normalsAttr.setSplitVertexValues(i, faceGroup, normal.asArray())
+          normalsAttr.setSplitVertexValues(i, faceGroup, normal)
         }
       }
     }
@@ -684,7 +685,7 @@ class Mesh extends BaseGeom {
     // if (debugAttrValues)
     //     maxIndex = Math.max(...indices);
 
-    const attrBuffers: Record<string, AttrBuffer> = {}
+    const attrBuffers: Record<string, any> = {}
     for (const [attrName, attr] of this.__vertexAttributes) {
       let values
       if (splitCount == 0) values = attr.asArray()

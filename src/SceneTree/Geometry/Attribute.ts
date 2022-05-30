@@ -5,19 +5,28 @@ import { BaseClass } from '../../Utilities/BaseClass'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { Mesh } from './Mesh'
 import { BinReader } from '../../SceneTree/BinReader'
+import { Vec3 } from '../../Math'
+import { AttrBuffer } from '../../Renderer/types/renderer'
 
-function approxEqual(a: Uint8Array | Uint16Array | Float32Array, b: Uint8Array | Uint16Array | Float32Array): boolean {
+function approxEqual(
+  a: Uint8Array | Int8Array | Uint16Array | Float32Array,
+  b: Uint8Array | Int8Array | Uint16Array | Float32Array
+): boolean {
   return !a.some((value, index) => Math.abs(b[index] - value) > 0.001)
 }
-function isInitialized(a: Uint8Array | Uint16Array | Float32Array) {
+function isInitialized(a: Uint8Array | Int8Array | Uint16Array | Float32Array) {
   for (let i = 0; i < a.length; i++) {
     if (!Number.isNaN(a[i])) return true
   }
   return false
 }
-const resizeArray = (inArray: Uint8Array | Uint16Array | Float32Array, newSize: number) => {
+const resizeArray = (inArray: Uint8Array | Int8Array | Uint16Array | Float32Array, newSize: number) => {
   if (inArray instanceof Uint8Array) {
     const newArray = new Uint8Array(newSize)
+    newArray.set(inArray)
+    return newArray
+  } else if (inArray instanceof Int8Array) {
+    const newArray = new Int8Array(newSize)
     newArray.set(inArray)
     return newArray
   } else if (inArray instanceof Uint16Array) {
@@ -35,10 +44,10 @@ class Attribute extends BaseClass {
   public dataTypeName: string
   public stride: number
   protected normalized!: boolean
-  protected data: Uint8Array | Uint16Array | Float32Array
+  protected data: Uint8Array | Int8Array | Uint16Array | Float32Array
 
   protected mesh!: Mesh
-  protected splitValues: Array<Uint8Array | Uint16Array | Float32Array> = []
+  protected splitValues: Array<Uint8Array | Int8Array | Uint16Array | Float32Array> = []
   protected splits: Record<number, Record<number, number>> = {}
 
   constructor(dataTypeName: string, stride: number) {
@@ -69,7 +78,7 @@ class Attribute extends BaseClass {
    *
    * @return - The return value.
    */
-  asArray(): Uint8Array | Uint16Array | Float32Array {
+  asArray(): Uint8Array | Int8Array | Uint16Array | Float32Array {
     return this.data
   }
 
@@ -171,7 +180,7 @@ class Attribute extends BaseClass {
    * @param faceVertex - The index of vertex within the face. [0... num face vertices]
    * @return - The return value.
    */
-  getFaceVertexValueRef_array(face: number, faceVertex: number): Uint8Array | Uint16Array | Float32Array {
+  getFaceVertexValueRef_array(face: number, faceVertex: number): Uint8Array | Int8Array | Uint16Array | Float32Array {
     const vertex = this.mesh.getFaceVertexIndex(face, faceVertex)
     if (vertex in this.splits && face in this.splits[vertex]) {
       return this.splitValues[this.splits[vertex][face]]
@@ -185,7 +194,11 @@ class Attribute extends BaseClass {
    * @param faceVertex - The index of vertex within the face. [0... num face vertices]
    * @param value - The value value.
    */
-  setFaceVertexValue_array(face: number, faceVertex: number, value: Uint8Array | Uint16Array | Float32Array): void {
+  setFaceVertexValue_array(
+    face: number,
+    faceVertex: number,
+    value: Uint8Array | Int8Array | Uint16Array | Float32Array
+  ): void {
     const vertex = this.mesh.getFaceVertexIndex(face, faceVertex)
     this.setFaceVertexValue_ByVertexIndex(face, vertex, value)
   }
@@ -196,7 +209,11 @@ class Attribute extends BaseClass {
    * @param vertex - The vertex value.
    * @param value - The value value.
    */
-  setFaceVertexValue_ByVertexIndex(face: number, vertex: number, value: Uint8Array | Uint16Array | Float32Array): void {
+  setFaceVertexValue_ByVertexIndex(
+    face: number,
+    vertex: number,
+    value: Uint8Array | Int8Array | Uint16Array | Float32Array
+  ): void {
     const currValue = this.data.subarray(vertex * this.stride, (vertex + 1) * this.stride)
     if (!isInitialized(currValue)) {
       // the value is uninitialized. Initialize it.
@@ -240,7 +257,11 @@ class Attribute extends BaseClass {
    * @param face - The face index.
    * @param value - The value value.
    */
-  setSplitVertexValue_array(vertex: number, face: number, value: Uint8Array | Uint16Array | Float32Array): void {
+  setSplitVertexValue_array(
+    vertex: number,
+    face: number,
+    value: Uint8Array | Int8Array | Uint16Array | Float32Array
+  ): void {
     if (!(vertex in this.splits)) this.splits[vertex] = {}
     if (face in this.splits[vertex]) {
       const currValue = this.splitValues[this.splits[vertex][face]]
@@ -257,10 +278,10 @@ class Attribute extends BaseClass {
    * @param faceGroup - The faceGroup value.
    * @param value - The value value.
    */
-  setSplitVertexValues(vertex: number, faceGroup: number[], value: Uint8Array | Uint16Array | Float32Array): void {
+  setSplitVertexValues(vertex: number, faceGroup: number[], value: Vec3): void {
     if (!(vertex in this.splits)) this.splits[vertex] = {}
     const splitIndex = this.splitValues.length
-    this.splitValues.push(value)
+    this.splitValues.push(value.asArray())
     for (const face of faceGroup) {
       // if (face in this.splits[vertex]) {
       //     let currValue = this.splitValues[this.splits[vertex][face]];
@@ -281,7 +302,7 @@ class Attribute extends BaseClass {
   generateSplitValues(
     splitIndices: Record<number, Record<number, number>>,
     splitCount: number
-  ): Uint8Array | Uint16Array | Float32Array {
+  ): Uint8Array | Int8Array | Uint16Array | Float32Array {
     if (splitCount == 0) return this.data
 
     const numUnSplitValues = this.getCount()
@@ -392,10 +413,11 @@ class Attribute extends BaseClass {
    *
    * @return - The return value.
    */
-  genBuffer(): Record<string, any> {
+  genBuffer(): any {
     return {
       values: this.data,
       count: this.getCount(),
+      dimension: this.stride,
       dataType: this.dataTypeName,
       normalized: this.normalized,
     }

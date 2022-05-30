@@ -16,23 +16,19 @@ const convertBuffer = (
     | Uint32Array
     | Float32Array,
   attrDesc: any
-): Uint8Array | Uint16Array | Int16Array | Float32Array => {
+): Uint8Array | Int8Array | Uint16Array | Int16Array | Float32Array => {
   // console.log('convertBuffer:', attrDesc.name, srcData)
   switch (attrDesc.dataType) {
     case gl.BYTE:
+      if (srcData instanceof Int8Array) return srcData
+      const tgt = new Int8Array(srcData.length)
+      // https://www.khronos.org/opengl/wiki/Vertex_Specification#Component_type
+      srcData.forEach((value, i) => (tgt[i] = MathFunctions.remap(value, -1, 1, -127, 127)))
+      return tgt
     case gl.UNSIGNED_BYTE: {
       if (srcData instanceof Uint8Array) return srcData
       const tgt = new Uint8Array(srcData.length)
-      // https://www.khronos.org/opengl/wiki/Vertex_Specification#Component_type
-      if (attrDesc.name == 'normals') {
-        // We assume the input values are normalized
-        // so we scale by 255. In the shader, normalized integers wil
-        // be scaled back to 0..1 by dividing by 255
-        // convert the values that are in the ra
-        srcData.forEach((value, i) => (tgt[i] = MathFunctions.remap(value, -1, 1, 0, 255)))
-      } else {
-        srcData.forEach((value, i) => (tgt[i] = MathFunctions.remap(value, 0, 1, 0, 255)))
-      }
+      srcData.forEach((value, i) => (tgt[i] = MathFunctions.remap(value, 0, 1, 0, 255)))
       return tgt
     }
     case gl.UNSIGNED_SHORT: {
@@ -92,7 +88,7 @@ const genDataTypeDesc = (gl: WebGL12RenderingContext, name: string, attrData: an
     case 'normals':
       dimension = 3
       elementSize = 1
-      dataType = gl.UNSIGNED_BYTE
+      dataType = gl.BYTE
       normalized = false
       break
     case 'texCoords':

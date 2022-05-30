@@ -275,7 +275,7 @@ describe('Mesh', () => {
       attrBuffers: {
         positions: {
           count: 3,
-          dataType: 'Vec3',
+          dataType: 'Vec3f16',
           dimension: 3,
           normalized: false,
           values: new Uint16Array([15360, 16384, 16896, 48128, 49152, 49664, 16384, 15360, 49664]),

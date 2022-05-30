@@ -6,6 +6,13 @@ import { MathFunctions } from '../../Utilities'
  * Class representing an attribute.
  */
 class Vec3f16Attribute extends Vec3Attribute {
+  /**
+   * Create a Vec3f8Attribute.
+   */
+  constructor() {
+    super('Vec3f16')
+  }
+
   protected init() {
     this.data = new Uint16Array(0)
     this.initRange(0)
@@ -147,6 +154,31 @@ class Vec3f16Attribute extends Vec3Attribute {
     valueData[1] = MathFunctions.encode16BitFloat(value.y)
     valueData[2] = MathFunctions.encode16BitFloat(value.z)
     this.setFaceVertexValue_array(face, faceVertex, valueData)
+  }
+
+  /**
+   * The setSplitVertexValues method.
+   * @param vertex - The vertex value.
+   * @param faceGroup - The faceGroup value.
+   * @param value - The value value.
+   */
+  setSplitVertexValues(vertex: number, faceGroup: number[], value: Vec3): void {
+    if (!(vertex in this.splits)) this.splits[vertex] = {}
+    const splitIndex = this.splitValues.length
+    const valueData = new Uint16Array(3)
+    valueData[0] = MathFunctions.encode16BitFloat(value.x)
+    valueData[1] = MathFunctions.encode16BitFloat(value.y)
+    valueData[2] = MathFunctions.encode16BitFloat(value.z)
+    this.splitValues.push(valueData)
+    for (const face of faceGroup) {
+      // if (face in this.splits[vertex]) {
+      //     let currValue = this.splitValues[this.splits[vertex][face]];
+      //     if (currValue.approxEqual(value))
+      //         return;
+      //     console.warn("Face Vertex Already Split with different value");
+      // }
+      this.splits[vertex][face] = splitIndex
+    }
   }
 }
 
