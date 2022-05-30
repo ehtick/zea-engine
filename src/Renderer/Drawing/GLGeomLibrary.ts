@@ -77,6 +77,17 @@ class GLGeomLibrary extends EventEmitter {
     // //////////////////////////////////////
     // Indices
     this.indicesAllocator.on('resized', () => {
+      // 540M indices == 2Gb of indices, which is the maximum allows by WebGL.
+      // This is because WebGL may accept JS arrays which can contain floating point indices.
+      // After we have allocated More than 256 Mb of indices, we then force allocations to be limited
+      // to the exact allocated space.
+      if (Math.log2(this.indicesAllocator.reservedSpace) >= 29) {
+        if (Math.log2(this.indicesAllocator.allocatedSpace) >= 29) {
+          throw 'Indices buffer too big. WebGL cannot allocate index buffers more than 2Gb'
+        }
+        // console.log("this.indicesAllocator. capped to':", this.indicesAllocator.allocatedSpace + 1)
+        this.indicesAllocator.reservedSpace = (1 << 29) - 1
+      }
       this.indicesBufferNeedsRealloc = true
     })
     this.indicesAllocator.on('dataReallocated', (event: any) => {
@@ -86,11 +97,11 @@ class GLGeomLibrary extends EventEmitter {
       this.dirtyGeomIndices.add(id)
     })
 
-    // Allocate 128Mb of data to begin with. This avoids lots of small
+    // Allocate enough space for 1M verts to begin with. This avoids lots of small
     // copies when loading small files.
-    const size = Math.pow(2, 23)
+    const size = 2 << 19
     this.attributesAllocator.reservedSpace = size
-    this.indicesAllocator.reservedSpace = size * 4
+    this.indicesAllocator.reservedSpace = size
     this.attributesBufferNeedsRealloc = true
     this.indicesBufferNeedsRealloc = true
   }
@@ -466,10 +477,10 @@ class GLGeomLibrary extends EventEmitter {
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
     }
 
-    // if (this.freeDataAfterUpload) {
-    //   const geom = this.geoms[index]
-    //   geom.freeBuffers()
-    // }
+    if (this.freeDataAfterUpload) {
+      const geom = this.geoms[index]
+      geom.freeBuffers()
+    }
 
     this.emit('geomDataChanged', new IndexEvent(index))
   }
@@ -500,6 +511,8 @@ class GLGeomLibrary extends EventEmitter {
         this.genIndicesBuffers()
         this.indicesBufferNeedsRealloc = false
       }
+
+      console.log('GLGeomLibrary MemoryAllocation:', this.calcMemoryAllocation())
     } else if (this.attributesBufferNeedsAlloc.length > 0) {
       // Sometimes new attributes are added after the main attributes.
       // e.g. Normals could be computed.
@@ -515,6 +528,36 @@ class GLGeomLibrary extends EventEmitter {
     })
 
     this.dirtyGeomIndices = new Set()
+  }
+
+  calcMemoryAllocation() {
+    const summary = { attrs: {}, indices: {} }
+
+    const MB = 1 << 20
+
+    for (const attrName in this.shaderAttrSpec) {
+      const attrSpec = this.shaderAttrSpec[attrName]
+      const reservedSpace = this.attributesAllocator.reservedSpace
+      const allocatedSpace = this.attributesAllocator.allocatedSpace
+      const numValues = reservedSpace * attrSpec.dimension
+      const sizeInBytes = numValues * attrSpec.elementSize
+      summary.attrs[attrName] = {
+        count: allocatedSpace,
+        MB: sizeInBytes / MB,
+      }
+    }
+
+    const reservedSpace = this.indicesAllocator.reservedSpace
+    const allocatedSpace = this.indicesAllocator.allocatedSpace
+    const elementSize = 4 //  Uint32Array for UNSIGNED_INT
+    const sizeInBytes = reservedSpace * elementSize
+
+    summary.indices = {
+      count: allocatedSpace,
+      MB: sizeInBytes / MB,
+    }
+
+    return summary
   }
 
   // /////////////////////////////////////
