@@ -1,6 +1,7 @@
 import { BaseGeom } from './BaseGeom'
 import { BinReader } from '../BinReader'
 import { AssetLoadContext } from '../AssetLoadContext'
+import { GeomBuffers } from '../types/scene'
 
 interface SubGeom {
   materialId: number
@@ -32,7 +33,7 @@ class CompoundGeomLoader extends BaseGeom {
     super()
   }
 
-  genBuffers() {
+  genBuffers(): GeomBuffers {
     const attrBuffers: Record<string, any> = {}
     for (const [attrName, attr] of this.__vertexAttributes) {
       attrBuffers[attrName] = attr.genBuffer()

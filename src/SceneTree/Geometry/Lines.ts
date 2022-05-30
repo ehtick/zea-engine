@@ -3,6 +3,7 @@
 import { BaseGeom } from './BaseGeom'
 import { Registry } from '../../Registry'
 import { BinReader } from '../../SceneTree/BinReader'
+import { GeomBuffers } from '../types/scene'
 /**
  *
  * Class representing lines primitive drawing type, connecting vertices using the specified indices.
@@ -120,7 +121,7 @@ class Lines extends BaseGeom {
    *
    * @return - The return value.
    */
-  genBuffers(opts?: Record<string, any>): Record<string, any> {
+  genBuffers(opts?: Record<string, any>): GeomBuffers {
     const buffers = super.genBuffers()
 
     let indices

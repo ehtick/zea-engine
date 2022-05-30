@@ -9,7 +9,7 @@ import { Registry } from '../../Registry'
 import { Vec3Attribute } from './Vec3Attribute'
 import { Vec3f8Attribute } from './Vec3f8Attribute'
 import { BinReader } from '../BinReader'
-import { AttrBuffer } from '../../Renderer/types/renderer'
+import { GeomBuffers } from '../types/scene'
 
 /**
  * The Mesh class provides a flexible and fast polygon mesh representation. It supports polygons of arbitrary complexity,
@@ -648,7 +648,7 @@ class Mesh extends BaseGeom {
    * @param opts - The opts value.
    * @return - The return value.
    */
-  genBuffers(opts?: Record<string, any>): Record<string, any> {
+  genBuffers(opts?: Record<string, any>): GeomBuffers {
     // Compute the normals on demand.
     // if (!('normals' in this.__vertexAttributes)) {
     //     // this.__geom.computeVertexNormals();

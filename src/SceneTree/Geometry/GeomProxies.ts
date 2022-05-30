@@ -1,5 +1,6 @@
 import { Box3 } from '../../Math/index'
 import { EventEmitter } from '../../Utilities/EventEmitter'
+import { AttrBuffer, GeomBuffers } from '../types/scene'
 
 /** ProxyGeometries are pupulated from data unpacked using a webworker while loading zcad files.
  * These geometries represent readonly geometries with very basic topologies.
@@ -8,7 +9,7 @@ import { EventEmitter } from '../../Utilities/EventEmitter'
  */
 class BaseProxy extends EventEmitter {
   protected name: string
-  __buffers: any
+  protected __buffers: GeomBuffers
   protected boundingBox: Box3
   public numVertices: number = 0
 
@@ -28,7 +29,7 @@ class BaseProxy extends EventEmitter {
     this.numVertices = this.__buffers.numVertices
   }
 
-  get positions(): any {
+  get positions(): AttrBuffer {
     return this.__buffers.attrBuffers['positions']
   }
 
@@ -53,7 +54,7 @@ class BaseProxy extends EventEmitter {
    * The genBuffers method.
    * @return - The return value.
    */
-  genBuffers(): any {
+  genBuffers(): GeomBuffers {
     return this.__buffers
   }
 

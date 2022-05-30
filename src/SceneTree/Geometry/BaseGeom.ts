@@ -8,6 +8,7 @@ import { Vec3f16Attribute } from './Vec3f16Attribute'
 import { Vec2f16Attribute } from './Vec2f16Attribute'
 import { BinReader } from '../../SceneTree/BinReader'
 import { Vec3f8Attribute } from './Vec3f8Attribute'
+import { GeomBuffers } from '../types/scene'
 
 const parse8BitPositionsArray = (
   range: Array<number>,
@@ -308,7 +309,7 @@ class BaseGeom extends ParameterOwner {
    * Returns vertex attributes buffers and its count.
    * @return - The return value.
    */
-  genBuffers(opts?: Record<string, any>): Record<string, any> {
+  genBuffers(opts?: Record<string, any>): GeomBuffers {
     const attrBuffers: Record<string, any> = {}
     for (const [attrName, attr] of this.__vertexAttributes) {
       attrBuffers[attrName] = attr.genBuffer()

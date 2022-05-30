@@ -6,7 +6,7 @@ import { MathFunctions } from '../../Utilities/MathFunctions'
 import { Mesh } from './Mesh'
 import { BinReader } from '../../SceneTree/BinReader'
 import { Vec3 } from '../../Math'
-import { AttrBuffer } from '../../Renderer/types/renderer'
+import { AttrBuffer } from '../../SceneTree/types/scene'
 
 function approxEqual(
   a: Uint8Array | Int8Array | Uint16Array | Float32Array,
@@ -413,7 +413,7 @@ class Attribute extends BaseClass {
    *
    * @return - The return value.
    */
-  genBuffer(): any {
+  genBuffer(): AttrBuffer {
     return {
       values: this.data,
       count: this.getCount(),
