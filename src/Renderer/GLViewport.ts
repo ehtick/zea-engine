@@ -925,7 +925,7 @@ class GLViewport extends GLBaseViewport {
     if (this.debugGeomDataBuffer) {
       this.renderGeomDataFbo()
       // Note: renderGeomDataFbo would have bound other shaders.
-      // and the renderstate used above is no blonger valid. Reset.
+      // and the renderstate used above is no longer valid. Reset.
       const renderstate = new ColorRenderState(this.__renderer.gl)
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
@@ -940,6 +940,7 @@ class GLViewport extends GLBaseViewport {
       screenQuad.draw(renderstate, this.highlightedGeomsBuffer, new Vec2(0, 0), new Vec2(1, 1))
     }
     if (this.debugOcclusionBuffer) {
+      const renderstate = new ColorRenderState(this.__renderer.gl)
       // @ts-ignore
       const occlusionDataBuffer = this.__renderer.glGeomItemLibrary.occlusionDataBuffer
       const screenQuad = this.__renderer.screenQuad!

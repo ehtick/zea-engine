@@ -478,6 +478,11 @@ const handleMessage = (data, postMessage) => {
       }
       geomItemsData[index] = geomItemData
       checkGeomItem(geomItemsData[index])
+
+      // When this geom shows up in the occlusion buffer, it will be unculled.
+      if (!geomItemData.loaded) {
+        occluded[index] = true
+      }
     })
     inFrustumDrawIdsBufferPopulated = false
     onDoneFrustumCull(postMessage)

@@ -1062,6 +1062,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       })
     }
 
+    if (renderstate.occlusionCulling) return
+
     //  Note: lines in VR are not fattened...
     const enableLineFattening = true
     if (renderstate.geomDataFbo && enableLineFattening) {
@@ -1120,10 +1122,10 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         if (geomType) gl.uniform1i(geomType.location, GeomType.LINES)
 
         // When debugging the lines geomdata buffer, we can enable this line to make lines draw yellow.
-        // const { passId } = renderstate.unifs
-        // if (passId) {
-        //   gl.uniform1i(passId.location, 99)
-        // }
+        const { passId } = renderstate.unifs
+        if (passId) {
+          gl.uniform1i(passId.location, 99)
+        }
 
         this.multiDrawLines(renderstate, counts['LINES'], offsets['LINES'], allocators['LINES'].allocatedSpace)
       }
