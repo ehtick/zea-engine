@@ -3,7 +3,7 @@
 import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { MathFunctions } from '../../Utilities/MathFunctions'
-import { GLAttrBuffer } from '../types/renderer'
+import { GLAttrBuffer, GLAttrDesc } from '../types/renderer'
 
 const convertBuffer = (
   gl: WebGL12RenderingContext,
@@ -16,7 +16,7 @@ const convertBuffer = (
     | Int32Array
     | Uint32Array
     | Float32Array,
-  attrDesc: any
+  attrDesc: GLAttrDesc
 ): Uint8Array | Int8Array | Uint16Array | Int16Array | Float32Array => {
   // console.log('convertBuffer:', attrDesc.name, srcData)
   switch (attrDesc.dataType) {
@@ -72,11 +72,10 @@ const convertBuffer = (
  *
  * @return
  */
-const genDataTypeDesc = (gl: WebGL12RenderingContext, name: string) => {
-  let dimension: number
-  let elementSize: number
-  let dataType: number
-  // console.log('genDataTypeDesc:', name, attrData.dataType)
+const genDataTypeDesc = (gl: WebGL12RenderingContext, name: string): GLAttrDesc => {
+  let dimension
+  let elementSize
+  let dataType
   switch (name) {
     case 'UInt8':
       dimension = 1
@@ -154,8 +153,9 @@ const genDataTypeDesc = (gl: WebGL12RenderingContext, name: string) => {
       elementSize = 1
       dataType = gl.UNSIGNED_BYTE
       break
+    default:
+      throw 'Unhandled Type:' + name
   }
-
   return {
     name,
     dimension,
@@ -165,7 +165,7 @@ const genDataTypeDesc = (gl: WebGL12RenderingContext, name: string) => {
 }
 abstract class IGeomShaderBinding {
   abstract bind(renderstate: RenderState): void
-  abstract unbind(): void
+  abstract unbind(renderstate: RenderState): void
   abstract destroy(): void
 }
 
@@ -175,7 +175,7 @@ abstract class IGeomShaderBinding {
 class GeomShaderBinding extends IGeomShaderBinding {
   protected gl: WebGL12RenderingContext
   protected shaderAttrs: Record<string, any>
-  protected glattrbuffers: Record<string, any>
+  protected glattrbuffers: Record<string, GLAttrBuffer>
   protected indexBuffer: WebGLBuffer | null
   /**
    * Create a geom shader binding.
@@ -247,7 +247,7 @@ class GeomShaderBinding extends IGeomShaderBinding {
   /**
    * The unbind method.
    */
-  unbind(): void {
+  unbind(renderstate: RenderState): void {
     const gl = this.gl
     for (const attrName in this.shaderAttrs) {
       const shaderAttrDesc = this.shaderAttrs[attrName]
@@ -362,7 +362,7 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
   /**
    * The unbind method.
    */
-  unbind(): void {
+  unbind(renderstate: RenderState): void {
     const gl = this.gl
     gl.bindVertexArray(null)
     if (this.indexBuffer) gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)

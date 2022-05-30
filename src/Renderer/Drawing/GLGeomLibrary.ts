@@ -1,6 +1,6 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter, Allocator1D } from '../../Utilities/index'
-import { generateShaderGeomBinding, genDataTypeDesc, convertBuffer } from './GeomShaderBinding'
+import { generateShaderGeomBinding, genDataTypeDesc, convertBuffer, IGeomShaderBinding } from './GeomShaderBinding'
 import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom } from '../../SceneTree/index'
 import { GLPoints } from './GLPoints'
 import { GLLines } from './GLLines'
@@ -10,6 +10,8 @@ import { GLBaseRenderer } from '../GLBaseRenderer'
 import { IndexEvent } from '../../Utilities/Events/IndexEvent'
 import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
+import { GeomBuffers } from '../../SceneTree/types/scene'
+import { GLAttrBuffer, GLAttrDesc } from '../types/renderer'
 
 const resizeIntArray = (intArray: Int32Array, newSize: number) => {
   const newArray = new Int32Array(newSize)
@@ -23,15 +25,16 @@ const resizeIntArray = (intArray: Int32Array, newSize: number) => {
 class GLGeomLibrary extends EventEmitter {
   protected renderer: GLBaseRenderer
   protected __gl: WebGL12RenderingContext
-  protected shaderAttrSpec: Record<string, any> = {}
   protected freeGeomIndices: number[] = []
   protected geoms: Array<BaseGeom | null> = []
   protected geomRefCounts: number[] = []
   protected geomsDict: Map<EventEmitter, number> = new Map()
   protected glGeomsDict: Map<EventEmitter, GLGeom> = new Map()
-  protected geomBuffersTmp: any[] = [] // for each geom, these are the buffer
-  protected glattrbuffers: Record<string, any> = new Map()
-  protected shaderBindings: Record<string, any> = new Map()
+  protected geomBuffersTmp: GeomBuffers[] = [] // for each geom, these are the buffer
+
+  protected shaderAttrSpec: Record<string, GLAttrDesc> = {}
+  protected glattrbuffers: Record<string, GLAttrBuffer> = {}
+  protected shaderBindings: Record<string, IGeomShaderBinding> = {}
   protected attributesBufferNeedsRealloc: boolean = false
   protected attributesBufferNeedsAlloc: string[] = []
   protected attributesAllocator: Allocator1D = new Allocator1D()
@@ -281,15 +284,8 @@ class GLGeomLibrary extends EventEmitter {
     for (const attrName in geomBuffers.attrBuffers) {
       if (!this.shaderAttrSpec[attrName]) {
         const attrData = geomBuffers.attrBuffers[attrName]
-        const geomAttrDesc: Record<string, any> = genDataTypeDesc(this.__gl, attrData.dataType)
 
-        this.shaderAttrSpec[attrName] = {
-          name: attrName,
-          dataType: geomAttrDesc.dataType,
-          normalized: attrData.normalized,
-          dimension: geomAttrDesc.dimension,
-          elementSize: geomAttrDesc.elementSize,
-        }
+        this.shaderAttrSpec[attrName] = genDataTypeDesc(this.__gl, attrData.dataType)
 
         this.attributesBufferNeedsAlloc.push(attrName)
       }
@@ -359,20 +355,23 @@ class GLGeomLibrary extends EventEmitter {
           gl.COPY_WRITE_BUFFER,
           0,
           0,
-          this.glattrbuffers[attrName].length * attrSpec.elementSize
+          this.glattrbuffers[attrName].numValues * attrSpec.elementSize
         )
         gl.deleteBuffer(this.glattrbuffers[attrName].buffer)
       }
 
-      attrSpec.numValues = numValues // cache for debugging only
+      // attrSpec.numValues = numValues // cache for debugging only
 
       const targetName = attrName == 'textureCoords' ? 'texCoords' : attrName
       this.glattrbuffers[targetName] = {
+        name: attrName,
+        elementSize: attrSpec.elementSize,
         buffer: attrBuffer,
         dataType: attrSpec.dataType,
         normalized: attrSpec.normalized,
-        length: numValues,
+        numValues: numValues,
         dimension: attrSpec.dimension,
+        shared: false,
       }
     }
   }

@@ -108,7 +108,7 @@ class GLGeom extends RefCounted {
     // GL state. (vertexAttribDivisor)
     const shaderBinding = this.__shaderBindings[renderstate.shaderkey!]
     if (shaderBinding) {
-      shaderBinding.unbind()
+      shaderBinding.unbind(renderstate)
     }
   }
 

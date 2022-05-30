@@ -34,7 +34,7 @@ export interface GLAttrDesc {
   dimension: number
   elementSize: number
   dataType: number
-  normalized: boolean
+  normalized?: boolean
 }
 
 export interface GLAttrBuffer {
@@ -45,6 +45,7 @@ export interface GLAttrBuffer {
   normalized: boolean
   shared: boolean
   numValues: number
+  offset?: number
   buffer?: WebGLBuffer
 }
 
