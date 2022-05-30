@@ -1026,6 +1026,18 @@ class GLBaseRenderer extends ParameterOwner {
     return undefined
   }
 
+  traversePasses(callback?: (pass: GLPass) => boolean) {
+    let stop = false
+    for (const key in this.__passes) {
+      const passSet = this.__passes[key]
+      for (const pass of passSet) {
+        if (pass.enabled) stop = callback(pass)
+        if (stop) break
+      }
+      if (stop) break
+    }
+  }
+
   // ///////////////////////
   // VR Setup
 
@@ -1219,7 +1231,7 @@ class GLBaseRenderer extends ParameterOwner {
    */
   bindGLBaseRenderer(renderstate: RenderState): void {
     renderstate.gl = this.__gl
-    renderstate.shaderopts = { directives: this.directives } // we will start deprecating this in favor os a simpler directives
+    renderstate.shaderopts = {} // we will start deprecating this in favor os a simpler directives
 
     const gl = this.__gl
     if (!renderstate.viewports || renderstate.viewports.length == 1) {

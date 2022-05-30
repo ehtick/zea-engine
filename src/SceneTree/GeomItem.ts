@@ -319,6 +319,7 @@ class GeomItem extends BaseGeomItem {
   }
 
   loadGeom() {
+    this.loaded = true
     const geomLibrary = this.assetItem.geomLibrary
     const geom = geomLibrary.getGeom(this.geomIndex)
     if (geom) {
@@ -330,7 +331,6 @@ class GeomItem extends BaseGeomItem {
         this.geomOffsetXfoParam.value = new Xfo()
       })
     }
-    this.loaded = true
   }
 
   /**
