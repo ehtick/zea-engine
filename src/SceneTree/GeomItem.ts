@@ -76,6 +76,7 @@ class GeomItem extends BaseGeomItem {
   protected calcGeomMatOperator: Operator
   public cullable: boolean = true
   public loaded = true
+  private tmpGeomXfo: Xfo
 
   /**
    * @member geomOffsetXfoParam - Provides an offset transformation that is applied only to the geometry and not inherited by child items.
@@ -243,10 +244,12 @@ class GeomItem extends BaseGeomItem {
       this.geomBBox = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
 
       if (context.lazyLoading) {
+        this.tmpGeomXfo = this.geomOffsetXfoParam.value
         const diagonal = this.geomBBox.diagonal()
         const center = this.geomBBox.p0.add(this.geomBBox.p1)
         center.scaleInPlace(0.5)
-        this.geomOffsetXfoParam.value = new Xfo(center, new Quat(), diagonal)
+        const boxOffset = new Xfo(center, new Quat(), diagonal)
+        this.geomOffsetXfoParam.value = this.geomOffsetXfoParam.value.multiply(boxOffset)
         this.geomParam.value = cuboid
         this.loaded = false
       }
@@ -294,6 +297,7 @@ class GeomItem extends BaseGeomItem {
       this.geomBBox = src.geomBBox
 
       if (!src.geomParam.value) {
+        this.tmpGeomXfo = src.tmpGeomXfo
         const geomLibrary = src.assetItem.getGeometryLibrary()
         const onGeomLoaded = (event: RangeLoadedEvent) => {
           const { range } = event
@@ -324,11 +328,11 @@ class GeomItem extends BaseGeomItem {
     const geom = geomLibrary.getGeom(this.geomIndex)
     if (geom) {
       this.geomParam.value = <BaseGeom>geom
-      this.geomOffsetXfoParam.value = new Xfo()
+      this.geomOffsetXfoParam.value = this.tmpGeomXfo ?? new Xfo()
     } else {
       geomLibrary.loadGeomFile(this.geomIndex, false).then(() => {
         this.geomParam.value = <BaseGeom>geomLibrary.getGeom(this.geomIndex)
-        this.geomOffsetXfoParam.value = new Xfo()
+        this.geomOffsetXfoParam.value = this.tmpGeomXfo ?? new Xfo()
       })
     }
     this.loaded = true
