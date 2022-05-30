@@ -18,6 +18,7 @@ const parseGeomsBinary = (data: any, callback: any): void => {
     version.branch = v.branch
     data.context.versions[key] = version
   }
+
   const geomDatas = []
   const byteOffset = data.byteOffset
   // console.log('byteOffset:' + byteOffset, ' geomsRange:', data.geomsRange)
@@ -64,20 +65,6 @@ const parseGeomsBinary = (data: any, callback: any): void => {
 
     const geomBuffers = geom.genBuffers(data.genBuffersOpts)
 
-    if (false) {
-      if (geomBuffers.indices) transferables.push(geomBuffers.indices.buffer)
-      for (const attrName in geomBuffers.attrBuffers) {
-        // Note: The type value assigned to the attribute can
-        // not be transferred back to the main thread. Convert to
-        // the type name here and send back as a string.
-        const attrData = geomBuffers.attrBuffers[attrName]
-        transferables.push(attrData.values.buffer)
-      }
-      if (geomBuffers.vertexNeighbors) {
-        transferables.push(geomBuffers.vertexNeighbors.buffer)
-      }
-    }
-
     // Transfer the bbox point buffers.
     const bbox = geom.getBoundingBox()
     transferables.push(bbox.p0.__data.buffer)
@@ -91,6 +78,11 @@ const parseGeomsBinary = (data: any, callback: any): void => {
     })
   }
 
+  // If the entire buffer was passed to the worker, we pass it back.
+  // The browser will then throw it away if we have already cloned
+  // arrays out of it, or it will wait till all those shared arrays
+  // are in the GPU and freed(see GLGeomLibrary freeDataAfterUpload)
+  // then it will free it in one go.
   transferables.push(data.bufferSlice)
 
   callback(

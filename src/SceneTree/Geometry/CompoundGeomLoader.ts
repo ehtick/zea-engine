@@ -77,6 +77,10 @@ class CompoundGeomLoader extends BaseGeom {
     this.counts['POINTS'] = geomCountsByType[2]
 
     const bytes = reader.loadUInt8()
+
+    // Note: do not clone the source arrays as we will transfer the
+    // entire buffer back to the main thread where it will be freed once
+    // the data is uploaded to the GPU.
     if (bytes == 1) this.indices = reader.loadUInt8Array(undefined, false)
     else if (bytes == 2) this.indices = reader.loadUInt16Array(undefined, false)
     else if (bytes == 4) this.indices = reader.loadUInt32Array(undefined, false)

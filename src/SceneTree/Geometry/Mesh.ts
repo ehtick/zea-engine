@@ -898,13 +898,15 @@ class Mesh extends BaseGeom {
     const numFaces = this.getNumFaces()
 
     // Note: we can remove this. We can infer this from the above faceCounts array.
-    const faceVertexCounts = reader.loadUInt8Array(numFaces)
+    // Do not clone the data, as its 'scratch memory' in any case.
+    // We can avoid a lot of unnecessary temporary allocaiton by using shared buffers.
+    const faceVertexCounts = reader.loadUInt8Array(numFaces, false)
     const offsetRange = reader.loadSInt32Vec2()
     const bytes = reader.loadUInt8()
     let faceVertexIndexDeltas
-    if (bytes == 1) faceVertexIndexDeltas = reader.loadUInt8Array()
-    else if (bytes == 2) faceVertexIndexDeltas = reader.loadUInt16Array()
-    else if (bytes == 4) faceVertexIndexDeltas = reader.loadUInt32Array()
+    if (bytes == 1) faceVertexIndexDeltas = reader.loadUInt8Array(undefined, false)
+    else if (bytes == 2) faceVertexIndexDeltas = reader.loadUInt16Array(undefined, false)
+    else if (bytes == 4) faceVertexIndexDeltas = reader.loadUInt32Array(undefined, false)
     else {
       throw Error('faceVertexIndexDeltas undefined')
     }
