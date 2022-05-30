@@ -7,13 +7,14 @@ import { Vec2Attribute } from './Vec2Attribute'
 import { Vec3f16Attribute } from './Vec3f16Attribute'
 import { Vec2f16Attribute } from './Vec2f16Attribute'
 import { BinReader } from '../../SceneTree/BinReader'
+import { Vec3f8Attribute } from './Vec3f8Attribute'
 
 const parse8BitPositionsArray = (
   range: Array<number>,
   offset: Vec3,
   sclVec: Vec3,
   positions_quantized: Uint8Array,
-  positionsAttr: Vec3f16Attribute
+  positionsAttr: Vec3Attribute
 ) => {
   for (let i = range[0]; i < range[1]; i++) {
     const pos = new Vec3(
@@ -31,7 +32,7 @@ const parse16BitPositionsArray = (
   offset: Vec3,
   sclVec: Vec3,
   positions_quantized: Uint16Array,
-  positionsAttr: Vec3f16Attribute
+  positionsAttr: Vec3Attribute
 ) => {
   for (let i = range[0]; i < range[1]; i++) {
     const pos = new Vec3(
@@ -189,7 +190,7 @@ class BaseGeom extends ParameterOwner {
    * Returns 'positions' vertex attribute.
    */
   get positions(): Vec3Attribute {
-    return this.__vertexAttributes.get('positions') as Vec3f16Attribute
+    return this.__vertexAttributes.get('positions') as Vec3Attribute
   }
 
   /**
@@ -338,14 +339,14 @@ class BaseGeom extends ParameterOwner {
     const numVerts = reader.loadUInt32()
     this.__boundingBox.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
 
-    this.setNumVertices(numVerts)
-    const positionsAttr = <Vec3f16Attribute>this.positions
+    const positionsAttr = <Vec3Attribute>this.positions
     let normalsAttr: Vec3Attribute
     let texCoordsAttr: Vec2Attribute
+
     if (flags & (1 << 1)) {
       normalsAttr = <Vec3Attribute>this.getVertexAttribute('normals')
       if (!normalsAttr) {
-        normalsAttr = new Vec3Attribute()
+        normalsAttr = new Vec3f8Attribute()
         this.addVertexAttribute('normals', normalsAttr)
       }
     }
@@ -357,7 +358,20 @@ class BaseGeom extends ParameterOwner {
       }
     }
     const numClusters = reader.loadUInt32()
-    if (numClusters == 1) {
+    if (numClusters == 0) {
+      // @ts-ignore
+      positionsAttr.data = reader.loadUInt16Array(numVerts * 3, false)
+      if (normalsAttr) {
+        // @ts-ignore
+        normalsAttr.data = reader.loadUInt8Array(numVerts * 3, false)
+      }
+      if (texCoordsAttr) {
+        // @ts-ignore
+        texCoordsAttr.data = reader.loadUInt16Array(numVerts * 2, false)
+      }
+      this.setNumVertices(numVerts)
+    } else if (numClusters == 1) {
+      this.setNumVertices(numVerts)
       {
         const box3 = this.__boundingBox
         // From 3.9.1, vertex data is a mix of 16bit and 8 bit quanitization
@@ -389,6 +403,7 @@ class BaseGeom extends ParameterOwner {
         texCoordsAttr.loadSplitValues(reader)
       }
     } else {
+      this.setNumVertices(numVerts)
       const clusters = []
       let offset = 0
       for (let i = 0; i < numClusters; i++) {
@@ -480,6 +495,10 @@ class BaseGeom extends ParameterOwner {
         texCoordsAttr.loadSplitValues(reader)
       }
     }
+
+    // Loading the attributes may have dirtied the bounding box.
+    // we konw we already loaded the bbox, so force it to be valid.
+    this.__boundingBoxDirty = false
   }
 
   /**
