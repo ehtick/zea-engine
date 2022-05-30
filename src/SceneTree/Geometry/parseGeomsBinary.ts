@@ -20,7 +20,7 @@ const parseGeomsBinary = (data: any, callback: any): void => {
   }
   const geomDatas = []
   const byteOffset = data.byteOffset
-  // console.log('byteOffset:' + byteOffset)
+  // console.log('byteOffset:' + byteOffset, ' geomsRange:', data.geomsRange)
   const transferables = []
   for (let i = data.geomsRange[0]; i < data.geomsRange[1]; i++) {
     const reader = new BinReader(data.bufferSlice, data.toc[i] - byteOffset, data.isMobileDevice)
@@ -63,17 +63,19 @@ const parseGeomsBinary = (data: any, callback: any): void => {
     }
 
     const geomBuffers = geom.genBuffers(data.genBuffersOpts)
-    if (geomBuffers.indices) transferables.push(geomBuffers.indices.buffer)
-    for (const attrName in geomBuffers.attrBuffers) {
-      // Note: The type value assigned to the attribute can
-      // not be transferred back to the main thread. Convert to
-      // the type name here and send back as a string.
-      const attrData = geomBuffers.attrBuffers[attrName]
-      transferables.push(attrData.values.buffer)
-    }
 
-    if (geomBuffers.vertexNeighbors) {
-      transferables.push(geomBuffers.vertexNeighbors.buffer)
+    if (false) {
+      if (geomBuffers.indices) transferables.push(geomBuffers.indices.buffer)
+      for (const attrName in geomBuffers.attrBuffers) {
+        // Note: The type value assigned to the attribute can
+        // not be transferred back to the main thread. Convert to
+        // the type name here and send back as a string.
+        const attrData = geomBuffers.attrBuffers[attrName]
+        transferables.push(attrData.values.buffer)
+      }
+      if (geomBuffers.vertexNeighbors) {
+        transferables.push(geomBuffers.vertexNeighbors.buffer)
+      }
     }
 
     // Transfer the bbox point buffers.
@@ -88,6 +90,9 @@ const parseGeomsBinary = (data: any, callback: any): void => {
       bbox,
     })
   }
+
+  transferables.push(data.bufferSlice)
+
   callback(
     {
       taskId: data.taskId,
