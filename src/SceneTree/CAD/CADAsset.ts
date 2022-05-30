@@ -86,7 +86,6 @@ class CADAsset extends AssetItem {
     context.versions['zea-cad'] = new Version(reader.loadStr())
     context.sdk = reader.loadStr()
     this.sdk = context.sdk
-    this.cadfileVersion = context.versions['zea-cad']
     // console.log('Loading CAD File version:', this.cadfileVersion, ' exported using SDK:', context.cadSDK)
 
     super.readBinary(reader, context)
@@ -166,7 +165,6 @@ class CADAsset extends AssetItem {
           // Maintain the name provided by the user before loading.
           if (name != '') this.setName(name)
 
-          context.versions['zea-cad'] = this.getVersion()
           context.versions['zea-engine'] = this.getEngineDataVersion()
 
           if (entries.geomsdata) {
@@ -228,7 +226,6 @@ class CADAsset extends AssetItem {
       resourceLoader.loadFile('archive', metaDataUrl).then(
         (entries) => {
           const context = new AssetLoadContext()
-          context.versions['zea-cad'] = this.getVersion()
           context.versions['zea-engine'] = this.getEngineDataVersion()
           this.geomLibrary.loadMetadata(entries.geomsdata, context)
           resourceLoader.incrementWorkDone(1)
