@@ -1,5 +1,5 @@
-import { Shaderopts } from './renderer'
-import { WebGLRenderingContextExtension } from './webgl2';
+import { GLAttrBuffer, Shaderopts } from './renderer'
+import { WebGLRenderingContextExtension } from './webgl2'
 
 export interface WebGL12RenderingContext extends WebGLRenderingContextExtension {
   name: string
@@ -11,7 +11,7 @@ export interface WebGL12RenderingContext extends WebGLRenderingContextExtension 
   // GLScreenQuad.ts
   setupInstancedQuad: any
   __quadVertexIdsBuffer: any
-  __quadattrbuffers: any
+  __quadattrbuffers: Record<string, GLAttrBuffer>
   __quadIndexBuffer: WebGLBuffer | null
 
   // GLBaseRenderer.ts

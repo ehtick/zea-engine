@@ -1,22 +1,17 @@
 import { Vec3 } from '../../Math/index'
 import { GLGeom } from './GLGeom'
-import { generateShaderGeomBinding } from './GeomShaderBinding'
+import { genDataTypeDesc, generateShaderGeomBinding } from './GeomShaderBinding'
 import { GLTexture2D } from '../GLTexture2D'
 import { Vec3Attribute } from '../../SceneTree/Geometry/Vec3Attribute'
 import { BaseGeom } from '../../SceneTree'
 import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
+import { GLAttrBuffer } from '../types/renderer'
 
 interface FatBuffers {
   drawCount: number
   positionsTexture: GLTexture2D | null
-  glattrbuffers: {
-    [key: string]: null | {
-      buffer: WebGLBuffer
-      dimension: number
-      dataType: string
-    }
-  }
+  glattrbuffers: Record<string, GLAttrBuffer>
 }
 /** Class representing GL lines.
  * @extends GLGeom
@@ -156,9 +151,14 @@ class GLLines extends GLGeom {
       gl.bufferData(gl.ARRAY_BUFFER, makeIndices(), gl.STATIC_DRAW)
 
       this.fatBuffers.glattrbuffers.segmentIndices = {
-        buffer: indexBuffer,
+        dataType: gl.FLOAT,
+        name: 'segmentIndices',
         dimension: 2,
-        dataType: 'Vec2',
+        elementSize: 4,
+        normalized: false,
+        shared: false,
+        numValues: indices.length,
+        buffer: indexBuffer,
       }
     } else {
       if (!this.genBufferOpts || (this.genBufferOpts && this.genBufferOpts.topologyChanged)) {
@@ -207,15 +207,21 @@ class GLLines extends GLGeom {
       // eslint-disable-next-line guard-for-in
       for (const attrName in geomBuffers.attrBuffers) {
         const attrData = geomBuffers.attrBuffers[attrName]
+        const attrDesc = genDataTypeDesc(gl, attrName, attrData)
         if (!this.__glattrbuffers[attrName]) {
           const attrBuffer = gl.createBuffer()
           gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer)
           gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW)
 
           this.__glattrbuffers[attrName] = {
+            dataType: attrDesc.dataType,
+            name: attrName,
+            dimension: attrData.dimension,
+            elementSize: attrDesc.elementSize,
+            normalized: false,
+            shared: false,
+            numValues: attrData.count,
             buffer: attrBuffer,
-            dataType: attrData.dataType,
-            normalized: attrData.normalized,
           }
         } else {
           const glattr = this.__glattrbuffers[attrName]

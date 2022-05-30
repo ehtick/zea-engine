@@ -161,6 +161,32 @@ const genDataTypeDesc = (gl: WebGL12RenderingContext, name: string, attrData: an
           elementSize = 1
           dataType = gl.UNSIGNED_BYTE
           break
+        case gl.BYTE:
+          dimension = attrData.dimension
+          elementSize = attrData.elementSize
+          dataType = gl.BYTE
+          break
+        case gl.UNSIGNED_BYTE:
+          dimension = attrData.dimension
+          elementSize = attrData.elementSize
+          dataType = gl.UNSIGNED_BYTE
+          break
+        case gl.UNSIGNED_SHORT:
+          dimension = attrData.dimension
+          elementSize = attrData.elementSize
+          dataType = gl.UNSIGNED_SHORT
+          break
+        case gl.UNSIGNED_INT:
+          dimension = attrData.dimension
+          elementSize = attrData.elementSize
+          dataType = gl.UNSIGNED_INT
+          break
+        case gl.FLOAT:
+          dimension = attrData.dimension
+          elementSize = attrData.elementSize
+          dataType = gl.FLOAT
+          break
+
         default:
           throw 'Unhandled Type'
       }

@@ -64,7 +64,7 @@ class GLMesh extends GLGeom {
     // eslint-disable-next-line guard-for-in
     for (const attrName in geomBuffers.attrBuffers) {
       const attrData = geomBuffers.attrBuffers[attrName]
-      const geomAttrDesc: Record<string, any> = genDataTypeDesc(this.__gl, attrName, attrData)
+      const attrDesc = genDataTypeDesc(gl, attrName, attrData)
 
       if (this.__glattrbuffers[attrName] && this.__glattrbuffers[attrName].buffer) {
         gl.deleteBuffer(this.__glattrbuffers[attrName].buffer)
@@ -73,13 +73,18 @@ class GLMesh extends GLGeom {
       const attrBuffer = gl.createBuffer()
       gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer)
 
-      const values = convertBuffer(gl, attrData.values, geomAttrDesc)
+      const values = convertBuffer(gl, attrData.values, attrDesc)
       gl.bufferData(gl.ARRAY_BUFFER, values, gl.STATIC_DRAW)
 
       this.__glattrbuffers[attrName] = {
+        dataType: attrDesc.dataType,
+        name: attrName,
+        dimension: attrData.dimension,
+        elementSize: attrDesc.elementSize,
+        normalized: false,
+        shared: false,
+        numValues: attrData.count,
         buffer: attrBuffer,
-        dataType: attrData.dataType,
-        normalized: attrData.normalized,
       }
 
       if (attrName == 'textureCoords') this.__glattrbuffers['texCoords'] = this.__glattrbuffers['textureCoords']

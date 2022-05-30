@@ -1,7 +1,8 @@
 import { BaseGeom, Mesh, RefCounted } from '../../SceneTree/index'
 import { RenderState } from '../RenderStates/index'
+import { GLAttrBuffer } from '../types/renderer'
 import { WebGL12RenderingContext } from '../types/webgl'
-import { generateShaderGeomBinding } from './GeomShaderBinding'
+import { generateShaderGeomBinding, IGeomShaderBinding } from './GeomShaderBinding'
 
 /** Class representing a GL geom.
  * @private
@@ -9,8 +10,8 @@ import { generateShaderGeomBinding } from './GeomShaderBinding'
 class GLGeom extends RefCounted {
   protected __gl: WebGL12RenderingContext
   protected __geom: BaseGeom | Mesh
-  protected __glattrbuffers: Record<string, any>
-  protected __shaderBindings: Record<string, any>
+  protected __glattrbuffers: Record<string, GLAttrBuffer>
+  protected __shaderBindings: Record<string, IGeomShaderBinding>
   protected buffersDirty: boolean
   protected genBufferOpts: Record<string, any> = {}
   protected __indexBuffer: WebGLBuffer | null = null
@@ -107,7 +108,7 @@ class GLGeom extends RefCounted {
     // GL state. (vertexAttribDivisor)
     const shaderBinding = this.__shaderBindings[renderstate.shaderkey!]
     if (shaderBinding) {
-      shaderBinding.unbind(renderstate)
+      shaderBinding.unbind()
     }
   }
 

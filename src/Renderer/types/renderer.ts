@@ -28,12 +28,24 @@ export interface ShaderParseResult {
   uniforms: Record<string, string>
   attributes: Record<string, Attribute>
 }
-export interface AttrBuffer {
-  values: Uint8Array | Uint16Array | Float32Array
-  count: number
+
+export interface GLAttrDesc {
+  name: string
   dimension: number
+  elementSize: number
+  dataType: number
   normalized: boolean
-  dataType: string
+}
+
+export interface GLAttrBuffer {
+  dataType: number
+  name: string
+  dimension: number
+  elementSize: number
+  normalized: boolean
+  shared: boolean
+  numValues: number
+  buffer?: WebGLBuffer
 }
 
 export interface LayoutItem {
