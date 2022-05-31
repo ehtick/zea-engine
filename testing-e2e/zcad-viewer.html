@@ -179,7 +179,7 @@
 
         const urlParams = new URLSearchParams(window.location.search)
         const scene = new Scene()
-        // scene.setupGrid(10.0, 10)
+        scene.setupGrid(10.0, 10)
 
         const renderer = new GLRenderer(document.getElementById('canvas'), {
           antialias: false,
@@ -196,7 +196,7 @@
         renderer.highlightOutlineThickness = 1.75
         renderer.hiddenLineColor = new Color(1, 0.15, 0.15, 0.0)
         // renderer.getViewport().debugHighlightedGeomsBuffer = true
-        renderer.getViewport().debugOcclusionBuffer = true
+        // renderer.getViewport().debugOcclusionBuffer = true
 
         renderer.setScene(scene)
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 10), new Vec3(0, 0, 1.5))

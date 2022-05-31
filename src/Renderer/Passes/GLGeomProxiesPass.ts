@@ -41,9 +41,10 @@ class GLGeomProxiesPass extends GLOpaqueGeomsPass {
    * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: ColorRenderState): void {
-    // return
-    const gl = this.__gl!
-    this.__traverseTreeAndDraw(renderstate)
+    // We don't draw the geom proxies.
+    return
+    // const gl = this.__gl!
+    // this.__traverseTreeAndDraw(renderstate)
   }
 
   /**
@@ -52,11 +53,11 @@ class GLGeomProxiesPass extends GLOpaqueGeomsPass {
    */
   drawGeomData(renderstate: GeomDataRenderState): void {
     const gl = this.__gl!
-    gl.colorMask(true, true, true, true)
+    gl.clear(gl.COLOR_BUFFER_BIT)
     super.drawGeomData(renderstate)
   }
 }
 
-// GLRenderer.registerPass(GLGeomProxiesPass, PassType.OPAQUE)
+GLRenderer.registerPass(GLGeomProxiesPass, PassType.OPAQUE)
 
 export { GLGeomProxiesPass }

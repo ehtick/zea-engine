@@ -294,7 +294,9 @@ class GLGeomItemLibrary extends EventEmitter {
     renderer
       .getViewport()
       .getCamera()
-      .on('movementFinished', () => this.calculateCulling())
+      .on('movementFinished', () => {
+        this.calculateCulling()
+      })
 
     // Initialize the view values on the worker.
     this.calculateCulling()
@@ -521,10 +523,6 @@ class GLGeomItemLibrary extends EventEmitter {
     renderstate.occlusionCulling = 0
     renderstate.floatGeomBuffer = true
 
-    // For lazy loading, we only care about the visibility geom proxies.
-    // The reduction texture should just have the pixels containing geom proxies.
-    // gl.colorMask(false, false, false, false)
-
     if (this.xrPresenting) {
       this.xrViewport.initCullingRenderState(renderstate)
       renderstate.viewports[0].fovY = this.xrFovY
@@ -544,6 +542,12 @@ class GLGeomItemLibrary extends EventEmitter {
     }
 
     this.occlusionDataBuffer.bindForWriting(renderstate, true)
+
+    // For lazy loading, we only care about the visibility geom proxies.
+    // The reduction texture should just have the pixels containing geom proxies.
+    // We disable driting to the color buffer, and the GLGeomProxiesPass reenables it.
+    // gl.colorMask(false, false, false, false)
+
     this.renderer.drawSceneGeomData(renderstate)
     this.occlusionDataBuffer.unbindForWriting(renderstate)
 

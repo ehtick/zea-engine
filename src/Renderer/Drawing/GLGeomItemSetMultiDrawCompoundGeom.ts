@@ -31,6 +31,10 @@ interface SubGeom {
   offset: number
   count: number
 }
+interface GeomItemIdAndGeomId {
+  geomItemId: number
+  geomId: number
+}
 
 /** This class abstracts the rendering of a collection of geometries to screen.
  * @extends EventEmitter
@@ -40,7 +44,9 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
   protected renderer: GLRenderer
   protected gl: WebGL12RenderingContext
   protected glGeomItems: Array<GLGeomItem | null> = []
-  protected glGeomIdsMapping: Record<string, any> = {}
+  protected glGeomItemIds: Map<GLGeomItem, GeomItemIdAndGeomId> = new Map()
+  protected glGeomIds: Array<Array<number>> = []
+  protected glGeomIdsMapping: Record<string, Array<number>> = {}
   protected glgeomItemEventHandlers: any[] = []
   protected freeIndices: number[] = []
   // protected visibleItems: GLGeomItem[] = []
@@ -105,13 +111,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
    */
   addGLGeomItem(glGeomItem: GLGeomItem) {
     const index: number = this.freeIndices.length > 0 ? this.freeIndices.pop()! : this.glGeomItems.length
-
-    // Keep track of which geomitems use which geoms, so we can update the offset and count array if they change.
-    if (!this.glGeomIdsMapping[glGeomItem.geomId]) {
-      this.glGeomIdsMapping[glGeomItem.geomId] = [index]
-    } else {
-      this.glGeomIdsMapping[glGeomItem.geomId].push(index)
-    }
+    const geomId: number = glGeomItem.geomId
 
     const eventHandlers: Record<string, any> = {}
 
@@ -126,7 +126,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     eventHandlers.visibilityChanged = (event: VisibilityChangedEvent) => {
       // const drawIndex = this.indexToDrawIndex[index]
       if (event.visible) {
-        const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
+        const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(geomId)
         for (let key in geomBuffers.counts) {
           if (geomBuffers.counts[key] == 0) continue
           const allocator = this.drawIdsArraysAllocators[key]
@@ -210,7 +210,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     // //////////////////////////////
     // ShatterState
     eventHandlers.shatterStateChanged = (event: StateChangedEvent) => {
-      // const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
+      // const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(geomId)
       // if (geomBuffers.materials.length == 0)
       {
         this.dirtyGeomItems.add(index)
@@ -233,7 +233,14 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     }
 
     this.glGeomItems[index] = glGeomItem
+    this.glGeomItemIds.set(glGeomItem, { geomItemId: index, geomId })
     this.glgeomItemEventHandlers[index] = eventHandlers
+    // Keep track of which geomitems use which geoms, so we can update the offset and count array if they change.
+    if (!this.glGeomIdsMapping[geomId]) {
+      this.glGeomIdsMapping[geomId] = [index]
+    } else {
+      this.glGeomIdsMapping[geomId].push(index)
+    }
 
     this.drawIdsBufferDirty = true
 
@@ -245,11 +252,16 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
    * @param {GLGeomItem} glGeomItem - The glGeomItem value.
    */
   removeGLGeomItem(glGeomItem: GLGeomItem) {
-    const index = this.glGeomItems.indexOf(glGeomItem)
-    const geomItemIndices = this.glGeomIdsMapping[glGeomItem.geomId]
-    geomItemIndices.splice(geomItemIndices.indexOf(index), 1)
-    if (geomItemIndices.length == 0) {
-      delete this.glGeomIdsMapping[glGeomItem.geomId]
+    // Note: the GLGeomItem.geomId may have changed since the GLGeomItem
+    // was added to this GeomItemSet. (this may be the reason the item is being removed)
+    // Use the cached index instead.
+    const geomItemIndices = this.glGeomItemIds.get(glGeomItem)
+    const index = geomItemIndices.geomItemId
+    const geomId = geomItemIndices.geomId
+    const geomToGeomItemIndices = this.glGeomIdsMapping[geomId]
+    geomToGeomItemIndices.splice(geomToGeomItemIndices.indexOf(index), 1)
+    if (geomToGeomItemIndices.length == 0) {
+      delete this.glGeomIdsMapping[geomId]
     }
 
     const eventHandlers = this.glgeomItemEventHandlers[index]
@@ -258,6 +270,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
 
     this.glGeomItems[index] = null
     this.glgeomItemEventHandlers[index] = null
+    this.glGeomItemIds.delete(glGeomItem)
     this.freeIndices.push(index)
 
     if (this.dirtyGeomItems.has(index)) {
@@ -291,9 +304,6 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
 
   // ////////////////////////////////////
   // Draw Ids
-
-  // ////////////////////////////////////
-  // Instance Ids
 
   /**
    * The updateDrawIDsBuffer method.

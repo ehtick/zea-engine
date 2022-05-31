@@ -378,14 +378,17 @@ const processOcclusionData = (data) => {
           occluded[index] = false
           newlyUnCulled.push(index)
           geomStats_add(geomItemData.geomStats)
+        } else {
+          // console.log('in occlusion buffer but already unculled:', index)
         }
       }
     } else {
       // Note: We have detected a geometry in the occlusion buffer that was flagged as culled by the
       // frustum culling. This is most likely a small item culled due to solid angle being too small
       // yet the occlusion rendering picked up a bounding box. We leave this item as culled.
-      // if (value != 0) {
-      // }
+      if (value != 0) {
+        // console.log('outOfFrustum but in occlusion buffer:', index)
+      }
     }
   })
   // Note: even if occlusion culling did nt filter out any more items
@@ -425,6 +428,7 @@ const handleMessage = (data, postMessage) => {
     })
     data.geomItems.forEach((geomItemData) => {
       const index = geomItemData.id
+
       // New geoms default to being un-culled
       // Existing geoms that may be changing state, like changing
       // visibility or transformations should simply update.

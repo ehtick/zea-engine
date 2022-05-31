@@ -76,7 +76,13 @@ class GeomItem extends BaseGeomItem {
   protected calcGeomMatOperator: Operator
   public cullable: boolean = true
   public loaded = true
-  private tmpGeomXfo: Xfo
+
+  // During lazy loading, we temporarily set a different
+  // GeomOffsetXfo to display the proxy geom at the same place
+  // as our bounding box. This is an optimization so that we can
+  // use a single unit cube to display all proxies. We then need
+  // to put back the correct GeomOffsetXfo once we load the correct geom.
+  private tmpGeomOffsetXfo: Xfo
 
   /**
    * @member geomOffsetXfoParam - Provides an offset transformation that is applied only to the geometry and not inherited by child items.
@@ -128,6 +134,18 @@ class GeomItem extends BaseGeomItem {
     if (this.disableBoundingBox) return new Box3()
     const bbox = super._cleanBoundingBox()
     if (this.geomBBox) {
+      if (!this.loaded) {
+        // We must ignore the actual geomMat, as it is based
+        // on the manipulated GeomOffset that is used to display
+        // the proxy geometry.
+        const globalMat4 = this.globalXfoParam.value.toMat4()
+        const geomOffsetMat4 = this.tmpGeomOffsetXfo.toMat4()
+        const mat4 = globalMat4.multiply(geomOffsetMat4)
+        bbox.addPoint(mat4.transformVec3(this.geomBBox.p0))
+        bbox.addPoint(mat4.transformVec3(this.geomBBox.p1))
+        return bbox
+      }
+
       // Note: this bbox is the global bounding box of the geomItem
       // transformed into the space of the geometry. We reapply
       // the geom matrix to get back the points in global space.
@@ -244,7 +262,7 @@ class GeomItem extends BaseGeomItem {
       this.geomBBox = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
 
       if (context.lazyLoading) {
-        this.tmpGeomXfo = this.geomOffsetXfoParam.value
+        this.tmpGeomOffsetXfo = this.geomOffsetXfoParam.value
         const diagonal = this.geomBBox.diagonal()
         const center = this.geomBBox.p0.add(this.geomBBox.p1)
         center.scaleInPlace(0.5)
@@ -297,7 +315,6 @@ class GeomItem extends BaseGeomItem {
       this.geomBBox = src.geomBBox
 
       if (!src.geomParam.value) {
-        this.tmpGeomXfo = src.tmpGeomXfo
         const geomLibrary = src.assetItem.getGeometryLibrary()
         const onGeomLoaded = (event: RangeLoadedEvent) => {
           const { range } = event
@@ -313,6 +330,7 @@ class GeomItem extends BaseGeomItem {
         }
         this.listenerIDs['rangeLoaded'] = geomLibrary.on('rangeLoaded', onGeomLoaded)
       } else {
+        this.tmpGeomOffsetXfo = src.tmpGeomOffsetXfo
         this.loaded = false
       }
     }
@@ -329,11 +347,11 @@ class GeomItem extends BaseGeomItem {
     const geom = geomLibrary.getGeom(this.geomIndex)
     if (geom) {
       this.geomParam.value = <BaseGeom>geom
-      this.geomOffsetXfoParam.value = this.tmpGeomXfo ?? new Xfo()
+      this.geomOffsetXfoParam.value = this.tmpGeomOffsetXfo ?? new Xfo()
     } else {
       geomLibrary.loadGeomFile(this.geomIndex, false).then(() => {
         this.geomParam.value = <BaseGeom>geomLibrary.getGeom(this.geomIndex)
-        this.geomOffsetXfoParam.value = this.tmpGeomXfo ?? new Xfo()
+        this.geomOffsetXfoParam.value = this.tmpGeomOffsetXfo ?? new Xfo()
       })
     }
   }
