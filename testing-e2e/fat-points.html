@@ -52,17 +52,26 @@
       renderer.getViewport().debugGeomDataBuffer = urlParams.has('debugGeomDataBuffer')
 
       /** HIGHLIGHT START */
+      let highlightKey = ''
       let highlightedItem
-      renderer.getViewport().on('pointerOverGeom', (event) => {
-        const item = event.intersectionData.geomItem
-        if (item) {
-          highlightedItem = item
-          highlightedItem.addHighlight('pointerOverGeom', new Color(1.0, 0.7, 0, 0.3), true)
+      renderer.getViewport().on('pointerMove', (event) => {
+        if (event.intersectionData) {
+          const item = event.intersectionData.geomItem
+          const key = 'highlight:' + event.intersectionData.componentId
+          console.log(key)
+          if (key != highlightKey) {
+            if (highlightedItem) highlightedItem.removeHighlight(highlightKey, true)
+            highlightedItem = item
+            highlightKey = key
+            highlightedItem.addHighlight(highlightKey, new Color(1.0, 0.7, 0, 0.3), true)
+          }
         }
       })
       renderer.getViewport().on('pointerLeaveGeom', (event) => {
-        highlightedItem.removeHighlight('pointerOverGeom', true)
-        highlightedItem = null
+        if (highlightedItem) {
+          highlightedItem.removeHighlight(highlightKey, true)
+          highlightedItem = null
+        }
       })
       renderer.getViewport().on('pointerUp', (event) => {
         if (event.intersectionData) {

@@ -8,11 +8,12 @@ import 'constants.glsl'
 uniform color BaseColor;
 uniform float Rounded;
 uniform float BorderWidth;
+uniform int highlightSubIndex;
 
 /* VS Outputs */
 varying vec2 v_texCoord;
 varying vec3 v_viewPos;
-varying float v_geomItemId;
+varying vec2 v_geomItemIds;
 
 #ifdef ENABLE_ES3
 out vec4 fragColor;
@@ -48,9 +49,10 @@ if (dist > 0.5)
   }
 
 #elif defined(DRAW_GEOMDATA)
-  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_geomItemId, 0.0, isOrthographic);
+  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_geomItemIds.x, v_geomItemIds.y, isOrthographic);
 #elif defined(DRAW_HIGHLIGHT)
-  fragColor = setFragColor_highlight(v_geomItemId);
+  if (highlightSubIndex != -1 && int(v_geomItemIds.y + 0.5) != highlightSubIndex) discard;
+  fragColor = setFragColor_highlight(v_geomItemIds.x);
 #endif // DRAW_HIGHLIGHT
 
 

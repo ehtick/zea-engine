@@ -25,7 +25,7 @@ uniform float Overlay;
 /* VS Outputs */
 varying vec2 v_texCoord;
 varying vec3 v_viewPos;
-varying float v_geomItemId;
+varying vec2 v_geomItemIds;
 
 void main(void) {
   int geomItemId = getGeomItemId();
@@ -50,7 +50,8 @@ void main(void) {
   // a surface. (else they get fully clipped)
   viewPos.z += 0.5 * PointSize;
 
-  v_geomItemId = float(getGeomItemId());
+  v_geomItemIds.x = float(geomItemId);
+  v_geomItemIds.y = float(gl_InstanceID);
   v_viewPos = -viewPos.xyz;
   
   gl_Position = projectionMatrix * viewPos;
