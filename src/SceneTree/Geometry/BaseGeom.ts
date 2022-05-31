@@ -369,7 +369,7 @@ class BaseGeom extends ParameterOwner {
       positionsAttr.data = reader.loadUInt16Array(numVerts * 3, false)
       if (normalsAttr) {
         // @ts-ignore
-        normalsAttr.data = reader.loadUInt8Array(numVerts * 3, false)
+        normalsAttr.data = reader.loadInt8Array(numVerts * 3, false)
       }
       if (texCoordsAttr) {
         // @ts-ignore
