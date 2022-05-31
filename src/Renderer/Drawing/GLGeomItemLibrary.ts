@@ -277,7 +277,7 @@ class GLGeomItemLibrary extends EventEmitter {
     })
 
     let tick = 0
-    let cullFreq = 5
+    let cullFreq = 20
     renderer.on('viewChanged', (event) => {
       // Calculate culling every Nth frame.
       if (workerReady) {
@@ -435,13 +435,13 @@ class GLGeomItemLibrary extends EventEmitter {
     //     if (this.glGeomItems[index]) this.glGeomItems[index].setCulled(true)
     //   })
     // }
-    // if (data.newlyUnCulled) {
-    //   data.newlyUnCulled.forEach((index: number) => {
-    //     // console.log('newlyUnCulled:', this.glGeomItems[index].geomItem.getName())
-    //     // if (this.glGeomItems[index]) this.glGeomItems[index].setCulled(false)
-    //     if (this.glGeomItems[index]) this.glGeomItems[index].geomItem.loadGeom()
-    //   })
-    // }
+    if (data.newlyUnCulled) {
+      data.newlyUnCulled.forEach((index: number) => {
+        // console.log('newlyUnCulled:', this.glGeomItems[index].geomItem.getName())
+        // if (this.glGeomItems[index]) this.glGeomItems[index].setCulled(false)
+        if (this.glGeomItems[index]) this.glGeomItems[index].geomItem.loadGeom()
+      })
+    }
     this.renderer.requestRedraw()
   }
 
@@ -492,33 +492,6 @@ class GLGeomItemLibrary extends EventEmitter {
   }
 
   /**
-   * Given the IDs of the items we know are in the frustum, setup an instanced attribute we can use
-   * to render bounding boxes for these items if they do not show up in the initial GPU buffer.
-   * @param {Float32Array} inFrustumIndices - The array of indices of items we know are in the frustum.
-   */
-  // updateGeomProxiesDrawIDsBuffer(geomProxies: Float32Array) {
-  //   const gl = this.renderer.gl
-  //   if (!gl.floatTexturesSupported) {
-  //     this.geomProxiesBufferDirty = false
-  //     return
-  //   }
-  //   if (this.geomProxiesBuffer && this.geomProxiesIndicesCount != geomProxies.length) {
-  //     gl.deleteBuffer(this.geomProxiesBuffer)
-  //     this.geomProxiesBuffer = null
-  //   }
-  //   if (!this.geomProxiesBuffer) {
-  //     this.geomProxiesBuffer = gl.createBuffer()
-  //     gl.bindBuffer(gl.ARRAY_BUFFER, this.geomProxiesBuffer)
-  //   }
-
-  //   gl.bindBuffer(gl.ARRAY_BUFFER, this.geomProxiesBuffer)
-  //   gl.bufferData(gl.ARRAY_BUFFER, geomProxies, gl.STATIC_DRAW)
-
-  //   this.geomProxiesIndicesCount = geomProxies.length
-  //   this.geomProxiesBufferDirty = false
-  // }
-
-  /**
    * Calculate a further refinement of the culling by using the GPU to see which items are actually visible.
    * @param inFrustumIndices - The array of indices of items we know are in the frustum.
    */
@@ -547,13 +520,6 @@ class GLGeomItemLibrary extends EventEmitter {
     const renderstate = new GeomDataRenderState(gl)
     renderstate.occlusionCulling = 0
     renderstate.floatGeomBuffer = true
-    // this.renderer.drawSceneGeomData(renderstate)
-
-    // this.renderer.bindGLBaseRenderer(renderstate)
-    // renderstate.directives = [...this.renderer.directives, '#define DRAW_GEOMDATA']
-    // renderstate.shaderopts.directives = renderstate.directives
-    // renderstate.floatGeomBuffer = true
-    // renderstate.occlusionCulling = 0
 
     // For lazy loading, we only care about the visibility geom proxies.
     // The reduction texture should just have the pixels containing geom proxies.
@@ -567,33 +533,26 @@ class GLGeomItemLibrary extends EventEmitter {
       this.renderer.getViewport().initRenderState(renderstate)
     }
 
-    // const drawSceneGeomData = (renderstate: GeomDataRenderState) => {
-    //   this.occlusionDataBuffer.bindForWriting(renderstate, false)
+    const ext = this.timer_query_ext
+    let queryDrawScene: WebGLQuery
+    let queryReduceSceneGeoms: WebGLQuery
+    // let queryDrawCulledBBoxes: WebGLQuery
+    // let queryReduceBBoxes: WebGLQuery
+    if (ext) {
+      queryDrawScene = gl.createQuery()
+      gl.beginQuery(ext.TIME_ELAPSED_EXT, queryDrawScene)
+    }
 
-    //   renderstate.glDisable(gl.BLEND)
-    //   renderstate.glDisable(gl.CULL_FACE)
-    //   renderstate.glEnable(gl.DEPTH_TEST)
-    //   // gl.disable(gl.BLEND)
-    //   // gl.disable(gl.CULL_FACE)
-    //   // gl.enable(gl.DEPTH_TEST)
-    //   gl.depthFunc(gl.LESS)
-    //   gl.depthMask(true)
+    this.occlusionDataBuffer.bindForWriting(renderstate, true)
+    this.renderer.drawSceneGeomData(renderstate)
+    this.occlusionDataBuffer.unbindForWriting(renderstate)
 
-    //   // this.renderer.drawSceneGeomData(renderstate)
-    //   // For now, just rendering the main opaque geoms.
-    //   const opaqueGeomsPass = this.renderer.getPass(0)
-    //   opaqueGeomsPass.drawGeomData(renderstate)
-    //   const linesPass = this.renderer.getPass(1)
-    //   linesPass.drawGeomData(renderstate)
-
-    //   this.occlusionDataBuffer.unbindForWriting(renderstate)
-    // }
+    // drawSceneGeomData(renderstate)
+    if (ext) gl.endQuery(ext.TIME_ELAPSED_EXT)
 
     // Draw one point for each pixel in the occlusion buffer.
     // This point will color a single pixel in the reduction buffer.
     const numReductionPoints = this.occlusionDataBuffer.width * this.occlusionDataBuffer.height
-
-    const ext = this.timer_query_ext
 
     // Now perform a reduction to calculate the indices of visible items.
     const reduce = (renderstate: GeomDataRenderState, clear: boolean, query: WebGLQuery) => {
@@ -627,23 +586,6 @@ class GLGeomItemLibrary extends EventEmitter {
       this.reductionDataBuffer.unbindForWriting(renderstate)
     }
 
-    let queryDrawScene: WebGLQuery
-    let queryReduceSceneGeoms: WebGLQuery
-    // let queryDrawCulledBBoxes: WebGLQuery
-    // let queryReduceBBoxes: WebGLQuery
-    if (ext) {
-      queryDrawScene = gl.createQuery()
-      gl.beginQuery(ext.TIME_ELAPSED_EXT, queryDrawScene)
-    }
-
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-    // this.occlusionDataBuffer.bindForWriting(renderstate, true)
-    this.renderer.drawSceneGeomData(renderstate)
-    // this.occlusionDataBuffer.unbindForWriting(renderstate)
-
-    // drawSceneGeomData(renderstate)
-    if (ext) gl.endQuery(ext.TIME_ELAPSED_EXT)
-    /*
     // We render the scene geometry, reduce, then render
     // the boxes, reduce again. The bounding boxes displayed
     // are based on the results of the first reduce.
@@ -653,7 +595,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // ////////////////////////////////////////////////
     // Draw the bounding boxes of culled geometries.
-    
+
     const drawBBoxes = (buffer: WebGLBuffer, drawCount: number) => {
       // Now clear the color buffer, but not the depth buffer
       // and draw the bounding boxes of occluded items.
@@ -758,7 +700,6 @@ class GLGeomItemLibrary extends EventEmitter {
         visibleItems: this.reductionDataArray,
       })
     })
-    */
   }
 
   /**

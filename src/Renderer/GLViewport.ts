@@ -947,13 +947,10 @@ class GLViewport extends GLBaseViewport {
       screenQuad.bindShader(renderstate)
       const imageInif = <Uniform>renderstate.unifs.image
       occlusionDataBuffer.bindColorTexture(renderstate, imageInif)
+      gl.uniform1i(renderstate.unifs.isTextured.location, 1)
 
-      const gl = this.__renderer.gl
-      gl.enable(gl.BLEND)
-      gl.blendEquation(gl.FUNC_ADD)
-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
-      screenQuad.draw(renderstate, null, new Vec2(0, 0), new Vec2(1, 1))
       gl.disable(gl.BLEND)
+      screenQuad.draw(renderstate, null)
     }
     if (this.debugReductionBuffer) {
       // @ts-ignore
@@ -963,8 +960,8 @@ class GLViewport extends GLBaseViewport {
 
       const imageInif = <Uniform>renderstate.unifs.image
       reductionDataBuffer.bindColorTexture(renderstate, imageInif)
-
       const gl = this.__renderer.gl
+      gl.uniform1i(renderstate.unifs.isTextured.location, 1)
       gl.enable(gl.BLEND)
       gl.blendEquation(gl.FUNC_ADD)
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)

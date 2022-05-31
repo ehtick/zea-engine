@@ -57,6 +57,9 @@ class GLScreenQuad {
     } else if (textureOrColor && textureOrColor instanceof Color) {
       gl.uniform1i(unifs.isTextured.location, 0)
       gl.uniform4fv(unifs.color.location, textureOrColor.asArray())
+    } else {
+      // Assume a texture is bound el;sewehere
+      gl.uniform1i(unifs.isTextured.location, 1)
     }
 
     {
