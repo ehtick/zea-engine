@@ -428,7 +428,6 @@ class GLViewport extends GLBaseViewport {
       // logGeomData();
       // console.log("getGeomDataAtPos:", screenPos.toString(), screenPos.x,this.__width)
 
-      // Allocate a 1 pixel block and read from the GeomData buffer.
       const bufferWidth = this.__geomDataBufferFbo.width
       const bufferHeight = this.__geomDataBufferFbo.height
       const x = Math.floor(screenPos.x * (bufferWidth / this.__width))
@@ -437,9 +436,57 @@ class GLViewport extends GLBaseViewport {
       let passId
       let geomData: Float32Array | Uint8Array
       if (this.__renderer.floatGeomBuffer) {
-        geomData = new Float32Array(4)
-        gl.readPixels(x, bufferHeight - y - 1, 1, 1, gl.RGBA, gl.FLOAT, geomData)
-        if (geomData[3] == 0) return null
+        // Allocate a 5x5 pixel block and read from the GeomData buffer.
+        const geomDatas = new Float32Array(4 * 25)
+        gl.readPixels(x - 2, bufferHeight - y - 1 - 2, 5, 5, gl.RGBA, gl.FLOAT, geomDatas)
+
+        // ////////////////////////////////////
+        // We have a 5x5 grid of pixels, and we
+        // scan them to find the closest geom to us
+        let closest = Number.MAX_VALUE
+        let closestId = -1
+        const checkPixel = (offsetX: number, offsetY: number) => {
+          const id = 13 + offsetX + offsetY * 5
+          if (geomDatas[id * 4 + 3] > 0 && geomDatas[id * 4 + 3] < closest) {
+            closest = geomDatas[id * 4 + 3]
+            closestId = id
+          }
+        }
+
+        // Now we search the pixels from the center pixel out.
+        // * 19 11 20  *
+        // 14 5  4  6 16
+        // 9  1  0  2 10
+        // 13 7  3  8 15
+        // * 17 12 18  *
+        checkPixel(0, 0) // 0 x
+        checkPixel(-1, 0) // 1 W
+        checkPixel(1, 0) // 2 E
+        checkPixel(0, -1) // 3. S
+        checkPixel(0, 1) // 4. N
+
+        checkPixel(-1, 1) // 5. NW
+        checkPixel(1, 1) // 6. NE
+        checkPixel(-1, -1) // 7. SW
+        checkPixel(1, -1) // 8. SE
+
+        checkPixel(-2, 0) // 9 WW
+        checkPixel(2, 0) // 10 EE
+        checkPixel(0, -2) // 11 NN
+        checkPixel(0, 2) // 12 SS
+
+        checkPixel(-2, -1) // 13
+        checkPixel(-2, 1) // 14
+        checkPixel(2, -1) // 15
+        checkPixel(2, 1) // 16
+        checkPixel(-1, -2) // 17
+        checkPixel(1, -2) // 18
+        checkPixel(-1, 2) // 19
+        checkPixel(1, 2) // 20
+
+        if (closestId == -1) return
+
+        geomData = geomDatas.slice(closestId * 4, (closestId + 1) * 4)
 
         // Mask the pass id to be only the first 6 bits of the integer.
         passId = Math.round(geomData[0]) & (64 - 1)
