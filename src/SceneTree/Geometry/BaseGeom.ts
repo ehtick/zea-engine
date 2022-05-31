@@ -2,8 +2,9 @@
 import { Vec2, Vec3, Box2, Box3, Color } from '../../Math/index'
 import { ParameterOwner } from '../ParameterOwner'
 import { Attribute } from './Attribute'
-import { Vec3Attribute } from './Vec3Attribute'
 import { Vec2Attribute } from './Vec2Attribute'
+import { Vec3Attribute } from './Vec3Attribute'
+import { ColorAttribute } from './ColorAttribute'
 import { Vec3f16Attribute } from './Vec3f16Attribute'
 import { Vec2f16Attribute } from './Vec2f16Attribute'
 import { BinReader } from '../../SceneTree/BinReader'
@@ -368,7 +369,7 @@ class BaseGeom extends ParameterOwner {
       positionsAttr.data = reader.loadUInt16Array(numVerts * 3, false)
       if (normalsAttr) {
         // @ts-ignore
-        normalsAttr.data = reader.loadUInt8Array(numVerts * 3, false)
+        normalsAttr.data = reader.loadInt8Array(numVerts * 3, false)
       }
       if (texCoordsAttr) {
         // @ts-ignore
@@ -543,13 +544,20 @@ class BaseGeom extends ParameterOwner {
     for (const name in json.vertexAttributes) {
       let attr = this.__vertexAttributes.get(name)
       const attrJSON = json.vertexAttributes[name]
-      if (!attr) {
-        // switch(attrJSON.dataType) {
-        //   case 'Vec3' attr = new Vec3Attribute( attrJSON.defaultScalarValue)
-        // }
-        // const dataType = Registry.getClassDefinition(attrJSON.dataType)
-        // attr = new VertexAttribute(this, dataType, 0, attrJSON.defaultScalarValue)
-        // if (attr) this.__vertexAttributes.set(name, attr)
+      if (!attr || attr.dataTypeName != attrJSON.dataType) {
+        switch (attrJSON.dataType) {
+          case 'Vec2':
+            attr = new Vec2Attribute()
+            break
+          case 'Vec3':
+            attr = new Vec3Attribute()
+            break
+          case 'Color':
+            attr = new ColorAttribute()
+            break
+        }
+        attr.setCount(this.__numVertices)
+        this.__vertexAttributes.set(name, attr)
       }
       if (attr) {
         attr.fromJSON(attrJSON)

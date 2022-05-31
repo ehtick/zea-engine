@@ -209,6 +209,28 @@ class BinReader {
   }
 
   /**
+   * Reads buffer and return a signed Int8 array with the specified size,
+   * starting from current byte offset.
+   * Byte offset is increased by the specified byte size.
+   *
+   * @param size - The size param.
+   * @param clone - The clone param.
+   * @return - The return value.
+   */
+  loadInt8Array(size?: number, clone = false): Int8Array {
+    if (size == undefined) size = this.loadUInt32()
+    let result
+    if (clone) {
+      result = new Int8Array(this.__data.slice(this.__byteOffset, this.__byteOffset + size))
+      if (result.length != size) console.log('broken')
+    } else {
+      result = new Int8Array(this.__data, this.__byteOffset, size)
+    }
+    this.__byteOffset += size
+    return result
+  }
+
+  /**
    * Reads buffer and return an unsigned Int8 array with the specified size,
    * starting from current byte offset.
    * Byte offset is increased by the specified byte size.
