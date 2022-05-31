@@ -1,4 +1,4 @@
-import { Xfo, Box3, Vec3, Quat } from '../Math/index'
+import { Xfo, Box3, Vec3, Quat, Color } from '../Math/index'
 import { XfoParameter, Mat4Parameter } from './Parameters/index'
 import { GeometryParameter } from './Parameters/GeometryParameter'
 import { Registry } from '../Registry'
@@ -182,6 +182,24 @@ class GeomItem extends BaseGeomItem {
     return bbox
   }
 
+  // ////////////////////////////////////////
+  // Highlights
+
+  /**
+   * Adds a highlight to the tree item.
+   *
+   * @param name - The name of the tree item.
+   * @param color - The color of the highlight.
+   * @param propagateToChildren - A boolean indicating whether to propagate to children.
+   */
+  addHighlight(name: string, color: Color, propagateToChildren = false): void {
+    super.addHighlight(name, color, propagateToChildren)
+
+    if (!this.loaded) {
+      this.loadGeom()
+    }
+  }
+
   // ///////////////////////////
   // Debugging
   /**
@@ -274,6 +292,21 @@ class GeomItem extends BaseGeomItem {
     }
   }
 
+  loadGeom() {
+    this.loaded = true
+    const geomLibrary = this.assetItem.geomLibrary
+    const geom = geomLibrary.getGeom(this.geomIndex)
+    if (geom) {
+      this.geomParam.value = <BaseGeom>geom
+      this.geomOffsetXfoParam.value = this.tmpGeomOffsetXfo ?? new Xfo()
+    } else {
+      geomLibrary.loadGeomFile(this.geomIndex, false).then(() => {
+        this.geomParam.value = <BaseGeom>geomLibrary.getGeom(this.geomIndex)
+        this.geomOffsetXfoParam.value = this.tmpGeomOffsetXfo ?? new Xfo()
+      })
+    }
+  }
+
   /**
    * Returns string representation of current object's state.
    * @param context
@@ -339,21 +372,6 @@ class GeomItem extends BaseGeomItem {
     // Note: this might not be necessary. It should
     // always be dirty after cloning.
     this.geomMatParam.setDirty(0)
-  }
-
-  loadGeom() {
-    this.loaded = true
-    const geomLibrary = this.assetItem.geomLibrary
-    const geom = geomLibrary.getGeom(this.geomIndex)
-    if (geom) {
-      this.geomParam.value = <BaseGeom>geom
-      this.geomOffsetXfoParam.value = this.tmpGeomOffsetXfo ?? new Xfo()
-    } else {
-      geomLibrary.loadGeomFile(this.geomIndex, false).then(() => {
-        this.geomParam.value = <BaseGeom>geomLibrary.getGeom(this.geomIndex)
-        this.geomOffsetXfoParam.value = this.tmpGeomOffsetXfo ?? new Xfo()
-      })
-    }
   }
 
   /**
