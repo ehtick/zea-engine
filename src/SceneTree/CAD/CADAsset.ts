@@ -194,7 +194,6 @@ class CADAsset extends AssetItem {
             // No geoms in this file, so we won't wait for the 'done' event in the GeomLibrary.
             resourceLoader.incrementWorkDone(1)
           }
-
           context.decrementAsync()
         },
         (error) => {

@@ -333,6 +333,8 @@
             const item = filterItem(event.intersectionData.geomItem)
             console.log('', item.getPath())
             if (item) selectionManager.toggleItemSelection(item, !event.ctrlKey)
+          } else {
+            selectionManager.clearSelection()
           }
         })
         renderer.getViewport().on('pointerDoublePressed', (event) => {
