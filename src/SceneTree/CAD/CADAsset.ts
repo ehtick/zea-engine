@@ -189,7 +189,7 @@ class CADAsset extends AssetItem {
               if (!context.lazyLoading) {
                 this.geomLibrary.loadGeomFilesStream(geomLibraryJSON, basePath, context)
               } else {
-                this.geomLibrary.prepareLazyLoad(basePath, context)
+                this.geomLibrary.prepareLazyLoad(geomLibraryJSON, basePath, context)
 
                 resourceLoader.incrementWorkDone(1)
               }

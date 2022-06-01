@@ -74,6 +74,8 @@ class GeomLibrary extends EventEmitter {
   protected loadContext?: AssetLoadContext
   protected numGeoms: number = -1
   protected numGeomFiles: number = 1
+  protected loadedGeomFiles: number = 0
+  private geomFilePromises: Array<Promise<void>> = []
   public geoms: Array<BaseProxy | BaseGeom> = []
   public basePath: string = ''
   public loadedCount: number = 0
@@ -105,26 +107,34 @@ class GeomLibrary extends EventEmitter {
    */
   loadGeomFile(geomFileID: number, incrementProgress = false): Promise<void> {
     if (incrementProgress) resourceLoader.incrementWorkload(1)
-    return new Promise((resolve) => {
-      const geomFileUrl = this.basePath + geomFileID + '.zgeoms'
+    if (!this.geomFilePromises[geomFileID]) {
+      this.geomFilePromises[geomFileID] = new Promise((resolve) => {
+        const geomFileUrl = this.basePath + geomFileID + '.zgeoms'
 
-      resourceLoader.loadFile('archive', geomFileUrl, false).then((entries: any) => {
-        const geomsData = entries[Object.keys(entries)[0]]
+        resourceLoader.loadFile('archive', geomFileUrl, false).then((entries: any) => {
+          const geomsData = entries[Object.keys(entries)[0]]
 
-        const streamFileParsedListenerID = this.on('streamFileParsed', (event: StreamFileParsedEvent) => {
-          if (event.geomFileID == geomFileUrl) {
-            if (incrementProgress) resourceLoader.incrementWorkDone(1)
-            this.removeListenerById('streamFileParsed', streamFileParsedListenerID)
-            resolve()
-          }
+          const streamFileParsedListenerID = this.on('streamFileParsed', (event: StreamFileParsedEvent) => {
+            if (event.geomFileID == geomFileUrl) {
+              if (incrementProgress) resourceLoader.incrementWorkDone(1)
+
+              this.loadedGeomFiles++
+              console.log(`GeomFileLoaded :${geomFileID} > ${this.loadedGeomFiles}/${this.numGeomFiles}`)
+              this.removeListenerById('streamFileParsed', streamFileParsedListenerID)
+              resolve()
+            }
+          })
+
+          this.readBinaryBuffer(geomFileUrl, geomsData.buffer, this.loadContext)
         })
-
-        this.readBinaryBuffer(geomFileUrl, geomsData.buffer, this.loadContext)
       })
-    })
+    }
+    return this.geomFilePromises[geomFileID]
   }
 
-  prepareLazyLoad(basePath: string, context: AssetLoadContext) {
+  prepareLazyLoad(geomLibraryJSON: Record<string, any>, basePath: string, context: AssetLoadContext) {
+    this.numGeomFiles = geomLibraryJSON.numGeomFiles
+    this.numGeoms = geomLibraryJSON.numGeoms
     this.basePath = basePath
     this.loadContext = context
   }
@@ -136,13 +146,12 @@ class GeomLibrary extends EventEmitter {
    * @param context - The value param.
    */
   loadGeomFilesStream(geomLibraryJSON: Record<string, any>, basePath: string, context: AssetLoadContext): void {
-    this.numGeomFiles = geomLibraryJSON.numGeomsPerFile.length
-    resourceLoader.incrementWorkload(this.numGeomFiles)
-
+    this.numGeomFiles = geomLibraryJSON.numGeomFiles
     this.numGeoms = geomLibraryJSON.numGeoms
     this.basePath = basePath
     this.loadContext = context
 
+    resourceLoader.incrementWorkload(this.numGeomFiles)
     for (let geomFileID = 0; geomFileID < this.numGeomFiles; geomFileID++) {
       this.loadGeomFile(geomFileID, false)
     }

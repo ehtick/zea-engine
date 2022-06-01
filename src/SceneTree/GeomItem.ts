@@ -17,7 +17,7 @@ import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'
 import { CloneContext } from './CloneContext'
 import { CADAsset } from './CAD/CADAsset'
 
-const cuboid = new Cuboid(1, 1, 1, false)
+const cuboid = new Cuboid(1, 1, 1, false, false)
 let calculatePreciseBoundingBoxes = false
 
 /** The operator the calculates the global Xfo of a TreeItem based on its parents GlobalXfo and its own LocalXfo

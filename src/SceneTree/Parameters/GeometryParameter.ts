@@ -41,7 +41,6 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
           this.emitBoundingBoxDirtied(event)
         })
       }
-
       this.emit('valueChanged')
     }
   }
@@ -100,7 +99,7 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
    * from this parameter and returns it.
    * @return - Returns a new geometry parameter.
    */
-  clone():  GeometryParameter {
+  clone(): GeometryParameter {
     const clonedParam = new GeometryParameter(this.name, this.__value)
     return clonedParam
   }

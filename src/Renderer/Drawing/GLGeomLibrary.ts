@@ -13,6 +13,22 @@ import { WebGL12RenderingContext } from '../types/webgl'
 import { GeomBuffers } from '../../SceneTree/types/scene'
 import { GLAttrBuffer, GLAttrDesc } from '../types/renderer'
 
+// @ts-ignore
+// import GLGeomLibraryWorker from 'web-worker:./GLGeomLibrary-worker.js'
+// import { WorkerPool } from '../../Utilities/WorkerPool'
+
+// class GLGeomLibraryWorkerPool extends WorkerPool<GLGeomLibraryWorker> {
+//   constructor() {
+//     super(false)
+//   }
+//   constructWorker(): Promise<GLGeomLibraryWorker> {
+//     const worker = new GLGeomLibraryWorker()
+//     return Promise.resolve(worker)
+//   }
+// }
+
+// const workerPool = new GLGeomLibraryWorkerPool()
+
 const resizeIntArray = (intArray: Int32Array, newSize: number) => {
   const newArray = new Int32Array(newSize)
   newArray.set(intArray)
@@ -461,14 +477,35 @@ class GLGeomLibrary extends EventEmitter {
         throw new Error('Invalid allocation for this geom')
       }
 
+      console.log('uploadBuffers:', index, indices.length)
       const attributesAllocation = this.attributesAllocator.getAllocation(index)
       // The indices need to be offset so they they index the new attributes array.
-      const offsettedIndices = new Uint32Array(allocation.size)
+      const offsettedIndices = new Uint32Array(indices.length)
+
+      let i = indices.length - 1
+      offsettedIndices[i] = geomBuffers.indices[i] + attributesAllocation.start
       for (let i = 0; i < indices.length; i++) {
         offsettedIndices[i] = geomBuffers.indices[i] + attributesAllocation.start
       }
+      // workerPool
+      //   .addTask(
+      //     {
+      //       index,
+      //       indices,
+      //       offset: attributesAllocation.start,
+      //     },
+      //     [indices.buffer]
+      //   )
+      //   .then((results) => {
+      //     // @ts-ignore
+      //     const offsettedIndices: Uint32Array = results.offsettedIndices
+      //     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
+      //     const elementSize = 4 //  Uint32Array
+      //     const offsetInBytes = allocation.start * elementSize
+      //     gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, offsetInBytes, offsettedIndices)
+      //     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
+      //   })
 
-      const gl = this.__gl
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
       const elementSize = 4 //  Uint32Array
       const offsetInBytes = allocation.start * elementSize
@@ -521,7 +558,6 @@ class GLGeomLibrary extends EventEmitter {
       })
       this.attributesBufferNeedsAlloc = []
     }
-
     this.dirtyGeomIndices.forEach((index: number) => {
       this.uploadBuffers(index)
     })
@@ -578,6 +614,7 @@ class GLGeomLibrary extends EventEmitter {
       shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.glattrbuffers, this.indexBuffer)
       this.shaderBindings[renderstate.shaderkey!] = shaderBinding
 
+      shaderBinding.bind(renderstate)
       {
         // Hack to force the primitive restart index cache to be dirty...
         // https://bugs.webkit.org/show_bug.cgi?id=239015

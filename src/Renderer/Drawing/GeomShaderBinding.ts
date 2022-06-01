@@ -341,10 +341,7 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
       // console.log("Binding :" + attrName + " to attr:" + location + " count:" + geomAttrBuffer.count + " dimension:" + dimension  + " stride:" + stride  + " offset:" + offset + " normalized:" + normalized + " instanced:" + instanced);
     }
 
-    // gl.bindVertexArray(null)
-
     this.indexBuffer = indexBuffer
-    if (this.indexBuffer) gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
   }
 
   /**

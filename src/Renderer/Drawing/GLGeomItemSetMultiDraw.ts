@@ -9,6 +9,11 @@ import { ColorRenderState, GeomDataRenderState, RenderState } from '../RenderSta
 import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeomItem } from './GLGeomItem'
 
+interface GeomItemIdAndGeomId {
+  geomItemId: number
+  geomId: number
+}
+
 /** This class abstracts the rendering of a collection of geometries to screen.
  * @extends EventEmitter
  * @private
@@ -17,9 +22,8 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   protected renderer: GLBaseRenderer
   protected gl: WebGL12RenderingContext
   protected glGeomItems: Array<GLGeomItem | null> = []
-  protected glGeomItemIdsMapping: Record<number, number> = {}
-  protected glGeomItemGeomIdsMapping: Record<number, number> = {}
-  protected glGeomIdsMapping: Record<number, number[]> = {}
+  protected glGeomItemIdsMapping: Map<GLGeomItem, GeomItemIdAndGeomId> = new Map()
+  protected glGeomIdsMapping: Record<number, Set<number>> = {}
   protected glgeomItemEventHandlers: any[] = []
   protected freeIndices: number[] = []
 
@@ -59,7 +63,9 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     this.gl = <WebGL12RenderingContext>renderer.gl
 
     this.renderer.glGeomLibrary.on('geomDataChanged', (event: IndexEvent) => {
-      this.dirtyGeomIndices.add(event.index)
+      if (this.glGeomIdsMapping[event.index]) {
+        this.dirtyGeomIndices.add(event.index)
+      }
     })
   }
 
@@ -69,15 +75,18 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    */
   addGLGeomItem(glGeomItem: GLGeomItem): void {
     const index: number = this.freeIndices.length > 0 ? this.freeIndices.pop()! : this.glGeomItems.length
+    const geomId = glGeomItem.geomId
+
+    this.glGeomItemIdsMapping.set(glGeomItem, {
+      geomItemId: index,
+      geomId,
+    })
 
     // Keep track of which geomitems use which geoms, so we can update the offset and count array if they change.
-    if (!this.glGeomIdsMapping[glGeomItem.geomId]) {
-      this.glGeomIdsMapping[glGeomItem.geomId] = [index]
-    } else {
-      this.glGeomIdsMapping[glGeomItem.geomId].push(index)
+    if (!this.glGeomIdsMapping[geomId]) {
+      this.glGeomIdsMapping[geomId] = new Set<number>()
     }
-    this.glGeomItemIdsMapping[glGeomItem.getId()] = index
-    this.glGeomItemGeomIdsMapping[glGeomItem.getId()] = glGeomItem.geomId
+    this.glGeomIdsMapping[geomId].add(index)
 
     // Note: we now allocate the draw index right away.
     // Visibility only controls the element count value
@@ -137,7 +146,9 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param glGeomItem - The glGeomItem value.
    */
   removeGLGeomItem(glGeomItem: GLGeomItem): void {
-    const index = this.glGeomItemIdsMapping[glGeomItem.getId()]
+    const geomItemIndices = this.glGeomItemIdsMapping.get(glGeomItem)
+    const index = geomItemIndices.geomItemId
+    const geomId = geomItemIndices.geomId
     // This is a solution to the problem caused by a new geometry being
     // assigned to a GeomItem (occurs during lazy loading).
     // The GLGeomItemLibrary updates the geomId stored in the GLGeomItem
@@ -146,21 +157,19 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     // when the GLGeomItem was added.
     // A better solution would be to make pass-reassignment more centralized
     // Maybe in the GLRenderer instead of in all these places that can conflict.
-    const geomId = this.glGeomItemGeomIdsMapping[glGeomItem.getId()]
-    const geomItemIndices = this.glGeomIdsMapping[geomId]
-    geomItemIndices.splice(geomItemIndices.indexOf(index), 1)
-    if (geomItemIndices.length == 0) {
+    const glGeomItemIndicesForGeomId = this.glGeomIdsMapping[geomId]
+    glGeomItemIndicesForGeomId.delete(index)
+    if (glGeomItemIndicesForGeomId.size == 0) {
       delete this.glGeomIdsMapping[geomId]
       if (this.dirtyGeomIndices.has(geomId)) this.dirtyGeomIndices.delete(geomId)
     }
-    delete this.glGeomItemIdsMapping[glGeomItem.getId()]
-    delete this.glGeomItemGeomIdsMapping[glGeomItem.getId()]
 
     const eventHandlers = this.glgeomItemEventHandlers[index]
     glGeomItem.geomItem.off('highlightChanged', eventHandlers.highlightChanged)
     glGeomItem.off('visibilityChanged', eventHandlers.visibilityChanged)
 
     this.glGeomItems[index] = null
+    this.glGeomItemIdsMapping.delete(glGeomItem)
     this.glgeomItemEventHandlers[index] = null
     this.drawIdsArray[index] = 0
     this.drawElementOffsets[index] = 0
@@ -216,6 +225,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
         })
       }
     })
+
     this.dirtyGeomIndices = new Set()
   }
 

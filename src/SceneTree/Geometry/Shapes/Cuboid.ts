@@ -48,7 +48,7 @@ class Cuboid extends ProceduralMesh {
    * @param z - The length of the cuboid along the Z axis.
    * @param baseZAtZero - The baseZAtZero value.
    */
-  constructor(x = 1.0, y = 1.0, z = 1.0, baseZAtZero = false) {
+  constructor(x = 1.0, y = 1.0, z = 1.0, baseZAtZero = false, normals = true) {
     super()
 
     if (isNaN(x) || isNaN(y) || isNaN(z)) throw new Error('Invalid geom args')
@@ -68,7 +68,7 @@ class Cuboid extends ProceduralMesh {
     this.setFaceVertexIndices(4, [0, 3, 7, 4])
     this.setFaceVertexIndices(5, [2, 1, 5, 6])
     this.setNumVertices(8)
-    this.addVertexAttribute('normals', new Vec3f8Attribute())
+    if (normals) this.addVertexAttribute('normals', new Vec3f8Attribute())
     // this.addVertexAttribute('texCoords', new Vec2f16Attribute())
   }
 
