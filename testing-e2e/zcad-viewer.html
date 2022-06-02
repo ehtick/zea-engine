@@ -211,6 +211,14 @@
 
         const appData = { scene, renderer }
 
+        // Setup TreeView Display
+        const treeElement = document.getElementById('tree')
+        treeElement.setTreeItem(scene.getRoot(), appData)
+
+        // Setup FPS Display
+        const fpsElement = document.getElementById('fps')
+        if (fpsElement) fpsElement.renderer = renderer
+
         /** SELECTION START */
         const { SelectionManager, SelectionTool } = window.zeaUx
 
@@ -236,17 +244,9 @@
         // Color the selection rect.
         const selectionRectColor = new Color(0, 0, 0, 1)
         selectionTool.rectItem.materialParam.value.getParameter('BaseColor').value = selectionRectColor
+        treeElement.setSelectionManager(selectionManager)
 
         /** SELECTION END */
-
-        // Setup FPS Display
-        const fpsElement = document.getElementById('fps')
-        if (fpsElement) fpsElement.renderer = renderer
-
-        // Setup TreeView Display
-        const treeElement = document.getElementById('tree')
-        treeElement.setTreeItem(scene.getRoot(), appData)
-        treeElement.setSelectionManager(selectionManager)
 
         // let highlightedItem
 

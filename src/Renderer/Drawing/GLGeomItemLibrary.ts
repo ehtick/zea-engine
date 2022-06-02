@@ -301,115 +301,117 @@ class GLGeomItemLibrary extends EventEmitter {
     // Initialize the view values on the worker.
     this.calculateCulling()
 
-    {
-      // ////////////////////////////////////////
-      // Occlusion Culling
-      if (this.enableOcclusionCulling) {
-        const gl = this.renderer.gl
+    // ////////////////////////////////////////
+    // Occlusion Culling
+    if (this.enableOcclusionCulling) {
+      const gl = this.renderer.gl
 
-        // https://www.khronos.org/registry/webgl/extensions/EXT_disjoint_timer_query_webgl2/
-        this.timer_query_ext = gl.getExtension('EXT_disjoint_timer_query_webgl2')
+      // https://www.khronos.org/registry/webgl/extensions/EXT_disjoint_timer_query_webgl2/
+      this.timer_query_ext = gl.getExtension('EXT_disjoint_timer_query_webgl2')
 
-        let occlusionDataBufferSizeFactor = 1 / window.devicePixelRatio
-        const occlusionDataBufferWidth = Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor)
-        const occlusionDataBufferHeight = Math.ceil(this.renderer.getHeight() * occlusionDataBufferSizeFactor)
-        this.occlusionDataBuffer = new GLRenderTarget(gl, {
-          type: gl.FLOAT,
-          format: gl.RGBA,
-          minFilter: gl.NEAREST,
-          magFilter: gl.NEAREST,
-          width: occlusionDataBufferWidth,
-          height: occlusionDataBufferHeight,
-          depthType: gl.UNSIGNED_SHORT,
-          depthFormat: gl.DEPTH_COMPONENT,
-          depthInternalFormat: gl.DEPTH_COMPONENT16,
-        })
-        // this.occlusionDataBuffer.clearColor.set(1, 0, 0, 1)
-        // this.occlusionDataBuffer.clear(true)
+      let occlusionDataBufferSizeFactor = 1 / window.devicePixelRatio
+      const occlusionDataBufferWidth = Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor)
+      const occlusionDataBufferHeight = Math.ceil(this.renderer.getHeight() * occlusionDataBufferSizeFactor)
+      this.occlusionDataBuffer = new GLRenderTarget(gl, {
+        type: gl.FLOAT,
+        format: gl.RGBA,
+        minFilter: gl.NEAREST,
+        magFilter: gl.NEAREST,
+        width: occlusionDataBufferWidth,
+        height: occlusionDataBufferHeight,
+        depthType: gl.UNSIGNED_SHORT,
+        depthFormat: gl.DEPTH_COMPONENT,
+        depthInternalFormat: gl.DEPTH_COMPONENT16,
+      })
+      // this.occlusionDataBuffer.clearColor.set(1, 0, 0, 1)
+      // this.occlusionDataBuffer.clear(true)
 
-        this.renderer.on('resized', (event) => {
-          if (!this.xrPresenting) {
-            this.occlusionDataBuffer.resize(
-              Math.ceil(event.width * occlusionDataBufferSizeFactor),
-              Math.ceil(event.height * occlusionDataBufferSizeFactor)
-            )
+      this.renderer.on('resized', (event) => {
+        if (!this.xrPresenting) {
+          this.occlusionDataBuffer.resize(
+            Math.ceil(event.width * occlusionDataBufferSizeFactor),
+            Math.ceil(event.height * occlusionDataBufferSizeFactor)
+          )
 
-            if (displayOcclusionBuffer) {
-              if (!this.occlusionImage) {
-                const material = new FlatSurfaceMaterial('Material')
-                const image = new DataImage('LDRImage')
-                image.mipMapped = false
-                image.format = 'RGB'
-                material.baseColorParam.setImage(image)
-                const xfo = new Xfo(new Vec3(0, -3, 0))
-                xfo.sc.set(5, 5, 1)
-                const geomItem = new GeomItem('geomItem2', new Plane(1, 1), material, xfo)
-                geomItem.setSelectable(false)
-                this.renderer.addTreeItem(geomItem)
-                this.occlusionImage = image
-                this.occlusionImageItem = geomItem
-              }
-              this.occlusionImage.setData(
-                this.occlusionDataBuffer.width,
-                this.occlusionDataBuffer.height,
-                // @ts-ignore
-                this.occlusionDataBuffer.textureTargets[0]
-              )
+          if (displayOcclusionBuffer) {
+            if (!this.occlusionImage) {
+              const material = new FlatSurfaceMaterial('Material')
+              const image = new DataImage('LDRImage')
+              image.mipMapped = false
+              image.format = 'RGB'
+              material.baseColorParam.setImage(image)
+              const xfo = new Xfo(new Vec3(0, -3, 0))
+              xfo.sc.set(5, 5, 1)
+              const geomItem = new GeomItem('geomItem2', new Plane(1, 1), material, xfo)
+              geomItem.setSelectable(false)
+              this.renderer.addTreeItem(geomItem)
+              this.occlusionImage = image
+              this.occlusionImageItem = geomItem
             }
+            this.occlusionImage.setData(
+              this.occlusionDataBuffer.width,
+              this.occlusionDataBuffer.height,
+              // @ts-ignore
+              this.occlusionDataBuffer.textureTargets[0]
+            )
           }
-        })
+        }
+      })
 
-        // Do we resize the occlusion buffer to match the screen resolution of the HMD?
-        // So far we are not seeing great performance in XR with culling enabled.
-        // For some reason, reduction is already 10x more costly in VR with the same
-        // resolution occlusion buffer.
-        // renderer.once('xrViewportSetup', (event: XrViewportEvent) => {
-        //   console.log('xrViewportSetup')
-        //   const xrvp = event.xrViewport
+      // Do we resize the occlusion buffer to match the screen resolution of the HMD?
+      // So far we are not seeing great performance in XR with culling enabled.
+      // For some reason, reduction is already 10x more costly in VR with the same
+      // resolution occlusion buffer.
+      // renderer.once('xrViewportSetup', (event: XrViewportEvent) => {
+      //   console.log('xrViewportSetup')
+      //   const xrvp = event.xrViewport
 
-        //   xrvp.on('presentingChanged', (event: StateChangedEvent) => {
-        //     if (event.state) {
-        //       occlusionDataBufferSizeFactor = 0.2
-        //       this.occlusionDataBuffer.resize(
-        //         Math.ceil(xrvp.getWidth() * occlusionDataBufferSizeFactor),
-        //         Math.ceil(xrvp.getWidth() * occlusionDataBufferSizeFactor)
-        //       )
-        //     } else {
-        //       occlusionDataBufferSizeFactor = 1
-        //       this.occlusionDataBuffer.resize(
-        //         Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor),
-        //         Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor)
-        //       )
-        //     }
-        //     this.occlusionImage.setData(
-        //       this.occlusionDataBuffer.width,
-        //       this.occlusionDataBuffer.height,
-        //       this.occlusionDataBuffer.textureTargets[0]
-        //     )
-        //   })
-        // })
+      //   xrvp.on('presentingChanged', (event: StateChangedEvent) => {
+      //     if (event.state) {
+      //       occlusionDataBufferSizeFactor = 0.2
+      //       this.occlusionDataBuffer.resize(
+      //         Math.ceil(xrvp.getWidth() * occlusionDataBufferSizeFactor),
+      //         Math.ceil(xrvp.getWidth() * occlusionDataBufferSizeFactor)
+      //       )
+      //     } else {
+      //       occlusionDataBufferSizeFactor = 1
+      //       this.occlusionDataBuffer.resize(
+      //         Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor),
+      //         Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor)
+      //       )
+      //     }
+      //     this.occlusionImage.setData(
+      //       this.occlusionDataBuffer.width,
+      //       this.occlusionDataBuffer.height,
+      //       this.occlusionDataBuffer.textureTargets[0]
+      //     )
+      //   })
+      // })
 
-        this.reductionDataBuffer = new GLRenderTarget(gl, {
-          type: gl.UNSIGNED_BYTE,
-          internalFormat: gl.R8,
-          format: gl.RED,
-          minFilter: gl.NEAREST,
-          magFilter: gl.NEAREST,
-          width: 1,
-          height: 1,
-          depthType: gl.UNSIGNED_SHORT,
-          depthFormat: gl.DEPTH_COMPONENT,
-          depthInternalFormat: gl.DEPTH_COMPONENT16,
-        })
+      this.reductionDataBuffer = new GLRenderTarget(gl, {
+        type: gl.UNSIGNED_BYTE,
+        internalFormat: gl.R8,
+        format: gl.RED,
+        minFilter: gl.NEAREST,
+        magFilter: gl.NEAREST,
+        width: 1,
+        height: 1,
+        depthType: gl.UNSIGNED_SHORT,
+        depthFormat: gl.DEPTH_COMPONENT,
+        depthInternalFormat: gl.DEPTH_COMPONENT16,
+      })
 
-        this.bbox = new GLLines(gl, new BBoxOcclusionLinesCuboid())
-        this.reductionShader = new ReductionShader(gl)
-        this.boundingBoxShader = new BoundingBoxShader(gl)
-        this.boundingBoxShader.compileForTarget('GLGeomItemLibrary', {
-          directives: this.renderer.directives,
-        })
-        this.inFrustumIndicesCount = 0
-      }
+      this.bbox = new GLLines(gl, new BBoxOcclusionLinesCuboid())
+      this.reductionShader = new ReductionShader(gl)
+      this.boundingBoxShader = new BoundingBoxShader(gl)
+      this.boundingBoxShader.compileForTarget('GLGeomItemLibrary', {
+        directives: this.renderer.directives,
+      })
+      this.inFrustumIndicesCount = 0
+
+      this.renderer.glGeomLibrary.on('geomBuffersUpdated', () => {
+        this.calculateCulling()
+      })
     }
   }
 

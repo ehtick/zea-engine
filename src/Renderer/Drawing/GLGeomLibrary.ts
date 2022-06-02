@@ -14,20 +14,20 @@ import { GeomBuffers } from '../../SceneTree/types/scene'
 import { GLAttrBuffer, GLAttrDesc } from '../types/renderer'
 
 // @ts-ignore
-// import GLGeomLibraryWorker from 'web-worker:./GLGeomLibrary-worker.js'
-// import { WorkerPool } from '../../Utilities/WorkerPool'
+import GLGeomLibraryWorker from 'web-worker:./GLGeomLibrary-worker.js'
+import { WorkerPool } from '../../Utilities/WorkerPool'
 
-// class GLGeomLibraryWorkerPool extends WorkerPool<GLGeomLibraryWorker> {
-//   constructor() {
-//     super(false)
-//   }
-//   constructWorker(): Promise<GLGeomLibraryWorker> {
-//     const worker = new GLGeomLibraryWorker()
-//     return Promise.resolve(worker)
-//   }
-// }
+class GLGeomLibraryWorkerPool extends WorkerPool<GLGeomLibraryWorker> {
+  constructor() {
+    super(false)
+  }
+  constructWorker(): Promise<GLGeomLibraryWorker> {
+    const worker = new GLGeomLibraryWorker()
+    return Promise.resolve(worker)
+  }
+}
 
-// const workerPool = new GLGeomLibraryWorkerPool()
+const workerPool = new GLGeomLibraryWorkerPool()
 
 const resizeIntArray = (intArray: Int32Array, newSize: number) => {
   const newArray = new Int32Array(newSize)
@@ -421,104 +421,104 @@ class GLGeomLibrary extends EventEmitter {
    * The uploadBuffers method.
    * @param index - The index of the geom to upload
    */
-  uploadBuffers(index: number): void {
-    const gl = this.__gl
+  uploadBuffers(index: number): Promise<void> {
+    return new Promise<void>((resolve) => {
+      const gl = this.__gl
 
-    // Note: when we allocate the buffers, we may resize the buffer, which
-    // means we need to re-upload geoms that were not changed.
-    let geomBuffers = this.geomBuffersTmp[index]
-    if (!geomBuffers) {
-      const geom = this.geoms[index]
-      if (!geom) return
-      geomBuffers = geom.genBuffers()
-      this.geomBuffersTmp[index] = geomBuffers
-    }
+      // Note: when we allocate the buffers, we may resize the buffer, which
+      // means we need to re-upload geoms that were not changed.
+      let geomBuffers = this.geomBuffersTmp[index]
+      if (!geomBuffers) {
+        const geom = this.geoms[index]
+        if (!geom) return
+        geomBuffers = geom.genBuffers()
+        this.geomBuffersTmp[index] = geomBuffers
+      }
 
-    const count = this.geomVertexCounts[index]
-    const numVerts = geomBuffers.numRenderVerts ? geomBuffers.numRenderVerts : geomBuffers.numVertices
-    if (count != numVerts) {
-      throw new Error('Invalid allocation for this geom')
-    }
-    if (numVerts == 0) {
-      const event = new IndexEvent(index)
-      this.emit('geomDataChanged', event)
-      return
-    }
-
-    // eslint-disable-next-line guard-for-in
-    for (const attrName in geomBuffers.attrBuffers) {
-      const attrSpec = this.shaderAttrSpec[attrName]
-      const attrData = geomBuffers.attrBuffers[attrName]
-      const glattrbuffer = this.glattrbuffers[attrName]
-
-      // Some geoms might not have all the attributes.
-      // and some geoms have more attributes than others.
-      if (!attrData || !glattrbuffer) continue
-
-      gl.bindBuffer(gl.ARRAY_BUFFER, glattrbuffer.buffer)
-      const elementSize = attrSpec.elementSize
-      const offsetInBytes = this.geomVertexOffsets[index] * elementSize * attrSpec.dimension
-
-      const values = convertBuffer(gl, attrData.values, attrSpec)
-      gl.bufferSubData(gl.ARRAY_BUFFER, offsetInBytes, values)
-    }
-    gl.bindBuffer(gl.ARRAY_BUFFER, null)
-
-    // //////////////////////////////////////
-    // Indices
-    // Note: we sometimes see geometries with zero vertices/indices which means
-    // no allocation has yet been made. We can safely skip these.
-    if (geomBuffers.indices && geomBuffers.indices.length > 0) {
-      const indices = geomBuffers.indices
-
-      const allocation = this.indicesAllocator.getAllocation(index)
-
-      if (allocation.size != indices.length) {
+      const count = this.geomVertexCounts[index]
+      const numVerts = geomBuffers.numRenderVerts ? geomBuffers.numRenderVerts : geomBuffers.numVertices
+      if (count != numVerts) {
         throw new Error('Invalid allocation for this geom')
       }
-
-      console.log('uploadBuffers:', index, indices.length)
-      const attributesAllocation = this.attributesAllocator.getAllocation(index)
-      // The indices need to be offset so they they index the new attributes array.
-      const offsettedIndices = new Uint32Array(indices.length)
-
-      let i = indices.length - 1
-      offsettedIndices[i] = geomBuffers.indices[i] + attributesAllocation.start
-      for (let i = 0; i < indices.length; i++) {
-        offsettedIndices[i] = geomBuffers.indices[i] + attributesAllocation.start
+      if (numVerts == 0) {
+        const event = new IndexEvent(index)
+        this.emit('geomDataChanged', event)
+        return
       }
-      // workerPool
-      //   .addTask(
-      //     {
-      //       index,
-      //       indices,
-      //       offset: attributesAllocation.start,
-      //     },
-      //     [indices.buffer]
-      //   )
-      //   .then((results) => {
-      //     // @ts-ignore
-      //     const offsettedIndices: Uint32Array = results.offsettedIndices
-      //     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
-      //     const elementSize = 4 //  Uint32Array
-      //     const offsetInBytes = allocation.start * elementSize
-      //     gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, offsetInBytes, offsettedIndices)
-      //     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
-      //   })
 
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
-      const elementSize = 4 //  Uint32Array
-      const offsetInBytes = allocation.start * elementSize
-      gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, offsetInBytes, offsettedIndices)
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
-    }
+      // eslint-disable-next-line guard-for-in
+      for (const attrName in geomBuffers.attrBuffers) {
+        const attrSpec = this.shaderAttrSpec[attrName]
+        const attrData = geomBuffers.attrBuffers[attrName]
+        const glattrbuffer = this.glattrbuffers[attrName]
 
-    if (this.freeDataAfterUpload) {
-      const geom = this.geoms[index]
-      geom.freeBuffers()
-    }
+        // Some geoms might not have all the attributes.
+        // and some geoms have more attributes than others.
+        if (!attrData || !glattrbuffer) continue
 
-    this.emit('geomDataChanged', new IndexEvent(index))
+        gl.bindBuffer(gl.ARRAY_BUFFER, glattrbuffer.buffer)
+        const elementSize = attrSpec.elementSize
+        const offsetInBytes = this.geomVertexOffsets[index] * elementSize * attrSpec.dimension
+
+        const values = convertBuffer(gl, attrData.values, attrSpec)
+        gl.bufferSubData(gl.ARRAY_BUFFER, offsetInBytes, values)
+      }
+      gl.bindBuffer(gl.ARRAY_BUFFER, null)
+
+      // //////////////////////////////////////
+      // Indices
+      // Note: we sometimes see geometries with zero vertices/indices which means
+      // no allocation has yet been made. We can safely skip these.
+      if (geomBuffers.indices && geomBuffers.indices.length > 0) {
+        const indices = geomBuffers.indices
+
+        const allocation = this.indicesAllocator.getAllocation(index)
+
+        if (allocation.size != indices.length) {
+          throw new Error('Invalid allocation for this geom')
+        }
+
+        const attributesAllocation = this.attributesAllocator.getAllocation(index)
+        // The indices need to be offset so they they index the new attributes array.
+        // const offsettedIndices = new Uint32Array(indices.length)
+        // for (let i = 0; i < indices.length; i++) {
+        //   offsettedIndices[i] = geomBuffers.indices[i] + attributesAllocation.start
+        // }
+        workerPool
+          .addTask(
+            {
+              index,
+              indices,
+              offset: attributesAllocation.start,
+            },
+            [indices.buffer]
+          )
+          .then((results) => {
+            // @ts-ignore
+            const offsettedIndices: Uint32Array = results.offsettedIndices
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
+            const elementSize = 4 //  Uint32Array
+            const offsetInBytes = allocation.start * elementSize
+            gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, offsetInBytes, offsettedIndices)
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
+
+            resolve()
+          })
+
+        // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
+        // const elementSize = 4 //  Uint32Array
+        // const offsetInBytes = allocation.start * elementSize
+        // gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, offsetInBytes, offsettedIndices)
+        // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
+      }
+
+      if (this.freeDataAfterUpload) {
+        const geom = this.geoms[index]
+        geom.freeBuffers()
+      }
+
+      this.emit('geomDataChanged', new IndexEvent(index))
+    })
   }
 
   /**
@@ -558,8 +558,21 @@ class GLGeomLibrary extends EventEmitter {
       })
       this.attributesBufferNeedsAlloc = []
     }
+
+    const start = performance.now()
+    const promises: Promise<void>[] = []
     this.dirtyGeomIndices.forEach((index: number) => {
-      this.uploadBuffers(index)
+      promises.push(this.uploadBuffers(index))
+    })
+
+    const duration = performance.now() - start
+    if (duration > 10) {
+      console.log('uploadBuffers:', this.dirtyGeomIndices.size, duration)
+    }
+
+    Promise.all(promises).then(() => {
+      this.emit('updated')
+      this.emit('geomBuffersUpdated')
     })
 
     this.dirtyGeomIndices = new Set()
