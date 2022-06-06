@@ -260,24 +260,6 @@
           return item
         }
 
-        // renderer.getViewport().on('pointerOverGeom', (event) => {
-        //   const item = event.intersectionData.geomItem
-        //   if (item) {
-        //     if (highlightedItem == item) highlightedItem.removeHighlight(highlightKey, true)
-        //     highlightedItem = item
-        //     if (event.intersectionData.componentId >= 0) {
-        //       highlightKey = 'pointerOverGeom:' + event.intersectionData.componentId
-        //     } else {
-        //       highlightKey = 'pointerOverGeom'
-        //     }
-        //     highlightedItem.addHighlight(highlightKey, highlightColor, true)
-        //   }
-        // })
-        // renderer.getViewport().on('pointerLeaveGeom', (event) => {
-        //   highlightedItem.removeHighlight(highlightKey, true)
-        //   highlightedItem = null
-        // })
-
         const shatterGeomsOnMouseOver = true
         renderer.getViewport().on('pointerMove', (event) => {
           if (event.intersectionData) {
@@ -351,6 +333,8 @@
             const item = filterItem(event.intersectionData.geomItem)
             console.log('', item.getPath())
             if (item) selectionManager.toggleItemSelection(item, !event.ctrlKey)
+          } else {
+            selectionManager.clearSelection()
           }
         })
         renderer.getViewport().on('pointerDoublePressed', (event) => {

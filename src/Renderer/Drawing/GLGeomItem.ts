@@ -45,7 +45,7 @@ class GLGeomItem extends EventEmitter {
 
   protected geomMatrixChanged: any
   protected cutAwayChanged: any
-  protected highlightChanged: any
+  private highlightSubIndex: number = -1
   /**
    * Create a GL geom item.
    * @param gl - The gl value.
@@ -127,6 +127,25 @@ class GLGeomItem extends EventEmitter {
       }
       this.listenerIDs['opacityChanged'] = this.geomItem.on('opacityChanged', opacityChanged)
       this.listenerIDs['material:opacityChanged'] = this.geomItem.materialParam.on('opacityChanged', opacityChanged)
+
+      const highlightChanged = (event: Record<string, any>) => {
+        if (event.name) {
+          const highlightName: string = event.name
+          const subGeomIndexIndex = highlightName.indexOf(':')
+          let subGeomIndices: Array<number> = []
+          if (subGeomIndexIndex != -1) {
+            subGeomIndices = highlightName
+              .substring(subGeomIndexIndex + 1)
+              .split(',')
+              .map((v) => Number.parseInt(v))
+
+            this.highlightSubIndex = subGeomIndices[0]
+          }
+        } else {
+          this.highlightSubIndex = -1
+        }
+      }
+      this.listenerIDs['highlightChanged'] = this.geomItem.on('highlightChanged', highlightChanged)
     }
   }
 
@@ -177,19 +196,17 @@ class GLGeomItem extends EventEmitter {
     const unifs = renderstate.unifs
 
     if (!this.supportInstancing) {
-      const modelMatrixunif = unifs.modelMatrix
-      if (modelMatrixunif) {
+      const { modelMatrix, drawItemData, cutawayData, highlightSubIndex } = unifs
+      if (modelMatrix) {
         if (this.geomMatrixDirty) {
           this.modelMatrixArray = this.geomItem.geomMatParam.value.asArray()
         }
-        gl.uniformMatrix4fv(modelMatrixunif.location, false, this.modelMatrixArray)
+        gl.uniformMatrix4fv(modelMatrix.location, false, this.modelMatrixArray)
       }
-      const drawItemDataunif = unifs.drawItemData
-      if (drawItemDataunif) {
-        gl.uniform4fv(drawItemDataunif.location, this.geomData)
+      if (drawItemData) {
+        gl.uniform4fv(drawItemData.location, this.geomData)
       }
-      const cutawayDataUnif = unifs.cutawayData
-      if (cutawayDataUnif) {
+      if (cutawayData) {
         if (this.cutDataChanged) {
           if (this.geomItem.isCutawayEnabled()) {
             const cutAwayVector = this.geomItem.getCutVector()
@@ -197,7 +214,10 @@ class GLGeomItem extends EventEmitter {
             this.cutData = [cutAwayVector.x, cutAwayVector.y, cutAwayVector.z, cutAwayDist]
           }
         }
-        gl.uniform4fv(cutawayDataUnif.location, this.cutData)
+        gl.uniform4fv(cutawayData.location, this.cutData)
+      }
+      if (highlightSubIndex) {
+        gl.uniform1i(highlightSubIndex.location, this.highlightSubIndex)
       }
     }
 
@@ -217,6 +237,7 @@ class GLGeomItem extends EventEmitter {
     if (!this.supportInstancing) {
       this.geomItem.geomMatParam.removeListenerById('valueChanged', this.listenerIDs['GeomMat.valueChanged'])
       this.geomItem.removeListenerById('cutAwayChanged', this.listenerIDs['cutAwayChanged'])
+      this.geomItem.removeListenerById('highlightChanged', this.listenerIDs['highlightChanged'])
     }
   }
 }

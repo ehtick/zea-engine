@@ -9,7 +9,7 @@ import { TreeItem } from './TreeItem'
 // The error from Chrome is: Failed to load resource: net::ERR_INSUFFICIENT_RESOURCES
 // We limit the number of concurrent resource loads here
 // by pushing loads into a queue.
-const MAX_LOAD_COUNT = 2000
+const MAX_LOAD_COUNT = 1000
 
 /**
  * Class for delegating resource loading, enabling an abstraction of a cloud file system to be implemented.

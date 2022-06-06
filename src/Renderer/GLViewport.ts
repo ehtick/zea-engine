@@ -17,6 +17,7 @@ import { ZeaMouseEvent } from '../Utilities/Events/ZeaMouseEvent'
 import { ZeaUIEvent } from '../Utilities/Events/ZeaUIEvent'
 import { Uniform } from './types/renderer'
 import { GeomDataRenderState, RenderState, ColorRenderState } from './RenderStates/index'
+import { MathFunctions } from '../Utilities'
 
 let activeViewport: GLViewport = null
 /**
@@ -42,6 +43,14 @@ let activeViewport: GLViewport = null
  */
 class GLViewport extends GLBaseViewport {
   protected __name: string
+  public debugGeomDataBuffer: boolean = false
+  public debugOcclusionBuffer: boolean = false
+  public debugReductionBuffer: boolean = false
+  public debugHighlightedGeomsBuffer: boolean = false
+
+  public mousePointerSearchArea = 10
+  public touchPointerSearchArea = 45
+
   protected __projectionMatrix: Mat4
   protected __frustumDim: Vec2
   protected __camera: Camera
@@ -52,10 +61,6 @@ class GLViewport extends GLBaseViewport {
   protected __geomDataBuffer: GLTexture2D
   protected __geomDataBufferSizeFactor: number = 1
   protected __geomDataBufferFbo: GLFbo
-  debugGeomDataBuffer: boolean = false
-  debugOcclusionBuffer: boolean = false
-  debugReductionBuffer: boolean = false
-  debugHighlightedGeomsBuffer: boolean = false
 
   protected __x: number = 0
   protected __y: number = 0
@@ -389,7 +394,7 @@ class GLViewport extends GLBaseViewport {
    * @param pointerRay - The pointerRay value.
    * @return - The return value.
    */
-  getGeomDataAtPos(screenPos: Vec2, pointerRay: Ray | undefined): IntersectionData | null {
+  getGeomDataAtPos(screenPos: Vec2, pointerRay: Ray | undefined, searchArea = 5): IntersectionData | null {
     if (this.__geomDataBufferFbo) {
       if (this.__geomDataBufferInvalid) {
         this.renderGeomDataFbo()
@@ -428,26 +433,66 @@ class GLViewport extends GLBaseViewport {
       // logGeomData();
       // console.log("getGeomDataAtPos:", screenPos.toString(), screenPos.x,this.__width)
 
-      // Allocate a 1 pixel block and read from the GeomData buffer.
+      const numPixels = searchArea * searchArea
       const bufferWidth = this.__geomDataBufferFbo.width
       const bufferHeight = this.__geomDataBufferFbo.height
-      const x = Math.floor(screenPos.x * (bufferWidth / this.__width))
-      const y = Math.floor(screenPos.y * (bufferHeight / this.__height))
+      const x = Math.floor(screenPos.x * (bufferWidth / this.__width)) - searchArea * 0.5
+      const y = Math.floor(bufferHeight - screenPos.y * (bufferHeight / this.__height) - 1) - searchArea * 0.5
 
       let passId
       let geomData: Float32Array | Uint8Array
       if (this.__renderer.floatGeomBuffer) {
-        geomData = new Float32Array(4)
-        gl.readPixels(x, bufferHeight - y - 1, 1, 1, gl.RGBA, gl.FLOAT, geomData)
-        if (geomData[3] == 0) return null
+        // Allocate a 5x5 pixel block and read from the GeomData buffer.
+        const geomDatas = new Float32Array(4 * numPixels)
+        gl.readPixels(x, y, searchArea, searchArea, gl.RGBA, gl.FLOAT, geomDatas)
+
+        // ////////////////////////////////////
+        // scan to find the closest geom
+        let closest = Number.MAX_VALUE
+        let closestId = -1
+        const checkPixel = (id: number) => {
+          const dist = geomDatas[id * 4 + 3]
+          if (dist > 0 && dist < closest) {
+            closest = dist
+            closestId = id
+          }
+        }
+
+        for (let i = 0; i < numPixels; i++) {
+          checkPixel(i)
+        }
+
+        if (closestId == -1) return
+
+        geomData = geomDatas.slice(closestId * 4, (closestId + 1) * 4)
 
         // Mask the pass id to be only the first 6 bits of the integer.
         passId = Math.round(geomData[0]) & (64 - 1)
       } else {
+        const geomDatas = new Uint8Array(4 * numPixels)
+        gl.readPixels(x, bufferHeight - y - 1, searchArea, searchArea, gl.RGBA, gl.UNSIGNED_BYTE, geomDatas)
+
+        // ////////////////////////////////////
+        // scan to find the closest geom
+        let closest = Number.MAX_VALUE
+        let closestId = -1
+        const checkPixel = (id: number) => {
+          if (geomDatas[id * 4] == 0 && geomDatas[id * 4 + 1] == 0) return
+          const distVals = geomDatas.slice(closestId * 4 + 2, closestId * 4 + 3)
+          const dist = MathFunctions.decode16BitFloatFrom2xUInt8(distVals)
+          if (dist > 0 && dist < closest) {
+            closest = dist
+            closestId = id
+          }
+        }
+
+        for (let i = 0; i < numPixels; i++) {
+          checkPixel(i)
+        }
+
+        if (closestId == -1) return
+
         geomData = new Uint8Array(4)
-        gl.readPixels(x, bufferHeight - y - 1, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, geomData)
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-        if (geomData[0] == 0 && geomData[1] == 0) return undefined
         passId = Math.floor(geomData[1] / 32)
       }
       this.__geomDataBufferFbo.unbind()
@@ -584,14 +629,22 @@ class GLViewport extends GLBaseViewport {
       const mouseEvent = <ZeaMouseEvent>event
       mouseEvent.pointerPos = this.__getPointerPos(mouseEvent.rendererX, mouseEvent.rendererY)
       mouseEvent.pointerRay = this.calcRayFromScreenPos(mouseEvent.pointerPos)
-      mouseEvent.intersectionData = this.getGeomDataAtPos(mouseEvent.pointerPos, mouseEvent.pointerRay)
+      mouseEvent.intersectionData = this.getGeomDataAtPos(
+        mouseEvent.pointerPos,
+        mouseEvent.pointerRay,
+        this.mousePointerSearchArea
+      )
     } else if (event.pointerType === POINTER_TYPES.touch) {
       const touchEvent = <ZeaTouchEvent>event
       if (touchEvent.touches.length == 1) {
         const touch = touchEvent.touches[0]
         touchEvent.pointerPos = this.__getPointerPos(touch.rendererX, touch.rendererY)
         touchEvent.pointerRay = this.calcRayFromScreenPos(touchEvent.pointerPos)
-        touchEvent.intersectionData = this.getGeomDataAtPos(touchEvent.pointerPos, touchEvent.pointerRay)
+        touchEvent.intersectionData = this.getGeomDataAtPos(
+          touchEvent.pointerPos,
+          touchEvent.pointerRay,
+          this.touchPointerSearchArea
+        )
       }
     }
 
@@ -652,14 +705,22 @@ class GLViewport extends GLBaseViewport {
       const mouseEvent = <ZeaMouseEvent>event
       mouseEvent.pointerPos = this.__getPointerPos(mouseEvent.rendererX, mouseEvent.rendererY)
       mouseEvent.pointerRay = this.calcRayFromScreenPos(mouseEvent.pointerPos)
-      mouseEvent.intersectionData = this.getGeomDataAtPos(mouseEvent.pointerPos, mouseEvent.pointerRay)
+      mouseEvent.intersectionData = this.getGeomDataAtPos(
+        mouseEvent.pointerPos,
+        mouseEvent.pointerRay,
+        this.mousePointerSearchArea
+      )
     } else if (event.pointerType === POINTER_TYPES.touch) {
       const touchEvent = <ZeaTouchEvent>event
       if (touchEvent.touches.length == 0 && touchEvent.changedTouches.length == 1) {
         const touch = touchEvent.changedTouches[0]
         touchEvent.pointerPos = this.__getPointerPos(touch.rendererX, touch.rendererY)
         touchEvent.pointerRay = this.calcRayFromScreenPos(touchEvent.pointerPos)
-        touchEvent.intersectionData = this.getGeomDataAtPos(touchEvent.pointerPos, touchEvent.pointerRay)
+        touchEvent.intersectionData = this.getGeomDataAtPos(
+          touchEvent.pointerPos,
+          touchEvent.pointerRay,
+          this.touchPointerSearchArea
+        )
       }
     }
 
@@ -721,7 +782,7 @@ class GLViewport extends GLBaseViewport {
       if (!event.propagating) return
     }
 
-    event.intersectionData = this.getGeomDataAtPos(event.pointerPos, event.pointerRay)
+    event.intersectionData = this.getGeomDataAtPos(event.pointerPos, event.pointerRay, this.mousePointerSearchArea)
     if (event.intersectionData) {
       if (event.intersectionData.geomItem != this.pointerOverItem) {
         if (this.pointerOverItem) {
@@ -827,7 +888,7 @@ class GLViewport extends GLBaseViewport {
 
     event.pointerPos = this.__getPointerPos(event.rendererX, event.rendererY)
     event.pointerRay = this.calcRayFromScreenPos(event.pointerPos)
-    event.intersectionData = this.getGeomDataAtPos(event.pointerPos, event.pointerRay)
+    event.intersectionData = this.getGeomDataAtPos(event.pointerPos, event.pointerRay, this.mousePointerSearchArea)
 
     if (event.intersectionData != undefined) {
       event.intersectionData.geomItem.onWheel(event)

@@ -58,11 +58,10 @@ void main(void) {
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
   vec4 viewPos    = modelViewMatrix * pos;
   gl_Position     = projectionMatrix * viewPos;
-  v_viewPos = -viewPos.xyz;
+  v_viewPos       = -viewPos.xyz;
   v_worldPos      = (modelMatrix * pos).xyz;
 
   mat3 normalMatrix = mat3(transpose(inverse(modelViewMatrix)));
-  v_viewPos       = -viewPos.xyz;
   v_viewNormal    = normalMatrix * normals;
   
   // offset slightly the lines and points to make them clearly defined.
@@ -75,7 +74,7 @@ void main(void) {
     }
   }
   else if (geomType == LINES) { // start 'LINES'
-    float overlay = 0.00003;
+    float overlay = 0.00001;
     if (isOrthographic > 0){
       gl_Position.z -= overlay;
     } else {
@@ -83,7 +82,7 @@ void main(void) {
     }
   } // end 'LINES'
   else if (geomType == POINTS) { // start 'POINTS'
-    float overlay = 0.00005;
+    float overlay = 0.00003;
     if (isOrthographic > 0){
       gl_Position.z -= overlay;
     } else {

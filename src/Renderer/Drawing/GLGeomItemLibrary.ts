@@ -795,7 +795,7 @@ class GLGeomItemLibrary extends EventEmitter {
     this.dirtyItemIndices.push(index)
 
     const gl = this.renderer.gl
-    const supportInstancing = gl.floatTexturesSupported
+    const supportInstancing = gl.floatTexturesSupported && material.getShaderClass().supportsInstancing()
     const glGeomItem = new GLGeomItem(gl, geomItem, index, geomIndex, matIndex, supportInstancing)
 
     const geomItemChanged = () => {
