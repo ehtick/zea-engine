@@ -44,6 +44,7 @@
         GeomItem,
         TreeItem,
         BaseTool,
+        POINTER_TYPES,
       } = window.zeaEngine
 
       const canvas = document.getElementById('viewport')
@@ -120,7 +121,13 @@
           this.stroke.addChild(geomItem)
         }
         onPointerMove(event) {
-          const intersectionData = this.viewport.getGeomDataAtPos(event.pointerPos, event.pointerRay)
+          let searchRadius = 0
+          if (event.pointerType === POINTER_TYPES.mouse) {
+            searchRadius = this.viewport.mousePointerSearchArea
+          } else if (event.pointerType === POINTER_TYPES.touch) {
+            searchRadius = this.viewport.touchPointerSearchArea
+          }
+          const intersectionData = this.viewport.getGeomDataAtPos(event.pointerPos, event.pointerRay, searchRadius)
           if (intersectionData) {
             this.addPoint(event, intersectionData)
           }
