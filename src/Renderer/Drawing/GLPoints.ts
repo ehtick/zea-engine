@@ -60,20 +60,26 @@ class GLPoints extends GLGeom {
 
     // Update the vertex attribute buffers
     const numVertsChanged = geomBuffers.numVertices != this.__numVertices
+    if (numVertsChanged) {
+      this.clearBuffers()
+    }
     // eslint-disable-next-line guard-for-in
     for (const attrName in geomBuffers.attrBuffers) {
       const attrData = geomBuffers.attrBuffers[attrName]
-      const glattr = this.__glattrbuffers[attrName]
-      if (numVertsChanged) {
-        gl.deleteBuffer(glattr.buffer)
-        glattr.buffer = gl.createBuffer()
+      if (!this.__glattrbuffers[attrName]) {
+        this.__glattrbuffers[attrName] = {
+          buffer: gl.createBuffer(),
+          dataType: attrData.dataType,
+          normalized: attrData.normalized,
+        }
       }
-      gl.bindBuffer(gl.ARRAY_BUFFER, glattr.buffer)
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.__glattrbuffers[attrName].buffer)
       gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW)
     }
 
     // Cache the size so we know later if it changed (see below)
     this.__numVertices = geomBuffers.numVertices
+    this.buffersDirty = false
   }
 
   /**
@@ -83,6 +89,8 @@ class GLPoints extends GLGeom {
    */
   bind(renderstate: RenderState): boolean {
     if (renderstate.unifs.PointSize) {
+      if (this.buffersDirty) this.updateBuffers()
+
       const gl = this.__gl
       let shaderBinding = this.__shaderBindings[renderstate.shaderkey!]
       if (!shaderBinding) {

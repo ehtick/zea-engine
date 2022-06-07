@@ -98,11 +98,31 @@
       }
       setStatusText('done-loading')
       document.getElementById('variant-01').addEventListener('click', function (event) {
+        const count = 1500
+        points.setNumVertices(count)
+        const positions = points.getVertexAttribute('positions')
+        for (let i = 0; i < count; i++) {
+          const v = positions.getValueRef(i)
+          const coords = hammersley(i, count)
+          sphereSample_uniform(coords[0], coords[1], v)
+        }
+        points.emit('geomDataChanged')
+
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
         renderer.frameAll()
         setStatusText(`done-variant-01`)
       })
       document.getElementById('variant-02').addEventListener('click', function (event) {
+        const count = points.getNumVertices()
+        const positions = points.getVertexAttribute('positions')
+        for (let i = 0; i < count; i++) {
+          const v = positions.getValue(i)
+          const coords = hammersley(i, count)
+          v.scaleInPlace(0.5)
+          positions.setValue(i, v)
+        }
+        points.emit('geomDataChanged')
+
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
         renderer.frameAll()
         setStatusText(`done-variant-02`)
