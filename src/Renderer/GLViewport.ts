@@ -18,6 +18,7 @@ import { ZeaUIEvent } from '../Utilities/Events/ZeaUIEvent'
 import { Uniform } from './types/renderer'
 import { GeomDataRenderState, RenderState, ColorRenderState } from './RenderStates/index'
 import { MathFunctions } from '../Utilities'
+import { Registry } from '../Registry'
 
 let activeViewport: GLViewport = null
 /**
@@ -439,6 +440,8 @@ class GLViewport extends GLBaseViewport {
       const x = Math.floor(screenPos.x * (bufferWidth / this.__width)) - searchArea * 0.5
       const y = Math.floor(bufferHeight - screenPos.y * (bufferHeight / this.__height) - 1) - searchArea * 0.5
 
+      const overlayPassClass = Registry.getClassDefinition('GLOverlayPass')
+      const overlayPassIndex = this.__renderer.findPassIndex(overlayPassClass)
       let passId
       let geomData: Float32Array | Uint8Array
       if (this.__renderer.floatGeomBuffer) {
@@ -450,16 +453,28 @@ class GLViewport extends GLBaseViewport {
         // scan to find the closest geom
         let closest = Number.MAX_VALUE
         let closestId = -1
-        const checkPixel = (id: number) => {
+        const checkPixel = (id: number): boolean => {
+          // We look for pixels rendered from the overlay pass, as that contains
+          // handles and other UI elements the user need to be able to click on.
+          // Mask the pass id to be only the first 6 bits of the integer.
+          const passId = Math.round(geomDatas[id * 4 + 0]) & (64 - 1)
+          if (passId == overlayPassIndex) {
+            closest = 0
+            closestId = id
+            return true
+          }
+
+          // find the closest pixel in the block to the user.
           const dist = geomDatas[id * 4 + 3]
           if (dist > 0 && dist < closest) {
             closest = dist
             closestId = id
           }
+          return false
         }
 
         for (let i = 0; i < numPixels; i++) {
-          checkPixel(i)
+          if (checkPixel(i)) break
         }
 
         if (closestId == -1) return

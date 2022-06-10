@@ -3,6 +3,7 @@ import { GLOpaqueGeomsPass } from './GLOpaqueGeomsPass'
 import { GLRenderer } from '../GLRenderer'
 import { GeomItem } from '../../SceneTree/GeomItem'
 import { RenderState, GeomDataRenderState, ColorRenderState } from '../RenderStates/index'
+import { Registry } from '../../Registry'
 
 /** Class representing a GL overlay pass.
  * @extends GLOpaqueGeomsPass
@@ -98,5 +99,11 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
 }
 
 GLRenderer.registerPass(GLOverlayPass, PassType.OVERLAY)
+
+// We register the overlay pass here so that the GLViewport can
+// find it in the GLRebderer,
+// Note: We can't simply import the class into the GLViewpoirt as that
+// is a circular import.
+Registry.register('GLOverlayPass', GLOverlayPass)
 
 export { GLOverlayPass }

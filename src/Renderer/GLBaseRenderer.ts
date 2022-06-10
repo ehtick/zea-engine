@@ -31,6 +31,7 @@ import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
 import { ColorRenderState, GeomDataRenderState, HighlightRenderState, RenderState } from './RenderStates/index'
 import { ARViewport } from './VR/ARViewport'
 import { VRViewport } from './VR/VRViewport'
+import { BaseClass } from '../Utilities'
 
 let activeGLRenderer: GLBaseRenderer | undefined
 let pointerIsDown = false
@@ -1032,6 +1033,23 @@ class GLBaseRenderer extends ParameterOwner {
       offset += passSet.length
     }
     return undefined
+  }
+
+  /**
+   * Find a pass given a class type. Used by the GPViewport to find the GLOverlayPass.
+   * @param index - The index value.
+   * @return - The return value.
+   */
+  findPassIndex(cls: typeof BaseClass): number {
+    let offset = 0
+    for (const key in this.__passes) {
+      const passSet = this.__passes[key]
+      for (let i = 0; i < passSet.length; i++) {
+        if (passSet[i] instanceof cls) return offset
+        offset++
+      }
+    }
+    return -1
   }
 
   // ///////////////////////
