@@ -79,11 +79,11 @@
       //   cullElement.textContent = `occlusionCulling Reduction: ${queryReduceSceneGeoms}, ${queryReduceBBoxes}`
       // })
       const cullElement = document.getElementById('cull-stats')
-      renderer.on('CullingUpdated', (event) => {
+      const displayCullStats = (event) => {
         if (event.visible != undefined && event.total != undefined) {
           cullElement.textContent = `visible: ${event.visible} / ${event.total} triangles: ${event.visibleGeomStats.triangles} / ${event.totalGeomStats.triangles}`
         }
-      })
+      }
 
       const statusElement = document.getElementById('status')
       const setStatusText = (text) => {
@@ -99,15 +99,17 @@
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 10), new Vec3(10, 0, 0))
         setTimeout(() => {
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 10), new Vec3(0, 0, 0))
-          setTimeout(() => {
+          renderer.once('CullingUpdated', (event) => {
+            displayCullStats(event)
             setStatusText(`done-variant-01`)
-          }, 500)
+          })
         }, 500)
       })
       document.getElementById('variant-02').addEventListener('click', function (event) {
         // Rotate the camera away from the objects. Rotate back, and check that everything is still visible
         // console.log('Press button')
-        renderer.once('CullingUpdated', () => {
+        renderer.once('CullingUpdated', (event) => {
+          displayCullStats(event)
           setStatusText(`done-variant-02`)
         })
         // renderer.on('onmessage', (event) => {
@@ -119,7 +121,8 @@
       document.getElementById('variant-03').addEventListener('click', function (event) {
         // Make the outer torus visible again.
         // console.log('Press button')
-        renderer.once('CullingUpdated', () => {
+        renderer.once('CullingUpdated', (event) => {
+          displayCullStats(event)
           setStatusText(`done-variant-03`)
 
           // Note: this forces the culling to be run again.
@@ -136,7 +139,8 @@
         // Move the big torus aside so we can see all 4 geometries.
         geomItemOuter.globalXfoParam.value = new Xfo(new Vec3(3, 0, 1))
         renderer.getViewport().getCamera().emit('movementFinished')
-        renderer.once('CullingUpdated', () => {
+        renderer.once('CullingUpdated', (event) => {
+          displayCullStats(event)
           setStatusText(`done-variant-04`)
         })
       })

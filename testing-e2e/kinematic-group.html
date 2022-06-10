@@ -25,7 +25,9 @@
         TreeItem,
         SimpleSurfaceMaterial,
         KinematicGroup,
+        AssetLoadContext,
       } = zeaEngine
+      import { hammersley, sphereSample_uniform } from './src/Hammersley.js'
 
       const domElement = document.getElementById('viewport')
 
@@ -38,32 +40,43 @@
       const tree1 = new TreeItem('tree1')
       scene.getRoot().addChild(tree1)
 
-      const kinematicGroup = new KinematicGroup('CuttingPlane')
-      scene.getRoot().addChild(kinematicGroup)
-
       const standardMaterial = new SimpleSurfaceMaterial('surfaces')
       standardMaterial.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       let i = 0
+      const count = 5
 
       const addMeshShape = (shape) => {
         const geomItem = new GeomItem(`item-${i}`, shape, standardMaterial)
-        geomItem.localXfoParam.value = new Xfo(new Vec3(i * 3, 0, 0))
+
+        const xfo = new Xfo()
+        xfo.tr.set(i * 3, 0, 0)
+        const axis = new Vec3()
+        const coords = hammersley(i, count)
+        sphereSample_uniform(coords[0], coords[1], axis)
+        const angle = i * 0.5
+        xfo.ori.setFromAxisAndAngle(axis, angle)
+        geomItem.localXfoParam.value = xfo
+
         tree1.addChild(geomItem)
-
-        kinematicGroup.addItem(geomItem)
-
         i += 1
+        return geomItem
       }
 
-      addMeshShape(new Sphere(1, 20))
-      addMeshShape(new Torus(0.5, 1))
-      addMeshShape(new Cuboid(1, 1, 1))
-      addMeshShape(new Cone(1, 2), 4)
-      addMeshShape(new Cylinder(1, 2, 20, 2, true))
+      const sphereItem = addMeshShape(new Sphere(1, 20))
+      const torusItem = addMeshShape(new Torus(0.5, 1))
+      const cuboidItem = addMeshShape(new Cuboid(1, 1, 1))
+      const coneItem = addMeshShape(new Cone(1, 2), 4)
+      const cylinderItem = addMeshShape(new Cylinder(1, 2, 20, 2, true))
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
-      renderer.frameAll()
+      const kinematicGroup = new KinematicGroup('KinematicGroup')
+      kinematicGroup.addItem(sphereItem)
+      kinematicGroup.addItem(torusItem)
+      kinematicGroup.addItem(cuboidItem)
+      scene.getRoot().addChild(kinematicGroup)
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(15, 15, 5), new Vec3(6, 0, 0))
+      // renderer.frameAll()
 
       // {{{ Variants
       const statusElement = document.getElementById('status')
@@ -73,20 +86,51 @@
       }
       setStatusText('done-loading')
       document.getElementById('variant-01').addEventListener('click', function (event) {
-        const angle = 2
+        const angle = -0.75
         const xfo = new Xfo()
-        xfo.tr.set(6, Math.cos(angle) * 2, 0)
+        // xfo.tr.set(1, -2, 0)
         xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), angle)
-        kinematicGroup.localXfoParam.value = xfo
+        kinematicGroup.globalXfoParam.value = xfo
         setStatusText(`done-variant-01`)
       })
       document.getElementById('variant-02').addEventListener('click', function (event) {
-        const angle = 3
-        const xfo = new Xfo()
-        xfo.tr.set(-6, Math.cos(angle) * 2, 0)
-        xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), angle)
-        kinematicGroup.localXfoParam.value = xfo
+        kinematicGroup.addItem(coneItem, false)
+        kinematicGroup.addItem(cylinderItem, false)
         setStatusText(`done-variant-02`)
+      })
+
+      let json
+      document.getElementById('variant-03').addEventListener('click', function (event) {
+        const context = {
+          makeRelative: (path) => {
+            return path
+          },
+        }
+        json = kinematicGroup.toJSON(context)
+        console.log(json)
+
+        kinematicGroup.removeItem(sphereItem)
+        kinematicGroup.removeItem(torusItem)
+        kinematicGroup.removeItem(cuboidItem)
+        kinematicGroup.removeItem(coneItem, false)
+        kinematicGroup.removeItem(cylinderItem, false)
+        scene.getRoot().removeChild(kinematicGroup)
+
+        setStatusText(`done-variant-03`)
+      })
+      document.getElementById('variant-04').addEventListener('click', function (event) {
+        // Now construct a new kinematic group and load the JSON from the pervious one.
+        // The results should match.
+        const kinematicGroup2 = new KinematicGroup('KinematicGroup')
+        const content = new AssetLoadContext()
+        content.resolvePath = (path, onSucceed, onFail) => {
+          if (!path) throw new Error('Path not specified')
+          const item = scene.getRoot().resolvePath(path)
+          if (item) onSucceed(item)
+        }
+        kinematicGroup2.fromJSON(json, content)
+
+        setStatusText(`done-variant-04`)
       })
       // }}}
     </script>
@@ -98,6 +142,8 @@
       <div class="variant-buttons">
         <button class="variant-button" id="variant-01">variant-01</button>
         <button class="variant-button" id="variant-02">variant-02</button>
+        <button class="variant-button" id="variant-03">variant-03</button>
+        <button class="variant-button" id="variant-04">variant-04</button>
       </div>
     </div>
   </body>

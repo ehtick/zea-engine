@@ -152,16 +152,13 @@ class ItemSetParameter extends Parameter<Set<TreeItem>> {
   toJSON(context?: Record<string, any>): Record<string, any> {
     if (!this.__value) this.__value = new Set()
 
-    const items = []
-    if (context) {
-      for (const item of this.__value) {
-        // TODO: Make relative path...
-        items.push(item.getPath())
-      }
+    const paths = []
+    for (const item of this.__value) {
+      const path = item.getPath()
+      paths.push(context && context.makeRelative ? context.makeRelative(path) : path)
     }
-
     return {
-      value: items,
+      value: paths,
     }
   }
 
@@ -171,12 +168,21 @@ class ItemSetParameter extends Parameter<Set<TreeItem>> {
    * @param context - The context value.
    */
   fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
-    if (context) {
-      for (const itemPath in j.value) {
-        const item = <TreeItem>context.resolvePath(itemPath)
-        this.__value.add(item)
-      }
+    if (!context || !context.resolvePath) {
+      throw new Error('Unable to load JSON on a ItemSetParameter without a load context')
     }
+    const paths: string[][] = j.value
+    paths.forEach((path: string[]) => {
+      context.resolvePath(
+        path,
+        (treeItem: TreeItem) => {
+          this.addItem(treeItem, false)
+        },
+        () => {
+          console.warn("BaseGroup: '" + this.getName() + "'. Unable to load item:" + path)
+        }
+      )
+    })
   }
 
   // ////////////////////////////////////////

@@ -117,19 +117,22 @@
 
       document.getElementById('variant-01').addEventListener('click', function (event) {
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-40, 0, 10), new Vec3(10, 10, 10))
-        renderer.once('CullingUpdated', () => {
+        renderer.once('CullingUpdated', (event) => {
+          displayCullStats(event)
           setStatusText(`done-variant-01`)
         })
       })
       document.getElementById('variant-02').addEventListener('click', function (event) {
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-1000, 1000, 20), new Vec3(20, 20, 20))
-        renderer.once('CullingUpdated', () => {
+        renderer.once('CullingUpdated', (event) => {
+          displayCullStats(event)
           setStatusText(`done-variant-02`)
         })
       })
       document.getElementById('variant-03').addEventListener('click', function (event) {
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-40, 0, 10), new Vec3(10, 10, 10))
-        renderer.once('CullingUpdated', () => {
+        renderer.once('CullingUpdated', (event) => {
+          displayCullStats(event)
           setStatusText(`done-variant-03`)
         })
       })
@@ -191,9 +194,9 @@
         console.log(`occlusionCulling Reduction: ${queryReduceSceneGeoms}, ${queryReduceBBoxes}`)
       })
       const cullElement = document.getElementById('cull-stats')
-      renderer.on('CullingUpdated', (event) => {
+      const displayCullStats = (event) => {
         cullElement.textContent = `visible: ${event.visible} / ${event.total} triangles: ${event.visibleGeomStats.triangles} / ${event.totalGeomStats.triangles}`
-      })
+      }
     </script>
     <style>
       .hud {

@@ -68,11 +68,11 @@
       })
 
       const cullElement = document.getElementById('cull-stats')
-      renderer.on('CullingUpdated', (event) => {
+      const displayCullStats = (event) => {
         if (event.visible != undefined && event.total != undefined) {
           cullElement.textContent = `visible: ${event.visible} / ${event.total} triangles: ${event.visibleGeomStats.triangles} / ${event.totalGeomStats.triangles}`
         }
-      })
+      }
 
       // {{{ Messages handler.
       const statusElement = document.getElementById('status')
@@ -82,7 +82,8 @@
       }
       document.getElementById('variant-01').addEventListener('click', function (event) {
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-10, 10, 2.7), new Vec3(0, 0, 0.4))
-        renderer.once('CullingUpdated', () => {
+        renderer.once('CullingUpdated', (event) => {
+          displayCullStats(event)
           setStatusText(`done-variant-01`)
         })
       })

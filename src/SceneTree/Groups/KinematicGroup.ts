@@ -125,7 +125,7 @@ class KinematicGroup extends BaseGroup {
    * @private
    * @return - Returns a new Xfo.
    */
-  calcGroupXfo(): void{
+  calcGroupXfo(): void {
     const items = Array.from(this.itemsParam.value)
     if (items.length == 0) return
     this.calculatingGroupXfo = true
@@ -288,19 +288,6 @@ class KinematicGroup extends BaseGroup {
   }
 
   // ////////////////////////////////////////
-  // Persistence
-
-  /**
-   * called once loading is done.
-   * @private
-   */
-  loadDone(): void {
-    this.calculatingGroupXfo = true
-    this.calcGroupXfo()
-    this.calculatingGroupXfo = false
-  }
-
-  // ////////////////////////////////////////
   // Clone
 
   /**
@@ -310,10 +297,38 @@ class KinematicGroup extends BaseGroup {
    * @param context - The context value.
    * @return - Returns a new cloned group.
    */
-  clone(context: CloneContext ): KinematicGroup {
+  clone(context: CloneContext): KinematicGroup {
     const cloned = new KinematicGroup()
     cloned.copyFrom(this, context)
     return cloned
+  }
+
+  // ////////////////////////////////////////
+  // Persistence
+
+  /**
+   * Encodes the current object as a json object.
+   *
+   * @param context - The context value.
+   * @return - Returns the json object.
+   */
+  toJSON(context?: Record<string, any>): Record<string, any> {
+    const json = super.toJSON(context)
+    json.bindXfo = this.groupTransformOp.bindXfo.toJSON()
+    return json
+  }
+
+  /**
+   * Decodes a json object for this type.
+   *
+   * @param json - The json object this item must decode.
+   * @param context - The context value.
+   */
+  fromJSON(json: Record<string, any>, context?: Record<string, any>): void {
+    super.fromJSON(json, context)
+    const xfo = new Xfo()
+    xfo.fromJSON(json.bindXfo)
+    this.groupTransformOp.setBindXfo(xfo)
   }
 }
 

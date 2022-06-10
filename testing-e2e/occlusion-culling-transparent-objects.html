@@ -67,9 +67,9 @@
         console.log(`occlusionCulling Reduction: ${queryReduceSceneGeoms}, ${queryReduceBBoxes}`)
       })
       const cullElement = document.getElementById('cull-stats')
-      renderer.on('CullingUpdated', (event) => {
+      const displayCullStats = (event) => {
         cullElement.textContent = `visible: ${event.visible} / ${event.total} triangles: ${event.visibleGeomStats.triangles} / ${event.totalGeomStats.triangles}`
-      })
+      }
 
       // {{{ Messages handler.
       const statusElement = document.getElementById('status')
@@ -81,13 +81,15 @@
 
       document.getElementById('variant-01').addEventListener('click', function (event) {
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 10, 0), new Vec3(12, 0, 0))
-        renderer.once('CullingUpdated', () => {
+        renderer.once('CullingUpdated', (event) => {
+          displayCullStats(event)
           setStatusText(`done-variant-01`)
         })
       })
       document.getElementById('variant-02').addEventListener('click', function (event) {
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(4, 20, 0), new Vec3(4, 0, 0))
-        renderer.once('CullingUpdated', () => {
+        renderer.once('CullingUpdated', (event) => {
+          displayCullStats(event)
           setStatusText(`done-variant-02`)
         })
       })
@@ -154,7 +156,6 @@
       <div class="variant-buttons">
         <button class="variant-button" id="variant-01">variant-01</button>
         <button class="variant-button" id="variant-02">variant-02</button>
-        <button class="variant-button" id="variant-03">variant-03</button>
       </div>
     </div>
   </body>
