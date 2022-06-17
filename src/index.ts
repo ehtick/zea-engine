@@ -18,6 +18,7 @@ export * from './Utilities/index'
 export * from './SceneTree/index'
 
 /* NODE_START
+export * from './Renderer/Shaders/index'
 // NODE_ELSE */
 export * from './Renderer/index'
 // NODE_END

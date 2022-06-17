@@ -16,7 +16,7 @@ class ArchiveUnpackerWorkerPool {
         buffer
       },
       (results) => {
-        console.log(results)
+        // console.log(results)
       }
     )
   }
