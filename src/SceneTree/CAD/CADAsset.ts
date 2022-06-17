@@ -53,8 +53,9 @@ class CADAsset extends AssetItem {
    * @param src - The tree item to copy from.
    * @param context - The context value.
    */
-  copyFrom(src: AssetItem, context?: CloneContext): void {
+  copyFrom(src: CADAsset, context?: CloneContext): void {
     super.copyFrom(src, context)
+    this.url = src.url
     if (!src.loaded) {
       src.once('geomsLoaded', (event) => {
         this.emit('geomsLoaded', event)
