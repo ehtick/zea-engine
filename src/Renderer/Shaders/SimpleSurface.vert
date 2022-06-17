@@ -41,7 +41,7 @@ void main(void) {
 
   mat3 normalMatrix = mat3(transpose(inverse(modelViewMatrix)));
   v_viewPos       = -viewPos.xyz;
-  v_viewNormal    = normalMatrix * normals;
+  v_viewNormal    = normalize(normalMatrix * normals);
 
 #ifdef ENABLE_TEXTURES
   v_textureCoord  = texCoords;

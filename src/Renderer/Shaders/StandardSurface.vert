@@ -62,7 +62,7 @@ void main(void) {
   v_worldPos      = (modelMatrix * pos).xyz;
 
   mat3 normalMatrix = mat3(transpose(inverse(modelViewMatrix)));
-  v_viewNormal    = normalMatrix * normals;
+  v_viewNormal    = normalize(normalMatrix * normals);
   
   // offset slightly the lines and points to make them clearly defined.
   // This ensures that lines drawn over surfaces are solid and not clipped
