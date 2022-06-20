@@ -22,7 +22,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   protected cleaning: boolean = false
   protected dirtyOpIndex: number = 0
   protected firstOP_WRITE: number = 0
-  protected name: string
+  private __name: string
   protected __value: T
   protected dataType: string
   protected ownerItem?: ParameterOwner
@@ -51,9 +51,21 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    */
   constructor(name: string = '', value: T, dataType: string) {
     super()
-    this.name = name
+    this.__name = name
     this.__value = value
     this.dataType = dataType
+  }
+
+  public get name() {
+    return this.__name
+  }
+
+  public set name(value: string) {
+    this.setName(value)
+  }
+
+  public get path() {
+    return this.getPath()
   }
 
   /**
@@ -62,7 +74,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @return - Returns the name.
    */
   getName(): string {
-    return this.name
+    return this.__name
   }
 
   /**
@@ -72,13 +84,13 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @return - The instance itself.
    */
   setName(name: string): void {
-    if (name === this.name) {
+    if (name === this.__name) {
       return
     }
 
-    const prevName = this.name
-    this.name = name
-    this.emit('nameChanged', { newName: this.name, prevName })
+    const prevName = this.__name
+    this.__name = name
+    this.emit('nameChanged', { newName: this.__name, prevName })
   }
 
   /**
@@ -107,9 +119,9 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    */
   getPath(): string[] {
     if (this.ownerItem && this.ownerItem instanceof BaseItem) {
-      return [...this.ownerItem.getPath(), this.name]
+      return [...this.ownerItem.getPath(), this.__name]
     } else {
-      return [this.name]
+      return [this.__name]
     }
   }
 
@@ -440,7 +452,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @param context - The context value.
    */
   readBinary(reader: BinReader, context?: AssetLoadContext) {
-    console.warn(`TODO: Parameter: ${this.constructor.name} with name: ${this.name} does not implement readBinary`)
+    console.warn(`TODO: Parameter: ${this.constructor.name} with name: ${this.__name} does not implement readBinary`)
   }
 
   /**

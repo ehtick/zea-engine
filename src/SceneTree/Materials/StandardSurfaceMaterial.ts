@@ -18,7 +18,6 @@ export class StandardSurfaceMaterial extends Material {
 
   edgeColorParam: MaterialColorParam = new MaterialColorParam('EdgeColor', new Color(0.2, 0.2, 0.2))
   pointColorParam: MaterialColorParam = new MaterialColorParam('PointColor', new Color(0.1, 0.1, 0.1))
-  hiddenEdgeColorParam: MaterialColorParam = new MaterialColorParam('HiddenEdgeColor', new Color(0.2, 0.2, 0.2, 0.0))
 
   constructor(name?: string) {
     super(name)
@@ -34,7 +33,6 @@ export class StandardSurfaceMaterial extends Material {
 
     this.addParameter(this.edgeColorParam)
     this.addParameter(this.pointColorParam)
-    this.addParameter(this.hiddenEdgeColorParam)
   }
 
   /**

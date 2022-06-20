@@ -44,6 +44,18 @@ class BaseItem extends ParameterOwner implements Owner {
     numBaseItems++
   }
 
+  public get name() {
+    return this.getName()
+  }
+
+  public set name(value: string) {
+    this.setName(value)
+  }
+
+  public get path() {
+    return this.getPath()
+  }
+
   // ////////////////////////////////////////
   // Static Methods
 
@@ -83,13 +95,6 @@ class BaseItem extends ParameterOwner implements Owner {
       const event = new NameChangedEvent(oldName, name)
       this.emit('nameChanged', event)
     }
-  }
-
-  get name() {
-    return this.getName()
-  }
-  set name(value: string) {
-    this.setName(value)
   }
 
   /**
