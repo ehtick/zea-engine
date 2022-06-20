@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html class="h-full">
+  <head>
+    <title>Zea Engine</title>
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
+    <script src="../dist/index.umd.js"></script>
+
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Color, LinesSphere, Plane, LinesMaterial, GeomItem, GLBoundingBoxPass } =
+        zeaEngine
+
+      const scene = new Scene()
+      const domElement = document.getElementById('viewport')
+      const renderer = new GLRenderer(domElement, { antialias: false })
+      renderer.setScene(scene)
+      scene.setupGrid(5, 10)
+
+      const standardMaterial = new LinesMaterial('surfaces')
+      standardMaterial.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
+
+      const sphere = new LinesSphere(1.5, 60)
+      const geomItem = new GeomItem('Sphere', sphere, standardMaterial)
+      scene.getRoot().addChild(geomItem)
+
+      // const boundingBoxPass = new GLBoundingBoxPass()
+      // renderer.addPass(boundingBoxPass)
+      // boundingBoxPass.addTreeItem(geomItem, true)
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+      renderer.frameAll()
+
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        renderer.forceRender()
+        statusElement.textContent = text
+      }
+      setStatusText('done-loading')
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        sphere.radiusParam.value = 2.5
+        setStatusText(`done-variant-01`)
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        sphere.loopsParam.value = 25
+        sphere.sidesParam.value = 15
+        setStatusText(`done-variant-02`)
+      })
+      // }}}
+    </script>
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="h-full">
+      <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+      </div>
+    </div>
+  </body>
+</html>

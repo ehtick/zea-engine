@@ -8,6 +8,7 @@ export * from './Rect'
 export * from './Circle'
 export * from './Cross'
 export * from './LinesCuboid'
+export * from './LinesSphere'
 export * from './Grid'
 
 export * from './Cone'
