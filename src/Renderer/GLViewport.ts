@@ -49,7 +49,7 @@ class GLViewport extends GLBaseViewport {
   public debugReductionBuffer: boolean = false
   public debugHighlightedGeomsBuffer: boolean = false
 
-  public mousePointerSearchArea = 10
+  public mousePointerSearchArea = 5
   public touchPointerSearchArea = 45
 
   protected __projectionMatrix: Mat4
