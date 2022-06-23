@@ -103,6 +103,24 @@ class GroupMemberXfoOperator extends Operator {
       this.memberGlobalXfo.setClean(memberGlobalXfo)
     }
   }
+
+  /**
+   * When the value on a Parameter is modified by a user by calling 'setValue,
+   * then if any operators are bound, the value of the Parameter cannot be modified
+   * directly as it is the result of a computation. Instead, the Parameter calls
+   * 'backPropagateValue' on the Operator to cause the Operator to handle propagating
+   * the value to one or more of its inputs.
+   * to its inputs.
+   * @param value - The value param.
+   * @return - The modified value.
+   */
+  backPropagateValue(value: Xfo): Xfo {
+    if (this._enabled) {
+      const invGroupTransformXfo = this.groupTransformXfo.getValue().inverse()
+      return invGroupTransformXfo.multiply(value)
+    }
+    return value
+  }
 }
 
 export { GroupTransformXfoOperator, GroupMemberXfoOperator }

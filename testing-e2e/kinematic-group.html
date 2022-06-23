@@ -8,6 +8,7 @@
     <meta charset="UTF-8" />
 
     <script src="../dist/index.umd.js"></script>
+    <script src="../node_modules/@zeainc/zea-ux/dist/index.umd.js"></script>
 
     <script type="module">
       const {
@@ -36,6 +37,17 @@
 
       const renderer = new GLRenderer(domElement, { antialias: false })
       renderer.setScene(scene)
+
+      /** SELECTION START */
+      const { SelectionManager, SelectionTool } = window.zeaUx
+
+      const appData = { scene, renderer }
+      const selectionManager = new SelectionManager(appData, {
+        enableXfoHandles: true,
+      })
+
+      // Users can enable the handles using a menu or hotkey.
+      selectionManager.showHandles(true)
 
       const tree1 = new TreeItem('tree1')
       scene.getRoot().addChild(tree1)
@@ -75,6 +87,8 @@
       kinematicGroup.addItem(cuboidItem)
       scene.getRoot().addChild(kinematicGroup)
 
+      selectionManager.toggleItemSelection(torusItem)
+
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(15, 15, 5), new Vec3(6, 0, 0))
       // renderer.frameAll()
 
@@ -88,7 +102,7 @@
       document.getElementById('variant-01').addEventListener('click', function (event) {
         const angle = -0.75
         const xfo = new Xfo()
-        // xfo.tr.set(1, -2, 0)
+        xfo.tr.set(2, 2, 0)
         xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), angle)
         kinematicGroup.globalXfoParam.value = xfo
         setStatusText(`done-variant-01`)
