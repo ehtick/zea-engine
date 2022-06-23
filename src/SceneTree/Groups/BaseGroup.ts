@@ -45,9 +45,11 @@ class BaseGroup extends TreeItem {
 
     this.itemsParam.on('itemAdded', (event: ItemEvent) => {
       this.bindItem(event.item, event.index)
+      this.emit('itemAdded', event)
     })
     this.itemsParam.on('itemRemoved', (event: ItemEvent) => {
       this.unbindItem(event.item, event.index)
+      this.emit('itemRemoved', event)
     })
   }
 
@@ -149,7 +151,7 @@ class BaseGroup extends TreeItem {
     if (!paramItems) return
 
     const itemIndex = Array.from(paramItems).indexOf(item)
-    if (itemIndex) this.itemsParam.removeItem(itemIndex, emit)
+    if (itemIndex != -1) this.itemsParam.removeItem(itemIndex, emit)
   }
 
   /**
