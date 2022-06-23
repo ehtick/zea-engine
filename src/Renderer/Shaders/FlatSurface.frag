@@ -86,7 +86,6 @@ void main(void) {
 #endif // ENABLE_MULTI_DRAW
 
   baseColor.a *= treeItemOpacity;
-  if (baseColor.a < 0.001) discard;
 
 #if defined(DRAW_COLOR)
   // Cutaways

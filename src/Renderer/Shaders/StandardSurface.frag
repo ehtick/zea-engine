@@ -205,9 +205,6 @@ void main(void) {
 
     material.emission      = matValue2.r;
     material.opacity       = matValue2.g * matValue0.a;
-    if (material.opacity < 0.001) discard;
-
-
 
 #else // ENABLE_MULTI_DRAW
 
@@ -232,7 +229,6 @@ void main(void) {
     material.baseColor     = baseColor.rgb;
     
     material.opacity       = Opacity * baseColor.a;
-    if (material.opacity < 0.001) discard;
 
 #ifdef ENABLE_PBR
 
@@ -273,7 +269,7 @@ void main(void) {
       float opacity        = Opacity;
 #endif // ENABLE_MULTI_DRAW
       edgeColor.a = edgeColor.a * opacity * treeItemOpacity;
-      if (edgeColor.a < 0.001) discard;
+      
       fragColor = edgeColor;
     } else {
       if (renderMode == 1) { // Flat
@@ -311,7 +307,6 @@ void main(void) {
 #endif // ENABLE_MULTI_DRAW
       fragColor = hiddenLineColor;
       fragColor.a = hiddenLineColor.a * opacity * treeItemOpacity;
-      if (fragColor.a < 0.001) discard;
     } else {
 #ifdef ENABLE_MULTI_DRAW
       vec4 edgeColor      = getMaterialValue(materialCoords, 3);
@@ -322,7 +317,6 @@ void main(void) {
       float opacity        = Opacity;
 #endif // ENABLE_MULTI_DRAW
       edgeColor.a = edgeColor.a * opacity * treeItemOpacity;
-      if (edgeColor.a < 0.001) discard;
       fragColor = edgeColor;
     }
   } // end 'LINES'
@@ -336,7 +330,6 @@ void main(void) {
     float opacity        = Opacity;
 #endif // ENABLE_MULTI_DRAW
     pointColor.a = pointColor.a * opacity * treeItemOpacity;
-    if (pointColor.a < 0.001) discard;
     fragColor = pointColor;
   }  // end 'POINTS'
   
