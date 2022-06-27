@@ -148,7 +148,9 @@ class KinematicGroup extends BaseGroup {
         if (item instanceof TreeItem) {
           const itemXfo = item.globalXfoParam.value
           xfo.tr.addInPlace(itemXfo.tr)
-          xfo.ori.addInPlace(itemXfo.ori)
+          // Note: Averaging rotations causes weird and confusing orientation.
+          // This also matches the behavior of the SelectionGroupXfoOperator in zea-ux.
+          if (index == 0) xfo.ori = itemXfo.ori
           numTreeItems++
         }
       })
