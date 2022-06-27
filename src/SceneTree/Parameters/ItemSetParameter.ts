@@ -69,12 +69,16 @@ class ItemSetParameter extends Parameter<Set<TreeItem>> {
       return
     }
 
-    this.__value.add(item)
+    if (!this.__value.has(item)) {
+      this.__value.add(item)
 
-    const index = Array.from(this.__value).indexOf(item)
-    this.emit('itemAdded', new ItemEvent(item, index))
-    if (emitValueChanged) this.emit('valueChanged')
-    return index
+      const index = Array.from(this.__value).indexOf(item)
+      this.emit('itemAdded', new ItemEvent(item, index))
+      if (emitValueChanged) this.emit('valueChanged')
+      return index
+    } else {
+      return -1
+    }
   }
 
   /**
