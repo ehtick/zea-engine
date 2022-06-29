@@ -46,6 +46,7 @@ class CompoundGeomLoader extends BaseGeom {
       attrBuffers,
       offsets: this.offsets,
       counts: this.counts,
+      numSubGeoms: this.numSubGeoms,
       subGeomOffsets: this.subGeomOffsets,
       subGeomCounts: this.subGeomCounts,
       materialLibraryIndices: this.materialLibraryIndices,

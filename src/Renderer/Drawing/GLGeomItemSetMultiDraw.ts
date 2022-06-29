@@ -57,7 +57,10 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     this.gl = <WebGL12RenderingContext>renderer.gl
 
     this.renderer.glGeomLibrary.on('geomDataChanged', (event: IndexEvent) => {
-      this.dirtyGeomIndices.add(event.index)
+      const geomItemIndices = this.glGeomIdsMapping[event.index]
+      if (geomItemIndices != undefined) {
+        this.dirtyGeomIndices.add(event.index)
+      }
     })
   }
 

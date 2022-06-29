@@ -1,7 +1,7 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter, Allocator1D } from '../../Utilities/index'
 import { generateShaderGeomBinding, genDataTypeDesc } from './GeomShaderBinding'
-import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom } from '../../SceneTree/index'
+import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom, CompoundGeom } from '../../SceneTree/index'
 import { GLPoints } from './GLPoints'
 import { GLLines } from './GLLines'
 import { GLMesh } from './GLMesh'
@@ -46,6 +46,8 @@ class GLGeomLibrary extends EventEmitter {
   protected indexBuffer: WebGLBuffer | null = null
   freeDataAfterUpload: boolean = true
   protected __destroyed: boolean = false
+
+  protected geomEventHandlerIds: Record<string, number>[] = []
 
   /**
    * Create a GLGeomLibrary.
@@ -169,8 +171,20 @@ class GLGeomLibrary extends EventEmitter {
       this.dirtyGeomIndices.add(index)
       this.emit('updated')
     }
-    geom.on('geomDataChanged', geomDataChanged)
-    geom.on('geomDataTopologyChanged', geomDataTopologyChanged)
+
+    const eventHandlerIds: Record<string, number> = {}
+
+    eventHandlerIds.geomDataChanged = geom.on('geomDataChanged', geomDataChanged)
+    eventHandlerIds.geomDataTopologyChanged = geom.on('geomDataTopologyChanged', geomDataTopologyChanged)
+
+    if (geom instanceof CompoundGeom) {
+      eventHandlerIds.materialsChanged = geom.on('materialsChanged', () => {
+        this.emit('geomDataChanged', new IndexEvent(index))
+        this.emit('updated')
+      })
+    }
+
+    this.geomEventHandlerIds[index] = eventHandlerIds
 
     return index
   }
@@ -211,6 +225,13 @@ class GLGeomLibrary extends EventEmitter {
 
     this.indicesCounts[index] = 0
     this.indicesOffsets[index] = 0
+
+    const eventHandlerIds = this.geomEventHandlerIds[index]
+    geom.removeListenerById('geomDataChanged', eventHandlerIds.geomDataChanged)
+    geom.removeListenerById('geomDataTopologyChanged', eventHandlerIds.geomDataTopologyChanged)
+    if (geom instanceof CompoundGeom) {
+      geom.removeListenerById('materialsChanged', eventHandlerIds.materialsChanged)
+    }
   }
 
   /**

@@ -40,8 +40,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
   protected renderer: GLRenderer
   protected gl: WebGL12RenderingContext
   protected glGeomItems: Array<GLGeomItem | null> = []
-  protected glGeomIdsMapping: Record<string, any> = {}
-  protected glgeomItemEventHandlers: any[] = []
+  protected glGeomIdsMapping: Record<string, number[]> = {}
+  protected glgeomItemEventHandlers: Record<string, (event: any) => void>[] = []
   protected freeIndices: number[] = []
   // protected visibleItems: GLGeomItem[] = []
   protected dirtyGeomItems: Set<number> = new Set()
@@ -113,7 +113,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       this.glGeomIdsMapping[glGeomItem.geomId].push(index)
     }
 
-    const eventHandlers: Record<string, any> = {}
+    const eventHandlers: Record<string, (event: any) => void> = {}
 
     // //////////////////////////////
     // Visibility

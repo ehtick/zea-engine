@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>zcad-shared-context - Zea Engine</title>
+
+    <link href="data/zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
+    <script src="../dist/index.umd.js"></script>
+
+    <script type="module">
+      const { GLRenderer, Scene, Color, Vec3, Xfo, CADAsset, CompoundGeom, CADBody, StandardSurfaceMaterial } =
+        zeaEngine
+
+      const canvas = document.getElementById('viewport')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { antialias: false })
+      renderer.setScene(scene)
+
+      scene.setupGrid(1000.0, 10)
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(1, -2, 0.5), new Vec3(0, 0, 0))
+
+      const promises = []
+
+      const asset = new CADAsset()
+      asset.load('data/zcad/3.9.1/Dead_eye_bearing.stp.zcad')
+      promises.push(new Promise((resolve) => asset.getGeometryLibrary().on('loaded', resolve)))
+      asset.globalXfoParam.value = new Xfo(new Vec3(-85, 0, 0))
+      scene.getRoot().addChild(asset)
+
+      const standardMaterial = new StandardSurfaceMaterial('surfaces')
+      standardMaterial.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
+      standardMaterial.edgeColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
+
+      /** HIGHLIGHT START */
+      let highlightKey
+      let highlightedItem
+
+      const highlightColor = new Color('#F9CE03')
+      highlightColor.a = 0.1
+      const filterItem = (item) => {
+        while (item && !(item instanceof CADBody || item instanceof PMIItem)) item = item.getOwner()
+        return item
+      }
+      const shatterGeomsOnMouseOver = true
+      renderer.getViewport().on('pointerMove', (event) => {
+        if (event.intersectionData) {
+          const item = event.intersectionData.geomItem
+          if (item) {
+            let key
+            if (event.intersectionData.componentId >= 0) {
+              key = 'pointerOverGeom:' + event.intersectionData.componentId
+              if (key != highlightKey) {
+                if (highlightedItem) highlightedItem.removeHighlight(highlightKey, true)
+                highlightedItem = item
+                highlightKey = key
+                highlightedItem.addHighlight(highlightKey, highlightColor, true)
+              }
+            } else {
+              if (item instanceof CADBody && shatterGeomsOnMouseOver) {
+                item.setShatterState(true)
+                return
+              }
+              if (highlightedItem && item != highlightedItem) {
+                highlightedItem.removeHighlight(highlightKey, true)
+              }
+              highlightedItem = filterItem(item)
+              highlightKey = 'pointerOverGeom'
+              highlightedItem.addHighlight(highlightKey, highlightColor, true)
+            }
+          }
+        } else {
+          if (highlightedItem) {
+            highlightedItem.removeHighlight(highlightKey, true)
+            if (highlightedItem instanceof CADBody) {
+              highlightedItem.setShatterState(false)
+            }
+            highlightedItem = null
+            highlightKey = ''
+          }
+        }
+      })
+      renderer.getViewport().on('pointerDown', (event) => {
+        if (event.intersectionData) {
+          if (event.intersectionData.componentId >= 0) {
+            const subGeom = event.intersectionData.componentId
+            const geomItem = event.intersectionData.geomItem
+            geomItem.geomParam.value.assignSubGeomMaterial(subGeom, standardMaterial)
+          }
+        }
+      })
+
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        renderer.forceRender()
+        statusElement.textContent = text
+      }
+      Promise.all(promises).then(() => {
+        renderer.frameAll()
+        setStatusText('done-loading')
+      })
+      document.getElementById('variant-01').addEventListener('click', function (event) {
+        asset.traverse((item) => {
+          if (item instanceof CADBody && item.geomParam.value instanceof CompoundGeom) {
+            const geom = item.geomParam.value
+            for (let i = 0; i < geom.getNumFaces(); i += 2) {
+              geom.assignSubGeomMaterial(i, standardMaterial)
+            }
+          }
+        })
+        setStatusText(`done-variant-01`)
+      })
+      document.getElementById('variant-02').addEventListener('click', function (event) {
+        asset.traverse((item) => {
+          if (item instanceof CADBody && item.geomParam.value instanceof CompoundGeom) {
+            const geom = item.geomParam.value
+            geom.clearMaterials()
+          }
+        })
+        setStatusText(`done-variant-02`)
+      })
+    </script>
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="h-screen">
+      <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <button class="variant-button" id="variant-01">variant-01</button>
+        <button class="variant-button" id="variant-02">variant-02</button>
+      </div>
+    </div>
+  </body>
+</html>
