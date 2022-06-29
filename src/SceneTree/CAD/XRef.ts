@@ -1,9 +1,9 @@
+import { ParameterOwner } from '../ParameterOwner'
 import { Xfo } from '../../Math/Xfo'
 import { Registry } from '../../Registry'
 import { AssetLoadContext } from '../AssetLoadContext'
 import { BinReader } from '../BinReader'
 import { CloneContext } from '../CloneContext'
-import { XfoParameter } from '../Parameters/XfoParameter'
 import { CADAsset } from './CADAsset'
 
 /**
@@ -58,6 +58,11 @@ class XRef extends CADAsset {
       // Note: the SpatialBridge now encodes the 'ReferenceName' into the
       // XRef, while CADEx didn't provide one. Use the name if it is provided.
       if (name == '') this.setName(relativePath)
+    }
+
+    // XRefs can now contain custom props that ma contain colors, or configurations.
+    if (context.versions['zea-engine'].compare([3, 11, 1]) > 0) {
+      ParameterOwner.prototype.readBinary.call(this, reader, context)
     }
 
     // console.log('resolving XRef:', relativePath, ' > ', url)
