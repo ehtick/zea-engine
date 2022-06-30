@@ -14,18 +14,18 @@ import { BaseGeom } from '.'
  * @private
  */
 class MaterialLibrary extends EventEmitter implements Owner {
-  protected __name: string
-  protected __images: Record<string, BaseImage> = {}
-  protected materials: Array<Material> = []
+  public name: string
+  public images: Record<string, BaseImage> = {}
+  public materials: Array<Material> = []
   protected __materialsMap: Record<string, number> = {}
-  protected name: string = ''
+
   /**
    * Create a material library.
    * @param name - The name of the material library.
    */
   constructor(name: string = 'MaterialLibrary') {
     super()
-    this.__name = name
+    this.name = name
 
     // this.defaultMaterial = new Material('Default', 'SimpleSurfaceShader')
   }
@@ -34,7 +34,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * The clear method.
    */
   clear(): void {
-    this.__images = {}
+    this.images = {}
     this.materials = []
     this.__materialsMap = {}
   }
@@ -44,7 +44,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @return - The return value.
    */
   getPath(): string[] {
-    return [this.__name]
+    return [this.name]
   }
 
   /**
@@ -113,10 +113,10 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @param assert - The assert value.
    * @return - The return value.
    */
-  getMaterial(name: string, assert = true): Material {
+  getMaterial(name: string): Material {
     const index = this.__materialsMap[name]
-    if (index == undefined && assert) {
-      throw new Error('Material:' + name + ' not found in library:' + this.getMaterialNames())
+    if (index == undefined) {
+      return null
     }
     return this.materials[index]
   }
@@ -127,7 +127,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @return - The return value.
    */
   hasImage(name: string): boolean {
-    return name in this.__images
+    return name in this.images
   }
 
   /**
@@ -136,7 +136,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    */
   addImage(image: BaseImage): void {
     image.setOwner(this)
-    this.__images[image.getName()] = image
+    this.images[image.getName()] = image
   }
 
   /**
@@ -146,7 +146,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @return - The return value.
    */
   getImage(name: string, assert = true): BaseImage {
-    const res = this.__images[name]
+    const res = this.images[name]
     if (!res && assert) {
       throw new Error('Image:' + name + ' not found in library:' + this.getImageNames())
     }
@@ -160,7 +160,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
   getImageNames(): string[] {
     const names = []
     // eslint-disable-next-line guard-for-in
-    for (const name in this.__images) {
+    for (const name in this.images) {
       names.push(name)
     }
     return names
@@ -212,7 +212,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
     for (const name in j.textures) {
       const image = new FileImage(name)
       image.fromJSON(j.textures[name])
-      this.__images[name] = image // TODO: texture -> image
+      this.images[name] = image // TODO: texture -> image
     }
     // eslint-disable-next-line guard-for-in
     for (const name in j.materials) {
@@ -237,7 +237,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
       const type = reader.loadStr()
       const texture = <BaseImage>Registry.constructClass(type)
       texture.readBinary(reader, context)
-      this.__images[texture.getName()] = texture
+      this.images[texture.getName()] = texture
     }
     const numMaterials = reader.loadUInt32()
     if (numMaterials > 0) {
@@ -273,7 +273,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
             break
         }
         reader.seek(toc[i]) // Reset the pointer to the start of the item data.
-        material.readBinary(reader, context) // (reader, context, this.__images)
+        material.readBinary(reader, context) // (reader, context, this.images)
 
         // Note: the compound geom now looks up materials by indexes
         // and so the index of the material in the zcad file must mow match

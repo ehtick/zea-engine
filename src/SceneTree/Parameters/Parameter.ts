@@ -56,14 +56,30 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
     this.dataType = dataType
   }
 
+  /**
+   * Returns the name of the parameter.
+   *
+   * @return - Returns the parameter name.
+   */
   public get name() {
     return this.__name
   }
 
+  /**
+   * Sets the name of the parameter(Updates path).
+   *
+   * @emits `nameChanged` with `newName` and `oldName` data.
+   * @param name - The parameter name.
+   */
   public set name(value: string) {
     this.setName(value)
   }
 
+  /**
+   * Returns the current path of the parameter in the tree as an array of names.
+   *
+   * @return - Returns an array.
+   */
   public get path() {
     return this.getPath()
   }

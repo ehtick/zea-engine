@@ -177,7 +177,7 @@ class TreeItem extends BaseItem {
    * @return - Returns the parent item.
    */
   getParentItem(): TreeItem | undefined {
-    return <TreeItem>this.getOwner() // TODO: TreeItem cast
+    return <TreeItem>this.getOwner()
   }
 
   /**
@@ -187,6 +187,14 @@ class TreeItem extends BaseItem {
    */
   setParentItem(parentItem: TreeItem): void {
     this.setOwner(parentItem)
+  }
+
+  get parent(): TreeItem | undefined {
+    return <TreeItem>this.getOwner()
+  }
+
+  set parent(treeItem: TreeItem) {
+    this.setOwner(treeItem)
   }
 
   // ////////////////////////////////////////

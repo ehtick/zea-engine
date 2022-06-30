@@ -45,7 +45,7 @@ class BaseGeomItem extends TreeItem {
    * @todo Need to find the layer and add this item to it.
    * @param val - `true` to enable it.
    */
-  setOverlay(val: boolean): void  {
+  setOverlay(val: boolean): void {
     // TODO: need to find the layer and add this item to it.
     this.overlay = val
   }
@@ -65,7 +65,7 @@ class BaseGeomItem extends TreeItem {
    * @todo Need to find the layer and add this item to it.
    * @param name - The name of the layer.
    */
-  addLayer(name: string): void  {
+  addLayer(name: string): void {
     // TODO: need to find the layer and add this item to it.
     this.__layers.push(name)
   }
@@ -156,7 +156,7 @@ class BaseGeomItem extends TreeItem {
       // const materialName = 'Material' + this.__bodyDescId;
 
       const materialLibrary = context.assetItem.getMaterialLibrary()
-      let material = materialLibrary.getMaterial(materialName, false)
+      let material = materialLibrary.getMaterial(materialName)
       if (!material) {
         // console.warn("BaseGeomItem :'" + this.name + "' Material not found:" + materialName);
         // material = materialLibrary.getMaterial('DefaultMaterial');

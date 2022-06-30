@@ -134,7 +134,7 @@ class VRViewport extends XRViewport {
           const materialLibrary = this.vrAsset!.getMaterialLibrary()
           const materialNames = materialLibrary.getMaterialNames()
           for (const name of materialNames) {
-            const material = materialLibrary.getMaterial(name, false)
+            const material = materialLibrary.getMaterial(name)
             if (material) {
               material.setShaderName('SimpleSurfaceShader')
             }

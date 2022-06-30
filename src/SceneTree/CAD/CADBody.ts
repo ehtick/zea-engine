@@ -73,7 +73,7 @@ class CADBody extends GeomItem {
         const materialName = reader.loadStr()
 
         const materialLibrary = context.assetItem.getMaterialLibrary()
-        let material = materialLibrary.getMaterial(materialName, false)
+        let material = materialLibrary.getMaterial(materialName)
         if (!material) {
           material = new Material(materialName, 'SimpleSurfaceShader')
           material.getParameter('BaseColor').setValue(Color.random(0.25))

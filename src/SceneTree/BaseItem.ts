@@ -44,18 +44,6 @@ class BaseItem extends ParameterOwner implements Owner {
     numBaseItems++
   }
 
-  public get name() {
-    return this.getName()
-  }
-
-  public set name(value: string) {
-    this.setName(value)
-  }
-
-  public get path() {
-    return this.getPath()
-  }
-
   // ////////////////////////////////////////
   // Static Methods
 
@@ -71,6 +59,34 @@ class BaseItem extends ParameterOwner implements Owner {
 
   // ////////////////////////////////////////
   // Name and Path
+
+  /**
+   * Returns the name of the base item.
+   *
+   * @return - Returns the base item name.
+   */
+  public get name() {
+    return this.getName()
+  }
+
+  /**
+   * Sets the name of the base item(Updates path).
+   *
+   * @emits `nameChanged` with `newName` and `oldName` data.
+   * @param name - The base item name.
+   */
+  public set name(value: string) {
+    this.setName(value)
+  }
+
+  /**
+   * Returns the current path of the item in the tree as an array of names.
+   *
+   * @return - Returns an array.
+   */
+  public get path() {
+    return this.getPath()
+  }
 
   /**
    * Returns the name of the base item.
