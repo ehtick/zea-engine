@@ -46,7 +46,7 @@ which implies that it doesn't allow multiple events with the same name.
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:26](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L26)
+[src/Utilities/WorkerPool.ts:26](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L26)
 
 ## Properties
 
@@ -60,7 +60,7 @@ which implies that it doesn't allow multiple events with the same name.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:21](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L21)
+[src/Utilities/WorkerPool.ts:21](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L21)
 
 ___
 
@@ -84,7 +84,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -94,7 +94,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:15](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L15)
+[src/Utilities/WorkerPool.ts:15](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L15)
 
 ___
 
@@ -104,7 +104,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:18](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L18)
+[src/Utilities/WorkerPool.ts:18](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L18)
 
 ___
 
@@ -114,7 +114,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:20](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L20)
+[src/Utilities/WorkerPool.ts:20](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L20)
 
 ___
 
@@ -124,7 +124,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:23](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L23)
+[src/Utilities/WorkerPool.ts:23](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L23)
 
 ___
 
@@ -134,7 +134,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:24](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L24)
+[src/Utilities/WorkerPool.ts:24](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L24)
 
 ___
 
@@ -144,7 +144,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:22](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L22)
+[src/Utilities/WorkerPool.ts:22](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L22)
 
 ___
 
@@ -154,7 +154,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:17](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L17)
+[src/Utilities/WorkerPool.ts:17](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L17)
 
 ___
 
@@ -164,7 +164,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:16](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L16)
+[src/Utilities/WorkerPool.ts:16](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L16)
 
 ## Methods
 
@@ -185,7 +185,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:31](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L31)
+[src/Utilities/WorkerPool.ts:31](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L31)
 
 ___
 
@@ -205,7 +205,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:40](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L40)
+[src/Utilities/WorkerPool.ts:40](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L40)
 
 ___
 
@@ -219,7 +219,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:95](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L95)
+[src/Utilities/WorkerPool.ts:95](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L95)
 
 ___
 
@@ -239,7 +239,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:101](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L101)
+[src/Utilities/WorkerPool.ts:101](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L101)
 
 ___
 
@@ -253,7 +253,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:155](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L155)
+[src/Utilities/WorkerPool.ts:155](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L155)
 
 ___
 
@@ -267,7 +267,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:60](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L60)
+[src/Utilities/WorkerPool.ts:60](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L60)
 
 ___
 
@@ -294,7 +294,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -316,7 +316,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -340,7 +340,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -361,7 +361,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:163](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L163)
+[src/Utilities/WorkerPool.ts:163](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L163)
 
 ___
 
@@ -388,7 +388,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -417,7 +417,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -455,7 +455,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -482,7 +482,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -502,7 +502,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:147](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L147)
+[src/Utilities/WorkerPool.ts:147](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L147)
 
 ___
 
@@ -522,5 +522,5 @@ ___
 
 #### Defined in
 
-[src/Utilities/WorkerPool.ts:157](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/WorkerPool.ts#L157)
+[src/Utilities/WorkerPool.ts:157](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/WorkerPool.ts#L157)
 

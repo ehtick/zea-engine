@@ -17,7 +17,7 @@ Archive unpacker plugin.
 
 #### Defined in
 
-[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:76](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L76)
+[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:76](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L76)
 
 ## Properties
 
@@ -27,7 +27,7 @@ Archive unpacker plugin.
 
 #### Defined in
 
-[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:74](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L74)
+[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:74](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L74)
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:73](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L73)
+[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:73](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L73)
 
 ## Methods
 
@@ -55,7 +55,7 @@ The type of file.
 
 #### Defined in
 
-[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:86](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L86)
+[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:86](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L86)
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:78](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L78)
+[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:78](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L78)
 
 ___
 
@@ -100,5 +100,5 @@ Note: using the resource loader to centralize data loading enables progress to b
 
 #### Defined in
 
-[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:96](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L96)
+[src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts:96](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ResourceLoader/ArchiveUnpackerPlugin.ts#L96)
 

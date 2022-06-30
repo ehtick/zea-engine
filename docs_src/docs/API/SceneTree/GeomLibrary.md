@@ -35,7 +35,7 @@ Create a geom library.
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:82](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L82)
+[src/SceneTree/GeomLibrary.ts:82](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L82)
 
 ## Properties
 
@@ -49,7 +49,7 @@ Create a geom library.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:70](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L70)
+[src/SceneTree/GeomLibrary.ts:70](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L70)
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:77](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L77)
+[src/SceneTree/GeomLibrary.ts:77](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L77)
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:73](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L73)
+[src/SceneTree/GeomLibrary.ts:73](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L73)
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:76](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L76)
+[src/SceneTree/GeomLibrary.ts:76](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L76)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:71](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L71)
+[src/SceneTree/GeomLibrary.ts:71](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L71)
 
 ___
 
@@ -113,7 +113,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -123,7 +123,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:74](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L74)
+[src/SceneTree/GeomLibrary.ts:74](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L74)
 
 ___
 
@@ -133,7 +133,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:78](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L78)
+[src/SceneTree/GeomLibrary.ts:78](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L78)
 
 ___
 
@@ -143,7 +143,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:75](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L75)
+[src/SceneTree/GeomLibrary.ts:75](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L75)
 
 ___
 
@@ -153,7 +153,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:72](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L72)
+[src/SceneTree/GeomLibrary.ts:72](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L72)
 
 ## Methods
 
@@ -177,7 +177,7 @@ The __receiveGeomDatas method.
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:308](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L308)
+[src/SceneTree/GeomLibrary.ts:308](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L308)
 
 ___
 
@@ -204,7 +204,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -226,7 +226,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -250,7 +250,7 @@ The getGeom method.
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:175](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L175)
+[src/SceneTree/GeomLibrary.ts:175](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L175)
 
 ___
 
@@ -274,7 +274,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -292,7 +292,7 @@ Returns the number of geometries the GeomLibrary has, or will have at the end of
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:166](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L166)
+[src/SceneTree/GeomLibrary.ts:166](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L166)
 
 ___
 
@@ -310,7 +310,7 @@ The returns true if all the geometries have been loaded and the loaded event has
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:92](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L92)
+[src/SceneTree/GeomLibrary.ts:92](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L92)
 
 ___
 
@@ -335,7 +335,7 @@ the promise resolves once the file is loaded, but not parsed.
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:105](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L105)
+[src/SceneTree/GeomLibrary.ts:105](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L105)
 
 ___
 
@@ -359,7 +359,7 @@ Loads the geometry files for this GeomLibrary.
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:132](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L132)
+[src/SceneTree/GeomLibrary.ts:132](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L132)
 
 ___
 
@@ -380,7 +380,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:396](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L396)
+[src/SceneTree/GeomLibrary.ts:396](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L396)
 
 ___
 
@@ -407,7 +407,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -436,7 +436,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -474,7 +474,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -498,7 +498,7 @@ The readBinaryBuffer method.
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:189](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L189)
+[src/SceneTree/GeomLibrary.ts:189](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L189)
 
 ___
 
@@ -525,7 +525,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -548,7 +548,7 @@ The setGenBufferOption method.
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:150](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L150)
+[src/SceneTree/GeomLibrary.ts:150](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L150)
 
 ___
 
@@ -570,7 +570,7 @@ The setNumGeoms method.
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:158](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L158)
+[src/SceneTree/GeomLibrary.ts:158](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L158)
 
 ___
 
@@ -588,7 +588,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:379](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L379)
+[src/SceneTree/GeomLibrary.ts:379](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L379)
 
 ___
 
@@ -606,5 +606,5 @@ The toString method.
 
 #### Defined in
 
-[src/SceneTree/GeomLibrary.ts:389](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/GeomLibrary.ts#L389)
+[src/SceneTree/GeomLibrary.ts:389](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/GeomLibrary.ts#L389)
 

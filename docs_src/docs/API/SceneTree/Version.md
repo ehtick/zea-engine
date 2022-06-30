@@ -13,7 +13,7 @@ Class designed to store version data. Widely used in the zea engine for backward
 
 ### constructor
 
-• **new Version**(`versionStr?`)
+• **new Version**(`arg?`)
 
 Creates a version.
 The version string should have the following structure:
@@ -21,13 +21,13 @@ major, minor and patch separated by a dot(`.`) and parts separated by a dash(`-`
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `versionStr` | `string` | `''` | The version string value. |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `arg?` | `string` \| `number`[] | The version string value, or an array of version numbers. |
 
 #### Defined in
 
-[src/SceneTree/Version.ts:16](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Version.ts#L16)
+[src/SceneTree/Version.ts:16](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Version.ts#L16)
 
 ## Properties
 
@@ -37,39 +37,63 @@ major, minor and patch separated by a dot(`.`) and parts separated by a dash(`-`
 
 #### Defined in
 
-[src/SceneTree/Version.ts:8](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Version.ts#L8)
+[src/SceneTree/Version.ts:8](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Version.ts#L8)
 
 ___
 
 ### major
 
-• **major**: `number`
+• **major**: `number` = `0`
 
 #### Defined in
 
-[src/SceneTree/Version.ts:5](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Version.ts#L5)
+[src/SceneTree/Version.ts:5](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Version.ts#L5)
 
 ___
 
 ### minor
 
-• **minor**: `number`
+• **minor**: `number` = `0`
 
 #### Defined in
 
-[src/SceneTree/Version.ts:6](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Version.ts#L6)
+[src/SceneTree/Version.ts:6](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Version.ts#L6)
 
 ___
 
 ### patch
 
-• **patch**: `number`
+• **patch**: `number` = `0`
 
 #### Defined in
 
-[src/SceneTree/Version.ts:7](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Version.ts#L7)
+[src/SceneTree/Version.ts:7](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Version.ts#L7)
 
 ## Methods
+
+### asArray
+
+▸ **asArray**(): `number`[]
+
+Converts the Version class instance back to an array for comparisons with other version class instances.
+e.g.
+```
+  const version1 = new Version([1, 2, 3])
+  const version2 = new Version([1, 2, 4])
+  const res = version1.compare(version2.asArray())
+```
+
+#### Returns
+
+`number`[]
+
+an array containing the major, minor and patch version numbers.
+
+#### Defined in
+
+[src/SceneTree/Version.ts:58](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Version.ts#L58)
+
+___
 
 ### compare
 
@@ -91,7 +115,7 @@ Compare a version object against a version numbers array.
 
 #### Defined in
 
-[src/SceneTree/Version.ts:37](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Version.ts#L37)
+[src/SceneTree/Version.ts:38](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Version.ts#L38)
 
 ___
 
@@ -105,5 +129,5 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Version.ts:47](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Version.ts#L47)
+[src/SceneTree/Version.ts:62](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Version.ts#L62)
 

@@ -43,7 +43,7 @@ Create points.
 
 #### Defined in
 
-[src/SceneTree/Geometry/CompoundGeom.ts:33](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Geometry/CompoundGeom.ts#L33)
+[src/SceneTree/Geometry/CompoundGeom.ts:36](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/CompoundGeom.ts#L36)
 
 ## Properties
 
@@ -57,7 +57,7 @@ Create points.
 
 #### Defined in
 
-[src/SceneTree/Geometry/GeomProxies.ts:13](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Geometry/GeomProxies.ts#L13)
+[src/SceneTree/Geometry/GeomProxies.ts:13](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/GeomProxies.ts#L13)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -85,7 +85,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Geometry/GeomProxies.ts:15](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Geometry/GeomProxies.ts#L15)
+[src/SceneTree/Geometry/GeomProxies.ts:15](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/GeomProxies.ts#L15)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Geometry/GeomProxies.ts:14](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Geometry/GeomProxies.ts#L14)
+[src/SceneTree/Geometry/GeomProxies.ts:14](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/GeomProxies.ts#L14)
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Geometry/CompoundGeom.ts:25](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Geometry/CompoundGeom.ts#L25)
+[src/SceneTree/Geometry/CompoundGeom.ts:30](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/CompoundGeom.ts#L30)
 
 ___
 
@@ -123,7 +123,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -133,7 +133,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Geometry/CompoundGeom.ts:26](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Geometry/CompoundGeom.ts#L26)
+[src/SceneTree/Geometry/CompoundGeom.ts:31](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/CompoundGeom.ts#L31)
 
 ___
 
@@ -147,17 +147,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Geometry/GeomProxies.ts:12](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Geometry/GeomProxies.ts#L12)
-
-___
-
-### subGeomMaterialIndices
-
-• `Protected` **subGeomMaterialIndices**: `Uint8Array`
-
-#### Defined in
-
-[src/SceneTree/Geometry/CompoundGeom.ts:27](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Geometry/CompoundGeom.ts#L27)
+[src/SceneTree/Geometry/GeomProxies.ts:12](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/GeomProxies.ts#L12)
 
 ___
 
@@ -167,9 +157,63 @@ ___
 
 #### Defined in
 
-[src/SceneTree/Geometry/CompoundGeom.ts:29](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Geometry/CompoundGeom.ts#L29)
+[src/SceneTree/Geometry/CompoundGeom.ts:32](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/CompoundGeom.ts#L32)
 
 ## Methods
+
+### assignSubGeomMaterial
+
+▸ **assignSubGeomMaterial**(`subGeomId`, `material`): `void`
+
+Assigns a material to a sub-geom by ID;
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `subGeomId` | `number` | The ID of the sub-geom to assign the material. |
+| `material` | [`Material`](../SceneTree_Material.Material) | The material to assign. |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/SceneTree/Geometry/CompoundGeom.ts:114](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/CompoundGeom.ts#L114)
+
+___
+
+### calcMaterialGroups
+
+▸ `Private` **calcMaterialGroups**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/SceneTree/Geometry/CompoundGeom.ts:141](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/CompoundGeom.ts#L141)
+
+___
+
+### clearMaterials
+
+▸ **clearMaterials**(): `void`
+
+Clears all sub--geom material assignments. This means the geometry will be drawn
+using only the material of the GeomItem or CADBody.
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/SceneTree/Geometry/CompoundGeom.ts:135](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/CompoundGeom.ts#L135)
+
+___
 
 ### emit
 
@@ -194,7 +238,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -215,7 +259,7 @@ The GLGeomLibrary may call this function to let the geometry know it can release
 
 #### Defined in
 
-[src/SceneTree/Geometry/GeomProxies.ts:70](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Geometry/GeomProxies.ts#L70)
+[src/SceneTree/Geometry/GeomProxies.ts:70](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/GeomProxies.ts#L70)
 
 ___
 
@@ -237,7 +281,7 @@ The genBuffers method.
 
 #### Defined in
 
-[src/SceneTree/Geometry/GeomProxies.ts:62](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Geometry/GeomProxies.ts#L62)
+[src/SceneTree/Geometry/GeomProxies.ts:62](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/GeomProxies.ts#L62)
 
 ___
 
@@ -259,7 +303,7 @@ Returns the bounding box for geometry.
 
 #### Defined in
 
-[src/SceneTree/Geometry/GeomProxies.ts:54](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Geometry/GeomProxies.ts#L54)
+[src/SceneTree/Geometry/GeomProxies.ts:54](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/GeomProxies.ts#L54)
 
 ___
 
@@ -281,7 +325,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -305,7 +349,43 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/BaseClass.ts#L25)
+
+___
+
+### getNumEdges
+
+▸ **getNumEdges**(): `any`
+
+Returns the number of Edge sub-geoms in this compound geom.
+
+#### Returns
+
+`any`
+
+- The return value.
+
+#### Defined in
+
+[src/SceneTree/Geometry/CompoundGeom.ts:75](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/CompoundGeom.ts#L75)
+
+___
+
+### getNumFaces
+
+▸ **getNumFaces**(): `any`
+
+Returns the number of Face sub-geoms in this compound geom.
+
+#### Returns
+
+`any`
+
+- The return value.
+
+#### Defined in
+
+[src/SceneTree/Geometry/CompoundGeom.ts:66](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/CompoundGeom.ts#L66)
 
 ___
 
@@ -323,7 +403,7 @@ Returns the number line segments in this lines proxy geometry
 
 #### Defined in
 
-[src/SceneTree/Geometry/CompoundGeom.ts:63](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Geometry/CompoundGeom.ts#L63)
+[src/SceneTree/Geometry/CompoundGeom.ts:93](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/CompoundGeom.ts#L93)
 
 ___
 
@@ -341,7 +421,25 @@ Returns the number line segments in this lines proxy geometry
 
 #### Defined in
 
-[src/SceneTree/Geometry/CompoundGeom.ts:72](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Geometry/CompoundGeom.ts#L72)
+[src/SceneTree/Geometry/CompoundGeom.ts:102](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/CompoundGeom.ts#L102)
+
+___
+
+### getNumSubGeoms
+
+▸ **getNumSubGeoms**(): `any`
+
+Returns the number of faces, edges and point sub-geoms in this compound geom.
+
+#### Returns
+
+`any`
+
+- The return value.
+
+#### Defined in
+
+[src/SceneTree/Geometry/CompoundGeom.ts:57](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/CompoundGeom.ts#L57)
 
 ___
 
@@ -349,7 +447,7 @@ ___
 
 ▸ **getNumTriangles**(): `number`
 
-Returns the number of triangles in this mesh proxy geometry.
+Returns the number of triangles in this compound geom.
 
 #### Returns
 
@@ -359,7 +457,7 @@ Returns the number of triangles in this mesh proxy geometry.
 
 #### Defined in
 
-[src/SceneTree/Geometry/CompoundGeom.ts:54](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Geometry/CompoundGeom.ts#L54)
+[src/SceneTree/Geometry/CompoundGeom.ts:84](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/CompoundGeom.ts#L84)
 
 ___
 
@@ -381,7 +479,7 @@ Returns the number of vertex attributes.
 
 #### Defined in
 
-[src/SceneTree/Geometry/GeomProxies.ts:46](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Geometry/GeomProxies.ts#L46)
+[src/SceneTree/Geometry/GeomProxies.ts:46](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/GeomProxies.ts#L46)
 
 ___
 
@@ -404,7 +502,7 @@ Sets state of current geometry(Including line segments) using a binary reader ob
 
 #### Defined in
 
-[src/SceneTree/Geometry/CompoundGeom.ts:85](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/Geometry/CompoundGeom.ts#L85)
+[src/SceneTree/Geometry/CompoundGeom.ts:205](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/Geometry/CompoundGeom.ts#L205)
 
 ___
 
@@ -431,7 +529,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -460,7 +558,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -498,7 +596,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -525,5 +623,5 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L134)
 

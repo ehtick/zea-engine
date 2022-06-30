@@ -15,5 +15,5 @@ custom_edit_url: null
 
 #### Defined in
 
-[src/Renderer/types/renderer.ts:45](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/types/renderer.ts#L45)
+[src/Renderer/types/renderer.ts:45](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/types/renderer.ts#L45)
 

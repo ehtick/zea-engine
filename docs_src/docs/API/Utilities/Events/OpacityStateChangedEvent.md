@@ -34,7 +34,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[src/Utilities/Events/OpacityStateChangedEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/Events/OpacityStateChangedEvent.ts#L6)
+[src/Utilities/Events/OpacityStateChangedEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/Events/OpacityStateChangedEvent.ts#L6)
 
 ## Properties
 
@@ -44,7 +44,7 @@ Create an BaseEvent.
 
 #### Defined in
 
-[src/Utilities/Events/OpacityStateChangedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/Events/OpacityStateChangedEvent.ts#L4)
+[src/Utilities/Events/OpacityStateChangedEvent.ts:4](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/Events/OpacityStateChangedEvent.ts#L4)
 
 ___
 
@@ -54,5 +54,5 @@ ___
 
 #### Defined in
 
-[src/Utilities/Events/OpacityStateChangedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/Events/OpacityStateChangedEvent.ts#L5)
+[src/Utilities/Events/OpacityStateChangedEvent.ts:5](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/Events/OpacityStateChangedEvent.ts#L5)
 

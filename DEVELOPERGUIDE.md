@@ -165,6 +165,16 @@ git push && git push --tags
 
 [https://github.com/ZeaInc/zea-engine/actions](https://github.com/ZeaInc/zea-engine/actions)
 
+7. Release using GitHub
+
+ - Wait for the "Publish to the "next" release channel" action to complete
+ - Go to the Tags page in the engine repo in GitHub: https://github.com/ZeaInc/zea-engine/tags
+ - See the most recent tag. Prett the 3 dot to the right side and select 'Create release'
+ - in the release page, press the 'generate release notes'
+ - Press the 'Publish release' button
+ - check the status of the release int he actions page: https://github.com/ZeaInc/zea-engine/actions/workflows/publish.yaml
+
+
 ### Publishing a pre-release
 
 Pre-releases are potentially unstable releases meant for tests of new features

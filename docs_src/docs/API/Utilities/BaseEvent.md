@@ -25,6 +25,8 @@ Class representing a BaseEvent.
 
   ↳ [`IndexEvent`](Events/Utilities_Events_IndexEvent.IndexEvent)
 
+  ↳ [`NameChangedEvent`](Events/Utilities_Events_NameChangedEvent.NameChangedEvent)
+
   ↳ [`OpacityStateChangedEvent`](Events/Utilities_Events_OpacityStateChangedEvent.OpacityStateChangedEvent)
 
   ↳ [`ParameterAddedEvent`](Events/Utilities_Events_ParameterAddedEvent.ParameterAddedEvent)
@@ -67,5 +69,5 @@ Create an BaseEvent.
 
 #### Defined in
 
-[src/Utilities/BaseEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseEvent.ts#L6)
+[src/Utilities/BaseEvent.ts:6](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/BaseEvent.ts#L6)
 

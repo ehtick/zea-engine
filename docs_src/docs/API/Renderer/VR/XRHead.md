@@ -26,57 +26,57 @@ Create a VR head.
 
 #### Defined in
 
-[src/Renderer/VR/XRHead.ts:18](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRHead.ts#L18)
+[src/Renderer/VR/XRHead.ts:18](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRHead.ts#L18)
 
 ## Properties
 
-### \_\_localXfo
-
-• `Protected` **\_\_localXfo**: [`Xfo`](../../Math/Math_Xfo.Xfo)
-
-#### Defined in
-
-[src/Renderer/VR/XRHead.ts:11](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRHead.ts#L11)
-
-___
-
-### \_\_mat4
-
-• `Protected` **\_\_mat4**: [`Mat4`](../../Math/Math_Mat4.Mat4)
-
-#### Defined in
-
-[src/Renderer/VR/XRHead.ts:10](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRHead.ts#L10)
-
-___
-
-### \_\_treeItem
-
-• `Protected` **\_\_treeItem**: [`TreeItem`](../../SceneTree/SceneTree_TreeItem.TreeItem)
-
-#### Defined in
-
-[src/Renderer/VR/XRHead.ts:9](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRHead.ts#L9)
-
-___
-
-### \_\_xrvp
-
-• `Protected` **\_\_xrvp**: `any`
-
-#### Defined in
-
-[src/Renderer/VR/XRHead.ts:8](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRHead.ts#L8)
-
-___
-
 ### hmdGeomItem
 
-• `Protected` **hmdGeomItem**: `any`
+• `Private` **hmdGeomItem**: `any`
 
 #### Defined in
 
-[src/Renderer/VR/XRHead.ts:12](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRHead.ts#L12)
+[src/Renderer/VR/XRHead.ts:12](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRHead.ts#L12)
+
+___
+
+### localXfo
+
+• `Private` **localXfo**: [`Xfo`](../../Math/Math_Xfo.Xfo)
+
+#### Defined in
+
+[src/Renderer/VR/XRHead.ts:11](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRHead.ts#L11)
+
+___
+
+### mat4
+
+• `Private` **mat4**: [`Mat4`](../../Math/Math_Mat4.Mat4)
+
+#### Defined in
+
+[src/Renderer/VR/XRHead.ts:10](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRHead.ts#L10)
+
+___
+
+### treeItem
+
+• `Protected` **treeItem**: [`TreeItem`](../../SceneTree/SceneTree_TreeItem.TreeItem)
+
+#### Defined in
+
+[src/Renderer/VR/XRHead.ts:9](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRHead.ts#L9)
+
+___
+
+### xrvp
+
+• `Private` **xrvp**: `any`
+
+#### Defined in
+
+[src/Renderer/VR/XRHead.ts:8](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRHead.ts#L8)
 
 ## Methods
 
@@ -94,7 +94,7 @@ The getTreeItem method.
 
 #### Defined in
 
-[src/Renderer/VR/XRHead.ts:78](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRHead.ts#L78)
+[src/Renderer/VR/XRHead.ts:78](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRHead.ts#L78)
 
 ___
 
@@ -112,7 +112,7 @@ The getXfo method.
 
 #### Defined in
 
-[src/Renderer/VR/XRHead.ts:86](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRHead.ts#L86)
+[src/Renderer/VR/XRHead.ts:86](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRHead.ts#L86)
 
 ___
 
@@ -134,7 +134,7 @@ The Set wether the HMB is visible in rendering or not. Used in spectator renderi
 
 #### Defined in
 
-[src/Renderer/VR/XRHead.ts:31](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRHead.ts#L31)
+[src/Renderer/VR/XRHead.ts:31](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRHead.ts#L31)
 
 ___
 
@@ -156,5 +156,5 @@ The update method.
 
 #### Defined in
 
-[src/Renderer/VR/XRHead.ts:57](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRHead.ts#L57)
+[src/Renderer/VR/XRHead.ts:57](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRHead.ts#L57)
 

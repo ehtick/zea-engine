@@ -15,7 +15,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[src/Utilities/IntersectionData.ts:6](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/IntersectionData.ts#L6)
+[src/Utilities/IntersectionData.ts:6](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/IntersectionData.ts#L6)
 
 ___
 
@@ -25,7 +25,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/IntersectionData.ts:7](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/IntersectionData.ts#L7)
+[src/Utilities/IntersectionData.ts:7](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/IntersectionData.ts#L7)
 
 ___
 
@@ -35,5 +35,5 @@ ___
 
 #### Defined in
 
-[src/Utilities/IntersectionData.ts:5](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/IntersectionData.ts#L5)
+[src/Utilities/IntersectionData.ts:5](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/IntersectionData.ts#L5)
 

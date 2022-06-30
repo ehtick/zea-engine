@@ -33,7 +33,7 @@ Create a GL pass.
 
 #### Defined in
 
-[src/Renderer/Passes/GLStandardGeomsPass.ts:18](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLStandardGeomsPass.ts#L18)
+[src/Renderer/Passes/GLStandardGeomsPass.ts:18](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLStandardGeomsPass.ts#L18)
 
 ## Properties
 
@@ -47,7 +47,7 @@ Create a GL pass.
 
 #### Defined in
 
-[src/Renderer/Passes/GLPass.ts:22](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLPass.ts#L22)
+[src/Renderer/Passes/GLPass.ts:22](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLPass.ts#L22)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Passes/GLPass.ts:24](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLPass.ts#L24)
+[src/Renderer/Passes/GLPass.ts:24](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLPass.ts#L24)
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:25](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L25)
+[src/SceneTree/ParameterOwner.ts:25](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L25)
 
 ___
 
@@ -103,7 +103,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Passes/GLPass.ts:19](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLPass.ts#L19)
+[src/Renderer/Passes/GLPass.ts:19](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLPass.ts#L19)
 
 ___
 
@@ -117,17 +117,17 @@ ___
 
 #### Defined in
 
-[src/Renderer/Passes/GLPass.ts:26](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLPass.ts#L26)
+[src/Renderer/Passes/GLPass.ts:26](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLPass.ts#L26)
 
 ___
 
 ### listenerIDs
 
-• `Protected` **listenerIDs**: `Record`<`number`, `Record`<`string`, `number`\>\> = `{}`
+• `Protected` **listenerIDs**: `Map`<[`GeomItem`](../../SceneTree/SceneTree_GeomItem.GeomItem), `Record`<`string`, `number`\>\>
 
 #### Defined in
 
-[src/Renderer/Passes/GLStandardGeomsPass.ts:14](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLStandardGeomsPass.ts#L14)
+[src/Renderer/Passes/GLStandardGeomsPass.ts:14](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLStandardGeomsPass.ts#L14)
 
 ___
 
@@ -141,17 +141,17 @@ ___
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
 ### materials
 
-• `Protected` **materials**: `Record`<`number`, [`Material`](../../SceneTree/SceneTree_Material.Material)\> = `{}`
+• `Protected` **materials**: `Map`<[`GeomItem`](../../SceneTree/SceneTree_GeomItem.GeomItem), [`Material`](../../SceneTree/SceneTree_Material.Material)\>
 
 #### Defined in
 
-[src/Renderer/Passes/GLStandardGeomsPass.ts:13](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLStandardGeomsPass.ts#L13)
+[src/Renderer/Passes/GLStandardGeomsPass.ts:13](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLStandardGeomsPass.ts#L13)
 
 ___
 
@@ -165,7 +165,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L22)
+[src/SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L22)
 
 ___
 
@@ -179,7 +179,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L23)
+[src/SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L23)
 
 ___
 
@@ -193,7 +193,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:24](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L24)
+[src/SceneTree/ParameterOwner.ts:24](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L24)
 
 ___
 
@@ -207,7 +207,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Passes/GLPass.ts:20](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLPass.ts#L20)
+[src/Renderer/Passes/GLPass.ts:20](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLPass.ts#L20)
 
 ___
 
@@ -221,7 +221,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/Passes/GLPass.ts:23](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLPass.ts#L23)
+[src/Renderer/Passes/GLPass.ts:23](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLPass.ts#L23)
 
 ## Methods
 
@@ -243,7 +243,7 @@ The addGeomItem method.
 
 #### Defined in
 
-[src/Renderer/Passes/GLStandardGeomsPass.ts:87](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLStandardGeomsPass.ts#L87)
+[src/Renderer/Passes/GLStandardGeomsPass.ts:96](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLStandardGeomsPass.ts#L96)
 
 ___
 
@@ -273,7 +273,7 @@ Adds `Parameter` object to the owner's parameter list.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:135](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L135)
+[src/SceneTree/ParameterOwner.ts:135](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L135)
 
 ___
 
@@ -303,7 +303,31 @@ This is used to handle migrating parameters to new names.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:92](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L92)
+[src/SceneTree/ParameterOwner.ts:92](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L92)
+
+___
+
+### checkMaterial
+
+▸ **checkMaterial**(`material`): `boolean`
+
+Checks the material to see if it is opaque.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `material` | [`Material`](../../SceneTree/SceneTree_Material.Material) | The geomItem value. |
+
+#### Returns
+
+`boolean`
+
+- The return value.
+
+#### Defined in
+
+[src/Renderer/Passes/GLStandardGeomsPass.ts:88](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLStandardGeomsPass.ts#L88)
 
 ___
 
@@ -331,7 +355,7 @@ and a glselectedshader for rendering selection hilghlights
 
 #### Defined in
 
-[src/Renderer/Passes/GLStandardGeomsPass.ts:141](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLStandardGeomsPass.ts#L141)
+[src/Renderer/Passes/GLStandardGeomsPass.ts:149](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLStandardGeomsPass.ts#L149)
 
 ___
 
@@ -358,7 +382,7 @@ Copies Parameters from another `ParameterOwner` to current object.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:316](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L316)
+[src/SceneTree/ParameterOwner.ts:316](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L316)
 
 ___
 
@@ -384,7 +408,7 @@ The draw method.
 
 #### Defined in
 
-[src/Renderer/Passes/GLPass.ts:123](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLPass.ts#L123)
+[src/Renderer/Passes/GLPass.ts:123](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLPass.ts#L123)
 
 ___
 
@@ -410,7 +434,7 @@ The drawGeomData method.
 
 #### Defined in
 
-[src/Renderer/Passes/GLPass.ts:137](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLPass.ts#L137)
+[src/Renderer/Passes/GLPass.ts:137](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLPass.ts#L137)
 
 ___
 
@@ -436,7 +460,7 @@ The drawHighlightedGeoms method.
 
 #### Defined in
 
-[src/Renderer/Passes/GLPass.ts:131](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLPass.ts#L131)
+[src/Renderer/Passes/GLPass.ts:131](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLPass.ts#L131)
 
 ___
 
@@ -463,7 +487,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -487,7 +511,7 @@ The filterGeomItem method.
 
 #### Defined in
 
-[src/Renderer/Passes/GLStandardGeomsPass.ts:79](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLStandardGeomsPass.ts#L79)
+[src/Renderer/Passes/GLStandardGeomsPass.ts:79](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLStandardGeomsPass.ts#L79)
 
 ___
 
@@ -514,7 +538,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:241](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L241)
+[src/SceneTree/ParameterOwner.ts:241](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L241)
 
 ___
 
@@ -536,7 +560,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -564,7 +588,7 @@ The getGeomItemAndDist method.
 
 #### Defined in
 
-[src/Renderer/Passes/GLStandardGeomsPass.ts:168](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLStandardGeomsPass.ts#L168)
+[src/Renderer/Passes/GLStandardGeomsPass.ts:176](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLStandardGeomsPass.ts#L176)
 
 ___
 
@@ -588,7 +612,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -610,7 +634,7 @@ Returns the number of parameters current object has.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:41](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L41)
+[src/SceneTree/ParameterOwner.ts:41](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L41)
 
 ___
 
@@ -638,7 +662,7 @@ Returns `Parameter` object using the given name
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:102](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L102)
+[src/SceneTree/ParameterOwner.ts:102](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L102)
 
 ___
 
@@ -666,7 +690,7 @@ Returns `Parameter` object in a given index
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:70](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L70)
+[src/SceneTree/ParameterOwner.ts:70](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L70)
 
 ___
 
@@ -694,7 +718,7 @@ Returns the index of a parameter in parameter list.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:60](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L60)
+[src/SceneTree/ParameterOwner.ts:60](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L60)
 
 ___
 
@@ -716,7 +740,7 @@ Returns all the parameters of the object.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:50](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L50)
+[src/SceneTree/ParameterOwner.ts:50](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L50)
 
 ___
 
@@ -738,7 +762,7 @@ Returns the pass type. OPAQUE passes are always rendered first, followed by TRAN
 
 #### Defined in
 
-[src/Renderer/Passes/GLPass.ts:75](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLPass.ts#L75)
+[src/Renderer/Passes/GLPass.ts:75](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLPass.ts#L75)
 
 ___
 
@@ -766,7 +790,7 @@ Validates if the specified parameter exists in the object.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:80](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L80)
+[src/SceneTree/ParameterOwner.ts:80](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L80)
 
 ___
 
@@ -793,7 +817,7 @@ The init method.
 
 #### Defined in
 
-[src/Renderer/Passes/GLStandardGeomsPass.ts:27](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLStandardGeomsPass.ts#L27)
+[src/Renderer/Passes/GLStandardGeomsPass.ts:27](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLStandardGeomsPass.ts#L27)
 
 ___
 
@@ -825,7 +849,7 @@ It replaces the event in the specified index.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:149](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L149)
+[src/SceneTree/ParameterOwner.ts:149](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L149)
 
 ___
 
@@ -856,7 +880,7 @@ It allows Passes to select geometries to handle the drawing of.
 
 #### Defined in
 
-[src/Renderer/Passes/GLStandardGeomsPass.ts:41](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLStandardGeomsPass.ts#L41)
+[src/Renderer/Passes/GLStandardGeomsPass.ts:41](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLStandardGeomsPass.ts#L41)
 
 ___
 
@@ -886,7 +910,7 @@ is removed to the scene, and the pass must handle cleaning up any resources.
 
 #### Defined in
 
-[src/Renderer/Passes/GLStandardGeomsPass.ts:66](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLStandardGeomsPass.ts#L66)
+[src/Renderer/Passes/GLStandardGeomsPass.ts:66](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLStandardGeomsPass.ts#L66)
 
 ___
 
@@ -913,7 +937,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -942,7 +966,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -980,7 +1004,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -1006,7 +1030,7 @@ The __parameterValueChanged method.
 
 #### Defined in
 
-[src/Renderer/Passes/GLPass.ts:44](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLPass.ts#L44)
+[src/Renderer/Passes/GLPass.ts:44](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLPass.ts#L44)
 
 ___
 
@@ -1038,7 +1062,7 @@ used to build the right `Parameter` class. Then all of them are added to the obj
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:276](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L276)
+[src/SceneTree/ParameterOwner.ts:276](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L276)
 
 ___
 
@@ -1060,7 +1084,7 @@ The removeGeomItem method.
 
 #### Defined in
 
-[src/Renderer/Passes/GLStandardGeomsPass.ts:118](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLStandardGeomsPass.ts#L118)
+[src/Renderer/Passes/GLStandardGeomsPass.ts:127](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLStandardGeomsPass.ts#L127)
 
 ___
 
@@ -1087,7 +1111,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -1115,7 +1139,7 @@ Removes `Parameter` from owner, by using parameter's name.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:176](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L176)
+[src/SceneTree/ParameterOwner.ts:176](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L176)
 
 ___
 
@@ -1143,7 +1167,7 @@ Replaces old `Parameter` by passing a new one with the same name.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:198](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L198)
+[src/SceneTree/ParameterOwner.ts:198](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L198)
 
 ___
 
@@ -1169,7 +1193,7 @@ The setPassIndex method.
 
 #### Defined in
 
-[src/Renderer/Passes/GLPass.ts:67](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLPass.ts#L67)
+[src/Renderer/Passes/GLPass.ts:67](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLPass.ts#L67)
 
 ___
 
@@ -1189,7 +1213,7 @@ The startPresenting method.
 
 #### Defined in
 
-[src/Renderer/Passes/GLPass.ts:109](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLPass.ts#L109)
+[src/Renderer/Passes/GLPass.ts:109](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLPass.ts#L109)
 
 ___
 
@@ -1209,7 +1233,7 @@ The stopPresenting method.
 
 #### Defined in
 
-[src/Renderer/Passes/GLPass.ts:114](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Passes/GLPass.ts#L114)
+[src/Renderer/Passes/GLPass.ts:114](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Passes/GLPass.ts#L114)
 
 ___
 
@@ -1237,7 +1261,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:218](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L218)
+[src/SceneTree/ParameterOwner.ts:218](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L218)
 
 ___
 
@@ -1265,5 +1289,5 @@ Converts object's JSON value and converts it to a string.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:303](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L303)
+[src/SceneTree/ParameterOwner.ts:303](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L303)
 

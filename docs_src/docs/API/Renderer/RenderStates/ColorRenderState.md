@@ -31,7 +31,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:60](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L60)
+[src/Renderer/RenderStates/RenderState.ts:60](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L60)
 
 ## Properties
 
@@ -45,7 +45,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:32](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L32)
+[src/Renderer/RenderStates/RenderState.ts:32](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L32)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:50](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L50)
+[src/Renderer/RenderStates/RenderState.ts:50](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L50)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:49](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L49)
+[src/Renderer/RenderStates/RenderState.ts:49](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L49)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:53](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L53)
+[src/Renderer/RenderStates/RenderState.ts:53](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L53)
 
 ___
 
@@ -130,7 +130,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:52](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L52)
+[src/Renderer/RenderStates/RenderState.ts:52](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L52)
 
 ___
 
@@ -144,7 +144,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:58](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L58)
+[src/Renderer/RenderStates/RenderState.ts:58](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L58)
 
 ___
 
@@ -158,7 +158,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:30](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L30)
+[src/Renderer/RenderStates/RenderState.ts:30](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L30)
 
 ___
 
@@ -172,7 +172,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:35](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L35)
+[src/Renderer/RenderStates/RenderState.ts:35](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L35)
 
 ___
 
@@ -182,7 +182,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/ColorRenderState.ts:8](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/ColorRenderState.ts#L8)
+[src/Renderer/RenderStates/ColorRenderState.ts:8](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/ColorRenderState.ts#L8)
 
 ___
 
@@ -192,7 +192,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/ColorRenderState.ts:17](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/ColorRenderState.ts#L17)
+[src/Renderer/RenderStates/ColorRenderState.ts:17](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/ColorRenderState.ts#L17)
 
 ___
 
@@ -202,7 +202,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/ColorRenderState.ts:18](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/ColorRenderState.ts#L18)
+[src/Renderer/RenderStates/ColorRenderState.ts:18](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/ColorRenderState.ts#L18)
 
 ___
 
@@ -216,7 +216,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:23](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L23)
+[src/Renderer/RenderStates/RenderState.ts:23](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L23)
 
 ___
 
@@ -230,7 +230,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:37](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L37)
+[src/Renderer/RenderStates/RenderState.ts:37](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L37)
 
 ___
 
@@ -244,7 +244,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:27](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L27)
+[src/Renderer/RenderStates/RenderState.ts:27](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L27)
 
 ___
 
@@ -254,7 +254,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/ColorRenderState.ts:14](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/ColorRenderState.ts#L14)
+[src/Renderer/RenderStates/ColorRenderState.ts:14](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/ColorRenderState.ts#L14)
 
 ___
 
@@ -264,7 +264,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/ColorRenderState.ts:13](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/ColorRenderState.ts#L13)
+[src/Renderer/RenderStates/ColorRenderState.ts:13](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/ColorRenderState.ts#L13)
 
 ___
 
@@ -274,7 +274,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/ColorRenderState.ts:11](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/ColorRenderState.ts#L11)
+[src/Renderer/RenderStates/ColorRenderState.ts:11](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/ColorRenderState.ts#L11)
 
 ___
 
@@ -284,7 +284,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/ColorRenderState.ts:12](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/ColorRenderState.ts#L12)
+[src/Renderer/RenderStates/ColorRenderState.ts:12](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/ColorRenderState.ts#L12)
 
 ___
 
@@ -298,7 +298,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:42](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L42)
+[src/Renderer/RenderStates/RenderState.ts:42](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L42)
 
 ___
 
@@ -312,7 +312,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:41](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L41)
+[src/Renderer/RenderStates/RenderState.ts:41](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L41)
 
 ___
 
@@ -326,7 +326,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:57](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L57)
+[src/Renderer/RenderStates/RenderState.ts:57](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L57)
 
 ___
 
@@ -336,7 +336,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/ColorRenderState.ts:10](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/ColorRenderState.ts#L10)
+[src/Renderer/RenderStates/ColorRenderState.ts:10](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/ColorRenderState.ts#L10)
 
 ___
 
@@ -346,7 +346,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/ColorRenderState.ts:15](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/ColorRenderState.ts#L15)
+[src/Renderer/RenderStates/ColorRenderState.ts:15](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/ColorRenderState.ts#L15)
 
 ___
 
@@ -360,7 +360,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:28](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L28)
+[src/Renderer/RenderStates/RenderState.ts:28](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L28)
 
 ___
 
@@ -374,7 +374,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:29](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L29)
+[src/Renderer/RenderStates/RenderState.ts:29](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L29)
 
 ___
 
@@ -388,7 +388,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:24](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L24)
+[src/Renderer/RenderStates/RenderState.ts:24](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L24)
 
 ___
 
@@ -402,7 +402,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:45](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L45)
+[src/Renderer/RenderStates/RenderState.ts:45](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L45)
 
 ___
 
@@ -416,7 +416,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:25](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L25)
+[src/Renderer/RenderStates/RenderState.ts:25](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L25)
 
 ___
 
@@ -430,7 +430,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:33](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L33)
+[src/Renderer/RenderStates/RenderState.ts:33](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L33)
 
 ___
 
@@ -444,7 +444,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:56](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L56)
+[src/Renderer/RenderStates/RenderState.ts:56](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L56)
 
 ___
 
@@ -458,7 +458,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:55](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L55)
+[src/Renderer/RenderStates/RenderState.ts:55](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L55)
 
 ___
 
@@ -472,7 +472,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:46](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L46)
+[src/Renderer/RenderStates/RenderState.ts:46](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L46)
 
 ___
 
@@ -486,7 +486,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:47](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L47)
+[src/Renderer/RenderStates/RenderState.ts:47](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L47)
 
 ___
 
@@ -500,21 +500,21 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:44](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L44)
+[src/Renderer/RenderStates/RenderState.ts:44](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L44)
 
 ___
 
-### vrviewport
+### xrviewport
 
-• `Optional` **vrviewport**: `any`
+• `Optional` **xrviewport**: `any`
 
 #### Inherited from
 
-[RenderState](Renderer_RenderStates_RenderState.RenderState).[vrviewport](Renderer_RenderStates_RenderState.RenderState#vrviewport)
+[RenderState](Renderer_RenderStates_RenderState.RenderState).[xrviewport](Renderer_RenderStates_RenderState.RenderState#xrviewport)
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:39](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L39)
+[src/Renderer/RenderStates/RenderState.ts:39](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L39)
 
 ## Methods
 
@@ -538,7 +538,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:144](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L144)
+[src/Renderer/RenderStates/RenderState.ts:144](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L144)
 
 ___
 
@@ -562,7 +562,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:140](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L140)
+[src/Renderer/RenderStates/RenderState.ts:140](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L140)
 
 ___
 
@@ -580,7 +580,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:70](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L70)
+[src/Renderer/RenderStates/RenderState.ts:70](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L70)
 
 ___
 
@@ -598,7 +598,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:65](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L65)
+[src/Renderer/RenderStates/RenderState.ts:65](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L65)
 
 ___
 
@@ -623,7 +623,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/RenderState.ts:149](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/RenderState.ts#L149)
+[src/Renderer/RenderStates/RenderState.ts:149](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/RenderState.ts#L149)
 
 ___
 
@@ -637,5 +637,5 @@ ___
 
 #### Defined in
 
-[src/Renderer/RenderStates/ColorRenderState.ts:20](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/RenderStates/ColorRenderState.ts#L20)
+[src/Renderer/RenderStates/ColorRenderState.ts:20](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/RenderStates/ColorRenderState.ts#L20)
 

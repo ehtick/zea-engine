@@ -1,11 +1,23 @@
 ---
-id: "Renderer_VR_XRViewport.VRViewport"
+id: "Renderer_VR_VRViewport.VRViewport"
 title: "Class: VRViewport"
 sidebar_label: "VRViewport"
 custom_edit_url: null
 ---
 
 
+
+This Viewport class is used for rendering stereoscopic views to VR controllers using the WebXR api.
+ When the GLRenderer class detects a valid WebXF capable device is plugged in, this class is automatically
+ instantiated ready for XR sessions
+
+**Events**
+* **presentingChanged:** Emitted when presenting is started or stopped
+* **controllerAdded:** Emitted when a new XR controller is detected.
+* **viewChanged:** Emitted during presentation each time the frame is rendered.
+* **pointerDoublePressed:** Emitted when the user double clicks with an XR pointer.
+* **pointerDown:** Emitted when the user presses an XR pointer
+* **pointerUp:** Emitted when the user releases an XR pointer
 
 ## Hierarchy
 
@@ -17,7 +29,7 @@ custom_edit_url: null
 
 ### constructor
 
-• **new VRViewport**(`renderer`)
+• **new VRViewport**(`renderer`, `sessionMode`)
 
 Create a VR viewport.
 
@@ -26,14 +38,15 @@ Create a VR viewport.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `renderer` | `any` | The renderer value. |
+| `sessionMode` | `string` | - |
 
-#### Inherited from
+#### Overrides
 
 [XRViewport](Renderer_VR_XRViewport.XRViewport).[constructor](Renderer_VR_XRViewport.XRViewport#constructor)
 
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:64](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L64)
+[src/Renderer/VR/VRViewport.ts:47](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/VRViewport.ts#L47)
 
 ## Properties
 
@@ -47,7 +60,7 @@ Create a VR viewport.
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:49](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L49)
+[src/Renderer/GLBaseViewport.ts:49](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L49)
 
 ___
 
@@ -61,7 +74,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:40](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L40)
+[src/Renderer/GLBaseViewport.ts:40](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L40)
 
 ___
 
@@ -75,7 +88,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:39](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L39)
+[src/Renderer/GLBaseViewport.ts:39](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L39)
 
 ___
 
@@ -89,7 +102,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:45](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L45)
+[src/Renderer/GLBaseViewport.ts:45](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L45)
 
 ___
 
@@ -103,7 +116,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:44](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L44)
+[src/Renderer/GLBaseViewport.ts:44](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L44)
 
 ___
 
@@ -117,7 +130,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:33](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L33)
+[src/Renderer/GLBaseViewport.ts:33](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L33)
 
 ___
 
@@ -131,7 +144,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:30](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L30)
+[src/Renderer/GLBaseViewport.ts:30](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L30)
 
 ___
 
@@ -145,7 +158,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:43](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L43)
+[src/Renderer/GLBaseViewport.ts:43](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L43)
 
 ___
 
@@ -159,7 +172,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L11)
+[src/Utilities/BaseClass.ts:11](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/BaseClass.ts#L11)
 
 ___
 
@@ -173,7 +186,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:32](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L32)
+[src/Renderer/GLBaseViewport.ts:32](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L32)
 
 ___
 
@@ -187,7 +200,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:42](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L42)
+[src/Renderer/GLBaseViewport.ts:42](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L42)
 
 ___
 
@@ -203,7 +216,21 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:56](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L56)
+[src/Renderer/GLBaseViewport.ts:56](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L56)
+
+___
+
+### cameraMatrices
+
+• `Protected` **cameraMatrices**: [`Mat4`](../../Math/Math_Mat4.Mat4)[] = `[]`
+
+#### Inherited from
+
+[XRViewport](Renderer_VR_XRViewport.XRViewport).[cameraMatrices](Renderer_VR_XRViewport.XRViewport#cameramatrices)
+
+#### Defined in
+
+[src/Renderer/VR/XRViewport.ts:40](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L40)
 
 ___
 
@@ -217,7 +244,37 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:47](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L47)
+[src/Renderer/GLBaseViewport.ts:47](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L47)
+
+___
+
+### controllerPointerDownTime
+
+• `Private` **controllerPointerDownTime**: `number`[]
+
+#### Defined in
+
+[src/Renderer/VR/VRViewport.ts:41](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/VRViewport.ts#L41)
+
+___
+
+### controllers
+
+• **controllers**: [`XRController`](Renderer_VR_XRController.XRController)[]
+
+#### Defined in
+
+[src/Renderer/VR/VRViewport.ts:40](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/VRViewport.ts#L40)
+
+___
+
+### controllersMap
+
+• `Private` **controllersMap**: `Record`<`string`, [`XRController`](Renderer_VR_XRController.XRController)\>
+
+#### Defined in
+
+[src/Renderer/VR/VRViewport.ts:39](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/VRViewport.ts#L39)
 
 ___
 
@@ -231,7 +288,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:25](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L25)
+[src/SceneTree/ParameterOwner.ts:25](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L25)
 
 ___
 
@@ -245,7 +302,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:48](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L48)
+[src/Renderer/GLBaseViewport.ts:48](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L48)
 
 ___
 
@@ -259,7 +316,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:51](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L51)
+[src/Renderer/GLBaseViewport.ts:51](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L51)
 
 ___
 
@@ -273,7 +330,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:36](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L36)
+[src/Renderer/GLBaseViewport.ts:36](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L36)
 
 ___
 
@@ -289,7 +346,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:61](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L61)
+[src/Renderer/GLBaseViewport.ts:61](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L61)
 
 ___
 
@@ -303,7 +360,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:46](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L46)
+[src/Renderer/GLBaseViewport.ts:46](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L46)
 
 ___
 
@@ -317,7 +374,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:37](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L37)
+[src/Renderer/GLBaseViewport.ts:37](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L37)
 
 ___
 
@@ -331,7 +388,55 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:38](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L38)
+[src/Renderer/GLBaseViewport.ts:38](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L38)
+
+___
+
+### hmd
+
+• `Private` **hmd**: `string` = `''`
+
+#### Defined in
+
+[src/Renderer/VR/VRViewport.ts:34](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/VRViewport.ts#L34)
+
+___
+
+### hmdAssetPromise
+
+• `Private` `Optional` **hmdAssetPromise**: `Promise`<[`VLAAsset`](../../SceneTree/SceneTree_VLAAsset.VLAAsset)\>
+
+#### Defined in
+
+[src/Renderer/VR/VRViewport.ts:35](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/VRViewport.ts#L35)
+
+___
+
+### invStageMatrix
+
+• `Protected` **invStageMatrix**: [`Mat4`](../../Math/Math_Mat4.Mat4)
+
+#### Inherited from
+
+[XRViewport](Renderer_VR_XRViewport.XRViewport).[invStageMatrix](Renderer_VR_XRViewport.XRViewport#invstagematrix)
+
+#### Defined in
+
+[src/Renderer/VR/XRViewport.ts:31](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L31)
+
+___
+
+### invStageXfo
+
+• `Protected` **invStageXfo**: [`Xfo`](../../Math/Math_Xfo.Xfo)
+
+#### Inherited from
+
+[XRViewport](Renderer_VR_XRViewport.XRViewport).[invStageXfo](Renderer_VR_XRViewport.XRViewport#invstagexfo)
+
+#### Defined in
+
+[src/Renderer/VR/XRViewport.ts:30](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L30)
 
 ___
 
@@ -345,7 +450,7 @@ ___
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L26)
+[src/Utilities/EventEmitter.ts:26](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L26)
 
 ___
 
@@ -359,7 +464,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:50](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L50)
+[src/Renderer/GLBaseViewport.ts:50](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L50)
 
 ___
 
@@ -373,7 +478,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:35](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L35)
+[src/Renderer/GLBaseViewport.ts:35](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L35)
 
 ___
 
@@ -387,7 +492,7 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:41](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L41)
+[src/Renderer/GLBaseViewport.ts:41](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L41)
 
 ___
 
@@ -401,7 +506,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L22)
+[src/SceneTree/ParameterOwner.ts:22](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L22)
 
 ___
 
@@ -415,7 +520,7 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L23)
+[src/SceneTree/ParameterOwner.ts:23](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L23)
 
 ___
 
@@ -429,7 +534,35 @@ ___
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:24](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L24)
+[src/SceneTree/ParameterOwner.ts:24](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L24)
+
+___
+
+### projectionMatrices
+
+• `Protected` **projectionMatrices**: [`Mat4`](../../Math/Math_Mat4.Mat4)[] = `[]`
+
+#### Inherited from
+
+[XRViewport](Renderer_VR_XRViewport.XRViewport).[projectionMatrices](Renderer_VR_XRViewport.XRViewport#projectionmatrices)
+
+#### Defined in
+
+[src/Renderer/VR/XRViewport.ts:38](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L38)
+
+___
+
+### projectionMatricesUpdated
+
+• `Protected` **projectionMatricesUpdated**: `boolean`
+
+#### Inherited from
+
+[XRViewport](Renderer_VR_XRViewport.XRViewport).[projectionMatricesUpdated](Renderer_VR_XRViewport.XRViewport#projectionmatricesupdated)
+
+#### Defined in
+
+[src/Renderer/VR/XRViewport.ts:23](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L23)
 
 ___
 
@@ -443,7 +576,35 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:34](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L34)
+[src/Renderer/GLBaseViewport.ts:34](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L34)
+
+___
+
+### refSpace
+
+• `Protected` **refSpace**: `any`
+
+#### Inherited from
+
+[XRViewport](Renderer_VR_XRViewport.XRViewport).[refSpace](Renderer_VR_XRViewport.XRViewport#refspace)
+
+#### Defined in
+
+[src/Renderer/VR/XRViewport.ts:36](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L36)
+
+___
+
+### region
+
+• `Protected` **region**: `number`[] = `[]`
+
+#### Inherited from
+
+[XRViewport](Renderer_VR_XRViewport.XRViewport).[region](Renderer_VR_XRViewport.XRViewport#region)
+
+#### Defined in
+
+[src/Renderer/VR/XRViewport.ts:34](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L34)
 
 ___
 
@@ -457,7 +618,35 @@ ___
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:31](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L31)
+[src/Renderer/GLBaseViewport.ts:31](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L31)
+
+___
+
+### session
+
+• `Protected` **session**: `any` = `null`
+
+#### Inherited from
+
+[XRViewport](Renderer_VR_XRViewport.XRViewport).[session](Renderer_VR_XRViewport.XRViewport#session)
+
+#### Defined in
+
+[src/Renderer/VR/XRViewport.ts:32](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L32)
+
+___
+
+### sessionMode
+
+• `Protected` **sessionMode**: `string` = `'immersive-vr'`
+
+#### Inherited from
+
+[XRViewport](Renderer_VR_XRViewport.XRViewport).[sessionMode](Renderer_VR_XRViewport.XRViewport#sessionmode)
+
+#### Defined in
+
+[src/Renderer/VR/XRViewport.ts:42](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L42)
 
 ___
 
@@ -471,29 +660,99 @@ ___
 
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:43](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L43)
+[src/Renderer/VR/XRViewport.ts:26](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L26)
 
-## Methods
+___
 
-### \_\_startSession
+### stageTreeItem
 
-▸ `Private` **__startSession**(): `void`
-
-The __startSession method.
-
-#### Returns
-
-`void`
+• `Protected` **stageTreeItem**: [`TreeItem`](../../SceneTree/SceneTree_TreeItem.TreeItem)
 
 #### Inherited from
 
-[XRViewport](Renderer_VR_XRViewport.XRViewport).[__startSession](Renderer_VR_XRViewport.XRViewport#__startsession)
+[XRViewport](Renderer_VR_XRViewport.XRViewport).[stageTreeItem](Renderer_VR_XRViewport.XRViewport#stagetreeitem)
 
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:196](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L196)
+[src/Renderer/VR/XRViewport.ts:24](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L24)
 
 ___
+
+### stageXfo
+
+• `Protected` **stageXfo**: [`Xfo`](../../Math/Math_Xfo.Xfo)
+
+#### Inherited from
+
+[XRViewport](Renderer_VR_XRViewport.XRViewport).[stageXfo](Renderer_VR_XRViewport.XRViewport#stagexfo)
+
+#### Defined in
+
+[src/Renderer/VR/XRViewport.ts:29](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L29)
+
+___
+
+### tick
+
+• `Protected` **tick**: `number`
+
+#### Inherited from
+
+[XRViewport](Renderer_VR_XRViewport.XRViewport).[tick](Renderer_VR_XRViewport.XRViewport#tick)
+
+#### Defined in
+
+[src/Renderer/VR/XRViewport.ts:25](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L25)
+
+___
+
+### viewMatrices
+
+• `Protected` **viewMatrices**: [`Mat4`](../../Math/Math_Mat4.Mat4)[] = `[]`
+
+#### Inherited from
+
+[XRViewport](Renderer_VR_XRViewport.XRViewport).[viewMatrices](Renderer_VR_XRViewport.XRViewport#viewmatrices)
+
+#### Defined in
+
+[src/Renderer/VR/XRViewport.ts:39](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L39)
+
+___
+
+### viewXfo
+
+• `Protected` **viewXfo**: [`Xfo`](../../Math/Math_Xfo.Xfo)
+
+#### Inherited from
+
+[XRViewport](Renderer_VR_XRViewport.XRViewport).[viewXfo](Renderer_VR_XRViewport.XRViewport#viewxfo)
+
+#### Defined in
+
+[src/Renderer/VR/XRViewport.ts:28](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L28)
+
+___
+
+### vrAsset
+
+• `Private` `Optional` **vrAsset**: [`VLAAsset`](../../SceneTree/SceneTree_VLAAsset.VLAAsset)
+
+#### Defined in
+
+[src/Renderer/VR/VRViewport.ts:33](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/VRViewport.ts#L33)
+
+___
+
+### xrhead
+
+• `Private` **xrhead**: [`XRHead`](Renderer_VR_XRHead.XRHead)
+
+#### Defined in
+
+[src/Renderer/VR/VRViewport.ts:37](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/VRViewport.ts#L37)
+
+## Methods
 
 ### addParameter
 
@@ -521,7 +780,7 @@ Adds `Parameter` object to the owner's parameter list.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:135](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L135)
+[src/SceneTree/ParameterOwner.ts:135](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L135)
 
 ___
 
@@ -551,7 +810,7 @@ This is used to handle migrating parameters to new names.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:92](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L92)
+[src/SceneTree/ParameterOwner.ts:92](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L92)
 
 ___
 
@@ -578,7 +837,7 @@ Copies Parameters from another `ParameterOwner` to current object.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:316](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L316)
+[src/SceneTree/ParameterOwner.ts:316](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L316)
 
 ___
 
@@ -604,7 +863,7 @@ The draw method.
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:280](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L280)
+[src/Renderer/GLBaseViewport.ts:280](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L280)
 
 ___
 
@@ -630,7 +889,7 @@ Draws the highlights around geometries.
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:438](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L438)
+[src/Renderer/GLBaseViewport.ts:427](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L427)
 
 ___
 
@@ -656,7 +915,7 @@ Draws the Silhouettes around geometries.
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:372](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L372)
+[src/Renderer/GLBaseViewport.ts:361](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L361)
 
 ___
 
@@ -676,13 +935,13 @@ The drawXRFrame method.
 
 `void`
 
-#### Inherited from
+#### Overrides
 
 [XRViewport](Renderer_VR_XRViewport.XRViewport).[drawXRFrame](Renderer_VR_XRViewport.XRViewport#drawxrframe)
 
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:484](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L484)
+[src/Renderer/VR/VRViewport.ts:333](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/VRViewport.ts#L333)
 
 ___
 
@@ -709,7 +968,7 @@ Triggers all listener functions in an event.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L154)
+[src/Utilities/EventEmitter.ts:154](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L154)
 
 ___
 
@@ -736,7 +995,7 @@ The fromJSON method decodes a json object for this type.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:241](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L241)
+[src/SceneTree/ParameterOwner.ts:241](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L241)
 
 ___
 
@@ -752,13 +1011,9 @@ The getAsset method.
 
 - The return value.
 
-#### Inherited from
-
-[XRViewport](Renderer_VR_XRViewport.XRViewport).[getAsset](Renderer_VR_XRViewport.XRViewport#getasset)
-
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:105](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L105)
+[src/Renderer/VR/VRViewport.ts:62](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/VRViewport.ts#L62)
 
 ___
 
@@ -780,7 +1035,7 @@ Returns the unmangled name of the class.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L33)
+[src/Utilities/BaseClass.ts:33](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/BaseClass.ts#L33)
 
 ___
 
@@ -796,13 +1051,9 @@ The getControllers method.
 
 - The return value.
 
-#### Inherited from
-
-[XRViewport](Renderer_VR_XRViewport.XRViewport).[getControllers](Renderer_VR_XRViewport.XRViewport#getcontrollers)
-
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:150](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L150)
+[src/Renderer/VR/VRViewport.ts:78](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/VRViewport.ts#L78)
 
 ___
 
@@ -818,13 +1069,9 @@ Returns the name of the HMD being used.
 
 - The return value.
 
-#### Inherited from
-
-[XRViewport](Renderer_VR_XRViewport.XRViewport).[getHMDName](Renderer_VR_XRViewport.XRViewport#getname)
-
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:158](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L158)
+[src/Renderer/VR/VRViewport.ts:86](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/VRViewport.ts#L86)
 
 ___
 
@@ -846,7 +1093,7 @@ The getHeight method.
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:163](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L163)
+[src/Renderer/GLBaseViewport.ts:163](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L163)
 
 ___
 
@@ -870,7 +1117,7 @@ Returns the unique id of the object.
 
 #### Defined in
 
-[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/BaseClass.ts#L25)
+[src/Utilities/BaseClass.ts:25](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/BaseClass.ts#L25)
 
 ___
 
@@ -892,7 +1139,7 @@ The getManipulator method.
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:497](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L497)
+[src/Renderer/GLBaseViewport.ts:486](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L486)
 
 ___
 
@@ -914,7 +1161,7 @@ Returns the number of parameters current object has.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:41](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L41)
+[src/SceneTree/ParameterOwner.ts:41](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L41)
 
 ___
 
@@ -942,7 +1189,7 @@ Returns `Parameter` object using the given name
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:102](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L102)
+[src/SceneTree/ParameterOwner.ts:102](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L102)
 
 ___
 
@@ -970,7 +1217,7 @@ Returns `Parameter` object in a given index
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:70](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L70)
+[src/SceneTree/ParameterOwner.ts:70](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L70)
 
 ___
 
@@ -998,7 +1245,7 @@ Returns the index of a parameter in parameter list.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:60](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L60)
+[src/SceneTree/ParameterOwner.ts:60](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L60)
 
 ___
 
@@ -1020,7 +1267,7 @@ Returns all the parameters of the object.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:50](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L50)
+[src/SceneTree/ParameterOwner.ts:50](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L50)
 
 ___
 
@@ -1040,7 +1287,7 @@ Returns the renderer this viewport is bound to.
 
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:97](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L97)
+[src/Renderer/VR/XRViewport.ts:75](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L75)
 
 ___
 
@@ -1062,7 +1309,7 @@ The getTreeItem method.
 
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:113](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L113)
+[src/Renderer/VR/XRViewport.ts:83](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L83)
 
 ___
 
@@ -1078,13 +1325,9 @@ The getVRHead method.
 
 - The return value.
 
-#### Inherited from
-
-[XRViewport](Renderer_VR_XRViewport.XRViewport).[getVRHead](Renderer_VR_XRViewport.XRViewport#getvrhead)
-
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:121](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L121)
+[src/Renderer/VR/VRViewport.ts:70](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/VRViewport.ts#L70)
 
 ___
 
@@ -1106,7 +1349,7 @@ The getWidth method.
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:155](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L155)
+[src/Renderer/GLBaseViewport.ts:155](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L155)
 
 ___
 
@@ -1128,7 +1371,7 @@ The getXfo method.
 
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:129](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L129)
+[src/Renderer/VR/XRViewport.ts:91](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L91)
 
 ___
 
@@ -1156,7 +1399,7 @@ Validates if the specified parameter exists in the object.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:80](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L80)
+[src/SceneTree/ParameterOwner.ts:80](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L80)
 
 ___
 
@@ -1182,7 +1425,7 @@ The initRenderState method.
 
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:465](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L465)
+[src/Renderer/VR/XRViewport.ts:158](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L158)
 
 ___
 
@@ -1214,7 +1457,7 @@ It replaces the event in the specified index.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:149](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L149)
+[src/SceneTree/ParameterOwner.ts:149](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L149)
 
 ___
 
@@ -1236,7 +1479,7 @@ The isPresenting method.
 
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:169](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L169)
+[src/Renderer/VR/XRViewport.ts:115](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L115)
 
 ___
 
@@ -1252,13 +1495,9 @@ The loadHMDResources method.
 
 - The return value.
 
-#### Inherited from
-
-[XRViewport](Renderer_VR_XRViewport.XRViewport).[loadHMDResources](Renderer_VR_XRViewport.XRViewport#loadresources)
-
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:210](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L210)
+[src/Renderer/VR/VRViewport.ts:94](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/VRViewport.ts#L94)
 
 ___
 
@@ -1285,7 +1524,7 @@ Removes a listener function from the specified event, using either the function 
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L97)
+[src/Utilities/EventEmitter.ts:97](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L97)
 
 ___
 
@@ -1314,7 +1553,7 @@ Adds a listener function for a given event name.
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L44)
+[src/Utilities/EventEmitter.ts:44](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L44)
 
 ___
 
@@ -1340,7 +1579,7 @@ Invoked when the user is pressing a key on the keyboard.
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:574](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L574)
+[src/Renderer/GLBaseViewport.ts:563](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L563)
 
 ___
 
@@ -1366,7 +1605,7 @@ Causes an event to occur  when the user releases a key on the keyboard.
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:580](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L580)
+[src/Renderer/GLBaseViewport.ts:569](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L569)
 
 ___
 
@@ -1392,7 +1631,7 @@ Invoked when the mouse pointer is moved out of an element.
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:568](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L568)
+[src/Renderer/GLBaseViewport.ts:557](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L557)
 
 ___
 
@@ -1412,13 +1651,13 @@ Handler of the `pointerdown` event fired when the pointer device is initially pr
 
 `void`
 
-#### Inherited from
+#### Overrides
 
 [XRViewport](Renderer_VR_XRViewport.XRViewport).[onPointerDown](Renderer_VR_XRViewport.XRViewport#onpointerdown)
 
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:605](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L605)
+[src/Renderer/VR/VRViewport.ts:443](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/VRViewport.ts#L443)
 
 ___
 
@@ -1444,7 +1683,7 @@ Invoked when the mouse pointer is moved into this viewport.
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:551](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L551)
+[src/Renderer/GLBaseViewport.ts:540](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L540)
 
 ___
 
@@ -1470,7 +1709,7 @@ Invoked when the mouse pointer is moved out of this viewport.
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:560](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L560)
+[src/Renderer/GLBaseViewport.ts:549](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L549)
 
 ___
 
@@ -1496,7 +1735,7 @@ Handler of the `pointermove` event fired when the pointer device changes coordin
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:542](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L542)
+[src/Renderer/GLBaseViewport.ts:531](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L531)
 
 ___
 
@@ -1516,13 +1755,13 @@ Causes an event to occur when a user releases a mouse button over a element.
 
 `void`
 
-#### Inherited from
+#### Overrides
 
 [XRViewport](Renderer_VR_XRViewport.XRViewport).[onPointerUp](Renderer_VR_XRViewport.XRViewport#onpointerup)
 
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:654](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L654)
+[src/Renderer/VR/VRViewport.ts:492](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/VRViewport.ts#L492)
 
 ___
 
@@ -1560,7 +1799,7 @@ asset.once('loaded', () => {
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L82)
+[src/Utilities/EventEmitter.ts:82](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L82)
 
 ___
 
@@ -1587,7 +1826,7 @@ to perform general updates (see GLPass or BaseItem).
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:124](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L124)
+[src/SceneTree/ParameterOwner.ts:124](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L124)
 
 ___
 
@@ -1619,7 +1858,7 @@ used to build the right `Parameter` class. Then all of them are added to the obj
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:276](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L276)
+[src/SceneTree/ParameterOwner.ts:276](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L276)
 
 ___
 
@@ -1646,7 +1885,7 @@ remove listener by ID returned from #on
 
 #### Defined in
 
-[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Utilities/EventEmitter.ts#L134)
+[src/Utilities/EventEmitter.ts:134](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Utilities/EventEmitter.ts#L134)
 
 ___
 
@@ -1674,7 +1913,7 @@ Removes `Parameter` from owner, by using parameter's name.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:176](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L176)
+[src/SceneTree/ParameterOwner.ts:176](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L176)
 
 ___
 
@@ -1702,7 +1941,7 @@ Replaces old `Parameter` by passing a new one with the same name.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:198](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L198)
+[src/SceneTree/ParameterOwner.ts:198](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L198)
 
 ___
 
@@ -1729,7 +1968,7 @@ The resize method.
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:172](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L172)
+[src/Renderer/GLBaseViewport.ts:172](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L172)
 
 ___
 
@@ -1757,7 +1996,7 @@ Resize any offscreen render targets.
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:189](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L189)
+[src/Renderer/GLBaseViewport.ts:189](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L189)
 
 ___
 
@@ -1783,34 +2022,7 @@ Sets the tool that will receive mouse, touch and keyboard events from the viewpo
 
 #### Defined in
 
-[src/Renderer/GLBaseViewport.ts:505](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/GLBaseViewport.ts#L505)
-
-___
-
-### setSpectatorMode
-
-▸ **setSpectatorMode**(`state`): `void`
-
-Turns on and off the spectator mode.
-Note: specator mode renders the scene an extra time to our regular viewport.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `state` | `boolean` | true for enabling spectator mode, else false |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[XRViewport](Renderer_VR_XRViewport.XRViewport).[setSpectatorMode](Renderer_VR_XRViewport.XRViewport#setspectatormode)
-
-#### Defined in
-
-[src/Renderer/VR/XRViewport.ts:178](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L178)
+[src/Renderer/GLBaseViewport.ts:494](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/GLBaseViewport.ts#L494)
 
 ___
 
@@ -1837,7 +2049,7 @@ The local displacement of the user within their volume is applied on top of this
 
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:138](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L138)
+[src/Renderer/VR/XRViewport.ts:100](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L100)
 
 ___
 
@@ -1851,13 +2063,33 @@ The startPresenting method.
 
 `Promise`<`void`\>
 
-#### Inherited from
+#### Overrides
 
 [XRViewport](Renderer_VR_XRViewport.XRViewport).[startPresenting](Renderer_VR_XRViewport.XRViewport#startpresenting)
 
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:273](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L273)
+[src/Renderer/VR/VRViewport.ts:157](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/VRViewport.ts#L157)
+
+___
+
+### startSession
+
+▸ `Protected` **startSession**(): `void`
+
+Lanuches the session loop
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[XRViewport](Renderer_VR_XRViewport.XRViewport).[startSession](Renderer_VR_XRViewport.XRViewport#startsession)
+
+#### Defined in
+
+[src/Renderer/VR/XRViewport.ts:122](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L122)
 
 ___
 
@@ -1877,7 +2109,7 @@ The stopPresenting method.
 
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:421](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L421)
+[src/Renderer/VR/XRViewport.ts:140](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L140)
 
 ___
 
@@ -1905,7 +2137,7 @@ The toJSON method encodes this type as a json object for persistence.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:218](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L218)
+[src/SceneTree/ParameterOwner.ts:218](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L218)
 
 ___
 
@@ -1933,7 +2165,7 @@ Converts object's JSON value and converts it to a string.
 
 #### Defined in
 
-[src/SceneTree/ParameterOwner.ts:303](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/SceneTree/ParameterOwner.ts#L303)
+[src/SceneTree/ParameterOwner.ts:303](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/SceneTree/ParameterOwner.ts#L303)
 
 ___
 
@@ -1953,7 +2185,7 @@ The togglePresenting method.
 
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:430](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L430)
+[src/Renderer/VR/XRViewport.ts:149](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/XRViewport.ts#L149)
 
 ___
 
@@ -1973,11 +2205,7 @@ The updateControllers method.
 
 `void`
 
-#### Inherited from
-
-[XRViewport](Renderer_VR_XRViewport.XRViewport).[updateControllers](Renderer_VR_XRViewport.XRViewport#updatecontrollers)
-
 #### Defined in
 
-[src/Renderer/VR/XRViewport.ts:443](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/VR/XRViewport.ts#L443)
+[src/Renderer/VR/VRViewport.ts:311](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/VR/VRViewport.ts#L311)
 

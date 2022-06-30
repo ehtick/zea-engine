@@ -28,7 +28,7 @@ Create material shader binding.
 
 #### Defined in
 
-[src/Renderer/Drawing/MaterialShaderBinding.ts:509](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/MaterialShaderBinding.ts#L509)
+[src/Renderer/Drawing/MaterialShaderBinding.ts:509](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Drawing/MaterialShaderBinding.ts#L509)
 
 ## Properties
 
@@ -38,7 +38,7 @@ Create material shader binding.
 
 #### Defined in
 
-[src/Renderer/Drawing/MaterialShaderBinding.ts:501](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/MaterialShaderBinding.ts#L501)
+[src/Renderer/Drawing/MaterialShaderBinding.ts:501](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Drawing/MaterialShaderBinding.ts#L501)
 
 ## Methods
 
@@ -62,7 +62,7 @@ The bind method.
 
 #### Defined in
 
-[src/Renderer/Drawing/MaterialShaderBinding.ts:591](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/MaterialShaderBinding.ts#L591)
+[src/Renderer/Drawing/MaterialShaderBinding.ts:591](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Drawing/MaterialShaderBinding.ts#L591)
 
 ___
 
@@ -79,7 +79,7 @@ Users should never need to call this method directly.
 
 #### Defined in
 
-[src/Renderer/Drawing/MaterialShaderBinding.ts:611](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/MaterialShaderBinding.ts#L611)
+[src/Renderer/Drawing/MaterialShaderBinding.ts:611](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Drawing/MaterialShaderBinding.ts#L611)
 
 ___
 
@@ -101,5 +101,5 @@ The unbind method.
 
 #### Defined in
 
-[src/Renderer/Drawing/MaterialShaderBinding.ts:601](https://github.com/ZeaInc/zea-engine/blob/8e646f8a8/src/Renderer/Drawing/MaterialShaderBinding.ts#L601)
+[src/Renderer/Drawing/MaterialShaderBinding.ts:601](https://github.com/ZeaInc/zea-engine/blob/bfc726cd6/src/Renderer/Drawing/MaterialShaderBinding.ts#L601)
 
