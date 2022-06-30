@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.5.0](https://github.com/ZeaInc/zea-engine/compare/v4.4.0...v4.5.0) (2022-06-30)
+
+
+### Features
+
+* WebXR AR Sessions now support hit testing and anchors. ([#749](https://github.com/ZeaInc/zea-engine/issues/749)) ([d4e22d2](https://github.com/ZeaInc/zea-engine/commit/d4e22d24177aaf543825429a164cecccb2a754c5))
+* Can now customize the materials assigned to CompoundGeoms. ([#767](https://github.com/ZeaInc/zea-engine/issues/767)) ([9fc3022](https://github.com/ZeaInc/zea-engine/commit/9fc30223d69d90bca36791142b8bf995bc90bde8))
+* FatPoints now support per-point picking and highlighting. ([f8d5482](https://github.com/ZeaInc/zea-engine/commit/f8d548239d8f12b9cd428be633135ea58ed33561))
+* implemented 'LinesSphere' class for displaying a sphere made up of 3 circles aligned to each axis. ([#762](https://github.com/ZeaInc/zea-engine/issues/762)) ([abd4ecf](https://github.com/ZeaInc/zea-engine/commit/abd4ecf69b3fad9a64f40045c55ae34e4c2d118d))
+* More convenient access to data in the tree via accessors. ([7092a53](https://github.com/ZeaInc/zea-engine/commit/7092a53e442065cdd5bb6723e80afb2489d45d9c))
+* To make picking small object easier, the GLViewport now scans a 5x5 pixel area for the closest object. ([81a070f](https://github.com/ZeaInc/zea-engine/commit/81a070f86ea37d28d43785d1dba9bc4d44276047))
+* Version class can now be constructed from a string, or an array, and can be converted back to an array for comparisons with other Version instances. ([5448cff](https://github.com/ZeaInc/zea-engine/commit/5448cffa901e9e025bfbab7e9f2f607aea529a49))
+* XRefs can now load custom properties such as Color and Configuration. ([ab18511](https://github.com/ZeaInc/zea-engine/commit/ab1851197da490e9272a6cfb9ba31a6bcfb3e46a))
+
+
+### Bug Fixes
+
+* Clicking on handles is now much easier as the viewport picking function prioritises items in the overlay pass over regular items. ([f4db13e](https://github.com/ZeaInc/zea-engine/commit/f4db13e5fcb1d9af2e02aa09cf0dbe4988cd98cd))
+* Cloned a CADAssets and XRef items now clone the source items url. ([fc982d1](https://github.com/ZeaInc/zea-engine/commit/fc982d1dc317e30bd2b85fdc1d3f4457bf81011b))
+* CompoundGeoms edges are now rendered with a larger overlay values to address z-fighting of edges agains the polygons. ([6360602](https://github.com/ZeaInc/zea-engine/commit/6360602dba4953e618d88511d59f095364c38713))
+* Fixed issues in Orthographic mode that caused surface lighting and overlay to be incorrect. ([#744](https://github.com/ZeaInc/zea-engine/issues/744)) ([753b501](https://github.com/ZeaInc/zea-engine/commit/753b501444679b0f6c09ff62b086b0d9cfe32ca9))
+* Fixed race condition where metadata loading was completed before geoms loading was completed. ([#750](https://github.com/ZeaInc/zea-engine/issues/750)) ([ffed89a](https://github.com/ZeaInc/zea-engine/commit/ffed89ad37c10d104482196898d899d91742f015))
+* Groups now correctly save to JSON and load items from JSON. ([#759](https://github.com/ZeaInc/zea-engine/issues/759)) ([754573d](https://github.com/ZeaInc/zea-engine/commit/754573d597b7ea071e0b11b6f56d6114ae0c3c2e))
+* Groups will no longer allow adding an item if the item is already in the group ([104387b](https://github.com/ZeaInc/zea-engine/commit/104387b34da0af0869d382d3312f00eb1272c620))
+* if a TreeItem's childrens names conflict, and then that conflict is resolved, the TreeItem.getChildByName will now then resolve the correct child. ([8120159](https://github.com/ZeaInc/zea-engine/commit/81201596c22991a5ab4bd88d4e45992a0a50842c))
+* In some obscure cases, the renderer would throw exceptions when items were removed from the scene. ([733bcaa](https://github.com/ZeaInc/zea-engine/commit/733bcaa4fb2b5165ac9dd6955f4e2bbbe9e7cd2e))
+* KinematicGroup orientation now simply matches the first item to match the SelectionGroup ([2fae71d](https://github.com/ZeaInc/zea-engine/commit/2fae71da6e7b0570d394d9c75037617bfa4023b5))
+* Manipulating the transoformation of items that are also being transformed by a kinematic group would cause a pop in location. ([#764](https://github.com/ZeaInc/zea-engine/issues/764)) ([7f84870](https://github.com/ZeaInc/zea-engine/commit/7f84870040de927b42b74d562654094bc799df42))
+* Max resource load count is reduced to 1000 as Chrome was throwing errors around the 1400 mark. ([bcb0043](https://github.com/ZeaInc/zea-engine/commit/bcb00439902a36c9140fc296e2fb6c800a51b724))
+* NodeJS build now exports the Shaders so that Materials can be assigned a Shader name and fully configured. ([#761](https://github.com/ZeaInc/zea-engine/issues/761)) ([239f14e](https://github.com/ZeaInc/zea-engine/commit/239f14ec454425f79cfbd0bcf93ef8ffb945bacc))
+* Outline thickness now takes into account the devicePixelRatio, so on devices with high pixel ratio, we now get clearer/thicker outlines. ([6c0453a](https://github.com/ZeaInc/zea-engine/commit/6c0453a6fcb8386ba9621bc93ff688bb2a32609f))
+* PMIView activation was broken because the 'camera' reference was lost during loading of zcad files. ([09fd015](https://github.com/ZeaInc/zea-engine/commit/09fd0150d4643a87cad8ae281db913fa956058fd))
+* Points now update correctly when changing vertex attributes when displayed using FatPointsShader. ([4a4fdaf](https://github.com/ZeaInc/zea-engine/commit/4a4fdaf1965f122901e3f8d7f66d3446db4850d5))
+* removing the fist item in the group was fixed. ([f7a5188](https://github.com/ZeaInc/zea-engine/commit/f7a5188289c61bb6b7561dda57919d4fc78df09d))
+* Removing the highlight that is not the top of the stack now correctly leaves the top highlight in visible. ([#766](https://github.com/ZeaInc/zea-engine/issues/766)) ([c1a40fa](https://github.com/ZeaInc/zea-engine/commit/c1a40fa6d09a3b2ca882ffbba177e2b4ff60f14c))
+* Shaders no longer discard fragments for transparent items as it changes the contents of the z-buffer ([bfb68f5](https://github.com/ZeaInc/zea-engine/commit/bfb68f5fe2b8f38538d3c9a564dd2325edc2ece2))
+* The canvas is now forced to fit its parent by applying 100% width and height values to the styling. This addresses canvs fitting its parent on screens where devicePixelRatio < 1. ([e5181df](https://github.com/ZeaInc/zea-engine/commit/e5181dfe9623bda27b42a5ac31193bf09ee5a842))
+* the NameChangedEvent class is now exported ([8a9b988](https://github.com/ZeaInc/zea-engine/commit/8a9b98861aa71c4d9225f59e978ade5dde91c4a9))
+
 ## [4.4.0](https://github.com/ZeaInc/zea-engine/compare/v4.3.0...v4.4.0) (2022-04-26)
 
 
