@@ -128,13 +128,13 @@ class GLStandardGeomsPass extends GLPass {
     const listenerIDs = this.listenerIDs.get(geomItem)
     this.listenerIDs.delete(geomItem)
 
-    geomItem.materialParam.removeListenerById('valueChanged', listenerIDs['materialParam.valueChanged'])
-    geomItem.geomParam.removeListenerById('valueChanged', listenerIDs['geomParam.valueChanged'])
+    geomItem.materialParam.off('valueChanged', listenerIDs['materialParam.valueChanged'])
+    geomItem.geomParam.off('valueChanged', listenerIDs['geomParam.valueChanged'])
 
     const material = this.materials.get(geomItem)
     this.materials.delete(geomItem)
-    geomItem.removeListenerById('opacityChanged', listenerIDs['geomItem.opacityChanged'])
-    material.removeListenerById('opacityChanged', listenerIDs['material.opacityChanged'])
+    geomItem.off('opacityChanged', listenerIDs['geomItem.opacityChanged'])
+    material.off('opacityChanged', listenerIDs['material.opacityChanged'])
   }
 
   /**

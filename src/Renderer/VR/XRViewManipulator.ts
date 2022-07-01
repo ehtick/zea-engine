@@ -77,7 +77,7 @@ class XRViewManipulator extends BaseTool {
     for (const controller of this.xrvp.getControllers()) {
       controller.getTipItem().removeAllChildren()
     }
-    this.xrvp.removeListenerById('controllerAdded', this.listenerIDs['controllerAdded'])
+    this.xrvp.off('controllerAdded', this.listenerIDs['controllerAdded'])
   }
 
   // ///////////////////////////////////

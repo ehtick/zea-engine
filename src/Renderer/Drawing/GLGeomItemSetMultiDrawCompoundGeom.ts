@@ -4,7 +4,7 @@ import '../../SceneTree/GeomItem'
 import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
 import { VisibilityChangedEvent } from '../../Utilities/Events/VisibilityChangedEvent'
 
-import { EventEmitter, MathFunctions, Allocator1D } from '../../Utilities/index'
+import { EventEmitter, Listener, MathFunctions, Allocator1D } from '../../Utilities/index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLRenderer } from '../GLRenderer'
 import { checkFramebuffer } from '../GLFbo'
@@ -41,7 +41,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
   protected gl: WebGL12RenderingContext
   protected glGeomItems: Array<GLGeomItem | null> = []
   protected glGeomIdsMapping: Record<string, number[]> = {}
-  protected glgeomItemEventHandlers: Record<string, (event: any) => void>[] = []
+  protected glgeomItemEventHandlers: Record<string, Listener>[] = []
   protected freeIndices: number[] = []
   // protected visibleItems: GLGeomItem[] = []
   protected dirtyGeomItems: Set<number> = new Set()
@@ -113,7 +113,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       this.glGeomIdsMapping[glGeomItem.geomId].push(index)
     }
 
-    const eventHandlers: Record<string, (event: any) => void> = {}
+    const eventHandlers: Record<string, Listener> = {}
 
     // //////////////////////////////
     // Visibility

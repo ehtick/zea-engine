@@ -8,16 +8,15 @@ import { BaseGeom } from '../../SceneTree/Geometry/BaseGeom'
  * @extends Parameter
  * @private
  */
-class GeometryParameter extends Parameter<BaseGeom | undefined> {
+class GeometryParameter extends Parameter<BaseGeom> {
   protected listenerIDs: Record<string, number> = {}
   /**
    * Create a geometry parameter.
    * @param name - The name of the color parameter.
    * @param value - The value of the parameter.
    */
-  constructor(name: string = '', value?: BaseGeom) {
-    super(name, value, 'Geometry')
-
+  constructor(name: string = '', value: BaseGeom = undefined) {
+    super(name, undefined, 'Geometry')
     if (value) this.setValue(value)
   }
 
@@ -33,7 +32,7 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.__value !== value) {
       if (this.__value) {
-        this.__value.removeListenerById('boundingBoxChanged', this.listenerIDs['boundingBoxChanged'])
+        this.__value.off('boundingBoxChanged', this.listenerIDs['boundingBoxChanged'])
       }
       this.__value = value
       if (this.__value) {
@@ -57,7 +56,7 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
    */
   loadValue(value: BaseGeom): void {
     if (this.__value) {
-      this.__value.removeListenerById('boundingBoxChanged', this.listenerIDs['boundingBoxChanged'])
+      this.__value.off('boundingBoxChanged', this.listenerIDs['boundingBoxChanged'])
     }
 
     this.__value = value
@@ -100,7 +99,7 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
    * from this parameter and returns it.
    * @return - Returns a new geometry parameter.
    */
-  clone():  GeometryParameter {
+  clone(): GeometryParameter {
     const clonedParam = new GeometryParameter(this.name, this.__value)
     return clonedParam
   }

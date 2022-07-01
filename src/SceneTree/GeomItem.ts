@@ -197,7 +197,7 @@ class GeomItem extends BaseGeomItem {
           const geom = geomLibrary.getGeom(geomIndex)
           if (geom) this.geomParam.value = <BaseGeom>geom
           else console.warn('Geom not loaded:', this.getName())
-          geomLibrary.removeListenerById('rangeLoaded', onGeomLoadedListenerID)
+          geomLibrary.off('rangeLoaded', onGeomLoadedListenerID)
         }
       }
       const onGeomLoadedListenerID = geomLibrary.on('rangeLoaded', onGeomLoaded)
@@ -291,7 +291,7 @@ class GeomItem extends BaseGeomItem {
           // @ts-ignore
           if (geom) this.geomParam.value = geom
           else console.warn('Geom not loaded:', this.getName())
-          geomLibrary.removeListenerById('rangeLoaded', this.listenerIDs['rangeLoaded'])
+          geomLibrary.off('rangeLoaded', this.listenerIDs['rangeLoaded'])
         }
       }
       this.listenerIDs['rangeLoaded'] = geomLibrary.on('rangeLoaded', onGeomLoaded)

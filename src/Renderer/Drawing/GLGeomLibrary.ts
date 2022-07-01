@@ -227,10 +227,10 @@ class GLGeomLibrary extends EventEmitter {
     this.indicesOffsets[index] = 0
 
     const eventHandlerIds = this.geomEventHandlerIds[index]
-    geom.removeListenerById('geomDataChanged', eventHandlerIds.geomDataChanged)
-    geom.removeListenerById('geomDataTopologyChanged', eventHandlerIds.geomDataTopologyChanged)
+    geom.off('geomDataChanged', eventHandlerIds.geomDataChanged)
+    geom.off('geomDataTopologyChanged', eventHandlerIds.geomDataTopologyChanged)
     if (geom instanceof CompoundGeom) {
-      geom.removeListenerById('materialsChanged', eventHandlerIds.materialsChanged)
+      geom.off('materialsChanged', eventHandlerIds.materialsChanged)
     }
   }
 

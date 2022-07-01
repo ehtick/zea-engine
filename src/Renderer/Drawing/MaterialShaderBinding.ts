@@ -166,7 +166,7 @@ class SimpleUniformBinding extends ParamUniformBinding {
         this.bind = this.bindValue
 
         if (imageLoadedId) {
-          boundImage.removeListenerById('loaded', imageLoadedId)
+          boundImage.off('loaded', imageLoadedId)
         }
         boundImage = null
         imageLoadedId = null
@@ -419,7 +419,7 @@ class ColorUniformBinding extends ParamUniformBinding {
       this.textureType = null
 
       if (imageLoadedId) {
-        boundImage.removeListenerById('loaded', imageLoadedId)
+        boundImage.off('loaded', imageLoadedId)
       }
 
       this.bind = this.bindValue

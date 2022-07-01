@@ -169,7 +169,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const glGeomItem = this.renderer!.glGeomItemLibrary.getGLGeomItem(geomItem)
     if (!glGeomItem) throw new Error('glGeomItem not found for geomItem:' + geomItem.getName())
 
-    glGeomItem.removeListenerById('visibilityChanged', listenerIDs['glGeomItem.visibilityChanged'])
+    glGeomItem.off('visibilityChanged', listenerIDs['glGeomItem.visibilityChanged'])
 
     if (glGeomItem.GLShaderGeomSets) {
       const glShaderGeomSets = <GLShaderGeomSets>glGeomItem.GLShaderGeomSets

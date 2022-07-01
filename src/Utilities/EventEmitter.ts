@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { BaseClass } from './BaseClass'
 import { BaseEvent } from './BaseEvent'
+
+interface Listener {
+  (event: BaseEvent | any): void
+}
+
 /**
  * Provides an interface for emitting events under given names, and registering listeners to those events.
  * This is a base class for most classes in the Scene Tree and Renderer, enabling observers to listen to changes throughout the system.
@@ -17,13 +22,13 @@ import { BaseEvent } from './BaseEvent'
  *
  *  ee.emit('myEvent', { data: 42 })
  *  // We no longer want to listen to this event, so let's remove the listener.
- *  ee.removeListenerById('myEvent', eventID)
+ *  ee.off('myEvent', eventID)
  * ```
  *
  *
  */
 class EventEmitter extends BaseClass {
-  listeners: Record<string, Array<null | ((event: BaseEvent) => void)>> = {}
+  listeners: Record<string, Array<null | Listener>> = {}
 
   /**
    * Initializes an empty `listeners` map that will host all the events,
@@ -41,7 +46,7 @@ class EventEmitter extends BaseClass {
    * @param listener - The listener function(callback).
    * @return - the id that can be used to remove the listener.
    */
-  on(eventName: string, listener?: (event: BaseEvent | any) => void): number {
+  on(eventName: string, listener?: Listener): number {
     if (!listener) {
       throw new Error('Missing listener.')
     }
@@ -79,7 +84,7 @@ class EventEmitter extends BaseClass {
    * @param listener - The listener value
    * @return - the id that can be used to remove the listener.
    */
-  once(eventName: string, listener: (event: BaseEvent | any) => void): number {
+  once(eventName: string, listener: Listener): number {
     const cb = (event: any) => {
       listener(event)
       this.off(eventName, cb)
@@ -89,28 +94,31 @@ class EventEmitter extends BaseClass {
   }
 
   /**
-   * Removes a listener function from the specified event, using either the function or the index id. Depends on what is passed in.
+   * Removes a listener from the specified event, using either the function or the index id. Depends on what is passed in.
    *
    * @param eventName - The name of the event.
-   * @param listener - The listener function or the id number.
+   * @param listenerOrId - The listener function or the id number returned by 'on'.
    */
-  off(eventName: string, listener?: (event: BaseEvent | any) => void): void {
-    if (!listener) {
+  off(eventName: string, listenerOrId: number | Listener): void {
+    if (listenerOrId == undefined) {
       throw new Error('Missing callback function (listener).')
-    }
-
-    if (typeof listener == 'number') {
-      console.warn('Deprecated. Un-register using the original listener instead.')
-      this.removeListenerById(eventName, listener)
-      return
     }
 
     const listeners = this.listeners[eventName] || []
 
+    if (typeof listenerOrId == 'number') {
+      const id = listenerOrId as number
+      if (!listeners[id]) throw new Error('Invalid ID')
+      // Note: do not splice the array as that would change the indexes of existing listeners.
+      listeners[id] = null
+      return
+    }
+    const listener = listenerOrId as Listener
+
     const ids: Array<number> = []
 
-    listeners.forEach((e: null | ((event: BaseEvent) => void), i: number) => {
-      if (e === listener) {
+    listeners.forEach((e: null | Listener, i: number) => {
+      if (e === listenerOrId) {
         ids.push(i)
       }
     })
@@ -132,16 +140,7 @@ class EventEmitter extends BaseClass {
    * @param id - The id returned by addListener
    */
   removeListenerById(eventName: string, id: number): void {
-    const listeners = this.listeners[eventName]
-
-    if (!listeners) {
-      console.warn('callback :' + id + ' was not connected to this event:' + eventName)
-      return
-    }
-
-    if (!listeners[id]) throw new Error('Invalid ID')
-    // Note: do not splice the array as that would change the indexes of existing listeners.
-    listeners[id] = null
+    this.off(eventName, id)
   }
 
   /**
@@ -154,7 +153,7 @@ class EventEmitter extends BaseClass {
   emit(eventName: string, event: BaseEvent = new BaseEvent()): void {
     const listeners = this.listeners[eventName] || []
 
-    listeners.forEach((fn: null | ((event: BaseEvent) => void)) => {
+    listeners.forEach((fn: null | Listener) => {
       // Skip disconnected listeners.
       if (fn) {
         fn(event)
@@ -163,4 +162,4 @@ class EventEmitter extends BaseClass {
   }
 }
 
-export { EventEmitter }
+export { EventEmitter, Listener }

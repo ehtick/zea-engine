@@ -103,7 +103,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
       this.drawCountChanged(event)
     })
     glGeomItemSet.once('destructing', () => {
-      glGeomItemSet.removeListenerById('drawCountChanged', listenerID)
+      glGeomItemSet.off('drawCountChanged', listenerID)
       this.glGeomItemSets.delete(glGeomItemSet.getGLGeom())
       if (this.glGeomItemSets.size == 0) {
         // Remove the listeners.

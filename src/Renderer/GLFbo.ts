@@ -45,7 +45,7 @@ class GLFbo {
     this.__clearColor = new Color(0, 0, 0, 0)
     if (this.__colorTexture) {
       this.colorTextureResizeEventId = this.__colorTexture.on('resized', () => {
-        console.warn("This code path will be deprecated. Instead, resize the GLFbo and it will resize the texture.")
+        console.warn('This code path will be deprecated. Instead, resize the GLFbo and it will resize the texture.')
         this.resize(this.__colorTexture.width, this.__colorTexture.height, false)
       })
     }
@@ -378,7 +378,7 @@ class GLFbo {
     gl.bindFramebuffer(gl.FRAMEBUFFER, null)
     gl.deleteFramebuffer(this.__fbo)
     this.__fbo = null
-    this.__colorTexture.removeListenerById('resized', this.colorTextureResizeEventId)
+    this.__colorTexture.off('resized', this.colorTextureResizeEventId)
   }
 }
 

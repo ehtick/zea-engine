@@ -118,9 +118,9 @@ class BaseGroup extends TreeItem {
       const parts = key.split('.')
       if (parts.length > 1) {
         const param = item.getParameter(parts[0])
-        if (param) param.removeListenerById(parts[1], listenerIDs[key])
+        if (param) param.off(parts[1], listenerIDs[key])
       } else {
-        item.removeListenerById(key, listenerIDs[key])
+        item.off(key, listenerIDs[key])
       }
     }
     this.__itemsEventHandlers.splice(index, 1)

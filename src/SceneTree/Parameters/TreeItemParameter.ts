@@ -89,7 +89,7 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
     if (this.filterFn && !this.filterFn(treeItem)) return
     if (this.__value !== treeItem) {
       if (this.__value) {
-        this.__value.removeListenerById('globalXfoChanged', this.listenerIDs['globalXfoChanged'])
+        this.__value.off('globalXfoChanged', this.listenerIDs['globalXfoChanged'])
       }
       this.__value = treeItem
       if (this.__value) {

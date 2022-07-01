@@ -173,8 +173,8 @@ class GLHDRImage extends GLTexture2D {
     if (this.unpackHDRShader) this.unpackHDRShader.destroy()
     if (this.shaderBinding) this.shaderBinding.destroy()
 
-    if ('loaded' in this.listenerIDs) this.hdrImage.removeListenerById('loaded', this.listenerIDs['loaded'])
-    this.hdrImage.removeListenerById('updated', this.listenerIDs['updated'])
+    if ('loaded' in this.listenerIDs) this.hdrImage.off('loaded', this.listenerIDs['loaded'])
+    this.hdrImage.off('updated', this.listenerIDs['updated'])
   }
 }
 

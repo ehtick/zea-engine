@@ -67,16 +67,6 @@ describe('EventEmitter', () => {
     expect(mockFn).toHaveBeenCalledTimes(1)
   })
 
-  it('fails when trying to unregister a callback but no callback was passed.', () => {
-    const eventEmitter = new EventEmitter()
-
-    const fn = () => {
-      eventEmitter.off('fake')
-    }
-
-    expect(fn).toThrow()
-  })
-
   it('stops calling the listener.', () => {
     const eventEmitter = new EventEmitter()
 

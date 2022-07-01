@@ -22,15 +22,15 @@ import { Material } from '../Material'
  *
  * @extends Parameter
  */
-class MaterialParameter extends Parameter<Material | undefined> {
+class MaterialParameter extends Parameter<Material> {
   protected listenerIDs: Record<string, number> = {}
   /**
    * Create a material parameter.
    * @param name - The name of the material parameter.
    * @param value - The value of the parameter.
    */
-  constructor(name: string = '', value?: Material) {
-    super(name, value, 'Material')
+  constructor(name: string = '', value: Material = undefined) {
+    super(name, undefined, 'Material')
     if (value) this.setValue(value)
   }
 
@@ -47,7 +47,7 @@ class MaterialParameter extends Parameter<Material | undefined> {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.__value !== material) {
       if (this.__value) {
-        this.__value.removeListenerById('parameterValueChanged', this.listenerIDs['parameterValueChanged'])
+        this.__value.off('parameterValueChanged', this.listenerIDs['parameterValueChanged'])
       }
       this.__value = material
       if (this.__value) {
@@ -74,7 +74,7 @@ class MaterialParameter extends Parameter<Material | undefined> {
   //TODO: remove?
   loadValue(value: Material): void {
     if (this.__value) {
-      this.__value.removeListenerById('parameterValueChanged', this.listenerIDs['parameterValueChanged'])
+      this.__value.off('parameterValueChanged', this.listenerIDs['parameterValueChanged'])
     }
     this.__value = value
     if (this.__value) {

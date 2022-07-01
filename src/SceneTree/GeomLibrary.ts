@@ -113,7 +113,7 @@ class GeomLibrary extends EventEmitter {
         const streamFileParsedListenerID = this.on('streamFileParsed', (event: StreamFileParsedEvent) => {
           if (event.geomFileID == geomFileUrl) {
             if (incrementProgress) resourceLoader.incrementWorkDone(1)
-            this.removeListenerById('streamFileParsed', streamFileParsedListenerID)
+            this.off('streamFileParsed', streamFileParsedListenerID)
             resolve()
           }
         })

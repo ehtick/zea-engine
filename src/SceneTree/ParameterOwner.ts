@@ -179,7 +179,7 @@ class ParameterOwner extends EventEmitter {
     }
     const index = this.paramMapping[name]
     const param = this.params[this.paramMapping[name]]
-    param.removeListenerById('valueChanged', this.paramEventListenerIDs[name])
+    param.off('valueChanged', this.paramEventListenerIDs[name])
     this.params.splice(index, 1)
     delete this.paramMapping[name]
     for (let i = index; i < this.params.length; i++) {

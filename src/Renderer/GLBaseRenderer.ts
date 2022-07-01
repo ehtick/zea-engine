@@ -509,8 +509,8 @@ class GLBaseRenderer extends ParameterOwner {
     const listenerIDs = this.listenerIDs.get(treeItem)
     this.listenerIDs.delete(treeItem)
 
-    treeItem.removeListenerById('childAdded', listenerIDs['childAdded'])
-    treeItem.removeListenerById('childRemoved', listenerIDs['childRemoved'])
+    treeItem.off('childAdded', listenerIDs['childAdded'])
+    treeItem.off('childRemoved', listenerIDs['childRemoved'])
 
     const pass = this.passAssignments.get(treeItem)
     if (pass != undefined) {
@@ -530,7 +530,7 @@ class GLBaseRenderer extends ParameterOwner {
       const geomItem = treeItem
       if (listenerIDs['Geometry.valueChanged']) {
         const geomParam = treeItem.geomParam
-        geomParam.removeListenerById('valueChanged', listenerIDs['Geometry.valueChanged'])
+        geomParam.off('valueChanged', listenerIDs['Geometry.valueChanged'])
       }
 
       this.glGeomItemLibrary.removeGeomItem(geomItem)
