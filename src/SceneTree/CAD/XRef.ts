@@ -68,66 +68,66 @@ class XRef extends CADAsset {
     // console.log('resolving XRef:', relativePath, ' > ', url)
     context.incrementAsync()
 
-    // If an XRef already exists to the same zcad file, we can just clone the existing XRef.
-    // This means the geometry will only be loaded once, and it will become re-used
-    // by the cloned XRefs.
-    if (context.xrefs[relativePath]) {
-      const xref = context.xrefs[relativePath]
-      const copyFromXRef = () => {
-        this.copyFrom(xref)
-        // // Make sure we keep our name and Xfo.
-        this.setName(name)
-        this.localXfoParam.value = xfo
-
-        this.loaded = true
-        this.emit('loaded')
-        context.decrementAsync()
-      }
-      if (!xref.loaded) {
-        xref.on('loaded', copyFromXRef)
+    // /////////////////////////////////////
+    // URL
+    // If a resources dict has been provided, look it up, else
+    // generate a url.
+    let url
+    if (context.resources) {
+      if (context.resources[relativePath]) {
+        url = context.resources[relativePath]
       } else {
-        copyFromXRef()
-      }
-    } else {
-      // /////////////////////////////////////
-      // URL
-      // If a resources dict has been provided, look it up, else
-      // generate a url.
-      let url
-      if (context.resources) {
-        if (context.resources[relativePath]) {
-          url = context.resources[relativePath]
-        } else {
-          // CAD systems seem to have flexible path resolution strategies that we dont yet support.
-          // e.g. looking in multiple folders for a file.
-          // The relative paths often break.
-          // If the user provides a mapping table, we will use it, else
-          // we assume files will all be in the same folder.
-          if (relativePath.includes('/')) {
-            relativePath = relativePath.slice(relativePath.lastIndexOf('/') + 1)
-          } else if (relativePath.includes('\\')) {
-            relativePath = relativePath.slice(relativePath.lastIndexOf('\\') + 1)
-          }
-          if (context.resources[relativePath]) {
-            url = context.resources[relativePath]
-          } else if (context.xrefLoadCallback) {
-            url = context.xrefLoadCallback.call(context, relativePath, this)
-          }
-        }
-      } else if (context.xrefLoadCallback) {
-        url = context.xrefLoadCallback.call(context, relativePath, this)
-      } else {
+        // CAD systems seem to have flexible path resolution strategies that we dont yet support.
+        // e.g. looking in multiple folders for a file.
+        // The relative paths often break.
+        // If the user provides a mapping table, we will use it, else
+        // we assume files will all be in the same folder.
         if (relativePath.includes('/')) {
           relativePath = relativePath.slice(relativePath.lastIndexOf('/') + 1)
         } else if (relativePath.includes('\\')) {
           relativePath = relativePath.slice(relativePath.lastIndexOf('\\') + 1)
         }
-        // Generate a url relative to the folder of the asset we are currently loading.
-        url = context.folder + relativePath + '.zcad'
+        if (context.resources[relativePath]) {
+          url = context.resources[relativePath]
+        } else if (context.xrefLoadCallback) {
+          url = context.xrefLoadCallback.call(context, relativePath, this)
+        }
       }
+    } else if (context.xrefLoadCallback) {
+      url = context.xrefLoadCallback.call(context, relativePath, this)
+    } else {
+      if (relativePath.includes('/')) {
+        relativePath = relativePath.slice(relativePath.lastIndexOf('/') + 1)
+      } else if (relativePath.includes('\\')) {
+        relativePath = relativePath.slice(relativePath.lastIndexOf('\\') + 1)
+      }
+      // Generate a url relative to the folder of the asset we are currently loading.
+      url = context.folder + relativePath + '.zcad'
+    }
 
-      if (url) {
-        context.xrefs[relativePath] = this
+    if (url) {
+      // If an XRef already exists to the same zcad file, we can just clone the existing XRef.
+      // This means the geometry will only be loaded once, and it will become re-used
+      // by the cloned XRefs.
+      if (context.xrefs[url]) {
+        const xref = context.xrefs[url]
+        const copyFromXRef = () => {
+          this.copyFrom(xref)
+          // // Make sure we keep our name and Xfo.
+          this.setName(name)
+          this.localXfoParam.value = xfo
+
+          this.loaded = true
+          this.emit('loaded')
+          context.decrementAsync()
+        }
+        if (!xref.loaded) {
+          xref.on('loaded', copyFromXRef)
+        } else {
+          copyFromXRef()
+        }
+      } else {
+        context.xrefs[url] = this
         this.load(url, new AssetLoadContext(context)).then(
           () => {
             context.decrementAsync()
@@ -136,10 +136,10 @@ class XRef extends CADAsset {
             context.decrementAsync()
           }
         )
-      } else {
-        context.decrementAsync()
-        console.warn(`While Loading ${this.getPath()} unable to resolve ${relativePath}`)
       }
+    } else {
+      context.decrementAsync()
+      console.warn(`While Loading ${this.getPath()} unable to resolve ${relativePath}`)
     }
   }
 }
