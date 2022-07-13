@@ -1,16 +1,17 @@
 import { BaseGeom, Mesh, RefCounted } from '../../SceneTree/index'
 import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
-import { generateShaderGeomBinding } from './GeomShaderBinding'
+import { generateShaderGeomBinding, IGeomShaderBinding } from './GeomShaderBinding'
 
 /** Class representing a GL geom.
  * @private
  */
 class GLGeom extends RefCounted {
   protected __gl: WebGL12RenderingContext
-  protected __geom: BaseGeom | Mesh
+  public geom: BaseGeom | Mesh
+  protected numVertices: number = 0
   protected __glattrbuffers: Record<string, any>
-  protected __shaderBindings: Record<string, any>
+  protected __shaderBindings: Record<string, IGeomShaderBinding>
   protected buffersDirty: boolean
   protected genBufferOpts: Record<string, any> = {}
   protected __indexBuffer: WebGLBuffer | null = null
@@ -22,7 +23,7 @@ class GLGeom extends RefCounted {
   constructor(gl: WebGL12RenderingContext, geom: BaseGeom) {
     super()
     this.__gl = gl
-    this.__geom = geom
+    this.geom = geom
 
     this.__glattrbuffers = {}
     this.__shaderBindings = {}
@@ -31,13 +32,13 @@ class GLGeom extends RefCounted {
     const geomDataChanged = (opts: Record<string, any>) => {
       this.dirtyBuffers(opts)
     }
-    this.__geom.on('geomDataChanged', geomDataChanged)
+    this.geom.on('geomDataChanged', geomDataChanged)
 
     const geomDataTopologyChanged = (opts: Record<string, any>) => {
       this.clearBuffers()
       this.dirtyBuffers(opts)
     }
-    this.__geom.on('geomDataTopologyChanged', geomDataTopologyChanged)
+    this.geom.on('geomDataTopologyChanged', geomDataTopologyChanged)
   }
 
   /**
@@ -45,7 +46,7 @@ class GLGeom extends RefCounted {
    * @return - The geometry object.
    */
   getGeom(): BaseGeom {
-    return this.__geom
+    return this.geom
   }
 
   // /////////////////////////////////////
@@ -107,7 +108,7 @@ class GLGeom extends RefCounted {
     // GL state. (vertexAttribDivisor)
     const shaderBinding = this.__shaderBindings[renderstate.shaderkey!]
     if (shaderBinding) {
-      shaderBinding.unbind(renderstate)
+      shaderBinding.unbind()
     }
   }
 
@@ -167,8 +168,6 @@ class GLGeom extends RefCounted {
    * Users should never need to call this method directly.
    */
   destroy(): void {
-    this.__geom.deleteMetadata('glgeom')
-
     this.clearBuffers()
 
     this.__destroyed = true

@@ -9,11 +9,9 @@ import { WebGL12RenderingContext } from '../types/webgl'
  * @private
  */
 class GLMesh extends GLGeom {
-  protected __numTriIndices: number = 0
-  protected __indexDataType: number = 0
-  protected __numVertices: number = 0
-  protected __numTriangles: number = 0
-  protected __numRenderVerts: number = 0
+  protected numTriIndices: number = 0
+  protected indexDataType: number = 0
+  protected numTriangles: number = 0
 
   /**
    * Create a GL mesh.
@@ -35,16 +33,15 @@ class GLMesh extends GLGeom {
 
     const gl = this.__gl
 
-    const geomBuffers = this.__geom.genBuffers()
+    const geomBuffers = this.geom.genBuffers()
     const indices = geomBuffers.indices
-    this.__numTriIndices = geomBuffers.indices.length
-    if (indices instanceof Uint8Array) this.__indexDataType = this.__gl.UNSIGNED_BYTE
-    if (indices instanceof Uint16Array) this.__indexDataType = this.__gl.UNSIGNED_SHORT
-    if (indices instanceof Uint32Array) this.__indexDataType = this.__gl.UNSIGNED_INT
+    this.numTriIndices = geomBuffers.indices.length
+    if (indices instanceof Uint8Array) this.indexDataType = this.__gl.UNSIGNED_BYTE
+    if (indices instanceof Uint16Array) this.indexDataType = this.__gl.UNSIGNED_SHORT
+    if (indices instanceof Uint32Array) this.indexDataType = this.__gl.UNSIGNED_INT
 
-    this.__numVertices = this.__geom.getNumVertices()
-    this.__numTriangles = indices.length / 3
-    this.__numRenderVerts = geomBuffers.numRenderVerts
+    this.numVertices = this.geom.getNumVertices()
+    this.numTriangles = indices.length / 3
 
     if (this.__indexBuffer) {
       gl.deleteBuffer(this.__indexBuffer)
@@ -89,12 +86,12 @@ class GLMesh extends GLGeom {
   updateBuffers(renderstate?: RenderState): void {
     const gl = this.__gl
 
-    if (this.__numVertices != this.__geom.getNumVertices()) {
+    if (this.numVertices != this.geom.getNumVertices()) {
       this.genBuffers()
       return
     }
 
-    const geomBuffers = this.__geom.genBuffers({ includeIndices: false })
+    const geomBuffers = this.geom.genBuffers({ includeIndices: false })
     // eslint-disable-next-line guard-for-in
     for (const attrName in geomBuffers.attrBuffers) {
       const attrData = geomBuffers.attrBuffers[attrName]
@@ -124,7 +121,7 @@ class GLMesh extends GLGeom {
    * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState): void {
-    this.__gl.drawElements(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0)
+    this.__gl.drawElements(this.__gl.TRIANGLES, this.numTriIndices, this.indexDataType, 0)
   }
 
   /**
@@ -134,7 +131,7 @@ class GLMesh extends GLGeom {
    */
   drawInstanced(renderstate: RenderState, instanceCount: number): void {
     const gl = this.__gl
-    gl.drawElementsInstanced(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0, instanceCount)
+    gl.drawElementsInstanced(this.__gl.TRIANGLES, this.numTriIndices, this.indexDataType, 0, instanceCount)
   }
 
   /**

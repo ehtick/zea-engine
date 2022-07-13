@@ -1,7 +1,6 @@
 /* eslint-disable require-jsdoc */
-import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
-import { Material, NumberParameter, MaterialColorParam, FatPointsMaterial } from '../../SceneTree'
+import { Material, FatPointsMaterial } from '../../SceneTree'
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'
@@ -24,6 +23,14 @@ class FatPointsShader extends GLShader {
 
   bind(renderstate: RenderState, key: any): boolean {
     if (super.bind(renderstate, key)) {
+      renderstate.supportsInstancing = false
+
+      const gl = this.__gl
+      if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
+
+      renderstate.shaderAttrBuffers = gl.__quadattrbuffers
+      renderstate.shaderIndexBuffer = gl.__quadIndexBuffer
+
       renderstate.supportsInstancing = false
       return true
     }

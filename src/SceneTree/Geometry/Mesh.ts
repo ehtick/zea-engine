@@ -715,7 +715,7 @@ class Mesh extends BaseGeom {
   genBuffers(opts?: Record<string, any>): Record<string, any> {
     // Compute the normals on demand.
     // if (!('normals' in this.__vertexAttributes)) {
-    //     // this.__geom.computeVertexNormals();
+    //     // this.geom.computeVertexNormals();
     //     this.addVertexAttribute("normals", Vec3, 0.0);
     // }
 

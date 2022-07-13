@@ -8,8 +8,6 @@ import { RenderState } from '../RenderStates/index'
  * @private
  */
 class GLPoints extends GLGeom {
-  protected __numVertices: number = 9
-  protected __vboState: number = -1
   /**
    * Create a GL point.
    * @param gl - The webgl rendering context.
@@ -29,7 +27,8 @@ class GLPoints extends GLGeom {
 
     const gl = this.__gl
 
-    const geomBuffers = this.__geom.genBuffers()
+    const geomBuffers = this.geom.genBuffers()
+    this.numVertices = this.geom.getNumVertices()
 
     // eslint-disable-next-line guard-for-in
     for (const attrName in geomBuffers.attrBuffers) {
@@ -46,8 +45,7 @@ class GLPoints extends GLGeom {
       }
     }
 
-    this.__numVertices = geomBuffers.numVertices
-    this.__vboState = 2
+    this.numVertices = geomBuffers.numVertices
   }
 
   /**
@@ -56,10 +54,10 @@ class GLPoints extends GLGeom {
    */
   updateBuffers(renderstate?: RenderState): void {
     const gl = this.__gl
-    const geomBuffers = this.__geom.genBuffers()
+    const geomBuffers = this.geom.genBuffers()
 
     // Update the vertex attribute buffers
-    const numVertsChanged = geomBuffers.numVertices != this.__numVertices
+    const numVertsChanged = geomBuffers.numVertices != this.numVertices
     if (numVertsChanged) {
       this.clearBuffers()
     }
@@ -78,7 +76,7 @@ class GLPoints extends GLGeom {
     }
 
     // Cache the size so we know later if it changed (see below)
-    this.__numVertices = geomBuffers.numVertices
+    this.numVertices = geomBuffers.numVertices
     this.buffersDirty = false
   }
 
@@ -88,18 +86,21 @@ class GLPoints extends GLGeom {
    * @return - The return value.
    */
   bind(renderstate: RenderState): boolean {
-    if (renderstate.unifs.PointSize) {
+    // @ts-ignore
+    if (renderstate.shaderAttrBuffers) {
       if (this.buffersDirty) this.updateBuffers()
 
-      const gl = this.__gl
       let shaderBinding = this.__shaderBindings[renderstate.shaderkey!]
       if (!shaderBinding) {
-        if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
-
         // Merge the points attrs with the quad attrs.
-        const attrbuffers = Object.assign(this.__glattrbuffers, gl.__quadattrbuffers)
+        const attrbuffers = Object.assign(this.__glattrbuffers, renderstate.shaderAttrBuffers)
 
-        shaderBinding = generateShaderGeomBinding(this.__gl, renderstate.attrs, attrbuffers, gl.__quadIndexBuffer)
+        shaderBinding = generateShaderGeomBinding(
+          this.__gl,
+          renderstate.attrs,
+          attrbuffers,
+          renderstate.shaderIndexBuffer
+        )
         this.__shaderBindings[renderstate.shaderkey!] = shaderBinding
       }
       shaderBinding.bind(renderstate)
@@ -116,10 +117,11 @@ class GLPoints extends GLGeom {
    */
   draw(renderstate: RenderState): void {
     const gl = this.__gl
-    if (renderstate.unifs.PointSize) {
-      gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__numVertices)
+    // @ts-ignore
+    if (renderstate.shaderAttrBuffers) {
+      gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.numVertices)
     } else {
-      gl.drawArrays(gl.POINTS, 0, this.__numVertices)
+      gl.drawArrays(gl.POINTS, 0, this.numVertices)
     }
   }
 
@@ -130,7 +132,7 @@ class GLPoints extends GLGeom {
    */
   drawInstanced(renderstate: RenderState, instanceCount: number): void {
     const gl = this.__gl
-    gl.drawArraysInstanced(this.__gl.POINTS, 0, this.__numVertices, instanceCount)
+    gl.drawArraysInstanced(this.__gl.POINTS, 0, this.numVertices, instanceCount)
   }
 }
 export { GLPoints }

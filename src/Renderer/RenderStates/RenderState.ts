@@ -34,6 +34,8 @@ class RenderState {
 
   drawItemsTexture?: any
 
+  shaderAttrBuffers: Record<string, any>
+  shaderIndexBuffer: WebGLBuffer
   glGeom?: GLGeom
 
   xrviewport?: any

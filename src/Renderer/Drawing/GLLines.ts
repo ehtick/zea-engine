@@ -23,12 +23,11 @@ interface FatBuffers {
  * @private
  */
 class GLLines extends GLGeom {
-  protected __numSegIndices: number = 0
-  protected __numVertices: number = 0
+  protected numSegIndices: number = 0
   protected __fatBuffersNeedUpload: boolean = false
   protected fatBuffers: FatBuffers | null = null
   protected __buffersNeedUpload: boolean = false
-  protected __indexDataType: number = 0
+  protected indexDataType: number = 0
   /**
    * Create a GL line.
    * @param gl - The webgl rendering context.
@@ -37,8 +36,8 @@ class GLLines extends GLGeom {
   constructor(gl: WebGL12RenderingContext, lines: BaseGeom) {
     super(gl, lines)
 
-    this.__numSegIndices = 0
-    this.__numVertices = 0
+    this.numSegIndices = 0
+    this.numVertices = 0
     this.__fatBuffersNeedUpload = true
   }
 
@@ -82,9 +81,10 @@ class GLLines extends GLGeom {
   genFatBuffers(renderstate: RenderState): void {
     const gl = this.__gl
 
-    const geomBuffers = this.__geom.genBuffers()
+    this.numVertices = this.geom.getNumVertices()
+    const geomBuffers = this.geom.genBuffers()
     const indices = geomBuffers.indices
-    const numVertsChanged = geomBuffers.numVertices != this.__numVertices
+    const numVertsChanged = geomBuffers.numVertices != this.numVertices
 
     if (!gl.__quadVertexIdsBuffer) {
       gl.setupInstancedQuad()
@@ -99,7 +99,7 @@ class GLLines extends GLGeom {
 
     this.fatBuffers.drawCount = indices.length / 2
 
-    const vertexAttributes = this.__geom.getVertexAttributes()
+    const vertexAttributes = this.geom.getVertexAttributes()
     const positions = <Vec3Attribute>vertexAttributes.positions
     const lineThicknessAttr = vertexAttributes.lineThickness
 
@@ -166,8 +166,8 @@ class GLLines extends GLGeom {
         gl.bufferData(gl.ARRAY_BUFFER, makeIndices(), gl.STATIC_DRAW)
       }
     }
-    this.__numSegIndices = indices.length
-    this.__numVertices = geomBuffers.numVertices
+    this.numSegIndices = indices.length
+    this.numVertices = geomBuffers.numVertices
 
     gl.bindTexture(gl.TEXTURE_2D, null)
     renderstate.boundTextures--
@@ -182,9 +182,9 @@ class GLLines extends GLGeom {
   genBuffers(renderstate?: RenderState): void {
     const gl = this.__gl
 
-    const geomBuffers = this.__geom.genBuffers()
+    const geomBuffers = this.geom.genBuffers()
     const indices = geomBuffers.indices
-    const numVertsChanged = geomBuffers.numVertices != this.__numVertices
+    const numVertsChanged = geomBuffers.numVertices != this.numVertices
     {
       if (!this.__indexBuffer) {
         this.__indexBuffer = gl.createBuffer()
@@ -194,13 +194,13 @@ class GLLines extends GLGeom {
         // Note: the topology can change without the number of vertices changing
         // and vice versa.
         if (!this.genBufferOpts || (this.genBufferOpts && this.genBufferOpts.topologyChanged)) {
-          if (this.__numSegIndices != indices.length) {
+          if (this.numSegIndices != indices.length) {
             gl.deleteBuffer(this.__indexBuffer)
             this.__indexBuffer = gl.createBuffer()
           }
           gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer)
           gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW)
-          this.__numSegIndices = indices.length
+          this.numSegIndices = indices.length
         }
       }
 
@@ -229,14 +229,14 @@ class GLLines extends GLGeom {
       }
 
       // Cache the size so we know later if it changed
-      this.__numSegIndices = indices.length
-      this.__numVertices = geomBuffers.numVertices
+      this.numSegIndices = indices.length
+      this.numVertices = geomBuffers.numVertices
       this.__buffersNeedUpload = false
     }
 
-    if (indices instanceof Uint8Array) this.__indexDataType = this.__gl.UNSIGNED_BYTE
-    if (indices instanceof Uint16Array) this.__indexDataType = this.__gl.UNSIGNED_SHORT
-    if (indices instanceof Uint32Array) this.__indexDataType = this.__gl.UNSIGNED_INT
+    if (indices instanceof Uint8Array) this.indexDataType = this.__gl.UNSIGNED_BYTE
+    if (indices instanceof Uint16Array) this.indexDataType = this.__gl.UNSIGNED_SHORT
+    if (indices instanceof Uint32Array) this.indexDataType = this.__gl.UNSIGNED_INT
   }
 
   /**
@@ -285,7 +285,7 @@ class GLLines extends GLGeom {
    * The drawPoints method.
    */
   drawPoints(): void {
-    this.__gl.drawArrays(this.__gl.POINTS, 0, this.__geom.numVertices())
+    this.__gl.drawArrays(this.__gl.POINTS, 0, this.geom.numVertices())
   }
 
   // ////////////////////////////////
@@ -302,7 +302,7 @@ class GLLines extends GLGeom {
 
       // Note: We don't have a solution for drawing fat lines to the geom data buffer.
     } else {
-      gl.drawElements(this.__gl.LINES, this.__numSegIndices, this.__indexDataType, 0)
+      gl.drawElements(this.__gl.LINES, this.numSegIndices, this.indexDataType, 0)
     }
   }
 
@@ -317,12 +317,12 @@ class GLLines extends GLGeom {
     if (occluded) {
       gl.uniform1i(occluded.location, 0)
     }
-    gl.drawElementsInstanced(this.__gl.LINES, this.__numSegIndices, this.__indexDataType, 0, instanceCount)
+    gl.drawElementsInstanced(this.__gl.LINES, this.numSegIndices, this.indexDataType, 0, instanceCount)
 
     if (occluded) {
       gl.uniform1i(occluded.location, 1)
       gl.depthFunc(gl.GREATER)
-      gl.drawElementsInstanced(this.__gl.LINES, this.__numSegIndices, this.__indexDataType, 0, instanceCount)
+      gl.drawElementsInstanced(this.__gl.LINES, this.numSegIndices, this.indexDataType, 0, instanceCount)
       gl.depthFunc(gl.LEQUAL)
     }
   }

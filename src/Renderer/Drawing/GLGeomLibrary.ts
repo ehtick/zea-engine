@@ -1,6 +1,6 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter, Allocator1D } from '../../Utilities/index'
-import { generateShaderGeomBinding, genDataTypeDesc } from './GeomShaderBinding'
+import { generateShaderGeomBinding, genDataTypeDesc, IGeomShaderBinding } from './GeomShaderBinding'
 import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom, CompoundGeom } from '../../SceneTree/index'
 import { GLPoints } from './GLPoints'
 import { GLLines } from './GLLines'
@@ -30,8 +30,8 @@ class GLGeomLibrary extends EventEmitter {
   protected geomsDict: Map<EventEmitter, number> = new Map()
   protected glGeomsDict: Map<EventEmitter, GLGeom> = new Map()
   protected geomBuffersTmp: any[] = [] // for each geom, these are the buffer
-  protected glattrbuffers: Record<string, any> = new Map()
-  protected shaderBindings: Record<string, any> = new Map()
+  protected glattrbuffers: Record<string, any> = {}
+  protected shaderBindings: Record<string, IGeomShaderBinding> = {}
   protected attributesBufferNeedsRealloc: boolean = false
   protected attributesBufferNeedsAlloc: string[] = []
   protected attributesAllocator: Allocator1D = new Allocator1D()
@@ -585,7 +585,7 @@ class GLGeomLibrary extends EventEmitter {
     // GL state. (vertexAttribDivisor)
     const shaderBinding = this.shaderBindings[renderstate.shaderkey!]
     if (shaderBinding) {
-      shaderBinding.unbind(renderstate)
+      shaderBinding.unbind()
     }
   }
 
