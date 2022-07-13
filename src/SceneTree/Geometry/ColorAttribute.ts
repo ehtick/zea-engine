@@ -1,6 +1,7 @@
 import { Attribute } from './Attribute'
 import { Color } from '../../Math/Color'
 import { Registry } from '../../Registry'
+import { Xfo } from '../../Math'
 
 /**
  * Class representing an attribute.
@@ -94,6 +95,16 @@ class ColorAttribute extends Attribute {
    */
   setSplitVertexValue(vertex: number, face: number, value: Color): void {
     this.setSplitVertexValue_array(vertex, face, value.asArray())
+  }
+
+  merge(other: ColorAttribute, xfo: Xfo = new Xfo()) {
+    const prevNumValues: number = this.getCount()
+    const addedValues = other.getCount()
+    this.setCount(prevNumValues + addedValues)
+    for (let i = 0; i < addedValues; i++) {
+      this.setValue(prevNumValues + i, other.getValue(i))
+    }
+    this.splitValues = [...this.splitValues, ...other.splitValues]
   }
 }
 

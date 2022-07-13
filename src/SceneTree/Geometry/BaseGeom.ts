@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Vec2, Vec3, Box2, Box3, Color } from '../../Math/index'
+import { Vec2, Vec3, Box2, Box3, Color, Xfo } from '../../Math/index'
 import { ParameterOwner } from '../ParameterOwner'
 import { Attribute } from './Attribute'
 import { Vec3Attribute } from './Vec3Attribute'
@@ -256,6 +256,30 @@ class BaseGeom extends ParameterOwner {
     this.__boundingBoxDirty = false
   }
 
+  /**
+   * Merges a separate geometry into this one. Similar to a 'union' boolean operation.
+   * @param other the other geom that will be merged into this one
+   * @param xfo the transformation to be applied to the other geom as it is merged in.
+   */
+  merge(other: BaseGeom, xfo: Xfo = new Xfo()) {
+    const prevNumVerts = this.getNumVertices()
+    const addedVerts = other.getNumVertices()
+
+    for (const [attrName, attr] of this.__vertexAttributes) {
+      const otherAttr = other.getVertexAttribute(attrName)
+      if (otherAttr) {
+        if (attrName == 'positions') attr.merge(otherAttr, xfo)
+        else if (attrName == 'normals') attr.merge(otherAttr, new Xfo(new Vec3(), xfo.ori))
+      }
+    }
+
+    // Note: all the attributes have already been resized, so
+    // this is just a final check.
+    this.setNumVertices(prevNumVerts + addedVerts)
+
+    this.updateBoundingBox()
+  }
+
   // ////////////////////////////////////////
   // Metadata
 
@@ -329,7 +353,7 @@ class BaseGeom extends ParameterOwner {
    *
    * @param reader - The reader value.
    */
-  loadBaseGeomBinary(reader: BinReader, context?: Record<string, any>): void {
+  protected loadBaseGeomBinary(reader: BinReader, context?: Record<string, any>): void {
     this.name = reader.loadStr()
     const flags = reader.loadUInt8()
     this.debugColor = reader.loadRGBFloat32Color()

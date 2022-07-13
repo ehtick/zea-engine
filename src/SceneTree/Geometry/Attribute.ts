@@ -5,6 +5,7 @@ import { BaseClass } from '../../Utilities/BaseClass'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { Mesh } from './Mesh'
 import { BinReader } from '../../SceneTree/BinReader'
+import { Xfo } from '../../Math'
 
 function approxEqual(a: Float32Array, b: Float32Array): boolean {
   return !a.some((value, index) => Math.abs(b[index] - value) > 0.001)
@@ -20,22 +21,17 @@ class Attribute extends BaseClass {
   public dataTypeName: string
   public stride: number
   protected normalized!: boolean
-  protected data: Float32Array
+  protected data: Float32Array = new Float32Array(0)
 
   protected mesh!: Mesh
-  protected splitValues: Array<Float32Array>
-  protected splits: Record<number, Record<number, number>>
+  protected splitValues: Array<Float32Array> = []
+  protected splits: Record<number, Record<number, number>> = {}
 
   constructor(dataTypeName: string, stride: number) {
     super()
-
-    this.data = new Float32Array(0)
     this.dataTypeName = dataTypeName
     this.stride = stride
     this.initRange(0)
-
-    this.splits = {}
-    this.splitValues = []
   }
 
   /**
@@ -139,6 +135,20 @@ class Attribute extends BaseClass {
    */
   setFloat32Value(index: number, value: number): void {
     this.data[index] = value
+  }
+
+  merge(other: Attribute, xfo: Xfo = new Xfo()) {
+    const prevNumValues = this.data.length
+    const addedValues = other.data.length
+    const newLength = prevNumValues + addedValues
+    const data = new Float32Array(newLength)
+    data.set(this.data, 0)
+    for (let i = 0; i < addedValues; i++) {
+      data[prevNumValues + i] = other.data[i]
+    }
+    this.data = data
+
+    this.splitValues = [...this.splitValues, ...other.splitValues]
   }
 
   // //////////////////////////////////////////////////

@@ -3,6 +3,7 @@
 import { BaseGeom } from './BaseGeom'
 import { Registry } from '../../Registry'
 import { BinReader } from '../../SceneTree/BinReader'
+import { Xfo } from '../../Math'
 /**
  *
  * Class representing lines primitive drawing type, connecting vertices using the specified indices.
@@ -110,6 +111,25 @@ class Lines extends BaseGeom {
     const numSegments = this.getNumSegments()
     if (line < numSegments) return this.__indices[line * 2 + lineVertex]
     return -1
+  }
+
+  /**
+   * Merges a separate geometry into this one. Similar to a 'union' boolean operation.
+   * @param other the other geom that will be merged into this one
+   * @param xfo the transformation to be applied to the other geom as it is merged in.
+   */
+  merge(other: Lines, xfo: Xfo = new Xfo()) {
+    const prevNumVerts = this.getNumVertices()
+    super.merge(other, xfo)
+
+    const otheIndices = other.__indices
+    const indices = new Uint32Array(this.__indices.length + otheIndices.length)
+    indices.set(this.__indices, 0)
+    indices.set(
+      otheIndices.map((index) => index + prevNumVerts),
+      this.__indices.length
+    )
+    this.__indices = indices
   }
 
   // ////////////////////////////////////////

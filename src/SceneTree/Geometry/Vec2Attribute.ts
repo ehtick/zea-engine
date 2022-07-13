@@ -1,6 +1,7 @@
 import { Attribute } from './Attribute'
 import { Vec2 } from '../../Math/Vec2'
 import { Registry } from '../../Registry'
+import { Xfo } from '../../Math'
 
 /**
  * Class representing an attribute.
@@ -94,6 +95,16 @@ class Vec2Attribute extends Attribute {
    */
   setSplitVertexValue(vertex: number, face: number, value: Vec2): void {
     this.setSplitVertexValue_array(vertex, face, <Float32Array>value.asArray())
+  }
+
+  merge(other: Vec2Attribute, xfo: Xfo = new Xfo()) {
+    const prevNumValues: number = this.getCount()
+    const addedValues = other.getCount()
+    this.setCount(prevNumValues + addedValues)
+    for (let i = 0; i < addedValues; i++) {
+      this.setValue(prevNumValues + i, other.getValue(i))
+    }
+    this.splitValues = [...this.splitValues, ...other.splitValues]
   }
 }
 

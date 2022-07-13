@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html class="h-full">
+  <head>
+    <title>geom-merge - Zea Engine</title>
+    <meta charset="UTF-8" />
+
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
+
+    <script src="../dist/index.umd.js"></script>
+
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Xfo, Color, Cone, Cylinder, Sphere, SimpleSurfaceMaterial, GeomItem } = zeaEngine
+
+      const domElement = document.getElementById('viewport')
+
+      const scene = new Scene()
+      // scene.setupGrid(10.0, 10)
+
+      const renderer = new GLRenderer(domElement, { antialias: false })
+      renderer.setScene(scene)
+
+      const standardMaterial = new SimpleSurfaceMaterial('surfaces')
+      standardMaterial.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
+      const xfo = new Xfo()
+      xfo.tr.z = 1.0
+
+      const cylinder = new Cylinder(0.1, 1.0, 12, 2, true, true, false, false)
+      cylinder.merge(new Sphere(0.2, 12, 12, false, false))
+      cylinder.merge(new Cone(0.4, 1.0, 12, true, false, false), xfo)
+      const geomItem1 = new GeomItem('Arrow1', cylinder, standardMaterial)
+      geomItem1.globalXfoParam.value.tr.x = -1
+      scene.getRoot().addChild(geomItem1)
+
+      const cone = new Cone(0.4, 1.0, 12, true, false, false)
+      cone.merge(new Sphere(0.2, 12, 12, false, false))
+      cone.merge(new Cylinder(0.1, 1.0, 12, 2, true, true, false, false), xfo)
+
+      const geomItem2 = new GeomItem('Arrow2', cone, standardMaterial)
+      geomItem2.globalXfoParam.value.tr.x = 1
+      scene.getRoot().addChild(geomItem2)
+
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        renderer.forceRender()
+        statusElement.textContent = text
+      }
+      setStatusText('done-loading')
+
+      // }}}
+    </script>
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="h-full">
+      <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+    </div>
+  </body>
+</html>

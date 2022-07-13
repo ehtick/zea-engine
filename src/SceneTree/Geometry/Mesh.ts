@@ -9,6 +9,7 @@ import { Registry } from '../../Registry'
 import { Vec3Attribute } from './Vec3Attribute'
 import { BinReader } from '../BinReader'
 import { AttrBuffer } from '../../Renderer/types/renderer'
+import { Xfo } from '../../Math'
 
 /**
  * The Mesh class provides a flexible and fast polygon mesh representation. It supports polygons of arbitrary complexity,
@@ -637,6 +638,70 @@ class Mesh extends BaseGeom {
       }
     }
     return Uint32Array.from(hardEdges)
+  }
+
+  /**
+   * Merges a separate geometry into this one. Similar to a 'union' boolean operation.
+   * @param other the other geom that will be merged into this one
+   * @param xfo the transformation to be applied to the other geom as it is merged in.
+   */
+  merge(other: Mesh, xfo: Xfo = new Xfo()) {
+    const prevNumVerts = this.getNumVertices()
+    super.merge(other, xfo)
+
+    const otherFaceVertexIndices = other.__faceVertexIndices
+    const faceVertexIndices = new Uint32Array(this.__faceVertexIndices.length + otherFaceVertexIndices.length)
+
+    const otherFaceCounts = other.getFaceCounts()
+
+    let indexOffset = 0
+    let otherIndexOffset = 0
+    let mergedIndexOffset = 0
+
+    const numCounts = Math.max(this.faceCounts.length, otherFaceCounts.length)
+    for (let i = 0; i < numCounts; i++) {
+      if (this.faceCounts.length > i) {
+        // Add 'this' indices
+        const numIndicesThis = this.faceCounts[i] * (i + 3)
+        faceVertexIndices.set(
+          this.__faceVertexIndices.slice(indexOffset, indexOffset + numIndicesThis),
+          mergedIndexOffset
+        )
+        indexOffset += numIndicesThis
+        mergedIndexOffset += numIndicesThis
+      }
+
+      if (otherFaceCounts.length > i) {
+        // Add the 'other' indices
+        const numIndicesOther = otherFaceCounts[i] * (i + 3)
+        faceVertexIndices.set(
+          otherFaceVertexIndices
+            .slice(otherIndexOffset, otherIndexOffset + numIndicesOther)
+            .map((index) => index + prevNumVerts),
+          mergedIndexOffset
+        )
+        otherIndexOffset += numIndicesOther
+        mergedIndexOffset += numIndicesOther
+        if (this.faceCounts.length == i) this.faceCounts[i] = 0
+        this.faceCounts[i] += otherFaceCounts[i]
+      }
+    }
+
+    this.__faceVertexIndices = faceVertexIndices
+
+    // Note: the merge does not correctly merge split values, as it is quite complex
+    // and we don't have time now. We can come back to this, but the splits system is overly complex
+    // and we can probably re-write.
+    // for (const [attrName, attr] of this.__vertexAttributes) {
+    //   const otherAttr = other.getVertexAttribute(attrName)
+    //   if (otherAttr) {
+    //     const thisSplits = attr.getSplits()
+    //     const otherSplits = otherAttr.getSplits()
+    //     // for (let key in otherSplits) {
+    //     //   thisSplits[key] = otherSplits[key]
+    //     // }
+    //   }
+    // }
   }
 
   // ////////////////////////////////////////

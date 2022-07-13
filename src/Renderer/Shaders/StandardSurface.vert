@@ -62,7 +62,7 @@ void main(void) {
   v_worldPos      = (modelMatrix * pos).xyz;
 
   mat3 normalMatrix = mat3(transpose(inverse(modelViewMatrix)));
-  v_viewNormal    = normalize(normalMatrix * normals);
+  v_viewNormal    = normalMatrix * normals; // Note: we normalize in the fragment shader.
   
   // offset slightly the lines and points to make them clearly defined.
   // This ensures that lines drawn over surfaces are solid and not clipped

@@ -1,6 +1,7 @@
 import { Attribute } from './Attribute'
 import { Vec3 } from '../../Math/Vec3'
 import { Registry } from '../../Registry'
+import { Xfo } from '../../Math'
 
 /**
  * Class representing an attribute.
@@ -94,6 +95,23 @@ class Vec3Attribute extends Attribute {
    */
   setSplitVertexValue(vertex: number, face: number, value: Vec3): void {
     this.setSplitVertexValue_array(vertex, face, value.asArray())
+  }
+
+  merge(other: Vec3Attribute, xfo: Xfo = new Xfo()) {
+    const prevNumValues: number = this.getCount()
+    const addedValues = other.getCount()
+
+    // We cached these values before calling 'setCount'.
+    // Maybe 'setCount' shoulnd't clear the splits. It seems heavy, but I don't want to change anything.
+    // We should just re-write the system without splits anyway.
+    // const splitValues = [...this.splitValues, ...other.splitValues]
+    // const splits = [...this.splits, ...other.splits]
+
+    this.setCount(prevNumValues + addedValues)
+    for (let i = 0; i < addedValues; i++) {
+      this.setValue(prevNumValues + i, xfo.transformVec3(other.getValue(i)))
+    }
+    // this.splitValues = [...this.splitValues, ...other.splitValues]
   }
 }
 

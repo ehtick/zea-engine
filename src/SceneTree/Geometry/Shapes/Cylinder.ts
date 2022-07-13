@@ -64,7 +64,16 @@ class Cylinder extends ProceduralMesh {
    * @param caps - A boolean indicating whether the ends of the cylinder are capped or open.
    * @param baseZAtZero - The baseZAtZero value.
    */
-  constructor(radius = 0.5, height = 1.0, sides = 32, loops = 2, caps = true, baseZAtZero = false) {
+  constructor(
+    radius = 0.5,
+    height = 1.0,
+    sides = 32,
+    loops = 2,
+    caps = true,
+    baseZAtZero = false,
+    addNormals = true,
+    addTextureCoords = true
+  ) {
     super()
     this.topologyParams = []
     if (isNaN(radius) || isNaN(height) || isNaN(sides) || isNaN(loops)) throw new Error('Invalid geom args')
@@ -80,8 +89,8 @@ class Cylinder extends ProceduralMesh {
     this.capsParam = this.addParameter(new BooleanParameter('Caps', caps)) as BooleanParameter
     this.baseZAtZeroParam = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero)) as BooleanParameter
 
-    this.addVertexAttribute('texCoords', new Vec2Attribute())
-    this.addVertexAttribute('normals', new Vec3Attribute()) // TODO: review args/params.
+    if (addNormals) this.addVertexAttribute('normals', new Vec3Attribute()) // TODO: review args/params.
+    if (addTextureCoords) this.addVertexAttribute('texCoords', new Vec2Attribute())
 
     this.topologyParams.push('Sides')
     this.topologyParams.push('Loops')
@@ -245,7 +254,10 @@ class Cylinder extends ProceduralMesh {
     }
     this.dirtyTopology = false
     this.dirtyVertices = false
-    this.computeVertexNormals()
+    const normals = <Vec3Attribute>this.getVertexAttribute('normals')
+    if (normals) {
+      this.computeVertexNormals()
+    }
   }
 }
 
