@@ -28,8 +28,13 @@ class FatPointsShader extends GLShader {
       const gl = this.__gl
       if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
 
-      renderstate.shaderAttrBuffers = gl.__quadattrbuffers
-      renderstate.shaderIndexBuffer = gl.__quadIndexBuffer
+      renderstate.shaderInstancedGeom = {
+        attrBuffers: gl.__quadattrbuffers,
+        indexBuffer: gl.__quadIndexBuffer,
+        indexDataType: gl.UNSIGNED_BYTE,
+        numVertices: 4,
+        numTriIndices: 6,
+      }
 
       renderstate.supportsInstancing = false
       return true

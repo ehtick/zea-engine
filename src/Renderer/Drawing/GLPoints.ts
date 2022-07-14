@@ -87,19 +87,19 @@ class GLPoints extends GLGeom {
    */
   bind(renderstate: RenderState): boolean {
     // @ts-ignore
-    if (renderstate.shaderAttrBuffers) {
+    if (renderstate.shaderInstancedGeom) {
       if (this.buffersDirty) this.updateBuffers()
 
       let shaderBinding = this.__shaderBindings[renderstate.shaderkey!]
       if (!shaderBinding) {
         // Merge the points attrs with the quad attrs.
-        const attrbuffers = Object.assign(this.__glattrbuffers, renderstate.shaderAttrBuffers)
+        const attrbuffers = Object.assign(this.__glattrbuffers, renderstate.shaderInstancedGeom.attrBuffers)
 
         shaderBinding = generateShaderGeomBinding(
           this.__gl,
           renderstate.attrs,
           attrbuffers,
-          renderstate.shaderIndexBuffer
+          renderstate.shaderInstancedGeom.indexBuffer
         )
         this.__shaderBindings[renderstate.shaderkey!] = shaderBinding
       }
@@ -118,8 +118,14 @@ class GLPoints extends GLGeom {
   draw(renderstate: RenderState): void {
     const gl = this.__gl
     // @ts-ignore
-    if (renderstate.shaderAttrBuffers) {
-      gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.numVertices)
+    if (renderstate.shaderInstancedGeom) {
+      gl.drawElementsInstanced(
+        gl.TRIANGLES,
+        renderstate.shaderInstancedGeom.numTriIndices,
+        renderstate.shaderInstancedGeom.indexDataType,
+        0,
+        this.numVertices
+      )
     } else {
       gl.drawArrays(gl.POINTS, 0, this.numVertices)
     }

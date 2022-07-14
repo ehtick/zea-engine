@@ -298,7 +298,7 @@ class GLLines extends GLGeom {
   draw(renderstate: RenderState): void {
     const gl = this.__gl
     if (renderstate.unifs.LineThickness && gl.floatTexturesSupported) {
-      gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.fatBuffers!.drawCount)
+      gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_BYTE, 0, this.fatBuffers!.drawCount)
 
       // Note: We don't have a solution for drawing fat lines to the geom data buffer.
     } else {

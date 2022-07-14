@@ -5,7 +5,7 @@ import { GLShader } from '../GLShader'
 import { Shaderopts, Uniforms } from '../types/renderer'
 import { WebGL12RenderingContext } from '../types/webgl'
 
-export interface ViewportRenderState {
+interface ViewportRenderState {
   region: number[]
   viewMatrix: Mat4
   projectionMatrix?: Mat4
@@ -13,7 +13,16 @@ export interface ViewportRenderState {
   viewportFrustumSize?: Vec2
   fovY?: number
 }
-export interface StackObj {
+
+interface ShaderInstanceGeom {
+  attrBuffers: Record<string, any>
+  indexBuffer?: WebGLBuffer
+  indexDataType?: number
+  numVertices?: number
+  numTriIndices?: number
+}
+
+interface StackObj {
   enabled: Set<number>
   disabled: Set<number>
   functions: Record<string, number | number[]>
@@ -34,8 +43,7 @@ class RenderState {
 
   drawItemsTexture?: any
 
-  shaderAttrBuffers: Record<string, any>
-  shaderIndexBuffer: WebGLBuffer
+  shaderInstancedGeom?: ShaderInstanceGeom
   glGeom?: GLGeom
 
   xrviewport?: any
@@ -158,4 +166,4 @@ class RenderState {
   }
 }
 
-export { RenderState }
+export { RenderState, ViewportRenderState, ShaderInstanceGeom }

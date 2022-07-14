@@ -110,7 +110,7 @@ const create3DContext = function (
     // ////////////////////////////
     // Generate a buffer for drawing a full screen quad.
     const vertexIDs = new Float32Array([0.0, 1.0, 2.0, 3.0])
-    const indices = new Uint16Array([0, 1, 2, 2, 1, 3])
+    const indices = new Uint8Array([0, 1, 2, 2, 1, 3])
 
     this.__quadVertexIdsBuffer = this.createBuffer()
     this.bindBuffer(this.ARRAY_BUFFER, this.__quadVertexIdsBuffer)
@@ -131,7 +131,7 @@ const create3DContext = function (
     }
   }
   context.drawQuad = function () {
-    this.drawElements(this.TRIANGLES, 6, this.UNSIGNED_SHORT, 0)
+    this.drawElements(this.TRIANGLES, 6, this.UNSIGNED_BYTE, 0)
   }
 
   return context

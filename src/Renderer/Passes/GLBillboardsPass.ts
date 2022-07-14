@@ -517,7 +517,7 @@ class GLBillboardsPass extends GLPass {
       }
 
       renderstate.bindViewports(unifs, () => {
-        gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.drawCount)
+        gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_BYTE, 0, this.drawCount)
       })
     }
   }
