@@ -29,7 +29,13 @@
       const promises = []
 
       const asset = new CADAsset()
-      asset.load('data/zcad/3.9.1/Dead_eye_bearing.stp.zcad')
+      asset.load('data/zcad/3.12.0/Dead_eye_bearing.stp.zcad').then(() => {
+        asset.traverse((item) => {
+          if (item instanceof CADBody) {
+            item.setShatterState(true)
+          }
+        })
+      })
       promises.push(new Promise((resolve) => asset.getGeometryLibrary().on('loaded', resolve)))
       asset.globalXfoParam.value = new Xfo(new Vec3(-85, 0, 0))
       scene.getRoot().addChild(asset)
@@ -52,35 +58,18 @@
       renderer.getViewport().on('pointerMove', (event) => {
         if (event.intersectionData) {
           const item = event.intersectionData.geomItem
-          if (item) {
-            let key
-            if (event.intersectionData.componentId >= 0) {
-              key = 'pointerOverGeom:' + event.intersectionData.componentId
-              if (key != highlightKey) {
-                if (highlightedItem) highlightedItem.removeHighlight(highlightKey, true)
-                highlightedItem = item
-                highlightKey = key
-                highlightedItem.addHighlight(highlightKey, highlightColor, true)
-              }
-            } else {
-              if (item instanceof CADBody && shatterGeomsOnMouseOver) {
-                item.setShatterState(true)
-                return
-              }
-              if (highlightedItem && item != highlightedItem) {
-                highlightedItem.removeHighlight(highlightKey, true)
-              }
-              highlightedItem = filterItem(item)
-              highlightKey = 'pointerOverGeom'
+          if (item && event.intersectionData.componentId >= 0) {
+            const key = 'pointerOverGeom:' + event.intersectionData.componentId
+            if (key != highlightKey) {
+              if (highlightedItem) highlightedItem.removeHighlight(highlightKey, true)
+              highlightedItem = item
+              highlightKey = key
               highlightedItem.addHighlight(highlightKey, highlightColor, true)
             }
           }
         } else {
           if (highlightedItem) {
             highlightedItem.removeHighlight(highlightKey, true)
-            if (highlightedItem instanceof CADBody) {
-              highlightedItem.setShatterState(false)
-            }
             highlightedItem = null
             highlightKey = ''
           }
@@ -89,9 +78,17 @@
       renderer.getViewport().on('pointerDown', (event) => {
         if (event.intersectionData) {
           if (event.intersectionData.componentId >= 0) {
-            const subGeom = event.intersectionData.componentId
+            const subGeomId = event.intersectionData.componentId
             const geomItem = event.intersectionData.geomItem
-            geomItem.geomParam.value.assignSubGeomMaterial(subGeom, standardMaterial)
+            geomItem.geomParam.value.assignSubGeomMaterial(subGeomId, standardMaterial)
+
+            const geom = geomItem.geomParam.value
+            const subGeom = geom.subGeoms[subGeomId]
+            console.log(subGeom.name)
+            const json = subGeom.toJSON()
+            for (let key in json.params) {
+              console.log(key, json.params[key])
+            }
           }
         }
       })
