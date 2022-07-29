@@ -289,6 +289,8 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       this._drawItem(renderstate, transparentItem, cache)
     }
 
+    if (cache.currentglShader) cache.currentglShader.unbind(renderstate)
+
     // if (cache.currentGLGeom) cache.currentGLGeom.unbind(renderstate)
   }
 
@@ -412,6 +414,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       this._drawItem(renderstate, transparentItem, cache)
     }
 
+    if (cache.currentglShader) cache.currentglShader.unbind(renderstate)
     if (cache.currentGLGeom) cache.currentGLGeom.unbind(renderstate)
   }
 
@@ -423,15 +426,9 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const gl = this.__gl!
 
     renderstate.pushGLStack()
-    // renderstate.glDisable(gl.BLEND)
     renderstate.glEnable(gl.DEPTH_TEST)
     renderstate.glEnable(gl.CULL_FACE)
 
-    // gl.disable(gl.BLEND)
-    // gl.disable(gl.CULL_FACE)
-    // gl.enable(gl.DEPTH_TEST)
-    // gl.depthFunc(gl.LESS)
-    // gl.depthMask(true)
 
     // eslint-disable-next-line guard-for-in
     for (const shaderName in this.__glShaderGeomSets) {
