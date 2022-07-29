@@ -28,8 +28,8 @@ class GLMesh extends GLGeom {
   /**
    * The genBuffers method.
    */
-  genBuffers(): void {
-    super.genBuffers()
+  genBuffers(renderstate: RenderState): void {
+    super.genBuffers(renderstate)
 
     const gl = this.__gl
 
@@ -83,11 +83,11 @@ class GLMesh extends GLGeom {
    * The updateBuffers method.
    * @param opts - The options object.
    */
-  updateBuffers(renderstate?: RenderState): void {
+  updateBuffers(renderstate: RenderState): void {
     const gl = this.__gl
 
     if (this.numVertices != this.geom.getNumVertices()) {
-      this.genBuffers()
+      this.genBuffers(renderstate)
       return
     }
 

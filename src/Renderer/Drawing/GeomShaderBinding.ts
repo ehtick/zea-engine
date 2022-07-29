@@ -15,36 +15,43 @@ const genDataTypeDesc = (gl: WebGL12RenderingContext, attrDataType: any) => {
   let dimension
   let elementSize
   let dataType
+  let isInteger = false
   switch (attrDataType) {
     case 'UInt8':
       dimension = 1
       elementSize = 4
       dataType = gl.UNSIGNED_BYTE
+      isInteger = true
       break
     case 'SInt8':
       dimension = 1
       elementSize = 4
       dataType = gl.BYTE
+      isInteger = true
       break
     case 'UInt16':
       dimension = 1
       elementSize = 4
       dataType = gl.UNSIGNED_SHORT
+      isInteger = true
       break
     case 'SInt16':
       dimension = 1
       elementSize = 4
       dataType = gl.SHORT
+      isInteger = true
       break
     case 'UInt32':
       dimension = 1
       elementSize = 4
       dataType = gl.UNSIGNED_INT
+      isInteger = true
       break
     case 'SInt32':
       dimension = 1
       elementSize = 4
       dataType = gl.INT
+      isInteger = true
       break
     case 'Float32':
       dimension = 1
@@ -80,6 +87,7 @@ const genDataTypeDesc = (gl: WebGL12RenderingContext, attrDataType: any) => {
     dimension,
     elementSize,
     dataType,
+    isInteger
   }
 }
 abstract class IGeomShaderBinding {
@@ -142,19 +150,22 @@ class GeomShaderBinding extends IGeomShaderBinding {
         geomAttrBuffer.offset != undefined
           ? geomAttrBuffer.offset * geomAttrDesc.dimension * geomAttrDesc.elementSize
           : 0
-      const normalized = geomAttrBuffer.normalized == true
       const instanced = shaderAttrDesc.instanced
 
       gl.enableVertexAttribArray(location)
       gl.bindBuffer(gl.ARRAY_BUFFER, geomAttrBuffer.buffer)
-      gl.vertexAttribPointer(location, geomAttrDesc.dimension, geomAttrDesc.dataType, normalized, stride, offset)
 
-      if (gl.vertexAttribDivisor) {
-        if (instanced == true) {
-          gl.vertexAttribDivisor(location, 1) // This makes it instanced
-        } else {
-          gl.vertexAttribDivisor(location, 0) // This makes it not-instanced
-        }
+      if (geomAttrDesc.isInteger)
+        gl.vertexAttribIPointer(location, geomAttrDesc.dimension, geomAttrDesc.dataType, stride, offset)
+      else {
+        const normalized = geomAttrBuffer.normalized == true
+        gl.vertexAttribPointer(location, geomAttrDesc.dimension, geomAttrDesc.dataType, normalized, stride, offset)
+      }
+      
+      if (instanced == true) {
+        gl.vertexAttribDivisor(location, 1) // This makes it instanced
+      } else {
+        gl.vertexAttribDivisor(location, 0) // This makes it not-instanced
       }
 
       // console.log("Binding :" + attrName + " to attr:" + location + " count:" + geomAttrBuffer.count + " dimension:" + dimension  + " stride:" + stride  + " offset:" + offset + " normalized:" + normalized + " instanced:" + instanced);
@@ -244,13 +255,17 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
         shaderAttrDesc.offset != undefined
           ? shaderAttrDesc.offset * geomAttrDesc.dimension * geomAttrDesc.elementSize
           : 0
-      const normalized = geomAttrBuffer.normalized == true
       const instanced = shaderAttrDesc.instanced
 
       gl.enableVertexAttribArray(location)
       gl.bindBuffer(gl.ARRAY_BUFFER, geomAttrBuffer.buffer)
-      gl.vertexAttribPointer(location, geomAttrDesc.dimension, geomAttrDesc.dataType, normalized, stride, offset)
 
+      if (geomAttrDesc.isInteger)
+        gl.vertexAttribIPointer(location, geomAttrDesc.dimension, geomAttrDesc.dataType, stride, offset)
+      else {
+        const normalized = geomAttrBuffer.normalized == true
+        gl.vertexAttribPointer(location, geomAttrDesc.dimension, geomAttrDesc.dataType, normalized, stride, offset)
+      }
       if (gl.vertexAttribDivisor) {
         if (instanced == true) {
           gl.vertexAttribDivisor(location, 1) // This makes it instanced

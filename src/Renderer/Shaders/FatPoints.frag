@@ -6,7 +6,9 @@ import 'constants.glsl'
 
 
 uniform color BaseColor;
-uniform float Rounded;
+uniform sampler2D BaseColorTex;
+uniform int BaseColorTexType;
+
 uniform float BorderWidth;
 uniform int highlightSubIndex;
 
@@ -14,6 +16,7 @@ uniform int highlightSubIndex;
 varying vec2 v_texCoord;
 varying vec3 v_viewPos;
 varying vec2 v_geomItemIds;
+varying vec4 v_color;
 
 #ifdef ENABLE_ES3
 out vec4 fragColor;
@@ -45,7 +48,14 @@ if (dist > 0.5)
     // Modulate the lighting using the texture coord so the point looks round.
     float NdotV = cos(dist * PI);
 
-    fragColor = BaseColor * mix(1.0, NdotV, Rounded);
+    vec4 baseColor = BaseColor * v_color;
+    ivec2 texSize = textureSize(BaseColorTex, 0);
+    if (texSize.x == 1 && texSize.y > 1) {
+      vec4 gradient = texture2D(BaseColorTex, vec2(0.5, dist * 2.0));
+      baseColor *= gradient;
+    }
+
+    fragColor = baseColor;
   }
 
 #elif defined(DRAW_GEOMDATA)

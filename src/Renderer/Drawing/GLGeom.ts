@@ -72,7 +72,7 @@ class GLGeom extends RefCounted {
    * The updateBuffers method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  updateBuffers(renderstate?: RenderState): void {
+  updateBuffers(renderstate: RenderState): void {
     this.genBuffers(renderstate)
     this.buffersDirty = false
   }
@@ -88,7 +88,7 @@ class GLGeom extends RefCounted {
   bind(renderstate: RenderState): void {
     if (this.__destroyed) throw new Error('Error binding a destroyed geom')
 
-    if (this.buffersDirty) this.updateBuffers()
+    if (this.buffersDirty) this.updateBuffers(renderstate)
 
     let shaderBinding = this.__shaderBindings[renderstate.shaderkey!]
     if (!shaderBinding) {

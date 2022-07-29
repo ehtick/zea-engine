@@ -1,10 +1,10 @@
-describe('compound-geom-changing-face-materials', () => {
+describe('zcad-changing-face-materials', () => {
   it('Captures snapshots of variants', () => {
-    cy.visit(`testing-e2e/compound-geom-changing-face-materials.html`)
+    cy.visit(`testing-e2e/zcad-changing-face-materials.html`)
 
     cy.get('#status').should('have.text', `done-loading`)
 
-    const test = 'compound-geom-changing-face-materials'
+    const test = 'zcad-changing-face-materials'
     cy.get('canvas').percySnapshot(test)
     {
       const variant = 'variant-01'

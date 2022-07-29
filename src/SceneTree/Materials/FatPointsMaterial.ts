@@ -6,9 +6,8 @@ import { Material } from '../Material'
 import { CloneContext } from '../CloneContext'
 
 export class FatPointsMaterial extends Material {
-  baseColorParam: MaterialColorParam = new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5))
+  baseColorParam: MaterialColorParam = new MaterialColorParam('BaseColor', new Color(1, 1, 1))
   pointSizeParam: NumberParameter = new NumberParameter('PointSize', 1)
-  roundedParam: NumberParameter = new NumberParameter('Rounded', 1)
   borderWidthParam: NumberParameter = new NumberParameter('BorderWidth', 0.2)
   overlayParam: NumberParameter = new NumberParameter('Overlay', 0.0)
 
@@ -17,7 +16,6 @@ export class FatPointsMaterial extends Material {
     this.__shaderName = 'FatPointsShader'
     this.addParameter(this.baseColorParam)
     this.addParameter(this.pointSizeParam)
-    this.addParameter(this.roundedParam)
     this.addParameter(this.borderWidthParam)
     this.addParameter(this.overlayParam)
   }

@@ -435,7 +435,7 @@ class GLBillboardsPass extends GLPass {
    * The sort method.
    * @param cameraPos - The cameraPos value.
    */
-  sort(cameraPos: any): void {
+  sort(cameraPos: Vec3): void {
     for (const billboardData of this.billboards) {
       const { billboard } = billboardData
       if (billboard && billboard.isVisible()) {
