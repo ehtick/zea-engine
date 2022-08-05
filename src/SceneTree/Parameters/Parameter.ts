@@ -239,6 +239,10 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
     }
   }
 
+  isDrivenByOperator(): boolean {
+    return this.firstOP_WRITE == 0 && this.boundOutputs.length > 0
+  }
+
   /**
    * Dirties this Parameter so subsequent calls to `getValue` will cause an evaluation of its bound operators.
    *

@@ -222,6 +222,7 @@ class ParameterOwner extends EventEmitter {
     const paramsJSON: Record<string, unknown> = {}
     let savedParams = 0
     for (const param of this.params) {
+      if (param.isDrivenByOperator()) continue
       const paramJSON = param.toJSON(context)
       if (paramJSON) {
         paramsJSON[param.getName()] = paramJSON

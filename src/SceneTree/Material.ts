@@ -254,17 +254,9 @@ class Material extends BaseItem {
     }
     this.setShaderName(j.shader)
     super.fromJSON(j, context)
-    // let props = this.params;
-    // for (let key in j) {
-    //     let value;
-    //     if (j[key] instanceof Object) {
-    //         value = new Color();
-    //         value.fromJSON(j[key]);
-    //     } else {
-    //         value = j[key];
-    //     }
-    //     this.addParameter(paramName, value);
-    // }
+
+    this.__checkOpacity()
+    this.__checkTextures()
   }
 
   /**
@@ -284,50 +276,7 @@ class Material extends BaseItem {
     }
     this.setShaderName(shaderName)
 
-    if (context.versions['zea-engine'].compare([0, 0, 3]) < 0) {
-      throw `Loading zcad files of version ${context.versions['zea-engine']} is not longer support`
-      this.setName(reader.loadStr())
-
-      const capitalizeFirstLetter = function (string: string) {
-        return string.charAt(0).toUpperCase() + string.slice(1)
-      }
-
-      const numParams = reader.loadUInt32()
-      for (let i = 0; i < numParams; i++) {
-        const paramName = capitalizeFirstLetter(reader.loadStr())
-        const paramType = reader.loadStr()
-        let value
-        if (paramType == 'MaterialColorParam') {
-          value = reader.loadRGBAFloat32Color()
-          // If the value is in linear space, then we should convert it to gamma space.
-          // Note: !! this should always be done in preprocessing...
-          value.applyGamma(2.2)
-        } else {
-          value = reader.loadFloat32()
-        }
-        const textureName = reader.loadStr()
-
-        // console.log(paramName +":" + value);
-        let param = <MaterialColorParam | MaterialFloatParam>this.getParameter(paramName)
-        if (param instanceof MaterialColorParam) {
-          ;(<MaterialColorParam>param).setValue(value)
-        } else {
-          // param = <MaterialColorParam | MaterialFloatParam>(
-          //   // this.addParameter(generateParameterInstance(paramName, value))
-          // )
-        }
-        if (textureName != '' && param.setImage) {
-          if (context.assetItem.materialLibrary.hasImage(textureName)) {
-            // console.log(paramName +":" + textureName + ":" + context.materialLibrary[textureName].resourcePath);
-            param.setImage(context.assetItem.materialLibrary.getImage(textureName))
-          } else {
-            console.warn('Missing Texture:' + textureName)
-          }
-        }
-      }
-    } else {
-      super.readBinary(reader, context)
-    }
+    super.readBinary(reader, context)
     this.__checkOpacity()
     this.__checkTextures()
   }
