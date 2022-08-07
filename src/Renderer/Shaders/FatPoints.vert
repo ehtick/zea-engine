@@ -73,7 +73,7 @@ void main(void) {
   viewPos.z += 0.5 * pointSize;
 
   v_geomItemIds.x = float(geomItemId);
-  v_geomItemIds.y = float(gl_InstanceID);
+  v_geomItemIds.y = float(drawIndices);
   v_viewPos = -viewPos.xyz;
   
   gl_Position = projectionMatrix * viewPos;

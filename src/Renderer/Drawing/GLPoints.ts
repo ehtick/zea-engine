@@ -17,7 +17,7 @@ class GLPoints extends GLGeom {
   protected drawIndexBuffer: WebGLBuffer | null = null
   protected pointsAttributesTexture: GLTexture2D | null = null
   protected pointsAttributesTextureStride: number = 1
-  protected prevSortCameraPos: Vec3 =  new Vec3()
+  protected prevSortCameraPos: Vec3 = new Vec3()
   protected threshold: number = 0
 
   /**
@@ -42,36 +42,37 @@ class GLPoints extends GLGeom {
     this.numVertices = this.geom.getNumVertices()
 
     if (!renderstate.attrs.positions && renderstate.unifs.pointsAttributes) {
-      
       let stride = 4
       this.pointsAttributesTextureStride = 1
       const colors = this.geom.getVertexAttribute('colors') as ColorAttribute
-      if (colors)  {
+      if (colors) {
         stride = 8
         this.pointsAttributesTextureStride = 2
       }
-      
+
       const positions = this.geom.positions
       const sizes = this.geom.getVertexAttribute('sizes')
 
-      const size = MathFunctions.nextPow2(Math.round(Math.sqrt(this.numVertices * this.pointsAttributesTextureStride) + 0.5))
+      const size = MathFunctions.nextPow2(
+        Math.round(Math.sqrt(this.numVertices * this.pointsAttributesTextureStride) + 0.5)
+      )
       const data = new Float32Array(size * size * 4)
-      for (let i=0; i<positions.getCount(); i++) {
+      for (let i = 0; i < positions.getCount(); i++) {
         const pos = positions.getValue(i)
-        data[(i * stride) + 0] = pos.x
-        data[(i * stride) + 1] = pos.y
-        data[(i * stride) + 2] = pos.z
-        if (sizes)  data[(i * stride) + 3] = sizes.getFloat32Value(i)
-        else data[(i * stride) + 3] = 1.0
-        if (colors)  {
+        data[i * stride + 0] = pos.x
+        data[i * stride + 1] = pos.y
+        data[i * stride + 2] = pos.z
+        if (sizes) data[i * stride + 3] = sizes.getFloat32Value(i)
+        else data[i * stride + 3] = 1.0
+        if (colors) {
           const color = colors.getValue(i)
-          data[(i * stride) + 4] = color.r
-          data[(i * stride) + 5] = color.g
-          data[(i * stride) + 6] = color.g
-          data[(i * stride) + 7] = color.a
+          data[i * stride + 4] = color.r
+          data[i * stride + 5] = color.g
+          data[i * stride + 6] = color.b
+          data[i * stride + 7] = color.a
         }
       }
-      this.pointsAttributesTexture = new GLTexture2D(gl,  {
+      this.pointsAttributesTexture = new GLTexture2D(gl, {
         format: 'RGBA',
         type: 'FLOAT',
         width: size,
@@ -109,7 +110,6 @@ class GLPoints extends GLGeom {
    * @param renderstate - The object tracking the current state of the renderer
    */
   updateBuffers(renderstate: RenderState): void {
-
     if (this.numVertices != this.geom.getNumVertices()) {
       this.genBuffers(renderstate)
       return
@@ -123,7 +123,7 @@ class GLPoints extends GLGeom {
     if (numVertsChanged) {
       this.clearBuffers()
     }
-    
+
     if (!renderstate.attrs.positions && renderstate.unifs.pointsAttributes) {
       // Only support power 2 textures. Else we get strange corruption on some GPUs
       // in some scenes.
@@ -131,29 +131,31 @@ class GLPoints extends GLGeom {
       let stride = 4
       this.pointsAttributesTextureStride = 1
       const colors = this.geom.getVertexAttribute('colors') as ColorAttribute
-      if (colors)  {
+      if (colors) {
         stride = 8
         this.pointsAttributesTextureStride = 2
       }
-      
+
       const positions = this.geom.positions
       const sizes = this.geom.getVertexAttribute('sizes')
 
-      const size = MathFunctions.nextPow2(Math.round(Math.sqrt(this.numVertices * this.pointsAttributesTextureStride) + 0.5))
+      const size = MathFunctions.nextPow2(
+        Math.round(Math.sqrt(this.numVertices * this.pointsAttributesTextureStride) + 0.5)
+      )
       const data = new Float32Array(size * size * 4)
-      for (let i=0; i<positions.getCount(); i++) {
+      for (let i = 0; i < positions.getCount(); i++) {
         const pos = positions.getValue(i)
-        data[(i * stride) + 0] = pos.x
-        data[(i * stride) + 1] = pos.y
-        data[(i * stride) + 2] = pos.z
-        if (sizes)  data[(i * stride) + 3] = sizes.getFloat32Value(i)
-        else data[(i * stride) + 3] = 1.0
-        if (colors)  {
+        data[i * stride + 0] = pos.x
+        data[i * stride + 1] = pos.y
+        data[i * stride + 2] = pos.z
+        if (sizes) data[i * stride + 3] = sizes.getFloat32Value(i)
+        else data[i * stride + 3] = 1.0
+        if (colors) {
           const color = colors.getValue(i)
-          data[(i * stride) + 4] = color.r
-          data[(i * stride) + 5] = color.g
-          data[(i * stride) + 6] = color.g
-          data[(i * stride) + 7] = color.a
+          data[i * stride + 4] = color.r
+          data[i * stride + 5] = color.g
+          data[i * stride + 6] = color.b
+          data[i * stride + 7] = color.a
         }
       }
       this.pointsAttributesTexture.populate(data, size, size)
@@ -187,13 +189,13 @@ class GLPoints extends GLGeom {
   sort(cameraPos: Vec3): void {
     const positions = this.geom.positions
     this.distances = new Float32Array(positions.getCount())
-    
+
     let bufferSizeChanged = false
     if (this.indexArray.length != this.distances.length) {
       this.indexArray = new Int32Array(this.distances.length)
       bufferSizeChanged = true
     }
-    for (let i=0; i<positions.getCount(); i++) {
+    for (let i = 0; i < positions.getCount(); i++) {
       const pos = positions.getValue(i)
       this.distances[i] = pos.distanceTo(cameraPos)
       this.indexArray[i] = i
@@ -213,11 +215,10 @@ class GLPoints extends GLGeom {
       if (this.drawIndexBuffer) gl.deleteBuffer(this.__glattrbuffers.drawIndices.buffer)
       this.__glattrbuffers.drawIndices.buffer = gl.createBuffer()
     }
-      
+
     gl.bindBuffer(gl.ARRAY_BUFFER, this.__glattrbuffers.drawIndices.buffer)
     gl.bufferData(gl.ARRAY_BUFFER, this.indexArray, gl.STATIC_DRAW)
   }
-
 
   /**
    * The bind method.
@@ -225,7 +226,6 @@ class GLPoints extends GLGeom {
    * @return - The return value.
    */
   bind(renderstate: RenderState): boolean {
-    
     if (renderstate.attrs.drawIndices) {
       const cameraPos = renderstate.viewXfo.tr
       const dist = cameraPos.distanceTo(this.prevSortCameraPos)
@@ -268,7 +268,7 @@ class GLPoints extends GLGeom {
         this.pointsAttributesTexture.bindToUniform(renderstate, pointsAttributes)
         this.__gl!.uniform1i(pointsAttributesStride.location, this.pointsAttributesTextureStride)
       }
-      
+
       return true
     } else {
       super.bind(renderstate)
@@ -306,5 +306,5 @@ class GLPoints extends GLGeom {
     gl.drawArraysInstanced(this.__gl.POINTS, 0, this.numVertices, instanceCount)
   }
 }
+
 export { GLPoints }
-// GLPoints;

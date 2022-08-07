@@ -14,7 +14,19 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Xfo, Vec3, Points, Color, GeomItem, FatPointsMaterial, Attribute, ColorAttribute, LDRImage } = zeaEngine
+      const {
+        GLRenderer,
+        Scene,
+        Xfo,
+        Vec3,
+        Points,
+        Color,
+        GeomItem,
+        FatPointsMaterial,
+        Attribute,
+        ColorAttribute,
+        LDRImage,
+      } = zeaEngine
 
       import { hammersley, sphereSample_uniform } from './src/Hammersley.js'
 
@@ -38,10 +50,10 @@
         const v = new Vec3()
         const coords = hammersley(i, count)
         sphereSample_uniform(coords[0], coords[1], v)
-        
+
         positions.setValue(i, v)
         sizes.setFloat32Value(i, coords[0] * 5)
-        colors.setValue(i, new Color(coords[0], coords[1], 0))
+        colors.setValue(i, new Color(coords[0], coords[1], 1 - coords[1], 1))
       }
 
       const material = new FatPointsMaterial('points')
@@ -50,13 +62,13 @@
 
       const promises = []
 
-      material.baseColorParam.value = new Color(1, 1, 1, 1) 
-      // const image = new LDRImage('LDRImage')
-      // image.setImageURL('data/gradient.png', 'RGBA')
-      // promises.push(new Promise((resolve) => image.on('loaded', resolve)))
-      // material.baseColorParam.setImage(image)
+      // material.baseColorParam.value = new Color(1, 1, 1, 1)
 
-      
+      const image = new LDRImage('LDRImage')
+      image.setImageURL('data/gradient.png', 'RGBA')
+      promises.push(new Promise((resolve) => image.on('loaded', resolve)))
+      material.baseColorParam.setImage(image)
+
       const geomItem = new GeomItem('geomItem', points, material)
       const xfo = new Xfo()
       xfo.tr.set(0, 0, 1)
