@@ -16,7 +16,7 @@ import { BaseEvent } from '../../Utilities/BaseEvent'
 const MANIPULATION_MODES: { [key: string]: number } = {
   pan: 0,
   dolly: 1,
-  focussing: 2,
+  zoom: 2,
   look: 3,
   turntable: 4,
   tumbler: 5,
@@ -115,7 +115,7 @@ class CameraManipulator extends BaseTool {
   private ongoingTouches: Record<string, OngoingTouch> = {}
 
   private orbitTarget: Vec3
-  private prevPointerPos: Vec2
+  private prevMousePos: Vec2
   private focusIntervalId: number
 
   private mouseWheelMovementDist: number = 0
@@ -130,7 +130,7 @@ class CameraManipulator extends BaseTool {
   /**
    * @member dollySpeedParam - The rate at which the mouse button or touch interactions are translated camera dolly movement.
    */
-  dollySpeedParam: NumberParameter = new NumberParameter('DollySpeed', 0.02)
+  dollySpeedParam: NumberParameter = new NumberParameter('DollySpeed', 0.001)
 
   /**
    * @member mouseWheelDollySpeedParam - The rate at which the mouse wheel interactions are translated camera dolly movement.
@@ -359,24 +359,73 @@ class CameraManipulator extends BaseTool {
   }
 
   /**
-   * The dolly method.
+   * Dollying moves the camera forward at a constant speed, not changing the focal distance.
    * @param event - The event value.
    * @param dragVec - The drag vector value.
    */
-  dolly(event: Record<string, any>, dragVec: Vec2): void {
-    const { viewport } = event
+  dolly(event: ZeaPointerEvent, pointerPos: Vec2, dragVec: Vec2): void {
+    const viewport = event.viewport as GLViewport
     const camera = viewport.getCamera()
     const focalDistance = camera.getFocalDistance()
 
+    // As we click and drag away from the center of the screen, we move forward.
+    // Like pullingoutelves into the screen farther.
+    const screenCenter = new Vec2(viewport.getWidth() * 0.5, viewport.getHeight() * 0.5)
+    const vecFromCenter = pointerPos.subtract(screenCenter).normalize()
+    const dragDist = dragVec.dot(vecFromCenter)
+
     const applyMovement = () => {
-      const dollyDist = dragVec.y * this.dollySpeedParam.value * focalDistance
+      const dollyDist = dragDist * this.dollySpeedParam.value * focalDistance
       const delta = new Xfo()
       delta.tr.set(0, 0, dollyDist)
       const globalXfo = camera.globalXfoParam.value
       camera.globalXfoParam.value = globalXfo.multiply(delta)
     }
     const applyViewScale = () => {
-      const dollyDist = dragVec.y * this.dollySpeedParam.value
+      const dollyDist = dragDist * this.dollySpeedParam.value
+      const viewHeight = camera.getFrustumHeight()
+      const zoomDist = viewHeight * dollyDist
+      camera.setFrustumHeight(viewHeight + zoomDist)
+    }
+
+    if (camera.isOrthographic()) {
+      applyViewScale()
+    } else {
+      applyMovement()
+    }
+  }
+
+  /**
+   * Zooms the camera towards the target.
+   * @param event - The event value.
+   * @param dragVec - The drag vector value.
+   */
+  zoom(event: ZeaPointerEvent, dragStartPos: Vec2, dragVec: Vec2): void {
+    const viewport = event.viewport as GLViewport
+    const camera = viewport.getCamera()
+    const focalDistance = camera.getFocalDistance()
+
+    // As we click and drag away from the center of the screen, we move forward.
+    // Like pullingoutelves into the screen farther.
+    const screenCenter = new Vec2(
+      (viewport.getWidth() * 0.5) / window.devicePixelRatio,
+      (viewport.getHeight() * 0.5) / window.devicePixelRatio
+    )
+    const vecFromCenter = dragStartPos.subtract(screenCenter).normalize()
+
+    const dragDist = dragVec.dot(vecFromCenter)
+
+    const applyMovement = () => {
+      const zoomDist = -dragDist * this.dollySpeedParam.value * focalDistance
+      const delta = new Xfo()
+      delta.tr.set(0, 0, zoomDist)
+      const globalXfo = camera.globalXfoParam.value
+
+      camera.setFocalDistance(focalDistance + zoomDist)
+      camera.globalXfoParam.value = globalXfo.multiply(delta)
+    }
+    const applyViewScale = () => {
+      const dollyDist = -dragDist * this.dollySpeedParam.value
       const viewHeight = camera.getFrustumHeight()
       const zoomDist = viewHeight * dollyDist
       camera.setFrustumHeight(viewHeight + zoomDist)
@@ -396,7 +445,6 @@ class CameraManipulator extends BaseTool {
    * @param event - The event value.
    */
   initDrag(event: ZeaPointerEvent): void {
-    const { pointerPos } = event
     event.setCapture(this)
 
     this.pointerDown = true
@@ -420,7 +468,6 @@ class CameraManipulator extends BaseTool {
       this.orbitTarget = xfo.tr.add(xfo.ori.getZaxis().scale(-camera.getFocalDistance()))
     }
 
-    this.prevPointerPos = pointerPos
     this.dragging = 1
   }
 
@@ -449,7 +496,7 @@ class CameraManipulator extends BaseTool {
     if (this.focusIntervalId) clearInterval(this.focusIntervalId)
 
     const count = Math.round(duration / 20) // each step is 20ms
-    const initalMode = this.manipulationState
+    const initalMode = this.defaultManipulationState
     let i = 0
     const applyMovement = () => {
       const prevGlobalXfo = camera.globalXfoParam.value
@@ -631,6 +678,8 @@ class CameraManipulator extends BaseTool {
       this.initDrag(event)
 
       const mouseEvent = <ZeaMouseEvent>event
+      this.prevMousePos = mouseEvent.pointerPos
+
       if (mouseEvent.button == 2) {
         this.manipulationState = MANIPULATION_MODES.pan
       } else if (mouseEvent.ctrlKey && mouseEvent.altKey) {
@@ -672,9 +721,11 @@ class CameraManipulator extends BaseTool {
     if (!this.pointerDown) return
 
     const pointerPos = event.pointerPos
-    // this.__calculatingDragAction = true
-    const dragVec = pointerPos.subtract(this.prevPointerPos)
 
+    const dragVec = pointerPos.subtract(this.prevMousePos)
+
+    // Note: at mouse down, we selected the manipulation
+    // mode to use for this interaction.
     switch (this.manipulationState) {
       case MANIPULATION_MODES.turntable:
         this.turntable(event, dragVec)
@@ -689,14 +740,17 @@ class CameraManipulator extends BaseTool {
         this.look(event, dragVec)
         break
       case MANIPULATION_MODES.pan:
-        this.pan(event, pointerPos.subtract(this.prevPointerPos))
+        this.pan(event, pointerPos.subtract(this.prevMousePos))
         break
       case MANIPULATION_MODES.dolly:
-        this.dolly(event, dragVec)
+        this.dolly(event, pointerPos, dragVec)
+        break
+      case MANIPULATION_MODES.zoom:
+        this.zoom(event, pointerPos, dragVec)
         break
     }
-    this.prevPointerPos = pointerPos
-    // this.__calculatingDragAction = false
+    this.prevMousePos = pointerPos
+
     event.preventDefault()
   }
 
@@ -707,12 +761,10 @@ class CameraManipulator extends BaseTool {
    * @private
    */
   _onTouchMove(event: ZeaTouchEvent): void {
-    // this.__calculatingDragAction = true
-
     const touches = event.touches
     if (touches.length == 1) {
       const touch = touches[0]
-      const touchPos = new Vec2(touch.clientX, touch.clientY)
+      const touchPos = touch.touchPos
       const touchData = this.ongoingTouches[touch.identifier]
       if (!touchData) return
       const dragVec = touchPos.subtract(touchData.pos)
@@ -731,6 +783,15 @@ class CameraManipulator extends BaseTool {
         case MANIPULATION_MODES.trackball:
           this.trackball(event, dragVec)
           break
+        case MANIPULATION_MODES.pan:
+          this.pan(event, dragVec)
+          break
+        case MANIPULATION_MODES.dolly:
+          this.dolly(event, touchPos, dragVec)
+          break
+        case MANIPULATION_MODES.zoom:
+          this.zoom(event, touchData.pos, dragVec)
+          break
       }
       touchData.pos = touchPos
     } else if (touches.length == 2) {
@@ -741,8 +802,8 @@ class CameraManipulator extends BaseTool {
 
       if (!touchData0 || !touchData1) return
 
-      const touch0Pos = new Vec2(touch0.clientX, touch0.clientY)
-      const touch1Pos = new Vec2(touch1.clientX, touch1.clientY)
+      const touch0Pos = touch0.touchPos
+      const touch1Pos = touch1.touchPos
 
       const startSeparation = touchData1.pos.subtract(touchData0.pos).length()
       const dragSeparation = touch1Pos.subtract(touch0Pos).length()
@@ -798,8 +859,6 @@ class CameraManipulator extends BaseTool {
       touchData0.pos = touch0Pos
       touchData1.pos = touch1Pos
     }
-
-    // this.__calculatingDragAction = false
   }
 
   /**
@@ -1122,7 +1181,7 @@ class CameraManipulator extends BaseTool {
   __startTouch(touch: Touch): void {
     this.ongoingTouches[touch.identifier] = {
       identifier: touch.identifier,
-      pos: new Vec2(touch.clientX, touch.clientY),
+      pos: touch.touchPos,
     }
   }
 
@@ -1132,8 +1191,6 @@ class CameraManipulator extends BaseTool {
    * @private
    */
   __endTouch(touch: Touch): void {
-    // let idx = this.__ongoingTouchIndexById(touch.identifier);
-    // this.ongoingTouches.splice(idx, 1); // remove it; we're done
     delete this.ongoingTouches[touch.identifier]
   }
 

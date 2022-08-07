@@ -750,7 +750,7 @@ class GLBaseRenderer extends ParameterOwner {
     // which causes double taps and other weirdness.
     const isMobileDeviceMouseEvent = (event: Record<string, any>) => {
       if (SystemDesc.isMobileDevice) {
-        console.warn('Mobile device is triggering mouse event:', event.type)
+        // console.warn('Mobile device is triggering mouse event:', event.type)
         return true
       }
       return false

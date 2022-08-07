@@ -243,7 +243,7 @@
       // }}}
 
       // Position the camera to a better perspective view.
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0, 5, 3), new Vec3(0, 0, 0))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0, 4, 3), new Vec3(0, 0, 0))
 
       // To make mouse wheel testing move the camera a decent amount, we increase the
       // mouse wheel movement by 10x. This is because the cypress will send only a single
@@ -262,14 +262,7 @@
         .getViewport()
         .getCamera()
         .on('movementFinished', (e) => {
-          if (!e.event) {
-            return
-          }
-          console.log('movementFinished')
-
-          // renderer.once('redrawOccurred', () => {
           setStatusText('done-moving-camera')
-          // })
         })
     </script>
   </head>

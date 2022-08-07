@@ -321,12 +321,14 @@ class GLViewport extends GLBaseViewport {
     // Convert the raster coordinates to screen space ([0,{w|h}] -> [-1,1]
     // - Note: The raster vertical is inverted wrt OGL screenspace Y
 
-    const topy = this.__canvasHeight * (1.0 - this.__tr.y)
-    let sx = (screenPos.x - this.__x) / this.__width
-    let sy = (screenPos.y - topy) / this.__height
+    const x_pixelPos = screenPos.x * window.devicePixelRatio
+    const y_pixelPos = screenPos.y * window.devicePixelRatio
 
-    sx = sx * 2.0 - 1.0
-    sy = sy * 2.0 - 1.0
+    const top_y = this.__canvasHeight * (1.0 - this.__tr.y)
+
+    // sx /sy range from -1 ... +1
+    const sx = ((x_pixelPos - this.__x) / this.__width) * 2.0 - 1.0
+    const sy = ((y_pixelPos - top_y) / this.__height) * 2.0 - 1.0
 
     // Transform the origin from camera local to world space
     const cameraMat = this.__cameraMat
@@ -433,12 +435,14 @@ class GLViewport extends GLBaseViewport {
       // }
       // logGeomData();
       // console.log("getGeomDataAtPos:", screenPos.toString(), screenPos.x,this.__width)
+      const x_pixelPos = screenPos.x * window.devicePixelRatio
+      const y_pixelPos = screenPos.y * window.devicePixelRatio
 
       const numPixels = searchArea * searchArea
       const bufferWidth = this.__geomDataBufferFbo.width
       const bufferHeight = this.__geomDataBufferFbo.height
-      const x = Math.floor(screenPos.x * (bufferWidth / this.__width)) - searchArea * 0.5
-      const y = Math.floor(bufferHeight - screenPos.y * (bufferHeight / this.__height) - 1) - searchArea * 0.5
+      const x = Math.floor(x_pixelPos * (bufferWidth / this.__width)) - searchArea * 0.5
+      const y = Math.floor(bufferHeight - y_pixelPos * (bufferHeight / this.__height) - 1) - searchArea * 0.5
 
       const overlayPassClass = Registry.getClassDefinition('GLOverlayPass')
       const overlayPassIndex = this.__renderer.findPassIndex(overlayPassClass)
@@ -616,10 +620,7 @@ class GLViewport extends GLBaseViewport {
    * @private
    */
   __getPointerPos(rendererX: number, rendererY: number): Vec2 {
-    return new Vec2(
-      (rendererX - this.getPosX()) * window.devicePixelRatio,
-      (rendererY - this.getPosY()) * window.devicePixelRatio
-    )
+    return new Vec2(rendererX - this.getPosX(), rendererY - this.getPosY())
   }
 
   /**

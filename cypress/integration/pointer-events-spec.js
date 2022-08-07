@@ -6,23 +6,18 @@ describe('pointer-events', () => {
   })
 
   it('Mouse Move - Camera Manipulator', () => {
-    cyFocusCanvas()
     cy.get('canvas').trigger('mousedown', 100, 230).trigger('mousemove', 250, 230).trigger('mouseup', 250, 230)
 
     cy.get('canvas').percySnapshot(`MouseMoveCameraManipulator`)
   })
 
   it('Mouse Enter - Geometry', () => {
-    cyFocusCanvas()
-
     cy.get('canvas').trigger('mousemove', 100, 230).trigger('mousemove', 250, 230)
 
     cy.get('canvas').percySnapshot(`MouseEnterGeometry`)
   })
 
   it('Mouse Leave - Geometry', () => {
-    cyFocusCanvas()
-
     cy.get('canvas').trigger('mousemove', 250, 230).trigger('mousemove', 100, 230)
 
     cy.get('canvas').percySnapshot(`MouseLeaveGeometry`)
@@ -58,8 +53,9 @@ describe('pointer-events', () => {
   // })
 
   it('Double Click - Geometry', () => {
-    cy.get('canvas').dblclick(800, 300)
+    cy.get('canvas').dblclick(250, 230)
 
+    cy.get('#status').should('have.text', `done-moving-camera`)
     cy.get('canvas').percySnapshot(`DoubleClickGeometry`)
   })
 
@@ -75,7 +71,8 @@ describe('pointer-events', () => {
   })
 
   it('Double Tap - Geometry', () => {
-    const eTouch = createTouchEvents([800, 300])
+    const eTouch = createTouchEvents([250, 230])
+
     cy.get('canvas')
       .trigger('touchstart', eTouch)
       .trigger('touchend', eTouch)
@@ -105,12 +102,5 @@ describe('pointer-events', () => {
       .trigger('touchmove', eTouch)
       .trigger('touchend', eTouch)
       .percySnapshot(`TouchZoomOutCameraManipulator`)
-  })
-})
-
-describe('pointer-events-debugGeomShader', () => {
-  it('Capture snapshots', () => {
-    cy.visit('testing-e2e/pointer-events.html?debugGeomShader')
-    cy.get('canvas').percySnapshot('pointer-events')
   })
 })

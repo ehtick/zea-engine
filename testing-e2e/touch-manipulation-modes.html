@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html class="h-full">
+  <head>
+    <title>touch-manipulation-modes - Zea Engine</title>
+    <meta charset="UTF-8" />
+
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <link rel="stylesheet" href="styles/test.css" />
+
+    <script src="../dist/index.umd.js"></script>
+
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Color, Cuboid, SimpleSurfaceMaterial, GeomItem } = zeaEngine
+
+      const domElement = document.getElementById('viewport')
+
+      const scene = new Scene()
+      scene.setupGrid(10.0, 10)
+
+      const renderer = new GLRenderer(domElement, { antialias: false })
+      renderer.setScene(scene)
+
+      const standardMaterial = new SimpleSurfaceMaterial('surfaces')
+      standardMaterial.baseColorParam.value = new Color(200 / 255, 50 / 255, 50 / 255)
+
+      const cuboid = new Cuboid(1.5, 2.0, 1.1)
+      const geomItem = new GeomItem('Cuboid', cuboid, standardMaterial)
+      scene.getRoot().addChild(geomItem)
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(3, 3, 1.7), new Vec3(0, 0, 0.1))
+      const cameraManipulator = renderer.getViewport().getManipulator()
+
+      const cameraModes = document.cameraModeForm.cameraModes
+      for (let i = 0; i < cameraModes.length; i++) {
+        cameraModes[i].addEventListener('change', function () {
+          switch (this.value) {
+            case 'ortho':
+              renderer.getViewport().getCamera().setIsOrthographic(1)
+              break
+            case 'persp':
+              renderer.getViewport().getCamera().setIsOrthographic(0)
+              break
+          }
+        })
+      }
+
+      const manipModes = document.manipModeForm.manipModes
+      for (let i = 0; i < manipModes.length; i++) {
+        manipModes[i].addEventListener('change', function () {
+          cameraManipulator.setDefaultManipulationMode(this.value)
+        })
+      }
+
+      // {{{ Variants
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        renderer.forceRender()
+        statusElement.textContent = text
+      }
+      setStatusText('done-loading')
+
+      // }}}
+    </script>
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="h-screen">
+      <canvas id="viewport"></canvas>
+      <div id="status" class="hud"></div>
+      <div class="variant-buttons">
+        <form name="cameraModeForm">
+          <input type="radio" id="persp" name="cameraModes" value="persp" checked /><label for="persp"
+            >Perspective</label
+          >
+          <input type="radio" id="ortho" name="cameraModes" value="ortho" /><label for="ortho">Orthographic</label>
+        </form>
+        <br />
+        <form name="manipModeForm">
+          <input type="radio" id="rotate" name="manipModes" value="turntable" checked /><label for="rotate"
+            >Rotate</label
+          >
+          <input type="radio" id="pan" name="manipModes" value="pan" /><label for="pan">Move</label>
+          <input type="radio" id="zoom" name="manipModes" value="zoom" /><label for="zoom">Zoom</label>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

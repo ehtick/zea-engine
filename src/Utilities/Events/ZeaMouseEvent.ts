@@ -20,16 +20,14 @@ class ZeaMouseEvent extends ZeaPointerEvent {
     this.clientX = sourceEvent.clientX
     this.clientY = sourceEvent.clientY
 
-    // Disabling devicePixelRatio for now. See: __onResize
-    const DPR = 1.0 // window.devicePixelRatio
     // Note: the rendererX/Y values are relative to the viewport,
     // but are available outside the viewport. So when a mouse
     // drag occurs, and drags outside the viewport, these values
     // provide consistent coords.
     // offsetX/Y are only valid inside the viewport and so cause
     // jumps when the mouse leaves the viewport.
-    this.rendererX = (this.clientX - rect.left) * DPR
-    this.rendererY = (this.clientY - rect.top) * DPR
+    this.rendererX = this.clientX - rect.left
+    this.rendererY = this.clientY - rect.top
 
     this.altKey = sourceEvent.altKey
     this.metaKey = sourceEvent.metaKey
