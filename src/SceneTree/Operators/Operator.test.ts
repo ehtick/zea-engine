@@ -21,8 +21,13 @@ class AddFloatsOperator extends Operator {
 
   evaluate() {
     const a = this.inputA.getValue()
-    const b = this.inputB.getValue()
-    this.outputC.setClean(a + b)
+
+    if (this.inputB.isConnected()) {
+      const b = this.inputB.getValue()
+      this.outputC.setClean(a + b)
+    } else {
+      this.outputC.setClean(a)
+    }
   }
 }
 
@@ -428,6 +433,27 @@ describe('Operator', () => {
     expect(param.getValue()).toBe(5)
   })
 
+  test('dirty by assigning param', () => {
+    const inParamA = new NumberParameter('inA')
+    const inParamB = new NumberParameter('inB')
+    const outParamC = new NumberParameter('C')
+
+    const op = new AddFloatsOperator()
+    op.outputC.setParam(outParamC)
+
+    op.inputA.setParam(inParamA)
+    inParamA.setValue(2)
+    inParamB.setValue(3)
+    expect(outParamC.getValue()).toBe(2)
+
+    op.inputB.setParam(inParamB)
+
+    // Simply connecting the parameter, we expect this parameter to be dirty.
+    expect(outParamC.isDirty()).toBe(true)
+
+    expect(outParamC.getValue()).toBe(5)
+  })
+
   test('save to JSON (serialization).', () => {
     const addOperator = new AddFloatsOperator()
     const parameterOwner = new BaseItem('Foo')
@@ -444,7 +470,6 @@ describe('Operator', () => {
 
     expect(JSON.stringify(addOperator.toJSON())).toMatchSnapshot()
   })
-
   test('load from JSON (serialization).', () => {
     const parameterOwner = new BaseItem('Foo')
     parameterOwner.addParameter(new NumberParameter('A'))

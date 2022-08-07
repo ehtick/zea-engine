@@ -83,6 +83,9 @@ abstract class OperatorInput<T> extends EventEmitter {
     if (this.param) {
       this.param.bindOperatorInput(this)
     }
+    // When an input param is assigned, the op should
+    // propagate dirty to its outputs.
+    if (this._op) this._op.setDirty()
     this.emit('paramSet', { param: this.param })
   }
 
