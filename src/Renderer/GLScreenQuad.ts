@@ -96,7 +96,7 @@ class GLScreenQuad {
   draw(renderstate: RenderState, textureOrColor?: GLTexture2D | Color, pos?: Vec2, size?: Vec2) {
     this.bind(renderstate, textureOrColor, pos, size)
     const gl = this.__gl
-    gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0)
+    gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_BYTE, 0)
   }
 }
 

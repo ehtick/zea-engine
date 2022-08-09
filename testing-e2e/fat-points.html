@@ -37,6 +37,7 @@
 
       const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
+      renderer.highlightOutlineThickness = 4
 
       const points = new Points()
       const count = 500
@@ -98,6 +99,7 @@
         if (highlightedItem) {
           highlightedItem.removeHighlight(highlightKey, true)
           highlightedItem = null
+          highlightKey = ''
         }
       })
       renderer.getViewport().on('pointerUp', (event) => {

@@ -3,59 +3,65 @@ precision highp float;
 
 uniform float outlineThickness;
 uniform sampler2D highlightDataTexture;
-uniform vec2 highlightDataTextureSize;
 
 varying vec2 v_texCoord;
 
-
-vec3 SobelFactor(vec3 ldc, vec3 ldl, vec3 ldr, vec3 ldu, vec3 ldd)
+float M_PI = 3.141592653589793;
+float diff(vec4 pixelA, vec4 pixelB)
 {
-  return abs(ldl - ldc) +
-      abs(ldr - ldc) +
-      abs(ldu - ldc) +
-      abs(ldd - ldc);
+  return abs(pixelA.r - pixelB.r) + abs(pixelA.g - pixelB.g) + abs(pixelA.b - pixelB.b) + abs(pixelA.a - pixelB.a);
 }
 
-// https://github.com/ssell/UnitySobelOutline/blob/2e1f4a5b4e703ae2c96aaf08d5518ce58abbaab9/Assets/Resources/Shaders/SobelOutlineHLSL.shader#L18
-vec4 SobelSample(vec2 uv)
+// find the first pixel which is not the same as the center pixel.
+vec4 RadialSearch(vec2 uv)
 {
-  vec3 offset = vec3((1.0 / highlightDataTextureSize.x), (1.0 / highlightDataTextureSize.y), 0.0) * outlineThickness;
+  vec2 texSize = vec2(textureSize(highlightDataTexture, 0));
+  ivec2 pixelCenterCoord = ivec2(uv * texSize);
+  vec4 pixelCenter = texelFetch(highlightDataTexture, pixelCenterCoord, 0);
 
-  vec4 pixelCenter = texture2D(highlightDataTexture, uv);
-  vec3 pixelLeft   = texture2D(highlightDataTexture, uv - offset.xz).rgb;
-  vec3 pixelRight  = texture2D(highlightDataTexture, uv + offset.xz).rgb;
-  vec3 pixelUp     = texture2D(highlightDataTexture, uv + offset.zy).rgb;
-  vec3 pixelDown   = texture2D(highlightDataTexture, uv - offset.zy).rgb;
+  vec3 offset = vec3((1.0 / texSize.x), (1.0 / texSize.y), 0.0);
 
-  vec3 sobelNormalVec = SobelFactor(pixelCenter.rgb, pixelLeft, pixelRight, pixelUp, pixelDown);
-  
-  float sobelNormal = sobelNormalVec.x + sobelNormalVec.y + sobelNormalVec.z;
-  
-  float outlineDepthMultiplier = 10.0;
-  float outlineDepthBias = 2.5;
-  sobelNormal = pow(sobelNormal * outlineDepthMultiplier, outlineDepthBias);
+  vec4 result = pixelCenter;
+  float weights = 1.0;
+  float radius = 0.0;
+  int differentPixels = 0;
+  while (radius <= outlineThickness + 0.001) {
+    radius += 1.0;
+    
+    int samples = int(2.0 * M_PI * radius);
+    for (int i =0; i<samples; i++) {
+      float theta = (float(i) / float(samples)) * 2.0 * M_PI;
+      vec2 dir = vec2(radius * cos(theta) * offset.x, radius * sin(theta) * offset.y);
+      
+      ivec2 pixelCoord = ivec2((uv + dir) * texSize);
+      vec4 pixel = texelFetch(highlightDataTexture, pixelCoord, 0);
+      if ((pixel.r > 0.0 || pixel.g > 0.0 || pixel.b > 0.0)) {
+        if (diff(pixel, pixelCenter) > 0.1) differentPixels++;
+        // Blend the outer ring of pixels.
+        // Note: disabled because I ran out of time. We can blend off the highlight towards
+        // the edges to get a nicely anti-aliazed outline. 
+        // float dist = length(vec2(pixelCoord) - vec2(pixelCenterCoord));
+        // float blendStart = max(1.0, outlineThickness - 0.5);
+        pixel.a = 1.0; //smoothstep(1.0, 0.0, dist - blendStart);
 
-  sobelNormal = clamp(sobelNormal, 0.0, 1.0);
+        result += pixel;
+        weights += pixel.a;
+      }
+    }
+  }
 
-  
-  float pixelCenterWeight = length(pixelCenter.rgb) > 0.0 ? 1.0 : 0.0;
-  float pixelLeftWeight   = length(pixelLeft) > 0.0 ? 1.0 : 0.0;
-  float pixelRightWeight  = length(pixelRight) > 0.0 ? 1.0 : 0.0;
-  float pixelUpWeight     = length(pixelUp) > 0.0 ? 1.0 : 0.0;
-  float pixelDownWeight   = length(pixelDown) > 0.0 ? 1.0 : 0.0;
-  
-  // Weight each neighbors contribution to the current pixel color.
-  pixelCenter.rgb = pixelCenter.rgb * pixelCenterWeight;
-  pixelLeft   *= pixelLeftWeight;
-  pixelRight  *= pixelRightWeight;
-  pixelUp     *= pixelUpWeight;
-  pixelDown   *= pixelDownWeight;
+  // Note: at the boundary between 2 highlighted objects, we get a nice blending effect. 
+  if (weights > 1.0) {
+    result = result / weights;
+  }
 
-  // Add all the weighted contributions, and then normalize.
-  vec3 outlineColor = pixelCenter.rgb + pixelLeft + pixelRight +  pixelUp + pixelDown;
-  outlineColor /= pixelCenterWeight + pixelLeftWeight + pixelRightWeight + pixelUpWeight + pixelDownWeight;
+  // If all the pixels found are the same as the center pixel, we just
+  // return the center pixel.
+  if (differentPixels == 0) {
+    return pixelCenter;
+  }
 
-  return mix(vec4(outlineColor, sobelNormal), pixelCenter, pixelCenter.a);
+  return result;
 }
 
 
@@ -65,7 +71,7 @@ out vec4 fragColor;
 
 void main(void) {
     
-  vec4 outlineColor = SobelSample(v_texCoord);
+  vec4 outlineColor = RadialSearch(v_texCoord);
   
   if (outlineColor.a > 0.0001) {
 #ifndef ENABLE_ES3
@@ -75,7 +81,7 @@ void main(void) {
 #endif
   }
   else {
-      discard;
+    discard;
   }
 }
 

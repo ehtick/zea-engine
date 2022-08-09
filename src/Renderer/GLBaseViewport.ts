@@ -466,7 +466,6 @@ class GLBaseViewport extends ParameterOwner {
         const unifs = renderstate.unifs
         gl.uniform1f(unifs.outlineThickness.location, this.renderer.highlightOutlineThickness)
         this.highlightedGeomsBuffer.bindToUniform(renderstate, unifs.highlightDataTexture)
-        gl.uniform2f(unifs.highlightDataTextureSize.location, renderstate.region[2], renderstate.region[3])
         this.quad.bindAndDraw(renderstate)
 
         renderstate.popGLStack()

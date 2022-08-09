@@ -29,6 +29,8 @@
       const domElement = document.getElementById('viewport')
       const renderer = new GLRenderer(domElement, { antialias: false })
       renderer.setScene(scene)
+      // renderer.getViewport().debugHighlightedGeomsBuffer = true
+      renderer.highlightOutlineThickness = 2
 
       scene.setupGrid(60.0, 6)
       const tree1 = new TreeItem('tree1')
