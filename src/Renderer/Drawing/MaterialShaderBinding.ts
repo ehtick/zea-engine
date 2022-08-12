@@ -145,7 +145,7 @@ class SimpleUniformBinding extends ParamUniformBinding {
     /**
      * The update method.
      */
-    if (param instanceof MaterialFloatParam) {
+    if (this.textureUnif && param instanceof MaterialFloatParam) {
       const connectImage = (image: BaseImage) => {
         if (!image.isLoaded()) {
           imageLoadedId = image.on('loaded', () => {
@@ -377,56 +377,8 @@ class ColorUniformBinding extends ParamUniformBinding {
     this.values = Float32Array.from([0, 0, 0, 0])
     this.bind = this.bindValue
 
-    const genGLTex = (image: BaseImage) => {
-      boundImage = image
-      let gltexture = GLTexture2D.getCachedGLTexture2D(image)
-      const textureType = 1
-      if (!gltexture) {
-        if (image.type === 'FLOAT') {
-          gltexture = new GLHDRImage(gl, <HDRImage>image)
-        } else {
-          gltexture = new GLTexture2D(gl, image)
-        }
-        GLTexture2D.setCachedGLTexture2D(image, gltexture)
-      }
-      this.texBinding = gltexture.preBind(this.textureUnif, unifs)
-      gltexture.on('updated', () => {
-        glMaterial.emit('updated')
-      })
-      this.gltexture = gltexture
-      this.gltexture.addRef(this)
-      this.textureType = textureType
-      this.bind = this.bindTexture
-      glMaterial.emit('updated')
-    }
-
     let boundImage: BaseImage
     let imageLoadedId: number
-    const connectImage = (image: BaseImage) => {
-      if (!image.isLoaded()) {
-        imageLoadedId = image.once('loaded', () => {
-          genGLTex(image)
-        })
-      } else {
-        genGLTex(image)
-      }
-    }
-
-    const disconnectImage = () => {
-      this.gltexture.removeRef(this)
-      this.gltexture = null
-      this.texBinding = null
-      this.textureType = null
-
-      if (imageLoadedId) {
-        boundImage.off('loaded', imageLoadedId)
-      }
-
-      this.bind = this.bindValue
-      boundImage = null
-      imageLoadedId = null
-      glMaterial.emit('updated')
-    }
 
     this.update = () => {
       try {
@@ -446,7 +398,55 @@ class ColorUniformBinding extends ParamUniformBinding {
     /**
      * The update method.
      */
-    if (param instanceof MaterialColorParam) {
+    if (this.textureUnif && param instanceof MaterialColorParam) {
+      const genGLTex = (image: BaseImage) => {
+        boundImage = image
+        let gltexture = GLTexture2D.getCachedGLTexture2D(image)
+        const textureType = 1
+        if (!gltexture) {
+          if (image.type === 'FLOAT') {
+            gltexture = new GLHDRImage(gl, <HDRImage>image)
+          } else {
+            gltexture = new GLTexture2D(gl, image)
+          }
+          GLTexture2D.setCachedGLTexture2D(image, gltexture)
+        }
+        this.texBinding = gltexture.preBind(this.textureUnif, unifs)
+        gltexture.on('updated', () => {
+          glMaterial.emit('updated')
+        })
+        this.gltexture = gltexture
+        this.gltexture.addRef(this)
+        this.textureType = textureType
+        this.bind = this.bindTexture
+        glMaterial.emit('updated')
+      }
+
+      const connectImage = (image: BaseImage) => {
+        if (!image.isLoaded()) {
+          imageLoadedId = image.once('loaded', () => {
+            genGLTex(image)
+          })
+        } else {
+          genGLTex(image)
+        }
+      }
+
+      const disconnectImage = () => {
+        this.gltexture.removeRef(this)
+        this.gltexture = null
+        this.texBinding = null
+        this.textureType = null
+
+        if (imageLoadedId) {
+          boundImage.off('loaded', imageLoadedId)
+        }
+
+        this.bind = this.bindValue
+        boundImage = null
+        imageLoadedId = null
+        glMaterial.emit('updated')
+      }
       if (param.getImage()) connectImage(param.getImage())
       param.on('textureConnected', () => {
         connectImage(param.getImage())

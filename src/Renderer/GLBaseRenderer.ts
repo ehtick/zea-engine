@@ -383,7 +383,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.__renderGeomDataFbosRequested = true
     const onAnimationFrame = () => {
-      for (const vp of this.__viewports) vp.renderGeomDataFbo()
+      for (const vp of this.__viewports) vp.invalidateGeomDataBuffer()
       this.__renderGeomDataFbosRequested = false
     }
     window.requestAnimationFrame(onAnimationFrame)

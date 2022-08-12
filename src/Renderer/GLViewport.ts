@@ -62,6 +62,7 @@ class GLViewport extends GLBaseViewport {
   protected __geomDataBuffer: GLTexture2D
   protected __geomDataBufferSizeFactor: number = 1
   protected __geomDataBufferFbo: GLFbo
+  protected __geomDataBufferInvalid: boolean = true
 
   protected __x: number = 0
   protected __y: number = 0
@@ -71,7 +72,6 @@ class GLViewport extends GLBaseViewport {
   protected __cameraMat: Mat4 = new Mat4()
   protected __viewMat: Mat4 = new Mat4()
 
-  protected __geomDataBufferInvalid: boolean = true
   protected __screenPos: Vec2 | null = null
   protected __intersectionData: IntersectionData
 
@@ -211,7 +211,7 @@ class GLViewport extends GLBaseViewport {
         Math.floor(this.__width / this.__geomDataBufferSizeFactor),
         Math.floor(this.__height / this.__geomDataBufferSizeFactor)
       )
-      this.renderGeomDataFbo()
+      this.invalidateGeomDataBuffer()
     }
   }
 
@@ -368,7 +368,7 @@ class GLViewport extends GLBaseViewport {
    * Renders the scene geometry to the viewport's geom data buffer
    * in preparation for mouse picking.
    */
-  renderGeomDataFbo(): void {
+  private renderGeomDataFbo(): void {
     if (this.__geomDataBufferFbo) {
       const geomDataRenderstate: GeomDataRenderState = new GeomDataRenderState(this.renderer.__gl)
       this.initRenderState(geomDataRenderstate)
@@ -387,7 +387,7 @@ class GLViewport extends GLBaseViewport {
   /**
    * The invalidateGeomDataBuffer method.
    */
-  invalidateGeomDataBuffer(): void {
+  public invalidateGeomDataBuffer(): void {
     this.__geomDataBufferInvalid = true
   }
 
@@ -998,9 +998,16 @@ class GLViewport extends GLBaseViewport {
 
     renderstate.popGLStack()
 
+    // Rendering of the GeomData buffer should always occur after a regular draw,
+    // as Shaders, Materials and Geometries should be bound first duriing
+    // a regular draw.
+    if (this.__geomDataBufferInvalid) {
+      this.renderGeomDataFbo()
+    }
+
     // Turn this on to debug the geom data buffer.
     if (this.debugGeomDataBuffer) {
-      this.renderGeomDataFbo()
+      // this.renderGeomDataFbo()
       // Note: renderGeomDataFbo would have bound other shaders.
       // and the renderstate used above is no blonger valid. Reset.
       const renderstate = new ColorRenderState(this.__renderer.gl)
