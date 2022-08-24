@@ -5,6 +5,8 @@ import { Attribute } from './Attribute'
 import { Vec3Attribute } from './Vec3Attribute'
 import { Vec2Attribute } from './Vec2Attribute'
 import { BinReader } from '../../SceneTree/BinReader'
+import { GeomBuffers } from '../types/scene'
+import { ColorAttribute } from './ColorAttribute'
 
 const parse8BitPositionsArray = (
   range: Array<number>,
@@ -249,7 +251,7 @@ class BaseGeom extends ParameterOwner {
 
     if (positions) {
       const numVerts = positions.getCount()
-      for (let i = 0; i < numVerts; i++) bbox.addPoint(positions.getValueRef(i))
+      for (let i = 0; i < numVerts; i++) bbox.addPoint(positions.getValue(i))
     }
 
     this.__boundingBox = bbox
@@ -329,7 +331,7 @@ class BaseGeom extends ParameterOwner {
    * Returns vertex attributes buffers and its count.
    * @return - The return value.
    */
-  genBuffers(opts?: Record<string, any>): Record<string, any> {
+  genBuffers(opts?: Record<string, any>): GeomBuffers {
     const attrBuffers: Record<string, any> = {}
     for (const [attrName, attr] of this.__vertexAttributes) {
       attrBuffers[attrName] = attr.genBuffer()
@@ -538,13 +540,20 @@ class BaseGeom extends ParameterOwner {
     for (const name in json.vertexAttributes) {
       let attr = this.__vertexAttributes.get(name)
       const attrJSON = json.vertexAttributes[name]
-      if (!attr) {
-        // switch(attrJSON.dataType) {
-        //   case 'Vec3' attr = new Vec3Attribute( attrJSON.defaultScalarValue)
-        // }
-        // const dataType = Registry.getClassDefinition(attrJSON.dataType)
-        // attr = new VertexAttribute(this, dataType, 0, attrJSON.defaultScalarValue)
-        // if (attr) this.__vertexAttributes.set(name, attr)
+      if (!attr || attr.dataTypeName != attrJSON.dataType) {
+        switch (attrJSON.dataType) {
+          case 'Vec2':
+            attr = new Vec2Attribute()
+            break
+          case 'Vec3':
+            attr = new Vec3Attribute()
+            break
+          case 'Color':
+            attr = new ColorAttribute()
+            break
+        }
+        attr.setCount(this.__numVertices)
+        this.__vertexAttributes.set(name, attr)
       }
       if (attr) {
         attr.fromJSON(attrJSON)

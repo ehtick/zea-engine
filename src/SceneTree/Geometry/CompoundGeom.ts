@@ -5,15 +5,11 @@ import { Material } from '../Material'
 import { MaterialLibrary } from '../MaterialLibrary'
 import { BaseProxy } from './GeomProxies'
 import { Registry } from '../../Registry'
+import { CompoundGeomMaterialGroup } from '../types/scene'
 
 class SubGeom extends BaseItem {}
 Registry.register('SubGeom', SubGeom)
 
-interface MaterialGroup {
-  materialId: number
-  offset: number
-  count: number
-}
 /**
  * Class representing a point primitive drawing type, every vertex specified is a point.
  *
@@ -139,12 +135,12 @@ class CompoundGeom extends BaseProxy {
   }
 
   private calcMaterialGroups() {
-    const materialSubGeoms: Record<string, Array<MaterialGroup>> = {}
+    const materialSubGeoms: Record<string, Array<CompoundGeomMaterialGroup>> = {}
     // /////////////////////////////////
     // Material Groups
     let offset = 0
     let currMaterial = -99
-    let currMaterialSubGeom: MaterialGroup | null = null
+    let currMaterialSubGeom: CompoundGeomMaterialGroup | null = null
     for (let i = 0; i < this.__buffers.numSubGeoms; i++) {
       let key
       let subGeomOffset = 0

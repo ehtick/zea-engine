@@ -8,7 +8,7 @@ import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomSha
 import { MathFunctions } from '../Utilities/MathFunctions'
 import { AtlasLayoutShader } from './Shaders/AtlasLayoutShader'
 import { GLShader } from './GLShader'
-import { LayoutItem, Uniform, Uniforms } from './types/renderer'
+import { LayoutItem, ShaderUniform, ShaderUniforms } from './types/renderer'
 import { RenderState } from './RenderStates/index'
 import { WebGL12RenderingContext } from './types/webgl'
 
@@ -357,10 +357,10 @@ class GLImageAtlas extends GLRenderTarget {
    * @param unif - The WebGL uniform
    * @return - The return value.
    */
-  bindToUniform(renderstate: RenderState, unif: Uniform): boolean {
+  bindToUniform(renderstate: RenderState, unif: ShaderUniform): boolean {
     super.bindToUniform(renderstate, unif)
 
-    const unifs: Uniforms = renderstate.unifs
+    const unifs: ShaderUniforms = renderstate.unifs
 
     if (this.__atlasLayoutTexture) {
       const atlasLayoutUnif = unifs[unif.name + '_layout']

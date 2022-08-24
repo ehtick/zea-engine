@@ -1,5 +1,5 @@
 import { GLGeom } from './GLGeom'
-import { generateShaderGeomBinding } from './GeomShaderBinding'
+import { genDataTypeDesc, generateShaderGeomBinding } from './GeomShaderBinding'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { RenderState } from '../RenderStates/index'
 import { Vec3 } from '../../Math'
@@ -19,13 +19,12 @@ class GLPoints extends GLGeom {
   protected pointsAttributesTextureStride: number = 1
   protected prevSortCameraPos: Vec3 = new Vec3()
   protected threshold: number = 0
-
   /**
    * Create a GL point.
    * @param gl - The webgl rendering context.
    * @param points - The points value.
    */
-  constructor(gl: WebGL12RenderingContext, points: Points) {
+  constructor(gl: WebGL12RenderingContext, points: any) {
     super(gl, points)
   }
 
@@ -89,15 +88,21 @@ class GLPoints extends GLGeom {
       if (!renderstate.attrs[attrName]) continue
 
       const attrData = geomBuffers.attrBuffers[attrName]
+      const attrDesc = genDataTypeDesc(gl, attrData.dataType)
 
       const attrBuffer = gl.createBuffer()
       gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer)
       gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW)
 
       this.__glattrbuffers[attrName] = {
+        dataType: attrDesc.dataType,
+        name: attrName,
+        dimension: attrData.dimension,
+        elementSize: attrDesc.elementSize,
+        normalized: false,
+        shared: false,
+        numValues: attrData.count,
         buffer: attrBuffer,
-        dataType: attrData.dataType,
-        normalized: attrData.normalized,
       }
     }
 
@@ -123,7 +128,6 @@ class GLPoints extends GLGeom {
     if (numVertsChanged) {
       this.clearBuffers()
     }
-
     if (!renderstate.attrs.positions && renderstate.unifs.pointsAttributes) {
       // Only support power 2 textures. Else we get strange corruption on some GPUs
       // in some scenes.
@@ -165,11 +169,17 @@ class GLPoints extends GLGeom {
     for (const attrName in geomBuffers.attrBuffers) {
       if (!renderstate.attrs[attrName]) continue
       const attrData = geomBuffers.attrBuffers[attrName]
+      const attrDesc = genDataTypeDesc(gl, attrData.dataType)
       if (!this.__glattrbuffers[attrName]) {
         this.__glattrbuffers[attrName] = {
+          name: attrName,
+          dimension: attrData.dimension,
+          elementSize: attrDesc.elementSize,
           buffer: gl.createBuffer(),
-          dataType: attrData.dataType,
+          dataType: attrDesc.dataType,
           normalized: attrData.normalized,
+          shared: false,
+          numValues: attrData.count,
         }
       }
       gl.bindBuffer(gl.ARRAY_BUFFER, this.__glattrbuffers[attrName].buffer)
@@ -207,9 +217,14 @@ class GLPoints extends GLGeom {
     const gl = this.__gl!
     if (!this.__glattrbuffers['drawIndices']) {
       this.__glattrbuffers['drawIndices'] = {
+        name: 'drawIndices',
+        dimension: 1,
+        elementSize: 4,
         buffer: gl.createBuffer(),
-        dataType: 'SInt32',
+        dataType: gl.INT,
         normalized: false,
+        shared: false,
+        numValues: positions.getCount(),
       }
     } else if (bufferSizeChanged) {
       if (this.drawIndexBuffer) gl.deleteBuffer(this.__glattrbuffers.drawIndices.buffer)
@@ -268,6 +283,8 @@ class GLPoints extends GLGeom {
         this.pointsAttributesTexture.bindToUniform(renderstate, pointsAttributes)
         this.__gl!.uniform1i(pointsAttributesStride.location, this.pointsAttributesTextureStride)
       }
+      const { geomType } = renderstate.unifs
+      if (geomType) this.__gl.uniform1i(geomType.location, 2 /*GeomType.POINTS*/)
 
       return true
     } else {
@@ -306,5 +323,4 @@ class GLPoints extends GLGeom {
     gl.drawArraysInstanced(this.__gl.POINTS, 0, this.numVertices, instanceCount)
   }
 }
-
 export { GLPoints }

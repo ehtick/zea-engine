@@ -15,7 +15,6 @@ import { ZeaWheelEvent } from '../Utilities/Events/ZeaWheelEvent'
 import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent'
 import { ZeaMouseEvent } from '../Utilities/Events/ZeaMouseEvent'
 import { ZeaUIEvent } from '../Utilities/Events/ZeaUIEvent'
-import { Uniform } from './types/renderer'
 import { GeomDataRenderState, RenderState, ColorRenderState } from './RenderStates/index'
 import { MathFunctions } from '../Utilities'
 import { Registry } from '../Registry'
@@ -1028,7 +1027,7 @@ class GLViewport extends GLBaseViewport {
       const occlusionDataBuffer = this.__renderer.glGeomItemLibrary.occlusionDataBuffer
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
-      const imageInif = <Uniform>renderstate.unifs.image
+      const imageInif = renderstate.unifs.image
       occlusionDataBuffer.bindColorTexture(renderstate, imageInif)
 
       const gl = this.__renderer.gl
@@ -1044,7 +1043,7 @@ class GLViewport extends GLBaseViewport {
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
 
-      const imageInif = <Uniform>renderstate.unifs.image
+      const imageInif = renderstate.unifs.image
       reductionDataBuffer.bindColorTexture(renderstate, imageInif)
 
       const gl = this.__renderer.gl

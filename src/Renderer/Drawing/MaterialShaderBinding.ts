@@ -15,17 +15,17 @@ import {
 } from '../../SceneTree'
 import { GLMaterial } from '.'
 import { BaseClass } from '../../Utilities/BaseClass'
-import { Uniform, Uniforms } from '../types/renderer'
+import { ShaderUniform, ShaderUniforms } from '../types/renderer'
 import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 
 class ParamUniformBinding extends BaseClass {
-  protected unif: Uniform
+  protected unif: ShaderUniform
   protected dirty: boolean = false
   // bind: (renderstate?: RenderState) => void
   // unbind: (renderstate?: RenderState) => void
   // destroy: () => void
-  constructor(unif: Uniform) {
+  constructor(unif: ShaderUniform) {
     super()
     this.unif = unif
   }
@@ -51,15 +51,15 @@ class ParamUniformBinding extends BaseClass {
  */
 class SimpleUniformBinding extends ParamUniformBinding {
   param: NumberParameter | BooleanParameter
-  protected textureUnif: Uniform
-  protected textureTypeUnif: Uniform
-  protected texBinding: Record<string, Uniform>
+  protected textureUnif: ShaderUniform
+  protected textureTypeUnif: ShaderUniform
+  protected texBinding: Record<string, ShaderUniform>
   protected gltexture: GLTexture2D | null = null
   protected textureType: number = -1
   protected val: number
 
-  protected uniform1i: (index: number, value: number) => void
-  protected uniformXX: (index: number, value: number) => void
+  protected uniform1i: (unif: WebGLUniformLocation, value: number) => void
+  protected uniformXX: (unif: WebGLUniformLocation, value: number) => void
   protected update: () => void
 
   /**
@@ -74,8 +74,8 @@ class SimpleUniformBinding extends ParamUniformBinding {
     gl: WebGL12RenderingContext,
     glMaterial: any,
     param: NumberParameter | BooleanParameter,
-    unif: Uniform,
-    unifs: Uniforms
+    unif: ShaderUniform,
+    unifs: ShaderUniforms
   ) {
     super(unif)
     const name = param.getName()
@@ -221,7 +221,7 @@ class SimpleUniformBinding extends ParamUniformBinding {
 class ComplexUniformBinding extends ParamUniformBinding {
   protected param: Parameter<Vec2> | Parameter<Vec3> | Parameter<Vec4> | Parameter<Color>
   protected values: Float32Array
-  protected uniformXX: (index: number, value: Float32Array | number[]) => void
+  protected uniformXX: (unif: WebGLUniformLocation, value: Float32Array | number[]) => void
   /**
    * Create complex uniform binding.
    * @param gl - The webgl rendering context.
@@ -233,7 +233,7 @@ class ComplexUniformBinding extends ParamUniformBinding {
     gl: WebGL12RenderingContext,
     glMaterial: any,
     param: Parameter<Vec2> | Parameter<Vec3> | Parameter<Vec4> | Parameter<Color>,
-    unif: Uniform
+    unif: ShaderUniform
   ) {
     super(unif)
     this.param = param
@@ -284,7 +284,7 @@ class ComplexUniformBinding extends ParamUniformBinding {
  */
 class MatrixUniformBinding extends ParamUniformBinding {
   protected param: Mat4Parameter
-  protected uniformMatrixXXX: (index: number, transpose: boolean, value: Float32Array) => void
+  protected uniformMatrixXXX: (unif: WebGLUniformLocation, transpose: boolean, value: Float32Array) => void
   protected values: Float32Array = new Float32Array(0)
   /**
    * Create material uniform binding.
@@ -293,7 +293,7 @@ class MatrixUniformBinding extends ParamUniformBinding {
    * @param param - The param value.
    * @param unif - The WebGL uniform
    */
-  constructor(gl: WebGL12RenderingContext, glMaterial: any, param: any, unif: Uniform) {
+  constructor(gl: WebGL12RenderingContext, glMaterial: any, param: any, unif: ShaderUniform) {
     super(unif)
     this.param = param
 
@@ -341,16 +341,16 @@ class MatrixUniformBinding extends ParamUniformBinding {
  */
 class ColorUniformBinding extends ParamUniformBinding {
   protected param: MaterialColorParam | ColorParameter
-  protected unif: Uniform
-  protected textureUnif: Uniform
-  protected textureTypeUnif: Uniform
+  protected unif: ShaderUniform
+  protected textureUnif: ShaderUniform
+  protected textureTypeUnif: ShaderUniform
   protected values: Float32Array
   protected gltexture: GLTexture2D
   protected textureType: number
-  protected texBinding: Record<string, Uniform>
+  protected texBinding: Record<string, ShaderUniform>
 
-  protected uniform1i: (index: number, value: number) => void
-  protected uniform4fv: (index: number, value: Float32Array) => void
+  protected uniform1i: (unif: WebGLUniformLocation, value: number) => void
+  protected uniform4fv: (unif: WebGLUniformLocation, value: Float32Array) => void
   protected update: () => void
 
   /**
@@ -365,8 +365,8 @@ class ColorUniformBinding extends ParamUniformBinding {
     gl: WebGL12RenderingContext,
     glMaterial: GLMaterial,
     param: MaterialColorParam | ColorParameter,
-    unif: Uniform,
-    unifs: Uniforms
+    unif: ShaderUniform,
+    unifs: ShaderUniforms
   ) {
     super(unif)
     const name = param.getName()
@@ -506,7 +506,7 @@ class MaterialShaderBinding {
    * @param unifs - The dictionary of WebGL uniforms.
    * @param warnMissingUnifs - The warnMissingUnifs value.
    */
-  constructor(gl: WebGL12RenderingContext, glMaterial: any, unifs: Uniforms, warnMissingUnifs: any) {
+  constructor(gl: WebGL12RenderingContext, glMaterial: any, unifs: ShaderUniforms, warnMissingUnifs: any) {
     const bindParam = (param: Parameter<any>) => {
       const name = param.getName()
       const unif = unifs[name]

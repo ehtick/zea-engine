@@ -2,8 +2,9 @@ import { GLBaseViewport } from '../GLBaseViewport'
 import { Mat4, Vec2, Xfo } from '../../Math'
 import { GLGeom } from '../Drawing'
 import { GLShader } from '../GLShader'
-import { Shaderopts, Uniforms } from '../types/renderer'
+import { Shaderopts, ShaderUniforms, ShaderAttributes } from '../types/renderer'
 import { WebGL12RenderingContext } from '../types/webgl'
+import type { GLBaseRenderer } from '../GLBaseRenderer'
 
 interface ViewportRenderState {
   region: number[]
@@ -30,6 +31,7 @@ interface StackObj {
 
 class RenderState {
   gl: WebGL12RenderingContext
+  renderer: GLBaseRenderer
   stack: Array<StackObj> = []
   top: StackObj | null
 
@@ -38,8 +40,8 @@ class RenderState {
   shaderopts: Shaderopts
   directives?: string[]
 
-  attrs: Record<string, Record<string, any>> // not Attribute
-  unifs: Uniforms
+  attrs: ShaderAttributes // not Attribute
+  unifs: ShaderUniforms
 
   drawItemsTexture?: any
 
@@ -56,8 +58,8 @@ class RenderState {
   viewport?: GLBaseViewport // Viewport
   viewports?: Array<ViewportRenderState>
 
-  bindViewports: (unifs: Uniforms, cb: any) => void
-  bindRendererUnifs: (unifs: Uniforms) => void
+  bindViewports: (unifs: ShaderUniforms, cb: any) => void
+  bindRendererUnifs: (unifs: ShaderUniforms) => void
 
   boundTextures: number
   boundRendertarget: WebGLFramebuffer | null

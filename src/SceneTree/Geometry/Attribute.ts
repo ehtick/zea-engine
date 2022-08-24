@@ -6,6 +6,7 @@ import { MathFunctions } from '../../Utilities/MathFunctions'
 import { Mesh } from './Mesh'
 import { BinReader } from '../../SceneTree/BinReader'
 import { Xfo } from '../../Math'
+import { AttrBuffer } from '../types/scene'
 
 function approxEqual(a: Float32Array, b: Float32Array): boolean {
   return !a.some((value, index) => Math.abs(b[index] - value) > 0.001)
@@ -387,10 +388,11 @@ class Attribute extends BaseClass {
    *
    * @return - The return value.
    */
-  genBuffer(): Record<string, any> {
+  genBuffer(): AttrBuffer {
     return {
       values: this.data,
       count: this.getCount(),
+      dimension: this.stride,
       dataType: this.dataTypeName,
       normalized: this.normalized,
     }

@@ -12,28 +12,70 @@ export interface Viewport {
   fovY?: number
 }
 
-export type Uniforms = Record<string, Uniform>
-export interface Uniform {
-  name: string
-  location: number
-  type: string
-}
-export interface Attribute {
+// //////////////////////////////////
+// ShaderParseResult
+// This is what the parser found when inspecting the GLSL code.
+export interface ShaderParseAttribute {
   type: string
   instanced: boolean
 }
 export interface ShaderParseResult {
   glsl: string
   numLines: number
+  // A mapping of name to GLSL type.
   uniforms: Record<string, string>
-  attributes: Record<string, Attribute>
+  // A mapping of name to type .
+  attributes: Record<string, ShaderParseAttribute>
 }
-export interface AttrBuffer {
-  values: Float32Array
-  count: number
+
+// //////////////////////////////////
+// ShaderUniform and ShaderAttribute
+// This is what the WebGL API told us it found when parsing the compiled code.
+// Note: Unused uniforms and attributes will be missing, so will deviate
+// from the parse results above.
+export interface ShaderUniform {
+  name: string
+  location: WebGLUniformLocation
+  type: string
+}
+export interface ShaderAttribute {
+  name: string
+  location: number
+  type: string
+  instanced: boolean
+}
+
+export type ShaderAttributes = Record<string, ShaderAttribute>
+export type ShaderUniforms = Record<string, ShaderUniform>
+
+export interface ShaderCompileResult {
+  shaderkey?: string
+  unifs: ShaderUniforms
+  attrs: ShaderAttributes
+  shaderHdls?: Record<string, WebGLShader>
+  shaderProgramHdl?: WebGLProgram
+}
+
+// //////////////////////////////////
+// Given a Zea Type name (Float, Vec2, Color), provide a description of the
+// data in the GPU. See genDataTypeDesc
+export interface GLAttrDesc {
+  name: string
   dimension: number
+  elementSize: number
+  dataType: number
+}
+
+export interface GLAttrBuffer {
+  dataType: number
+  name: string
+  dimension: number
+  elementSize: number
   normalized: boolean
-  dataType: string
+  shared: boolean
+  numValues: number
+  offset?: number
+  buffer?: WebGLBuffer
 }
 
 export interface LayoutItem {
@@ -46,3 +88,9 @@ export interface Bindings {
 }
 
 export type JSON = Record<string, any>
+
+export enum GeomType {
+  TRIANGLES = 0,
+  LINES = 1,
+  POINTS = 2,
+}

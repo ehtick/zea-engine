@@ -4,16 +4,22 @@ import { BaseItem } from '../SceneTree/BaseItem'
 import { Material } from '../SceneTree/Material'
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { shaderLibrary } from './ShaderLibrary'
-import { ShaderParseResult, Shaderopts } from './types/renderer'
+import {
+  ShaderParseResult,
+  Shaderopts,
+  ShaderParseAttribute,
+  ShaderCompileResult,
+  ShaderUniforms,
+  ShaderAttributes,
+} from './types/renderer'
 import { RenderState } from './RenderStates/index'
 import { WebGL12RenderingContext } from './types/webgl'
 
-// interface Result {
-//   attrs: Record<string, any>
-//   unifs: Record<string, any>
-//   shaderHdls: any
-//   shaderProgramHdl: any
-// }
+export interface ShaderCompileAttributeAndUniformResult {
+  unifs: ShaderUniforms
+  attrs: ShaderAttributes
+}
+
 // Every instance of every shader should have a unique id.
 // This is so that we can uniquely identify the bound shader during
 // rendering. Materials and geometries cache bindings to shaders.
@@ -28,13 +34,11 @@ let shaderInstanceId = 0
  */
 class GLShader extends BaseItem {
   protected __gl: WebGL12RenderingContext | undefined
-  protected __shaderStagesGLSL: Record<string, string>
-  protected __shaderStages: Record<string, ShaderParseResult>
-  protected __shaderProgramHdls: Record<string, any>
-  protected __gltextures: Record<string, any>
-  //protected __id: number
-
-  protected __shaderCompilationAttempted!: boolean
+  protected __shaderStagesGLSL: Record<string, string> = {}
+  protected __shaderStages: Record<string, ShaderParseResult> = {}
+  protected __shaderProgramHdls: Record<string, ShaderCompileResult> = {}
+  protected __gltextures: Record<string, any> = {}
+  protected __shaderCompilationAttempted: boolean = false
   /**
    * Create a GL shader.
    * @param gl - The webgl rendering context.
@@ -42,12 +46,6 @@ class GLShader extends BaseItem {
   constructor(gl?: WebGL12RenderingContext, name?: string) {
     super(name)
     if (gl) this.__gl = gl
-    this.__shaderStagesGLSL = {}
-    this.__shaderStages = {}
-
-    this.__shaderProgramHdls = {}
-    this.__gltextures = {}
-
     this.__id = shaderInstanceId++
   }
 
@@ -212,7 +210,7 @@ class GLShader extends BaseItem {
    * @private
    */
   // TODO: can't use shaderopt tpye
-  __createProgram(shaderopts: Record<string, any>): Record<string, any> | boolean {
+  __createProgram(shaderopts: Record<string, any>): ShaderCompileResult | null {
     const gl = this.__gl!
     this.__shaderCompilationAttempted = true
     const shaderProgramHdl = gl.createProgram()
@@ -231,7 +229,7 @@ class GLShader extends BaseItem {
     if (vertexShaderGLSL != undefined) {
       const vertexShader = this.__compileShaderStage(vertexShaderGLSL, gl.VERTEX_SHADER, 'vertexShader', shaderopts)
       if (!vertexShader) {
-        return false
+        return
       }
       gl.attachShader(shaderProgramHdl, vertexShader)
       shaderHdls[gl.VERTEX_SHADER] = vertexShader
@@ -256,7 +254,7 @@ class GLShader extends BaseItem {
         fragshaderopts
       )
       if (!fragmentShader) {
-        return false
+        return
       }
       gl.attachShader(shaderProgramHdl, fragmentShader)
       shaderHdls[gl.FRAGMENT_SHADER] = fragmentShader
@@ -278,15 +276,16 @@ class GLShader extends BaseItem {
       console.log('vertexShaderGLSL:' + vertexShaderGLSL)
       console.log('fragmentShaderGLSL:' + fragmentShaderGLSL)
       throw new Error('Unable to link the shader program:' + this.constructor.name + '\n==================\n' + info)
-
-      gl.deleteProgram(shaderProgramHdl)
-      return false
     }
 
-    const result = this.__extractAttributeAndUniformLocations(shaderProgramHdl, shaderopts)
-    result.shaderHdls = shaderHdls
-    result.shaderProgramHdl = shaderProgramHdl
-    return result
+    const attributeAndUniformLocation = this.__extractAttributeAndUniformLocations(shaderProgramHdl, shaderopts)
+
+    return {
+      shaderHdls,
+      shaderProgramHdl,
+      unifs: attributeAndUniformLocation.unifs,
+      attrs: attributeAndUniformLocation.attrs,
+    }
   }
 
   /**
@@ -296,10 +295,13 @@ class GLShader extends BaseItem {
    * @return - The dictionary of attributes and uniform values
    * @private
    */
-  __extractAttributeAndUniformLocations(shaderProgramHdl: WebGLProgram, shaderopts: Shaderopts): Record<string, any> {
+  __extractAttributeAndUniformLocations(
+    shaderProgramHdl: WebGLProgram,
+    shaderopts: Shaderopts
+  ): ShaderCompileAttributeAndUniformResult {
     const gl = this.__gl!
-    const attrs: Record<string, any> = this.getAttributes()
-    const result: Record<string, any> = {
+    const attrs = this.getAttributes()
+    const result: ShaderCompileAttributeAndUniformResult = {
       attrs: {},
       unifs: {},
     }
@@ -309,7 +311,7 @@ class GLShader extends BaseItem {
         console.warn('Shader attribute not found:' + attrName)
         continue
       }
-      const attrDesc: Record<string, any> = attrs[attrName]
+      const attrDesc = attrs[attrName]
       result.attrs[attrName] = {
         name: attrName,
         location: location,
@@ -317,7 +319,7 @@ class GLShader extends BaseItem {
         instanced: attrDesc.instanced,
       }
     }
-    const unifs: Record<string, string> = this.getUniforms() // TODO: refactor type in fn()
+    const unifs = this.getUniforms() // TODO: refactor type in fn()
     for (let uniformName in unifs) {
       const unifType = unifs[uniformName]
       // TODO: array uniform disabled during ts-migration
@@ -360,8 +362,8 @@ class GLShader extends BaseItem {
    * The getAttributes method.
    * @return - The dictionary of attributes that this shader expects to be bound.
    */
-  getAttributes(): Record<string, any> {
-    const attributes: Record<string, any> = {}
+  getAttributes(): Record<string, ShaderParseAttribute> {
+    const attributes: Record<string, ShaderParseAttribute> = {}
     for (const stageName in this.__shaderStages) {
       const shaderStageBlock = this.__shaderStages[stageName]
       for (const attrName in shaderStageBlock['attributes'])
@@ -399,12 +401,12 @@ class GLShader extends BaseItem {
    * @param shaderopts - The shaderopts value.
    * @return - The result of the shader compilation.
    */
-  compileForTarget(key?: string, shaderopts?: Shaderopts): Record<string, any> | null {
-    const shaderkey = key ? key : this.getId()
+  compileForTarget(key?: string, shaderopts?: Shaderopts): ShaderCompileResult | null {
+    const shaderkey = key ? key : this.getId().toString()
     let shaderCompilationResult = this.__shaderProgramHdls[shaderkey]
     if (!shaderCompilationResult) {
       shaderCompilationResult = this.__createProgram(shaderopts || {})
-      shaderCompilationResult.shaderkey = shaderkey
+      if (shaderCompilationResult) shaderCompilationResult.shaderkey = shaderkey
       this.__shaderProgramHdls[shaderkey] = shaderCompilationResult
 
       return shaderCompilationResult

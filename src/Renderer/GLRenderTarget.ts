@@ -1,7 +1,7 @@
 import { Color } from '../Math/Color'
 import { EventEmitter } from '../Utilities/index'
 import { processTextureParams } from './processTextureParams'
-import { Uniform } from './types/renderer'
+import { ShaderUniform, ShaderUniforms } from './types/renderer'
 import { RenderState } from './RenderStates/index'
 import { WebGL12RenderingContext } from './types/webgl'
 
@@ -268,7 +268,7 @@ class GLRenderTarget extends EventEmitter {
    * @param channelId - The channelId value.
    * @return - The return value.
    */
-  bindColorTexture(renderstate: RenderState, unif: Uniform, channelId = 0): boolean {
+  bindColorTexture(renderstate: RenderState, unif: ShaderUniform, channelId = 0): boolean {
     const gl = this.__gl
     const unit = renderstate.boundTextures++
     gl.uniform1i(unif.location, unit)
@@ -283,7 +283,7 @@ class GLRenderTarget extends EventEmitter {
    * @param unif - The WebGL uniform
    * @return - The return value.
    */
-  bindDepthTexture(renderstate: RenderState, unif: Uniform): boolean {
+  bindDepthTexture(renderstate: RenderState, unif: ShaderUniform): boolean {
     const gl = this.__gl
     const unit = renderstate.boundTextures++
     gl.uniform1i(unif.location, unit)
@@ -444,7 +444,7 @@ class GLRenderTarget extends EventEmitter {
    * @param bindings - The bindings param.
    * @return - The return value.
    */
-  bindToUniform(renderstate: RenderState, unif: Uniform, bindings?: any): boolean {
+  bindToUniform(renderstate: RenderState, unif: ShaderUniform, bindings?: ShaderUniforms): boolean {
     // if (!this.__loaded) {
     //   return false
     // }

@@ -72,9 +72,9 @@ const parseGeomsBinary = (data: any, callback: any): void => {
       transferables.push(attrData.values.buffer)
     }
 
-    if (geomBuffers.vertexNeighbors) {
-      transferables.push(geomBuffers.vertexNeighbors.buffer)
-    }
+    // if (geomBuffers.vertexNeighbors) {
+    //   transferables.push(geomBuffers.vertexNeighbors.buffer)
+    // }
 
     // Transfer the bbox point buffers.
     const bbox = geom.getBoundingBox()

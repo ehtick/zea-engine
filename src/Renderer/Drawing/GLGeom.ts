@@ -1,5 +1,6 @@
 import { BaseGeom, Mesh, RefCounted } from '../../SceneTree/index'
 import { RenderState } from '../RenderStates/index'
+import { GLAttrBuffer } from '../types/renderer'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { generateShaderGeomBinding, IGeomShaderBinding } from './GeomShaderBinding'
 
@@ -10,7 +11,7 @@ class GLGeom extends RefCounted {
   protected __gl: WebGL12RenderingContext
   public geom: BaseGeom | Mesh
   protected numVertices: number = 0
-  protected __glattrbuffers: Record<string, any>
+  protected __glattrbuffers: Record<string, GLAttrBuffer>
   protected __shaderBindings: Record<string, IGeomShaderBinding>
   protected buffersDirty: boolean
   protected genBufferOpts: Record<string, any> = {}
@@ -66,7 +67,7 @@ class GLGeom extends RefCounted {
    * The genBuffers method.
    * @param renderstate - The object tracking the current state of the renderer
    */
-  genBuffers(renderstate?: RenderState): any {}
+  genBuffers(renderstate: RenderState): any {}
 
   /**
    * The updateBuffers method.
@@ -108,7 +109,7 @@ class GLGeom extends RefCounted {
     // GL state. (vertexAttribDivisor)
     const shaderBinding = this.__shaderBindings[renderstate.shaderkey!]
     if (shaderBinding) {
-      shaderBinding.unbind()
+      shaderBinding.unbind(renderstate)
     }
   }
 

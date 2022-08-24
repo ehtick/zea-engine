@@ -25,7 +25,7 @@ describe('Lines', () => {
     expect(lines.getSegmentVertexIndex(1, 0)).toBe(1)
     expect(lines.getSegmentVertexIndex(1, 1)).toBe(2)
 
-    expect(lines.getVertexAttribute('positions').getCount()).toBe(numVertices)
+    expect(lines.positions.getCount()).toBe(numVertices)
   })
 
   test('Check resizing bigger the line segment indices.', () => {
@@ -88,6 +88,7 @@ describe('Lines', () => {
         positions: {
           count: 3,
           dataType: 'Vec3',
+          dimension: 3,
           normalized: false,
           values: new Float32Array([1, 2, 3, -1, -2, -3, 2, 1, -3]),
         },
@@ -125,7 +126,7 @@ describe('Lines', () => {
     }
     lines.fromJSON(input)
 
-    expect(lines.getVertexAttribute('positions').getCount()).toBe(3)
+    expect(lines.positions.getCount()).toBe(3)
     expect(lines.getNumSegments()).toBe(2)
   })
 })

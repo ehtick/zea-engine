@@ -123,8 +123,9 @@ const create3DContext = function (
     this.__quadattrbuffers = {
       vertexIDs: {
         buffer: this.__quadVertexIdsBuffer,
-        dataType: 'Float32',
+        dataType: context.FLOAT,
         dimension: 1,
+        elementSize: 4,
         count: vertexIDs.length,
         shared: true /*This buffer is shared between geoms. do not destroy */,
       },

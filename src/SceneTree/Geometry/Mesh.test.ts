@@ -68,7 +68,7 @@ describe('Mesh', () => {
     const numVertices = 3
     mesh.setNumVertices(numVertices)
 
-    const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>mesh.positions
     positions.getValueRef(0).set(1, 2, 3)
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
@@ -81,7 +81,7 @@ describe('Mesh', () => {
     expect(mesh.getFaceVertexIndices(0)).toEqual([0, 1, 2])
     expect(mesh.computeHardEdgesIndices()).toEqual(new Uint32Array([0, 1, 1, 2, 0, 2]))
 
-    expect(mesh.getVertexAttribute('positions').getCount()).toBe(numVertices)
+    expect(mesh.positions.getCount()).toBe(numVertices)
   })
 
   test('Check for setting up a single quad', () => {
@@ -89,7 +89,7 @@ describe('Mesh', () => {
     const numVertices = 4
     mesh.setNumVertices(numVertices)
 
-    const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>mesh.positions
     positions.getValueRef(0).set(0, -1, -1)
     positions.getValueRef(1).set(0, -1, 1)
     positions.getValueRef(2).set(0, 1, 1)
@@ -117,7 +117,7 @@ describe('Mesh', () => {
     mesh.addVertexAttribute('normals', new Vec3Attribute())
     mesh.setNumVertices(numVertices)
 
-    const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>mesh.positions
     positions.getValueRef(0).set(0, -1, -1)
     positions.getValueRef(1).set(0, -1, 1)
     positions.getValueRef(2).set(0, 1, 1)
@@ -152,7 +152,7 @@ describe('Mesh', () => {
     const numVertices = 6
     mesh.setNumVertices(numVertices)
 
-    const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>mesh.positions
     positions.getValueRef(0).set(0, -1, -1)
     positions.getValueRef(1).set(0, -1, 1)
     positions.getValueRef(2).set(0, 1, 1)
@@ -188,7 +188,7 @@ describe('Mesh', () => {
     const numVertices = 6
     mesh.setNumVertices(numVertices)
 
-    const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>mesh.positions
     positions.getValueRef(0).set(0, -1, -1)
     positions.getValueRef(1).set(0, -1, 1)
     positions.getValueRef(2).set(0, 1, 1)
@@ -207,7 +207,7 @@ describe('Mesh', () => {
     const numVertices = 6
     mesh.setNumVertices(numVertices)
 
-    const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>mesh.positions
     positions.getValueRef(0).set(0, -1, -1)
     positions.getValueRef(1).set(0, -1, 1)
     positions.getValueRef(2).set(0, 1, 1)
@@ -263,7 +263,7 @@ describe('Mesh', () => {
     const numVertices = 3
     mesh.setNumVertices(numVertices)
 
-    const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>mesh.positions
     positions.getValueRef(0).set(1, 2, 3)
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
@@ -292,7 +292,7 @@ describe('Mesh', () => {
     const numVertices = 3
     mesh.setNumVertices(numVertices)
 
-    const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>mesh.positions
     positions.getValueRef(0).set(1, 2, 3)
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
@@ -323,7 +323,7 @@ describe('Mesh', () => {
     }
     mesh.fromJSON(input)
 
-    expect(mesh.getVertexAttribute('positions').getCount()).toBe(3)
+    expect(mesh.positions.getCount()).toBe(3)
     expect(mesh.getFaceCounts()).toEqual([1])
     expect(mesh.getFaceVertexIndices(0)).toEqual([0, 1, 2])
   })

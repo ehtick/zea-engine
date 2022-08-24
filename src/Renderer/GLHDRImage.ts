@@ -6,7 +6,7 @@ import { HDRImage } from '../SceneTree/Images/HDRImage'
 import { Color } from '../Math/Color'
 import { BaseImage } from '../SceneTree/BaseImage'
 import { GLShader } from './GLShader'
-import { Uniform } from './types/renderer'
+import { ShaderUniform } from './types/renderer'
 import { RenderState } from './RenderStates/index'
 import { WebGL12RenderingContext } from './types/webgl'
 
@@ -155,7 +155,7 @@ class GLHDRImage extends GLTexture2D {
    * @param bindings - The bindings value.
    * @return - The return value.
    */
-  bindToUniform(renderstate: RenderState, unif: Uniform, bindings?: Record<string, any>): boolean {
+  bindToUniform(renderstate: RenderState, unif: ShaderUniform, bindings?: Record<string, any>): boolean {
     return super.bindToUniform(renderstate, unif, bindings)
   }
 

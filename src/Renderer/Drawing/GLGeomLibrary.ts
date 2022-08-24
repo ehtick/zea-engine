@@ -10,6 +10,10 @@ import { GLBaseRenderer } from '../GLBaseRenderer'
 import { IndexEvent } from '../../Utilities/Events/IndexEvent'
 import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
+import { GeomBuffers } from '../../SceneTree/types/scene'
+import { GLAttrBuffer, GLAttrDesc } from '../types/renderer'
+import { GLCompoundGeom } from './GLCompoundGeom'
+import { SystemDesc } from '../../SystemDesc'
 
 const resizeIntArray = (intArray: Int32Array, newSize: number) => {
   const newArray = new Int32Array(newSize)
@@ -23,14 +27,15 @@ const resizeIntArray = (intArray: Int32Array, newSize: number) => {
 class GLGeomLibrary extends EventEmitter {
   protected renderer: GLBaseRenderer
   protected __gl: WebGL12RenderingContext
-  protected shaderAttrSpec: Record<string, any> = {}
   protected freeGeomIndices: number[] = []
   protected geoms: Array<BaseGeom | null> = []
   protected geomRefCounts: number[] = []
   protected geomsDict: Map<EventEmitter, number> = new Map()
   protected glGeomsDict: Map<EventEmitter, GLGeom> = new Map()
-  protected geomBuffersTmp: any[] = [] // for each geom, these are the buffer
-  protected glattrbuffers: Record<string, any> = {}
+  protected geomBuffersTmp: GeomBuffers[] = [] // for each geom, these are the buffer
+
+  protected shaderAttrSpec: Record<string, GLAttrDesc> = {}
+  protected glattrbuffers: Record<string, GLAttrBuffer> = {}
   protected shaderBindings: Record<string, IGeomShaderBinding> = {}
   protected attributesBufferNeedsRealloc: boolean = false
   protected attributesBufferNeedsAlloc: string[] = []
@@ -116,6 +121,8 @@ class GLGeomLibrary extends EventEmitter {
       glgeom = new GLLines(gl, geom)
     } else if (geom instanceof Points || geom instanceof PointsProxy) {
       glgeom = new GLPoints(gl, geom)
+    } else if (geom instanceof CompoundGeom) {
+      glgeom = new GLCompoundGeom(gl, geom)
     } else {
       throw new Error('Unsupported geom type:' + geom.constructor.name)
     }
@@ -291,14 +298,8 @@ class GLGeomLibrary extends EventEmitter {
     for (const attrName in geomBuffers.attrBuffers) {
       if (!this.shaderAttrSpec[attrName]) {
         const attrData = geomBuffers.attrBuffers[attrName]
-        const geomAttrDesc: Record<string, any> = genDataTypeDesc(this.__gl, attrData.dataType)
 
-        this.shaderAttrSpec[attrName] = {
-          dataType: attrData.dataType,
-          normalized: attrData.normalized,
-          dimension: geomAttrDesc.dimension,
-          elementSize: geomAttrDesc.elementSize,
-        }
+        this.shaderAttrSpec[attrName] = genDataTypeDesc(this.__gl, attrData.dataType)
 
         this.attributesBufferNeedsAlloc.push(attrName)
       }
@@ -368,20 +369,23 @@ class GLGeomLibrary extends EventEmitter {
           gl.COPY_WRITE_BUFFER,
           0,
           0,
-          this.glattrbuffers[attrName].length * attrSpec.elementSize
+          this.glattrbuffers[attrName].numValues * attrSpec.elementSize
         )
         gl.deleteBuffer(this.glattrbuffers[attrName].buffer)
       }
 
-      attrSpec.numValues = numValues // cache for debugging only
+      // attrSpec.numValues = numValues // cache for debugging only
 
       const targetName = attrName == 'textureCoords' ? 'texCoords' : attrName
       this.glattrbuffers[targetName] = {
+        name: attrName,
+        elementSize: attrSpec.elementSize,
         buffer: attrBuffer,
         dataType: attrSpec.dataType,
-        normalized: attrSpec.normalized,
-        length: numValues,
+        normalized: false,
+        numValues: numValues,
         dimension: attrSpec.dimension,
+        shared: false,
       }
     }
   }
@@ -554,7 +558,7 @@ class GLGeomLibrary extends EventEmitter {
       shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.glattrbuffers, this.indexBuffer)
       this.shaderBindings[renderstate.shaderkey!] = shaderBinding
 
-      {
+      if (SystemDesc.browserName == 'Safari') {
         // Hack to force the primitive restart index cache to be dirty...
         // https://bugs.webkit.org/show_bug.cgi?id=239015
         // - First draw updates the indexType to be correct (invalid enum -> draw buffer element type)
@@ -585,7 +589,7 @@ class GLGeomLibrary extends EventEmitter {
     // GL state. (vertexAttribDivisor)
     const shaderBinding = this.shaderBindings[renderstate.shaderkey!]
     if (shaderBinding) {
-      shaderBinding.unbind()
+      shaderBinding.unbind(renderstate)
     }
   }
 

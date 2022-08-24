@@ -1,3 +1,4 @@
+export * from './types/renderer'
 export * from './types/webgl'
 export * from './GLContext'
 export * from './GLTexture2D'

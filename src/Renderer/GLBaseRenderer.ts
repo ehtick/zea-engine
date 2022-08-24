@@ -25,7 +25,7 @@ import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
 
 import { GLShader } from './GLShader'
 import { WebGL12RenderingContext } from './types/webgl'
-import { Uniforms } from './types/renderer'
+import { ShaderUniforms } from './types/renderer'
 import { StateChangedEvent } from '../Utilities/Events/StateChangedEvent'
 import { ChildAddedEvent } from '../Utilities/Events/ChildAddedEvent'
 import { ColorRenderState, GeomDataRenderState, HighlightRenderState, RenderState } from './RenderStates/index'
@@ -1245,11 +1245,12 @@ class GLBaseRenderer extends ParameterOwner {
    */
   bindGLBaseRenderer(renderstate: RenderState): void {
     renderstate.gl = this.__gl
+    renderstate.renderer = this
     renderstate.shaderopts = { directives: this.directives } // we will start deprecating this in favor os a simpler directives
 
     const gl = this.__gl
     if (!renderstate.viewports || renderstate.viewports.length == 1) {
-      renderstate.bindRendererUnifs = (unifs: Uniforms) => {
+      renderstate.bindRendererUnifs = (unifs: ShaderUniforms) => {
         const { cameraMatrix, viewMatrix, projectionMatrix, eye, isOrthographic } = unifs
         if (cameraMatrix) {
           gl.uniformMatrix4fv(cameraMatrix.location, false, renderstate.cameraMatrix.asArray())
@@ -1273,9 +1274,9 @@ class GLBaseRenderer extends ParameterOwner {
           gl.uniform1i(isOrthographic.location, vp.isOrthographic)
         }
       }
-      renderstate.bindViewports = (unifs: Uniforms, cb: any) => cb()
+      renderstate.bindViewports = (unifs: ShaderUniforms, cb: any) => cb()
     } else {
-      renderstate.bindRendererUnifs = (unifs: Uniforms) => {
+      renderstate.bindRendererUnifs = (unifs: ShaderUniforms) => {
         // Note: the camera matrix should be the head position instead
         // of the eye position. The inverse(viewMatrix) can be used
         // when we want the eye pos.
@@ -1285,7 +1286,7 @@ class GLBaseRenderer extends ParameterOwner {
         }
       }
 
-      renderstate.bindViewports = (unifs: Uniforms, cb: any) => {
+      renderstate.bindViewports = (unifs: ShaderUniforms, cb: any) => {
         renderstate.viewports.forEach((vp: any, index: number) => {
           let vp_region = vp.region
           gl.viewport(vp_region[0], vp_region[1], vp_region[2], vp_region[3])

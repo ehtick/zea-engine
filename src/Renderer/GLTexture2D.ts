@@ -2,7 +2,7 @@ import { BaseImage, RefCounted } from '../SceneTree/index'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { MathFunctions } from '../Utilities/MathFunctions'
 import { processTextureParams } from './processTextureParams'
-import { Uniform, Uniforms } from './types/renderer'
+import { ShaderUniform, ShaderUniforms } from './types/renderer'
 import { RenderState } from './RenderStates/index'
 import { WebGL12RenderingContext } from './types/webgl'
 
@@ -570,7 +570,7 @@ class GLTexture2D extends RefCounted {
    * @param unifs - The unifs value.
    * @return - The return value.
    */
-  preBind(unif: Uniform, unifs: Uniforms): Record<string, Uniform> {
+  preBind(unif: ShaderUniform, unifs: ShaderUniforms): ShaderUniforms {
     return {
       textureTypeUnif: unifs[unif.name + 'Type'],
       textureDescUnif: unifs[unif.name + 'Desc'],
@@ -578,14 +578,14 @@ class GLTexture2D extends RefCounted {
   }
 
   /**
-   * Binds Texture to the Uniform attribute.
+   * Binds Texture to the ShaderUniform attribute.
    *
    * @param renderstate - The renderstate value.
    * @param unif - The unif value.
    * @param bindings - The bindings value.
    * @return - The return value.
    */
-  bindToUniform(renderstate: RenderState, unif: Uniform, bindings?: Record<string, any>): boolean {
+  bindToUniform(renderstate: RenderState, unif: ShaderUniform, bindings?: ShaderUniforms): boolean {
     if (!this.__loaded) {
       return false
     }

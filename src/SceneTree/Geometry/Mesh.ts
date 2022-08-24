@@ -8,7 +8,7 @@ import { Attribute } from './Attribute'
 import { Registry } from '../../Registry'
 import { Vec3Attribute } from './Vec3Attribute'
 import { BinReader } from '../BinReader'
-import { AttrBuffer } from '../../Renderer/types/renderer'
+import { GeomBuffers } from '../types/scene'
 import { Xfo } from '../../Math'
 
 /**
@@ -370,8 +370,8 @@ class Mesh extends BaseGeom {
         return connectedVertices[key]
       }
 
-      const p0 = positions.getValueRef(tmp0)
-      const p1 = positions.getValueRef(tmp1)
+      const p0 = positions.getValue(tmp0)
+      const p1 = positions.getValue(tmp1)
       const edgeVec = p1.subtract(p0)
 
       const edgeIndex = this.edgeFaces.length / 2
@@ -447,12 +447,12 @@ class Mesh extends BaseGeom {
     const numFaces = this.getNumFaces()
     for (let faceIndex = 0; faceIndex < numFaces; faceIndex++) {
       const faceVerts = this.getFaceVertexIndices(faceIndex)
-      const p0 = positions.getValueRef(faceVerts[0])
-      const p1 = positions.getValueRef(faceVerts[1])
+      const p0 = positions.getValue(faceVerts[0])
+      const p1 = positions.getValue(faceVerts[1])
       let prev = p1
       const faceNormal = new Vec3()
       for (let j = 2; j < faceVerts.length; j++) {
-        const pn = positions.getValueRef(faceVerts[j])
+        const pn = positions.getValue(faceVerts[j])
         const v0 = prev.subtract(p0)
         const v1 = pn.subtract(p0)
         faceNormal.addInPlace(v0.cross(v1).normalize())
@@ -483,7 +483,7 @@ class Mesh extends BaseGeom {
     for (let i = 0; i < this.edgeFaces.length; i += 2) {
       const v0 = this.edgeVerts[i]
       const v1 = this.edgeVerts[i + 1]
-      const edgeVec = positions.getValueRef(v1).subtract(positions.getValueRef(v0))
+      const edgeVec = positions.getValue(v1).subtract(positions.getValue(v0))
       edgeVec.normalizeInPlace()
       this.edgeVecs.push(edgeVec)
 
@@ -495,8 +495,8 @@ class Mesh extends BaseGeom {
         continue
       }
 
-      const n0 = faceNormals.getValueRef(p0)
-      const n1 = faceNormals.getValueRef(p1)
+      const n0 = faceNormals.getValue(p0)
+      const n1 = faceNormals.getValue(p1)
       this.edgeAngles[i / 2] = n0.angleTo(n1)
     }
   }
@@ -517,7 +517,7 @@ class Mesh extends BaseGeom {
     // provided on the attributes. We cache values and use hard coded constants.
     // const faceNormalsBuffer = faceNormals.data.buffer
     const getFaceNormal = (index: number) => {
-      return faceNormals.getValueRef(index)
+      return faceNormals.getValue(index)
     }
     const setVertexNormal = (index: number, value: Vec3) => {
       normalsAttr.setValue(index, value)
@@ -712,7 +712,7 @@ class Mesh extends BaseGeom {
    * @param opts - The opts value.
    * @return - The return value.
    */
-  genBuffers(opts?: Record<string, any>): Record<string, any> {
+  genBuffers(opts?: Record<string, any>): GeomBuffers {
     // Compute the normals on demand.
     // if (!('normals' in this.__vertexAttributes)) {
     //     // this.geom.computeVertexNormals();
@@ -749,7 +749,7 @@ class Mesh extends BaseGeom {
     // if (debugAttrValues)
     //     maxIndex = Math.max(...indices);
 
-    const attrBuffers: Record<string, AttrBuffer> = {}
+    const attrBuffers: Record<string, any> = {}
     for (const [attrName, attr] of this.__vertexAttributes) {
       let values
       if (splitCount == 0) values = attr.asArray()
