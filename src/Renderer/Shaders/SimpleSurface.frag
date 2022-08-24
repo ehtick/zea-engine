@@ -68,6 +68,13 @@ void main(void) {
   int flags = int(v_geomItemData.x + 0.5);
   float treeItemOpacity = v_geomItemData.y;
 
+  // We can make geoms invisible to hide them. 
+  // Avoid drawing GeomData for geoms that are completely transparent.
+  if (treeItemOpacity < 0.001) {
+    discard;
+    return;
+  }
+  
   // Cutaways
   if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) 
   {

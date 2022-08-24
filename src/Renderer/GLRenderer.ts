@@ -121,7 +121,7 @@ class GLRenderer extends GLBaseRenderer {
       // An EnvMap must be HDR, and can be convolved for reflections.
       // A Background map can be simply an image.
       const backgroundMap = env
-      if (backgroundMap.type === 'FLOAT') {
+      if (backgroundMap.type === 'HDR') {
         this.__glBackgroundMap = new GLHDRImage(this.__gl, <HDRImage>backgroundMap) // todo: is this cast ok?
       } else {
         this.__glBackgroundMap = new GLTexture2D(this.__gl, backgroundMap)

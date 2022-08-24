@@ -35,7 +35,7 @@ class HDRImage extends BaseImage {
       filepath = name
       this.setName(name.substring(name.lastIndexOf('/') + 1, name.lastIndexOf('.')))
     }
-    this.type = 'FLOAT'
+    this.type = 'HDR'
 
     if (filepath) {
       this.load(filepath)

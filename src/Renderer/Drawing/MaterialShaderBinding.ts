@@ -108,7 +108,7 @@ class SimpleUniformBinding extends ParamUniformBinding {
       let gltexture = GLTexture2D.getCachedGLTexture2D(image)
       const textureType = 1
       if (!gltexture) {
-        if (image.type === 'FLOAT') {
+        if (image.type === 'HDR') {
           gltexture = new GLHDRImage(gl, <HDRImage>image)
         } else {
           gltexture = new GLTexture2D(gl, image)

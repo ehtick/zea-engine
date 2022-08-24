@@ -135,6 +135,13 @@ void main(void) {
   int flags = int(v_geomItemData.x + 0.5);
   float treeItemOpacity = v_geomItemData.y;
 
+  // We can make geoms invisible to hide them. 
+  // Avoid drawing GeomData for geoms that are completely transparent.
+  if (treeItemOpacity < 0.001) {
+    discard;
+    return;
+  }
+  
   if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
     vec4 cutAwayData   = getCutaway(geomItemId);
     vec3 planeNormal = cutAwayData.xyz;
@@ -359,43 +366,6 @@ void main(void) {
       return;
     }
   }
-
-
-  // We can make geoms invisible to hide them. 
-  // Avoid drawing GeomData for geoms that are completely transparent.
-  if (geomType == TRIANGLES) { // start 'TRIANGLES'
-    vec4 matValue0      = getMaterialValue(materialCoords, 0);
-    vec4 matValue2      = getMaterialValue(materialCoords, 2);
-    float opacity          = matValue2.g * matValue0.a * treeItemOpacity;
-    if (opacity < 0.001) {
-      discard;
-      return;
-    }
-  } // end 'TRIANGLES'
-  else if (geomType == LINES) { // start 'LINES'
-#ifdef ENABLE_MULTI_DRAW
-    vec4 edgeColor      = getMaterialValue(materialCoords, 3);
-#else 
-    vec4 edgeColor      = EdgeColor;
-#endif // ENABLE_MULTI_DRAW
-    float opacity          = edgeColor.a * treeItemOpacity;
-    if (opacity < 0.001) {
-      discard;
-      return;
-    }
-  } // end 'LINES'
-  else if (geomType == POINTS) { // start 'POINTS'
-#ifdef ENABLE_MULTI_DRAW
-    vec4 pointColor      = getMaterialValue(materialCoords, 4);
-#else 
-    vec4 pointColor      = PointColor;
-#endif // ENABLE_MULTI_DRAW
-    float opacity          = pointColor.a * treeItemOpacity;
-    if (opacity < 0.001) {
-      discard;
-      return;
-    }
-  }  // end 'POINTS'
 
   
   fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_drawItemIds.x, v_drawItemIds.y, isOrthographic);
