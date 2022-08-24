@@ -4,6 +4,7 @@ import { Mesh } from '../../SceneTree/Geometry/Mesh'
 import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { genDataTypeDesc } from './GeomShaderBinding'
+import { MeshProxy } from '../../SceneTree'
 
 /** Class representing a GL mesh.
  * @extends GLGeom
@@ -19,7 +20,7 @@ class GLMesh extends GLGeom {
    * @param gl - The webgl rendering context.
    * @param mesh - The mesh value.
    */
-  constructor(gl: WebGL12RenderingContext, mesh: Mesh) {
+  constructor(gl: WebGL12RenderingContext, mesh: Mesh | MeshProxy) {
     super(gl, mesh)
   }
 

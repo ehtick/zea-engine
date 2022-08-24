@@ -7,6 +7,7 @@ import { GLAttrBuffer, GLAttrDesc, ShaderAttribute } from '../types/renderer'
 
 /**
  * Returns a descriptor for the provided geom attribute.
+ * Used to generate WebGLBuffers from the data provided by the geometry.
  * @private
  * @param gl - The webgl context
  * @param attrDataType - The geometry attribute value.
@@ -115,7 +116,7 @@ abstract class IGeomShaderBinding {
  */
 class GeomShaderBinding extends IGeomShaderBinding {
   protected gl: WebGL12RenderingContext
-  protected shaderAttrs: Record<string, any>
+  protected shaderAttrs: Record<string, ShaderAttribute>
   protected glattrbuffers: Record<string, GLAttrBuffer>
   protected indexBuffer: WebGLBuffer | null
   /**
@@ -160,13 +161,8 @@ class GeomShaderBinding extends IGeomShaderBinding {
       const dimension = geomAttrBuffer.dimension
       const dataType = geomAttrBuffer.dataType
       const normalized = geomAttrBuffer.normalized
-      const isInteger =
-        dataType == gl.UNSIGNED_BYTE ||
-        dataType == gl.BYTE ||
-        dataType == gl.UNSIGNED_SHORT ||
-        dataType == gl.SHORT ||
-        dataType == gl.INT ||
-        dataType == gl.UNSIGNED_INT
+      const isInteger = shaderAttrDesc.integer
+
       const stride = dimension * geomAttrBuffer.elementSize
       const offset =
         geomAttrBuffer.offset != undefined ? geomAttrBuffer.offset * dimension * geomAttrBuffer.elementSize : 0
@@ -270,15 +266,8 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
 
       const dimension = geomAttrBuffer.dimension
       const dataType = geomAttrBuffer.dataType
-      const isInteger =
-        dataType == gl.UNSIGNED_BYTE ||
-        dataType == gl.BYTE ||
-        dataType == gl.UNSIGNED_SHORT ||
-        dataType == gl.SHORT ||
-        dataType == gl.INT ||
-        dataType == gl.UNSIGNED_INT
-      const normalized = geomAttrBuffer.normalized == true
       const stride = geomAttrBuffer.dimension * geomAttrBuffer.elementSize
+      const isInteger = shaderAttrDesc.integer
       const instanced = shaderAttrDesc.instanced
 
       gl.enableVertexAttribArray(location)

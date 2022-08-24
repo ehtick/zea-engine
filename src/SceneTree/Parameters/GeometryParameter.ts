@@ -3,19 +3,20 @@
 import { Registry } from '../../Registry'
 import { Parameter } from './Parameter'
 import { BaseGeom } from '../../SceneTree/Geometry/BaseGeom'
+import { BaseProxy } from '../Geometry'
 
 /** Class representing a geometry parameter.
  * @extends Parameter
  * @private
  */
-class GeometryParameter extends Parameter<BaseGeom> {
+class GeometryParameter extends Parameter<BaseGeom | BaseProxy> {
   protected listenerIDs: Record<string, number> = {}
   /**
    * Create a geometry parameter.
    * @param name - The name of the color parameter.
    * @param value - The value of the parameter.
    */
-  constructor(name: string = '', value: BaseGeom = undefined) {
+  constructor(name: string = '', value: BaseGeom | BaseProxy = undefined) {
     super(name, undefined, 'Geometry')
     if (value) this.setValue(value)
   }
@@ -28,7 +29,7 @@ class GeometryParameter extends Parameter<BaseGeom> {
    * The setValue method.
    * @param value - The geom value.
    */
-  setValue(value: BaseGeom): void {
+  setValue(value: BaseGeom | BaseProxy): void {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.__value !== value) {
       if (this.__value) {
@@ -54,7 +55,7 @@ class GeometryParameter extends Parameter<BaseGeom> {
    *
    * @param value - The context value.
    */
-  loadValue(value: BaseGeom): void {
+  loadValue(value: BaseGeom | BaseProxy): void {
     if (this.__value) {
       this.__value.off('boundingBoxChanged', this.listenerIDs['boundingBoxChanged'])
     }

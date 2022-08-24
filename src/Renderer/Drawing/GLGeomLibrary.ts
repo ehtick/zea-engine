@@ -1,7 +1,17 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter, Allocator1D } from '../../Utilities/index'
 import { generateShaderGeomBinding, genDataTypeDesc, IGeomShaderBinding } from './GeomShaderBinding'
-import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom, CompoundGeom } from '../../SceneTree/index'
+import {
+  Points,
+  Lines,
+  Mesh,
+  PointsProxy,
+  LinesProxy,
+  MeshProxy,
+  BaseGeom,
+  CompoundGeom,
+  BaseProxy,
+} from '../../SceneTree/index'
 import { GLPoints } from './GLPoints'
 import { GLLines } from './GLLines'
 import { GLMesh } from './GLMesh'
@@ -28,7 +38,7 @@ class GLGeomLibrary extends EventEmitter {
   protected renderer: GLBaseRenderer
   protected __gl: WebGL12RenderingContext
   protected freeGeomIndices: number[] = []
-  protected geoms: Array<BaseGeom | null> = []
+  protected geoms: Array<BaseGeom | BaseProxy | null> = []
   protected geomRefCounts: number[] = []
   protected geomsDict: Map<EventEmitter, number> = new Map()
   protected glGeomsDict: Map<EventEmitter, GLGeom> = new Map()
@@ -107,7 +117,7 @@ class GLGeomLibrary extends EventEmitter {
    * @param geom - The geom value.
    * @return - The return value.
    */
-  constructGLGeom(geom: BaseGeom): GLGeom {
+  constructGLGeom(geom: BaseGeom | BaseProxy): GLGeom {
     let glgeom = this.glGeomsDict.get(geom)
     if (glgeom != undefined) {
       // Increment the ref count for the GLGeom
@@ -140,7 +150,7 @@ class GLGeomLibrary extends EventEmitter {
    * @param geom - The geom to be managed by this GLGeomLibrary.
    * @return - The index of the geom in the GLGeomLibrary
    */
-  addGeom(geom: BaseGeom): number {
+  addGeom(geom: BaseGeom | BaseProxy): number {
     let index = this.geomsDict.get(geom)
     if (index != undefined) {
       // Increment the ref count for the GLGeom
@@ -200,7 +210,7 @@ class GLGeomLibrary extends EventEmitter {
    * Removes a Geom managed by this GLGeomLibrary.
    * @param geom - The geom to remove
    */
-  removeGeom(geom: BaseGeom): void {
+  removeGeom(geom: BaseGeom | BaseProxy): void {
     const index = this.geomsDict.get(geom)
 
     this.geomRefCounts[index]--
@@ -246,7 +256,7 @@ class GLGeomLibrary extends EventEmitter {
    * @param index - The index of the geom to retrieve
    * @return - The return value.
    */
-  getGeom(index: number): BaseGeom {
+  getGeom(index: number): BaseGeom | BaseProxy {
     return this.geoms[index]
   }
 

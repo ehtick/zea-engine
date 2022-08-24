@@ -1,7 +1,8 @@
-import { Material } from '..'
+import { AssetLoadContext, Material } from '..'
 import { Box3 } from '../../Math/index'
 import { EventEmitter } from '../../Utilities/EventEmitter'
 import { MaterialLibrary } from '../MaterialLibrary'
+import { GeomBuffers } from '../types/scene'
 
 /** ProxyGeometries are pupulated from data unpacked using a webworker while loading zcad files.
  * These geometries represent readonly geometries with very basic topologies.
@@ -10,7 +11,7 @@ import { MaterialLibrary } from '../MaterialLibrary'
  */
 class BaseProxy extends EventEmitter {
   protected name: string
-  __buffers: any
+  __buffers: GeomBuffers
   protected boundingBox: Box3
   protected __metaData: any
 
@@ -21,7 +22,7 @@ class BaseProxy extends EventEmitter {
   constructor(data: any) {
     super()
     this.name = data.name
-    this.__buffers = data.geomBuffers
+    this.__buffers = data.geomBuffers as GeomBuffers
     if (this.__buffers.attrBuffers) {
       // eslint-disable-next-line guard-for-in
       // for (const attrName in this.__buffers.attrBuffers) {
@@ -59,7 +60,7 @@ class BaseProxy extends EventEmitter {
    * The genBuffers method.
    * @return - The return value.
    */
-  genBuffers(): any {
+  genBuffers(): GeomBuffers {
     return this.__buffers
   }
 
@@ -75,6 +76,32 @@ class BaseProxy extends EventEmitter {
     if (this.__buffers.indices) {
       this.__buffers.indices = null
     }
+  }
+
+  // ////////////////////////////////////////
+  // Persistence
+
+  /**
+   * The toJSON method encodes this type as a json object for persistence.
+   *
+   * @param context - The context value.
+   * @return - Returns the json object.
+   */
+  toJSON(context?: Record<string, any>): Record<string, unknown> {
+    const json: Record<string, unknown> = {
+      geomBuffers: this.__buffers,
+    }
+    return json
+  }
+
+  /**
+   * The fromJSON method decodes a json object for this type.
+   *
+   * @param json - The json object this item must decode.
+   * @param context - The context value.
+   */
+  fromJSON(json: Record<string, any>, context?: AssetLoadContext): void {
+    this.__buffers = json.geomBuffers
   }
 }
 

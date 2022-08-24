@@ -23,9 +23,10 @@ Registry.register('SubGeom', SubGeom)
  * @extends BaseProxy
  */
 class CompoundGeom extends BaseProxy {
-  private counts: Record<string, number>
   materials: Array<Material> = []
   subGeoms: Array<SubGeom> = []
+  private counts: Record<string, number>
+  private materialGroupsDirty = true
   /**
    * Create points.
    */
@@ -101,13 +102,21 @@ class CompoundGeom extends BaseProxy {
 
   // ////////////////////////////////////////
   // Materials
+  getSubGeomMaterial(subGeomId: number): Material | undefined {
+    // Note: subGeomMaterialIndices is Uint8Array, and 0 means no custom
+    // material is assigned to the subGeom.
+    // Subtract 1 to get the actual material id.
+    const materialIndex = this.__buffers.subGeomMaterialIndices[subGeomId] - 1
+    if (materialIndex == -1) return undefined
+    return this.materials[materialIndex]
+  }
 
   /**
    * Assigns a material to a sub-geom by ID;
    * @param subGeomId - The ID of the sub-geom to assign the material.
    * @param material - The material to assign.
    */
-  assignSubGeomMaterial(subGeomId: number, material: Material) {
+  setSubGeomMaterial(subGeomId: number, material: Material) {
     let materialIndex = this.materials.indexOf(material)
     if (materialIndex == -1) {
       materialIndex = this.materials.length
@@ -120,8 +129,19 @@ class CompoundGeom extends BaseProxy {
     // material is assigned to the subGeom.
     // Subtract 1 to get the actual material id.
     this.__buffers.subGeomMaterialIndices[subGeomId] = materialIndex + 1
-    this.calcMaterialGroups()
+    this.materialGroupsDirty = true
     this.emit('materialsChanged')
+  }
+
+  /**
+   * Assigns a material to a sub-geom by ID;
+   * @deprecated
+   * Please use: setSubGeomMaterial
+   * @param subGeomId - The ID of the sub-geom to assign the material.
+   * @param material - The material to assign.
+   */
+  assignSubGeomMaterial(subGeomId: number, material: Material) {
+    this.setSubGeomMaterial(subGeomId, material)
   }
 
   /**
@@ -134,6 +154,14 @@ class CompoundGeom extends BaseProxy {
     this.emit('materialsChanged')
   }
 
+  /**
+   * Each subgeom may be a assigned a different material.
+   *
+   * We calculate groups that enable multiple subgeoms to
+   * be rendered at once using the same material id.
+   * Note: this is an optimization that only applies when
+   * rendering geoms in non-shattered mode.
+   */
   private calcMaterialGroups() {
     const materialSubGeoms: Record<string, Array<CompoundGeomMaterialGroup>> = {}
     // /////////////////////////////////
@@ -189,8 +217,57 @@ class CompoundGeom extends BaseProxy {
     this.__buffers.materialSubGeoms = materialSubGeoms
   }
 
+  /**
+   * The genBuffers method.
+   * @return - The return value.
+   */
+  genBuffers(): any {
+    if (this.materialGroupsDirty) this.calcMaterialGroups()
+    return this.__buffers
+  }
+
   // ////////////////////////////////////////
   // Persistence
+
+  /**
+   * The toJSON method encodes this type as a json object for persistence.
+   *
+   * @param context - The context value.
+   * @return - Returns the json object.
+   */
+  toJSON(context?: Record<string, any>): Record<string, unknown> {
+    const json: Record<string, unknown> = {
+      geomBuffers: this.__buffers,
+      materialPaths: this.materials.map((material) => material.path),
+    }
+    return json
+  }
+
+  /**
+   * The fromJSON method decodes a json object for this type.
+   *
+   * @param json - The json object this item must decode.
+   * @param context - The context value.
+   */
+  fromJSON(json: Record<string, any>, context?: AssetLoadContext): void {
+    this.counts = json.geomBuffers.counts
+    this.__buffers = json.geomBuffers
+    if (json.materialPaths && context) {
+      const materialPaths = json.materialPaths as string[][]
+      this.materials = []
+      materialPaths.forEach((path, index) => {
+        context.resolvePath(
+          path,
+          (result) => {
+            if (result instanceof Material) this.materials[index] = result
+          },
+          () => {}
+        )
+      })
+    }
+    this.__buffers.materials = this.materials
+    this.materialGroupsDirty = true
+  }
 
   /**
    * Sets state of current geometry(Including line segments) using a binary reader object.

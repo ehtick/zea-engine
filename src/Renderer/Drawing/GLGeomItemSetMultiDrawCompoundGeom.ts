@@ -306,7 +306,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       // Note: culled geoms should still be allocated.
       // unculling/changing visiblity only changes the count value from zero to the actual value.
       {
-        const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
+        const geom = this.renderer.glGeomLibrary.getGeom(glGeomItem.geomId)
+        const geomBuffers = geom.genBuffers()
 
         // Here we calculate how many draws for each type of geometry, each
         // compound goem needs. We then allocate the space we have specified.
@@ -405,7 +406,6 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
               const materialId = geomBuffers.subGeomMaterialIndices[i] - 1
               const material = geomBuffers.materials[materialId]
 
-              // @ts-ignore
               this.renderer!.glMaterialLibrary.addMaterial(material)
               const materialAddr = this.renderer!.glMaterialLibrary.getMaterialAllocation(material)
               drawIdsArray[drawId * 4 + 2] = materialAddr.start

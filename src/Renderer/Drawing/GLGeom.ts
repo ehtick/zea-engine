@@ -1,4 +1,4 @@
-import { BaseGeom, Mesh, RefCounted } from '../../SceneTree/index'
+import { BaseGeom, BaseProxy, Mesh, RefCounted } from '../../SceneTree/index'
 import { RenderState } from '../RenderStates/index'
 import { GLAttrBuffer } from '../types/renderer'
 import { WebGL12RenderingContext } from '../types/webgl'
@@ -9,7 +9,7 @@ import { generateShaderGeomBinding, IGeomShaderBinding } from './GeomShaderBindi
  */
 class GLGeom extends RefCounted {
   protected __gl: WebGL12RenderingContext
-  public geom: BaseGeom | Mesh
+  public geom: BaseGeom | BaseProxy
   protected numVertices: number = 0
   protected __glattrbuffers: Record<string, GLAttrBuffer>
   protected __shaderBindings: Record<string, IGeomShaderBinding>
@@ -21,7 +21,7 @@ class GLGeom extends RefCounted {
    * @param gl - The webgl rendering context.
    * @param geom - A geometry object
    */
-  constructor(gl: WebGL12RenderingContext, geom: BaseGeom) {
+  constructor(gl: WebGL12RenderingContext, geom: BaseGeom | BaseProxy) {
     super()
     this.__gl = gl
     this.geom = geom
@@ -46,7 +46,7 @@ class GLGeom extends RefCounted {
    * Returns the owned Geometry object
    * @return - The geometry object.
    */
-  getGeom(): BaseGeom {
+  getGeom(): BaseGeom | BaseProxy {
     return this.geom
   }
 

@@ -80,7 +80,7 @@
           if (event.intersectionData.componentId >= 0) {
             const subGeomId = event.intersectionData.componentId
             const geomItem = event.intersectionData.geomItem
-            geomItem.geomParam.value.assignSubGeomMaterial(subGeomId, standardMaterial)
+            geomItem.geomParam.value.setSubGeomMaterial(subGeomId, standardMaterial)
 
             const geom = geomItem.geomParam.value
             const subGeom = geom.subGeoms[subGeomId]

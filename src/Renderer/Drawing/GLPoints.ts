@@ -5,7 +5,7 @@ import { RenderState } from '../RenderStates/index'
 import { Vec3 } from '../../Math'
 import { GLTexture2D } from '../GLTexture2D'
 import { MathFunctions } from '../../Utilities'
-import { ColorAttribute, Points } from '../../SceneTree'
+import { ColorAttribute, Points, PointsProxy } from '../../SceneTree'
 
 /** Class representing GL points.
  * @extends GLGeom
@@ -24,7 +24,7 @@ class GLPoints extends GLGeom {
    * @param gl - The webgl rendering context.
    * @param points - The points value.
    */
-  constructor(gl: WebGL12RenderingContext, points: any) {
+  constructor(gl: WebGL12RenderingContext, points: Points | PointsProxy) {
     super(gl, points)
   }
 
@@ -43,32 +43,24 @@ class GLPoints extends GLGeom {
     if (!renderstate.attrs.positions && renderstate.unifs.pointsAttributes) {
       let stride = 4
       this.pointsAttributesTextureStride = 1
-      const colors = this.geom.getVertexAttribute('colors') as ColorAttribute
+      const positions = geomBuffers.attrBuffers.positions
+      const colors = geomBuffers.attrBuffers.colors
+      const sizes = geomBuffers.attrBuffers.sizes
       if (colors) {
         stride = 8
         this.pointsAttributesTextureStride = 2
       }
 
-      const positions = this.geom.positions
-      const sizes = this.geom.getVertexAttribute('sizes')
-
       const size = MathFunctions.nextPow2(
         Math.round(Math.sqrt(this.numVertices * this.pointsAttributesTextureStride) + 0.5)
       )
       const data = new Float32Array(size * size * 4)
-      for (let i = 0; i < positions.getCount(); i++) {
-        const pos = positions.getValue(i)
-        data[i * stride + 0] = pos.x
-        data[i * stride + 1] = pos.y
-        data[i * stride + 2] = pos.z
-        if (sizes) data[i * stride + 3] = sizes.getFloat32Value(i)
+      for (let i = 0; i < positions.count; i++) {
+        data.set(positions.values.subarray(i * 3, (i + 1) * 3), i * stride)
+        if (sizes) data[i * stride + 3] = sizes.values[i]
         else data[i * stride + 3] = 1.0
         if (colors) {
-          const color = colors.getValue(i)
-          data[i * stride + 4] = color.r
-          data[i * stride + 5] = color.g
-          data[i * stride + 6] = color.b
-          data[i * stride + 7] = color.a
+          data.set(colors.values.subarray(i * 4, (i + 1) * 4), i * stride + 4)
         }
       }
       this.pointsAttributesTexture = new GLTexture2D(gl, {
@@ -134,32 +126,24 @@ class GLPoints extends GLGeom {
 
       let stride = 4
       this.pointsAttributesTextureStride = 1
-      const colors = this.geom.getVertexAttribute('colors') as ColorAttribute
+      const positions = geomBuffers.attrBuffers.positions
+      const sizes = geomBuffers.attrBuffers.sizes
+      const colors = geomBuffers.attrBuffers.colors
       if (colors) {
         stride = 8
         this.pointsAttributesTextureStride = 2
       }
 
-      const positions = this.geom.positions
-      const sizes = this.geom.getVertexAttribute('sizes')
-
       const size = MathFunctions.nextPow2(
         Math.round(Math.sqrt(this.numVertices * this.pointsAttributesTextureStride) + 0.5)
       )
       const data = new Float32Array(size * size * 4)
-      for (let i = 0; i < positions.getCount(); i++) {
-        const pos = positions.getValue(i)
-        data[i * stride + 0] = pos.x
-        data[i * stride + 1] = pos.y
-        data[i * stride + 2] = pos.z
-        if (sizes) data[i * stride + 3] = sizes.getFloat32Value(i)
+      for (let i = 0; i < positions.count; i++) {
+        data.set(positions.values.subarray(i * 3, (i + 1) * 3), i * stride)
+        if (sizes) data[i * stride + 3] = sizes.values[i]
         else data[i * stride + 3] = 1.0
         if (colors) {
-          const color = colors.getValue(i)
-          data[i * stride + 4] = color.r
-          data[i * stride + 5] = color.g
-          data[i * stride + 6] = color.b
-          data[i * stride + 7] = color.a
+          data.set(colors.values.subarray(i * 4, (i + 1) * 4), i * stride + 4)
         }
       }
       this.pointsAttributesTexture.populate(data, size, size)
@@ -197,16 +181,17 @@ class GLPoints extends GLGeom {
    * @param cameraPos - The cameraPos value.
    */
   sort(cameraPos: Vec3): void {
-    const positions = this.geom.positions
-    this.distances = new Float32Array(positions.getCount())
+    const geomBuffers = this.geom.genBuffers()
+    const positions = geomBuffers.attrBuffers.positions
+    this.distances = new Float32Array(positions.count)
 
     let bufferSizeChanged = false
     if (this.indexArray.length != this.distances.length) {
       this.indexArray = new Int32Array(this.distances.length)
       bufferSizeChanged = true
     }
-    for (let i = 0; i < positions.getCount(); i++) {
-      const pos = positions.getValue(i)
+    for (let i = 0; i < positions.count; i++) {
+      const pos = new Vec3(positions.values[i * 3], positions.values[i * 3 + 1], positions.values[i * 3 + 2])
       this.distances[i] = pos.distanceTo(cameraPos)
       this.indexArray[i] = i
     }
@@ -224,7 +209,7 @@ class GLPoints extends GLGeom {
         dataType: gl.INT,
         normalized: false,
         shared: false,
-        numValues: positions.getCount(),
+        numValues: positions.count,
       }
     } else if (bufferSizeChanged) {
       if (this.drawIndexBuffer) gl.deleteBuffer(this.__glattrbuffers.drawIndices.buffer)
@@ -248,8 +233,7 @@ class GLPoints extends GLGeom {
       if (dist > this.threshold) {
         this.sort(cameraPos)
         this.prevSortCameraPos = cameraPos.clone()
-        const positions = this.geom.positions
-        if (positions.getCount() > 1) {
+        if (this.distances.length > 1) {
           const idx0 = this.indexArray[this.indexArray.length - 1]
           const dist0 = this.distances[idx0]
           this.threshold = dist0 * 0.25

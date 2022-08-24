@@ -2,8 +2,7 @@ import { Vec3 } from '../../Math/index'
 import { GLGeom } from './GLGeom'
 import { genDataTypeDesc, generateShaderGeomBinding } from './GeomShaderBinding'
 import { GLTexture2D } from '../GLTexture2D'
-import { Vec3Attribute } from '../../SceneTree/Geometry/Vec3Attribute'
-import { BaseGeom } from '../../SceneTree'
+import { Lines, LinesProxy } from '../../SceneTree'
 import { RenderState } from '../RenderStates/index'
 import { WebGL12RenderingContext } from '../types/webgl'
 import { GLAttrBuffer } from '../types/renderer'
@@ -28,7 +27,7 @@ class GLLines extends GLGeom {
    * @param gl - The webgl rendering context.
    * @param lines - The geom value.
    */
-  constructor(gl: WebGL12RenderingContext, lines: BaseGeom) {
+  constructor(gl: WebGL12RenderingContext, lines: Lines | LinesProxy) {
     super(gl, lines)
 
     this.numSegIndices = 0
@@ -74,6 +73,7 @@ class GLLines extends GLGeom {
    * @param renderstate - The object tracking the current state of the renderer
    */
   genFatBuffers(renderstate: RenderState): void {
+    // if (!(this.geom instanceof Lines)
     const gl = this.__gl
 
     this.numVertices = this.geom.getNumVertices()
@@ -94,18 +94,16 @@ class GLLines extends GLGeom {
 
     this.fatBuffers.drawCount = indices.length / 2
 
-    const vertexAttributes = this.geom.getVertexAttributes()
-    const positions = <Vec3Attribute>vertexAttributes.positions
-    const lineThicknessAttr = vertexAttributes.lineThickness
+    const positions = geomBuffers.attrBuffers.positions
+    const lineThicknessAttr = geomBuffers.attrBuffers.lineThickness
 
     const stride = 4 // The number of floats per draw item.
-    const dataArray = new Float32Array(positions.getCount() * stride)
-    for (let i = 0; i < positions.getCount(); i++) {
-      const pos = new Vec3(new Float32Array(dataArray.buffer, i * stride * 4, 3))
-      pos.setFromOther(positions.getValue(i))
+    const dataArray = new Float32Array(positions.count * stride)
+    for (let i = 0; i < positions.count; i++) {
+      dataArray.set(positions.values.subarray(i * 3, (i + 1) * 3), i * 4)
 
       // The thickness of the line.
-      if (lineThicknessAttr) dataArray[i * 4 + 3] = lineThicknessAttr.getFloat32Value(i)
+      if (lineThicknessAttr) dataArray[i * 4 + 3] = lineThicknessAttr.values[i]
       else dataArray[i * 4 + 3] = 1.0
     }
 
@@ -117,7 +115,7 @@ class GLLines extends GLGeom {
       this.fatBuffers.positionsTexture = new GLTexture2D(this.__gl, {
         format: 'RGBA',
         type: 'FLOAT',
-        width: positions.getCount(),
+        width: positions.count,
         /* each pixel has 4 floats*/
         height: 1,
         filter: 'NEAREST',
@@ -126,7 +124,7 @@ class GLLines extends GLGeom {
         mipMapped: false,
       })
     } else {
-      this.fatBuffers.positionsTexture.bufferData(dataArray, positions.getCount(), 1)
+      this.fatBuffers.positionsTexture.bufferData(dataArray, positions.count, 1)
     }
 
     const makeIndices = (): Float32Array => {
@@ -295,7 +293,7 @@ class GLLines extends GLGeom {
    * The drawPoints method.
    */
   drawPoints(): void {
-    this.__gl.drawArrays(this.__gl.POINTS, 0, this.geom.numVertices())
+    this.__gl.drawArrays(this.__gl.POINTS, 0, this.geom.getNumVertices())
   }
 
   // ////////////////////////////////

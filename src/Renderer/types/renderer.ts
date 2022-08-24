@@ -1,3 +1,4 @@
+import { String } from 'cypress/types/lodash'
 import { Mat4 } from '../../Math/Mat4'
 import { Vec2 } from '../../Math/Vec2'
 
@@ -16,14 +17,18 @@ export interface Viewport {
 // ShaderParseResult
 // This is what the parser found when inspecting the GLSL code.
 export interface ShaderParseAttribute {
-  type: string
+  glslType: string
   instanced: boolean
+  integer: boolean
+}
+export interface ShaderParseUniform {
+  glslType: string
 }
 export interface ShaderParseResult {
   glsl: string
   numLines: number
   // A mapping of name to GLSL type.
-  uniforms: Record<string, string>
+  uniforms: Record<string, ShaderParseUniform>
   // A mapping of name to type .
   attributes: Record<string, ShaderParseAttribute>
 }
@@ -36,13 +41,14 @@ export interface ShaderParseResult {
 export interface ShaderUniform {
   name: string
   location: WebGLUniformLocation
-  type: string
+  glslType: string
 }
 export interface ShaderAttribute {
   name: string
+  glslType: string
   location: number
-  type: string
   instanced: boolean
+  integer: boolean
 }
 
 export type ShaderAttributes = Record<string, ShaderAttribute>

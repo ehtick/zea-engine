@@ -1,7 +1,4 @@
 import { shaderLibrary } from './ShaderLibrary'
-import { Vec2, Vec3, Vec4, Mat3, Mat4, Color } from '../Math/index'
-import { BaseImage } from '../SceneTree/BaseImage'
-import { SInt32, UInt32, Float32 } from '../Utilities/MathFunctions'
 // import { BaseImage } from '../SceneTree/BaseImage'
 // import { SInt32, UInt32, Float32 } from '../Utilities/MathFunctions'
 
@@ -107,7 +104,7 @@ describe('ShaderLibrary types', () => {
     import 'too.glsl'
     `
 
-    const correctResult = '{"check":{"type":"Boolean","instanced":false}}'
+    const correctResult = '{"check":{"glslType":"bool","instanced":false,"integer":false}}'
     shaderLibrary.setShaderModule('too.glsl', too)
     const result = shaderLibrary.parseShader('shader.glsl', shader)
 
@@ -125,7 +122,7 @@ describe('ShaderLibrary types', () => {
     import 'zoo.glsl'
     `
 
-    const correctResult = { oneUniform: 'Float32' }
+    const correctResult = { oneUniform: { glslType: 'float' } }
     shaderLibrary.setShaderModule('zoo.glsl', zoo)
     const result = shaderLibrary.parseShader('shader.glsl', shader)
 
@@ -141,7 +138,7 @@ describe('ShaderLibrary types', () => {
     const shader = `
     import 'boo.glsl'
     `
-    const correctResult = { check: { instanced: true, type: 'Boolean' } }
+    const correctResult = { check: { instanced: true, glslType: 'bool', integer: false } }
     shaderLibrary.setShaderModule('boo.glsl', boo)
     const result = shaderLibrary.parseShader('shader.glsl', shader)
     // console.log(result.attributes)
@@ -151,7 +148,11 @@ describe('ShaderLibrary types', () => {
     const code = `
     uniform vec4 x;
     `
-    const correctResult = { x: 'Vec4' }
+    const correctResult = {
+      x: {
+        glslType: 'vec4',
+      },
+    }
     const result = shaderLibrary.parseShader('color.glsl', code)
     expect(result.uniforms).toEqual(correctResult)
   })
@@ -160,7 +161,11 @@ describe('ShaderLibrary types', () => {
     const code = `
     uniform color x;
     `
-    const correctResult = { x: 'Color' }
+    const correctResult = {
+      x: {
+        glslType: 'color',
+      },
+    }
     const result = shaderLibrary.parseShader('color.glsl', code)
     expect(result.uniforms).toEqual(correctResult)
   })
@@ -176,7 +181,11 @@ describe('ShaderLibrary types', () => {
     const code = `
     uniform color x;
     `
-    const correctResult = { x: 'Color' }
+    const correctResult = {
+      x: {
+        glslType: 'color',
+      },
+    }
     const result = shaderLibrary.parseShader('color.glsl', code)
     expect(result.uniforms).toEqual(correctResult)
   })
@@ -184,7 +193,11 @@ describe('ShaderLibrary types', () => {
     const code = `
     uniform sampler2D x;
     `
-    const correctResult = { x: 'BaseImage' }
+    const correctResult = {
+      x: {
+        glslType: 'sampler2D',
+      },
+    }
     const result = shaderLibrary.parseShader('sampler2D.glsl', code)
     expect(result.uniforms).toEqual(correctResult)
   })
@@ -192,7 +205,11 @@ describe('ShaderLibrary types', () => {
     const code = `
     uniform samplerCube x;
     `
-    const correctResult = { x: 'BaseImage' }
+    const correctResult = {
+      x: {
+        glslType: 'samplerCube',
+      },
+    }
     const result = shaderLibrary.parseShader('sampler2D.glsl', code)
     expect(result.uniforms).toEqual(correctResult)
   })

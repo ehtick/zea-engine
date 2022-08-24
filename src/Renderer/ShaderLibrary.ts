@@ -1,24 +1,6 @@
 import { Material } from '../SceneTree'
 import { ShaderParseResult } from './types/renderer'
 
-const GlslTypes = {
-  bool: 'Boolean',
-  int: 'SInt32',
-  uint: 'UInt32',
-  float: 'Float32',
-  ivec2: 'Vec2',
-  ivec3: 'Vec3',
-  ivec4: 'Vec4',
-  vec2: 'Vec2',
-  vec3: 'Vec3',
-  vec4: 'Vec4',
-  color: 'Color',
-  mat3: 'Mat3',
-  mat4: 'Mat4',
-  sampler2D: 'BaseImage',
-  samplerCube: 'BaseImage',
-}
-
 /*
   regex variables
 */
@@ -80,15 +62,13 @@ class ShaderLibrary {
    * @param result - result object to store parsed data
    */
   parseAttr(parts: string[], instanced: boolean, result: ShaderParseResult, line: string): void {
-    // see if type is valid
-    if (!(parts[1] in GlslTypes)) {
-      throw new Error('Error while parsing \nType not recognized:' + parts[1])
-    }
-
     const name = parts[2].slice(0, parts[2].length - 1)
+    const type = parts[1]
+    const isInteger = type == 'int' || type == 'uint' || type == 'ivec2' || type == 'ivec3' || type == 'ivec4'
     result.attributes[name] = {
-      type: GlslTypes[parts[1]],
+      glslType: type,
       instanced: instanced,
+      integer: isInteger,
     }
 
     // console.log('attributes:' + name + ":" + parts[1]);
@@ -219,18 +199,20 @@ class ShaderLibrary {
           if (parts.length == 4) typeIndex = 2
           const typeName = parts[typeIndex]
 
-          if (!(typeName in GlslTypes))
-            throw new Error('Error while parsing :' + shaderName + ' \nType not recognized:' + parts[1])
           const name = parts[typeIndex + 1].slice(0, parts[typeIndex + 1].length - 1)
 
           if (name.includes('[')) {
             // Strip off the square brackets.
-            result.uniforms[name.substring(0, name.indexOf('['))] = GlslTypes[typeName]
+            result.uniforms[name.substring(0, name.indexOf('['))] = {
+              glslType: typeName,
+            }
           } else {
-            result.uniforms[name] = GlslTypes[typeName]
+            result.uniforms[name] = {
+              glslType: typeName,
+            }
           }
 
-          if (result.uniforms[name] == 'struct') {
+          if (typeName == 'struct') {
             console.log(parts)
           }
           if (parts[1] == 'color') {

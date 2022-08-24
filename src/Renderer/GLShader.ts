@@ -11,6 +11,7 @@ import {
   ShaderCompileResult,
   ShaderUniforms,
   ShaderAttributes,
+  ShaderParseUniform,
 } from './types/renderer'
 import { RenderState } from './RenderStates/index'
 import { WebGL12RenderingContext } from './types/webgl'
@@ -278,7 +279,7 @@ class GLShader extends BaseItem {
       throw new Error('Unable to link the shader program:' + this.constructor.name + '\n==================\n' + info)
     }
 
-    const attributeAndUniformLocation = this.__extractAttributeAndUniformLocations(shaderProgramHdl, shaderopts)
+    const attributeAndUniformLocation = this.extractAttributeAndUniformLocations(shaderProgramHdl, shaderopts)
 
     return {
       shaderHdls,
@@ -289,13 +290,13 @@ class GLShader extends BaseItem {
   }
 
   /**
-   * The __extractAttributeAndUniformLocations method.
+   * The extractAttributeAndUniformLocations method.
    * @param shaderProgramHdl - The shaderProgramHdl value.
    * @param shaderopts - The shaderopts value.
    * @return - The dictionary of attributes and uniform values
    * @private
    */
-  __extractAttributeAndUniformLocations(
+  private extractAttributeAndUniformLocations(
     shaderProgramHdl: WebGLProgram,
     shaderopts: Shaderopts
   ): ShaderCompileAttributeAndUniformResult {
@@ -315,13 +316,14 @@ class GLShader extends BaseItem {
       result.attrs[attrName] = {
         name: attrName,
         location: location,
-        type: attrDesc.type,
+        glslType: attrDesc.glslType,
         instanced: attrDesc.instanced,
+        integer: attrDesc.integer,
       }
     }
     const unifs = this.getUniforms() // TODO: refactor type in fn()
     for (let uniformName in unifs) {
-      const unifType = unifs[uniformName]
+      const unifParseResult = unifs[uniformName]
       // TODO: array uniform disabled during ts-migration
       // if (unifType instanceof Array) {
       //   for (const member of unifType) {
@@ -352,7 +354,7 @@ class GLShader extends BaseItem {
       result.unifs[uniformName] = {
         name: uniformName,
         location: location,
-        type: unifType,
+        glslType: unifParseResult.glslType,
       }
     }
     return result
@@ -376,8 +378,8 @@ class GLShader extends BaseItem {
    * The getUniforms method.
    * @return - The dictionary of uniforms that this shader expects to be bound.
    */
-  getUniforms(): Record<string, string> {
-    const uniforms: Record<string, string> = {}
+  getUniforms(): Record<string, ShaderParseUniform> {
+    const uniforms: Record<string, ShaderParseUniform> = {}
     for (const stageName in this.__shaderStages) {
       const shaderStageBlock = this.__shaderStages[stageName]
       for (const unifName in shaderStageBlock['uniforms']) uniforms[unifName] = shaderStageBlock['uniforms'][unifName]

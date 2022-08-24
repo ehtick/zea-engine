@@ -85,19 +85,19 @@ class SimpleUniformBinding extends ParamUniformBinding {
     this.textureTypeUnif = unifs[name + 'TexType']
     this.uniform1i = gl.uniform1i.bind(gl)
 
-    switch (this.unif.type) {
-      case 'Boolean':
+    switch (this.unif.glslType) {
+      case 'bool':
         // gl.uniform1ui(unif.location, value);// WebGL 2
         this.uniformXX = gl.uniform1i.bind(gl)
         break
-      case 'UInt32':
+      case 'uint':
         if (gl.name == 'webgl2') this.uniformXX = gl.uniform1ui.bind(gl)
         else this.uniformXX = gl.uniform1i.bind(gl)
         break
-      case 'SInt32':
+      case 'int':
         this.uniformXX = gl.uniform1i.bind(gl)
         break
-      case 'Float32':
+      case 'float':
         this.uniformXX = gl.uniform1f.bind(gl)
         break
     }
@@ -238,14 +238,14 @@ class ComplexUniformBinding extends ParamUniformBinding {
     super(unif)
     this.param = param
 
-    switch (this.unif.type) {
-      case 'Vec2':
+    switch (this.unif.glslType) {
+      case 'vec2':
         this.uniformXX = gl.uniform2fv.bind(gl)
         break
-      case 'Vec3':
+      case 'vec3':
         this.uniformXX = gl.uniform3fv.bind(gl)
         break
-      case 'Vec4':
+      case 'vec4':
         this.uniformXX = gl.uniform4fv.bind(gl)
         break
     }
@@ -297,11 +297,11 @@ class MatrixUniformBinding extends ParamUniformBinding {
     super(unif)
     this.param = param
 
-    switch (this.unif.type) {
-      case 'Mat3':
+    switch (this.unif.glslType) {
+      case 'mat3':
         this.uniformMatrixXXX = gl.uniformMatrix3fv.bind(gl)
         break
-      case 'Mat4':
+      case 'mat4':
         this.uniformMatrixXXX = gl.uniformMatrix4fv.bind(gl)
         break
     }
@@ -542,18 +542,18 @@ class MaterialShaderBinding {
         }
         return
       }
-      switch (unif.type) {
-        case 'Boolean':
-        case 'UInt32':
-        case 'SInt32':
-        case 'Float32':
+      switch (unif.glslType) {
+        case 'bool':
+        case 'uint':
+        case 'int':
+        case 'float':
           this.uniformBindings.push(
             new SimpleUniformBinding(gl, glMaterial, <NumberParameter | BooleanParameter>param, unif, unifs)
           )
           break
-        case 'Vec2':
-        case 'Vec3':
-        case 'Vec4':
+        case 'vec2':
+        case 'vec3':
+        case 'vec4':
           this.uniformBindings.push(
             new ComplexUniformBinding(
               gl,
@@ -563,16 +563,16 @@ class MaterialShaderBinding {
             )
           )
           break
-        case 'Color':
+        case 'color':
           this.uniformBindings.push(
             new ColorUniformBinding(gl, glMaterial, <MaterialColorParam | ColorParameter>param, unif, unifs)
           )
           break
-        case 'Mat4':
+        case 'mat4':
           this.uniformBindings.push(new MatrixUniformBinding(gl, glMaterial, <Mat4Parameter>param, unif))
           break
         default:
-          console.warn('Param :' + name + ' has unhandled data type:' + unif.type)
+          console.warn('Param :' + name + ' has unhandled data type:' + unif.glslType)
           return
       }
       return
