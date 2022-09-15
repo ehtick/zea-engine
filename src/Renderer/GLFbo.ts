@@ -269,6 +269,9 @@ class GLFbo {
     }
 
     checkFramebuffer(gl, this.width, this.height)
+
+    if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
+    else gl.bindFramebuffer(gl.FRAMEBUFFER, null)
   }
 
   /**

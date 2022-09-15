@@ -21,7 +21,13 @@
         gap: 0.2em;
       }
 
+      #middle {
+        height: 100%;
+        display: flex;
+      }
+
       #canvasHolder {
+        flex: 1 1 0%;
         height: 100%;
       }
 
@@ -31,69 +37,34 @@
         margin: auto 0.2em 0.2em 0.1em;
       }
 
-      #footer #controls {
-        display: flex;
-        flex-direction: row;
-        margin-left: auto;
-        gap: 0.1em;
-        margin-left: 0.1em;
-      }
-
-      #footer #timeline {
-        flex: auto;
-        padding: 0 2px;
-        border: #545454 1px solid;
-      }
-
-      #footer #controls button {
-        width: 1.5em;
-        background-color: burlywood;
-        border: #545454 1px solid;
-        cursor: pointer;
-      }
-
-      #footer #timebar {
-        margin-top: 0.1em;
-        height: 2.2em;
-        width: 10px;
-        background-color: red;
-      }
-
-      .disable-select {
-        user-select: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-      }
-
       #controllers {
         display: flex;
         align-items: center;
         padding: 0.5em;
         gap: 1em;
       }
+
+      #status {
+        color: rgb(0, 0, 0);
+        position: fixed;
+        bottom: 10px;
+        left: 10px;
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <div id="controllers">
-        <div>
-          <label for="xfoTool">Xfo Manipulator</label>
-          <input type="checkbox" id="xfoTool" value="XfoManipulator" class="tool" />
-        </div>
+        <button class="variant-button" id="openSidePanel">Open Side Panel</button>
       </div>
-      <div id="canvasHolder">
-        <canvas id="renderer"></canvas>
+      <div id="middle">
+        <div id="sidePanel"></div>
+        <div id="canvasHolder">
+          <canvas id="renderer"></canvas>
+        </div>
       </div>
       <div id="footer">
-        <div id="timeline">
-          <div id="timebar"></div>
-        </div>
-        <div id="controls">
-          <button id="prevkey" class="disable-select">&lt;</button>
-          <button id="nextkey" class="disable-select">&gt;</button>
-        </div>
+        <div id="status"></div>
       </div>
     </div>
 
@@ -105,6 +76,27 @@
       const renderer = new GLRenderer(document.getElementById('renderer'), { antialias: false })
       scene.setupGrid(10, 10)
       renderer.setScene(scene)
+
+      const statusElement = document.getElementById('status')
+      const setStatusText = (text) => {
+        renderer.once('redrawOccurred', () => {
+          statusElement.textContent = text
+        })
+        renderer.forceRender()
+      }
+      let open = false
+      document.getElementById('sidePanel').style.width = '10px'
+      document.getElementById('openSidePanel').addEventListener('click', function (event) {
+        if (!open) {
+          document.getElementById('sidePanel').style.width = '150px'
+          open = true
+        } else {
+          document.getElementById('sidePanel').style.width = '10px'
+          open = false
+        }
+        setStatusText(`done-openSidePanel`)
+      })
+      setStatusText(`done-loading`)
     </script>
   </body>
 </html>
