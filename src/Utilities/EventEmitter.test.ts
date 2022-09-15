@@ -83,29 +83,4 @@ describe('EventEmitter', () => {
 
     expect(mockFn).toHaveBeenCalledTimes(1)
   })
-
-  it('fails when trying to unregister a listener that was not registered.', () => {
-    const eventEmitter = new EventEmitter()
-
-    const notRegistered = () => {}
-
-    const fn = () => {
-      eventEmitter.off('fake', notRegistered)
-    }
-
-    expect(fn).toThrow()
-  })
-
-  it('fails when trying to unregister a listener more than once.', () => {
-    const eventEmitter = new EventEmitter()
-
-    const cb = () => {}
-
-    const fn = () => {
-      eventEmitter.off('fake', cb)
-      eventEmitter.off('fake', cb)
-    }
-
-    expect(fn).toThrow()
-  })
 })

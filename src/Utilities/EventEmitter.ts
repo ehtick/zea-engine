@@ -108,29 +108,18 @@ class EventEmitter extends BaseClass {
 
     if (typeof listenerOrId == 'number') {
       const id = listenerOrId as number
-      if (!listeners[id]) throw new Error('Invalid ID')
       // Note: do not splice the array as that would change the indexes of existing listeners.
       listeners[id] = null
       return
     }
     const listener = listenerOrId as Listener
 
-    const ids: Array<number> = []
-
     listeners.forEach((e: null | Listener, i: number) => {
-      if (e === listenerOrId) {
-        ids.push(i)
+      if (e === listener) {
+        // Note: do not splice the array as that would change the indexes of existing listeners.
+        listeners[i] = null
       }
     })
-
-    if (ids.length == 0) {
-      throw new Error(`Listener "${listener.name}" is not connected to "${eventName}" event`)
-    } else {
-      // Note: do not splice the array as that would change the indexes of existing listeners.
-      for (const id of ids) {
-        listeners[id] = null
-      }
-    }
   }
 
   /**
