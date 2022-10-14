@@ -623,10 +623,10 @@ class GLGeomItemLibrary extends EventEmitter {
       this.bbox.bind(renderstate)
 
       // Read each Matrix and Bbox settings from the Texture.
-      const { glGeomItemsTexture, glGeomItemsTextureSize, instancedDraw, reductionDataTexture, occlusionCulling } =
+      const { instancesTexture, instancesTextureSize, instancedDraw, reductionDataTexture, occlusionCulling } =
         renderstate.unifs
-      this.glGeomItemsTexture.bindToUniform(renderstate, glGeomItemsTexture)
-      gl.uniform1i(glGeomItemsTextureSize.location, this.glGeomItemsTexture.width)
+      this.glGeomItemsTexture.bindToUniform(renderstate, instancesTexture)
+      gl.uniform1i(instancesTextureSize.location, this.glGeomItemsTexture.width)
       gl.uniform1i(instancedDraw.location, 1)
       gl.uniform1i(occlusionCulling.location, 1)
 
@@ -1196,10 +1196,10 @@ class GLGeomItemLibrary extends EventEmitter {
     }
 
     const gl = this.renderer.gl
-    const { glGeomItemsTexture, glGeomItemsTextureSize } = renderstate.unifs
-    if (glGeomItemsTexture) {
-      this.glGeomItemsTexture!.bindToUniform(renderstate, glGeomItemsTexture)
-      gl.uniform1i(glGeomItemsTextureSize.location, this.glGeomItemsTexture!.width)
+    const { instancesTexture, instancesTextureSize } = renderstate.unifs
+    if (instancesTexture) {
+      this.glGeomItemsTexture!.bindToUniform(renderstate, instancesTexture)
+      gl.uniform1i(instancesTextureSize.location, this.glGeomItemsTexture!.width)
     }
   }
 }

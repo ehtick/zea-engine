@@ -12,7 +12,7 @@ mat4 getMatrix(sampler2D texture, int textureSize, int index) {
 }
 
 mat4 getModelMatrix(int id) {
-  return getMatrix(glGeomItemsTexture, glGeomItemsTextureSize, id);
+  return getMatrix(instancesTexture, instancesTextureSize, id);
 }
 
 #else
