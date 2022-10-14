@@ -12,9 +12,6 @@ const int pixelsPerItem = 8;
 vec4 getInstanceData(int id) {
   return fetchTexel(glGeomItemsTexture, glGeomItemsTextureSize, (id * pixelsPerItem) + 0);
 }
-vec4 getHighlightColor(int id) {
-  return fetchTexel(glGeomItemsTexture, glGeomItemsTextureSize, (id * pixelsPerItem) + 4);
-}
 
 #else
 

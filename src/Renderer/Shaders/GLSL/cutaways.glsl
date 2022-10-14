@@ -7,7 +7,7 @@ uniform color cutColor;
 
 #ifdef ENABLE_FLOAT_TEXTURES
   vec4 getCutaway(int id) {
-    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
+    return fetchTexel(glGeomItemsTexture, glGeomItemsTextureSize, (id * pixelsPerItem) + 5);
   }
 
 #else

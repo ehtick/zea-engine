@@ -23,7 +23,7 @@ import 'GLSLBits.glsl'
 
 #ifdef ENABLE_FLOAT_TEXTURES
 vec4 getHighlightColor(int id) {
-  return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 4);
+  return fetchTexel(glGeomItemsTexture, glGeomItemsTextureSize, (id * pixelsPerItem) + 4);
 }
 #else // ENABLE_FLOAT_TEXTURES
 
@@ -39,6 +39,7 @@ vec4 getHighlightColor() {
 
 /* VS Outputs */
 varying float v_geomItemId;
+
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 /* VS Outputs */
