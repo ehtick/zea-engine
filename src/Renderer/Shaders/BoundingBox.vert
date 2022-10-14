@@ -43,15 +43,15 @@ void main(void) {
     }
   }
 
-  vec4 bboxMin = fetchTexel(instancesTexture, instancesTextureSize, (drawItemId * pixelsPerItem) + 6);
-  vec4 bboxMax = fetchTexel(instancesTexture, instancesTextureSize, (drawItemId * pixelsPerItem) + 7);
+  vec4 bboxMin = fetchTexel(glGeomItemsTexture, glGeomItemsTextureSize, (drawItemId * pixelsPerItem) + 6);
+  vec4 bboxMax = fetchTexel(glGeomItemsTexture, glGeomItemsTextureSize, (drawItemId * pixelsPerItem) + 7);
   mat4 viewProjectionMatrix = projectionMatrix * viewMatrix;
 
   if (occlusionCulling != 0) {
     // TODO: The bounding box stochastic
     v_color = vec4(0.0, float(drawItemId), 0.0, 1.0);
   } else {
-    v_color = fetchTexel(instancesTexture, instancesTextureSize, (drawItemId * pixelsPerItem) + 4);
+    v_color = fetchTexel(glGeomItemsTexture, glGeomItemsTextureSize, (drawItemId * pixelsPerItem) + 4);
   }
 
   vec4 pos = positions;

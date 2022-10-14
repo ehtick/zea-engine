@@ -2412,10 +2412,10 @@
   resolved "https://registry.yarnpkg.com/@zeainc/zea-tree-view/-/zea-tree-view-0.1.5.tgz#b3e2f396ec745c2dbb831d76908a2eb6a7632319"
   integrity sha512-xrPJUmlRF0JKuRnV1kDj3cf65C4fmsDT9jUgxeENnFTt/H+3fTx/eLb0vUSbKyYDI7wy1vlIpzPbglJeS3mtgw==
 
-"@zeainc/zea-ux@^4.0.3":
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/@zeainc/zea-ux/-/zea-ux-4.0.5.tgz#06da0e6ffec92dd7d9b01ef1451702f2163de257"
-  integrity sha512-Zo/6NV1mhoRhojIGlTExq5+sgYqSKJ8xTNiqILbmmcKzaffdyi8/dJO/gEj+AdBAQhJnORYOMovz1c6JZa6P+A==
+"@zeainc/zea-ux@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@zeainc/zea-ux/-/zea-ux-4.1.0.tgz#8d050eacfdebe9657f6557c290df4d1e0ae82225"
+  integrity sha512-giQbN2TwMW41ZKQhrohxfCixYIjKhjwKld7phBIOPYNusEZqBJDqfSGAU2GROrOMY0IwZquEyPmVvGx/bj3BIA==
   dependencies:
     dom-to-image "^2.6.0"
 

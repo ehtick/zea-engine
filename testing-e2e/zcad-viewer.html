@@ -63,6 +63,10 @@
         font-size: 16px;
         user-select: none;
       }
+
+      .sidePanel {
+        height: calc(100vh - 71px);
+      }
     </style>
     <script src="../dist/index.umd.js"></script>
     <script src="./src/zea-fps-display.js" type="module"></script>
@@ -95,7 +99,7 @@
       <main class="flex flex-col flex-1">
         <div class="flex-1" id="topPanel">
           <div class="splitter">
-            <div id="leftPanel">
+            <div id="leftPanel" class="sidePanel">
               <zea-tree-view id="tree" class="select-none"></zea-tree-view>
             </div>
             <div class="separator" id="separatorV"></div>

@@ -14,16 +14,10 @@ import { GeomDataRenderState, HighlightRenderState, RenderState, ColorRenderStat
 import { WebGL12RenderingContext } from '../types/webgl'
 import { GLGeomItem } from './GLGeomItem'
 import { GLMesh } from './GLMesh'
-import { Color } from '../../Math'
+import { GeomType } from './GeomType'
 
 const deepEquals = (arr0: Array<number>, arr1: Array<number>) => {
   return arr0.length == arr1.length && !arr0.some((v, index) => v != arr1[index])
-}
-
-enum GeomType {
-  TRIANGLES = 0,
-  LINES = 1,
-  POINTS = 2,
 }
 
 interface SubGeom {

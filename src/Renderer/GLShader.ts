@@ -157,7 +157,7 @@ class GLShader extends BaseItem {
 
     // See if it compiled successfully
     if (!gl.getShaderParameter(shaderHdl, gl.COMPILE_STATUS)) {
-      console.log('Errors in :' + this.constructor.name)
+      console.log('Errors in :' + this.constructor.name + '.' + name)
       const errors: Record<string, any> = (<string>gl.getShaderInfoLog(shaderHdl)).split('\n')
       const errorLines: Record<string, any> = {}
       for (let i = 0; i < errors.length; i++) {
@@ -176,29 +176,36 @@ class GLShader extends BaseItem {
           }
         }
       }
-      const numberedLinesWithErrors = []
       const lines = glsl.split('\n')
-      for (const key in errorLines) {
-        const lineNumber = Number.parseInt(key) - 1
-        for (let i = Math.max(0, lineNumber - 4); i < lineNumber; i++)
-          numberedLinesWithErrors.push((lineNumber + 1 + ' ').padStart(3) + lines[i])
-        numberedLinesWithErrors.push((lineNumber + 1 + '>').padStart(3) + lines[lineNumber])
-        for (let i = lineNumber + 1; i < Math.min(lines.length - 1, lineNumber + 5); i++)
-          numberedLinesWithErrors.push((lineNumber + 1 + ' ').padStart(3) + lines[i])
-        const errors = errorLines[key]
-        for (const error of errors) {
-          numberedLinesWithErrors.push(error)
+      const generateNumberedLines = (startOffset: number, endOffset: number): string[] => {
+        const numberedLinesWithErrors = []
+        for (const key in errorLines) {
+          const lineNumber = Number.parseInt(key) - 1
+          for (let i = Math.max(0, lineNumber - startOffset); i < lineNumber; i++)
+            numberedLinesWithErrors.push((i + 1 + ' ').padStart(3) + '\x1B[34;107;2m' + lines[i] + '\x1B[m')
+          numberedLinesWithErrors.push(
+            (lineNumber + 1 + '>').padStart(3) + '\x1B[41;93;4m' + lines[lineNumber] + '\x1B[m'
+          )
+          for (let i = lineNumber + 1; i < Math.min(lines.length - 1, lineNumber + endOffset); i++)
+            numberedLinesWithErrors.push((i + 1 + ' ').padStart(3) + '\x1B[34;107;2m' + lines[i] + '\x1B[m')
+          const errors = errorLines[key]
+          for (const error of errors) {
+            numberedLinesWithErrors.push(error)
+          }
         }
+        return numberedLinesWithErrors
       }
+      console.groupCollapsed('ShaderError-All')
+      const allErrorLines = generateNumberedLines(lines.length, lines.length)
+      allErrorLines.forEach((line) => console.info(line))
+      console.groupEnd()
+      console.group('ShaderError-Summary')
+      const sumaryLinesWithErrors = generateNumberedLines(4, 5)
+      sumaryLinesWithErrors.forEach((line) => console.info(line))
+      console.groupEnd()
 
-      // throw("An error occurred compiling the shader \n\n" + numberedLinesWithErrors.join('\n') + "\n\n=================\n" + this.constructor.name + "." + name + ": \n\n" + errors.join('\n'));
       throw new Error(
-        'An error occurred compiling the shader \n=================\n' +
-          this.constructor.name +
-          '.' +
-          name +
-          ': \n\n' +
-          numberedLinesWithErrors.join('\n')
+        'An error occurred compiling the shader \n=================\n' + this.constructor.name + '.' + name
       )
     }
     return shaderHdl

@@ -395,8 +395,8 @@ class GLBoundingBoxPass extends GLPass {
         })
       }
     } else {
-      this.__drawItemsTexture!.bindToUniform(renderstate, unifs.instancesTexture)
-      gl.uniform1i(unifs.instancesTextureSize.location, this.__width)
+      this.__drawItemsTexture!.bindToUniform(renderstate, unifs.glGeomItemsTexture)
+      gl.uniform1i(unifs.glGeomItemsTextureSize.location, this.__width)
 
       {
         // The instance transform ids are bound as an instanced attribute.
