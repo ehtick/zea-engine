@@ -117,18 +117,23 @@ class CompoundGeom extends BaseProxy {
    * @param material - The material to assign.
    */
   setSubGeomMaterial(subGeomId: number, material: Material) {
-    let materialIndex = this.materials.indexOf(material)
-    if (materialIndex == -1) {
-      materialIndex = this.materials.length
-      this.materials[materialIndex] = material
+    if (!material) {
+      if (this.__buffers.subGeomMaterialIndices && this.__buffers.subGeomMaterialIndices[subGeomId])
+        this.__buffers.subGeomMaterialIndices[subGeomId] = 0
+    } else {
+      let materialIndex = this.materials.indexOf(material)
+      if (materialIndex == -1) {
+        materialIndex = this.materials.length
+        this.materials[materialIndex] = material
+      }
+      if (this.__buffers.subGeomMaterialIndices.length == 0) {
+        this.__buffers.subGeomMaterialIndices = new Uint8Array(this.__buffers.numSubGeoms)
+      }
+      // Note: subGeomMaterialIndices is Uint8Array, and 0 means no custom
+      // material is assigned to the subGeom.
+      // Subtract 1 to get the actual material id.
+      this.__buffers.subGeomMaterialIndices[subGeomId] = materialIndex + 1
     }
-    if (this.__buffers.subGeomMaterialIndices.length == 0) {
-      this.__buffers.subGeomMaterialIndices = new Uint8Array(this.__buffers.numSubGeoms)
-    }
-    // Note: subGeomMaterialIndices is Uint8Array, and 0 means no custom
-    // material is assigned to the subGeom.
-    // Subtract 1 to get the actual material id.
-    this.__buffers.subGeomMaterialIndices[subGeomId] = materialIndex + 1
     this.materialGroupsDirty = true
     this.emit('materialsChanged')
   }

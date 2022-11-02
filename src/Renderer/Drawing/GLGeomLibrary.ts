@@ -196,6 +196,10 @@ class GLGeomLibrary extends EventEmitter {
 
     if (geom instanceof CompoundGeom) {
       eventHandlerIds.materialsChanged = geom.on('materialsChanged', () => {
+        geom.materials.forEach((material) => {
+          this.renderer!.glMaterialLibrary.addMaterial(material)
+        })
+
         this.emit('geomDataChanged', new IndexEvent(index))
         this.emit('updated')
       })
